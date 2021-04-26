@@ -3,21 +3,18 @@
 ################################################################################
 ## Form generated from reading UI file 'graphicseditorwidget.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.14.2
+## Created by: Qt User Interface Compiler version 5.15.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import (QCoreApplication, QDate, QDateTime, QMetaObject,
-    QObject, QPoint, QRect, QSize, QTime, QUrl, Qt)
-from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
-    QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter,
-    QPixmap, QRadialGradient)
+from PySide2.QtCore import *
+from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from fieldchooserwidget import FieldChooserWidget
-from materialchooserwidget import MaterialChooserWidget
-from glyphchooserwidget import GlyphChooserWidget
+from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
+from opencmiss.zincwidgets.materialchooserwidget import MaterialChooserWidget
+from opencmiss.zincwidgets.glyphchooserwidget import GlyphChooserWidget
 
 
 class Ui_GraphicsEditorWidget(object):
@@ -44,8 +41,8 @@ class Ui_GraphicsEditorWidget(object):
         self.general_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.general_groupbox.setCheckable(False)
         self.formLayout_3 = QFormLayout(self.general_groupbox)
-        self.formLayout_3.setContentsMargins(7, 7, 7, 7)
         self.formLayout_3.setObjectName(u"formLayout_3")
+        self.formLayout_3.setContentsMargins(7, 7, 7, 7)
         self.face_combobox = QComboBox(self.general_groupbox)
         self.face_combobox.addItem("")
         self.face_combobox.addItem("")
@@ -130,11 +127,11 @@ class Ui_GraphicsEditorWidget(object):
         self.contours_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.contours_groupbox.setFlat(False)
         self.formLayout_2 = QFormLayout(self.contours_groupbox)
-        self.formLayout_2.setContentsMargins(7, 7, 7, 7)
         self.formLayout_2.setObjectName(u"formLayout_2")
         self.formLayout_2.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_2.setHorizontalSpacing(7)
         self.formLayout_2.setVerticalSpacing(7)
+        self.formLayout_2.setContentsMargins(7, 7, 7, 7)
         self.isovalues_lineedit = QLineEdit(self.contours_groupbox)
         self.isovalues_lineedit.setObjectName(u"isovalues_lineedit")
         sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
@@ -166,8 +163,8 @@ class Ui_GraphicsEditorWidget(object):
         self.streamlines_groupbox = QGroupBox(GraphicsEditorWidget)
         self.streamlines_groupbox.setObjectName(u"streamlines_groupbox")
         self.formLayout_5 = QFormLayout(self.streamlines_groupbox)
-        self.formLayout_5.setContentsMargins(7, 7, 7, 7)
         self.formLayout_5.setObjectName(u"formLayout_5")
+        self.formLayout_5.setContentsMargins(7, 7, 7, 7)
         self.stream_vector_field_label = QLabel(self.streamlines_groupbox)
         self.stream_vector_field_label.setObjectName(u"stream_vector_field_label")
 
@@ -221,9 +218,9 @@ class Ui_GraphicsEditorWidget(object):
         self.lines_groupbox = QGroupBox(GraphicsEditorWidget)
         self.lines_groupbox.setObjectName(u"lines_groupbox")
         self.formLayout_4 = QFormLayout(self.lines_groupbox)
-        self.formLayout_4.setContentsMargins(7, 7, 7, 7)
         self.formLayout_4.setObjectName(u"formLayout_4")
         self.formLayout_4.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_4.setContentsMargins(7, 7, 7, 7)
         self.line_shape_label = QLabel(self.lines_groupbox)
         self.line_shape_label.setObjectName(u"line_shape_label")
 
@@ -284,9 +281,9 @@ class Ui_GraphicsEditorWidget(object):
         self.points_groupbox.setMinimumSize(QSize(0, 0))
         self.points_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.formLayout = QFormLayout(self.points_groupbox)
-        self.formLayout.setContentsMargins(7, 7, 7, 7)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout.setContentsMargins(7, 7, 7, 7)
         self.glyph_label = QLabel(self.points_groupbox)
         self.glyph_label.setObjectName(u"glyph_label")
 

@@ -8,10 +8,7 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-try:
-    from PySide2 import QtCore, QtGui
-except ImportError:
-    from PyQt4 import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from numbers import Number
 
@@ -71,13 +68,13 @@ def FieldIsStreamVectorCapable(field):
            (field.getNumberOfComponents() in [2,3,6,9])
 
 
-class GraphicsEditorWidget(QtGui.QWidget):
+class GraphicsEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         '''
         Call the super class init functions
         '''
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self._graphics = None
         # Using composition to include the visual element of the GUI.
         self.ui = Ui_GraphicsEditorWidget()

@@ -68,7 +68,16 @@
       <bool>false</bool>
      </property>
      <layout class="QFormLayout" name="formLayout_3">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="3" column="1">
@@ -245,7 +254,16 @@
       <property name="verticalSpacing">
        <number>7</number>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="1" column="1">
@@ -284,7 +302,16 @@
       <string>Streamlines:</string>
      </property>
      <layout class="QFormLayout" name="formLayout_5">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -373,7 +400,16 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -488,7 +524,16 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -638,17 +683,17 @@
   <customwidget>
    <class>FieldChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>fieldchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/fieldchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>MaterialChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>materialchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/materialchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>GlyphChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>glyphchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/glyphchooserwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
