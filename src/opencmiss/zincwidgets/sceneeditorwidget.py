@@ -129,12 +129,15 @@ class SceneEditorWidget(QtWidgets.QWidget):
         if graphics == selectedGraphics:
             self.ui.graphics_editor.setGraphics(selectedGraphics)
 
-    def addGraphicsEntered(self, name):
+    def addGraphicsEntered(self, index):
         '''
         Add a new chosen graphics type
         '''
         if not self._scene:
             return
+        if index == 0:
+            return
+        name = self.ui.add_graphics_combobox.itemText(index)
         graphicsType = Graphics.TYPE_INVALID
         fieldDomainType = Field.DOMAIN_TYPE_INVALID
         if name == "point":
