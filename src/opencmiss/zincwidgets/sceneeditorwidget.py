@@ -8,23 +8,21 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-try:
-    from PySide2 import QtCore, QtGui
-except ImportError:
-    from PyQt4 import QtCore, QtGui
+from PySide2 import QtCore, QtGui, QtWidgets
 
 from opencmiss.zincwidgets.sceneeditorwidget_ui import Ui_SceneEditorWidget
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.graphics import Graphics
 from opencmiss.zinc.status import OK as ZINC_OK
+from opencmiss.utils.zinc.general import ChangeManager
 
-class SceneEditorWidget(QtGui.QWidget):
+class SceneEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         '''
         Call the super class init functions
         '''
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self._scene = None
         # Using composition to include the visual element of the GUI.
         self.ui = Ui_SceneEditorWidget()
@@ -131,12 +129,15 @@ class SceneEditorWidget(QtGui.QWidget):
         if graphics == selectedGraphics:
             self.ui.graphics_editor.setGraphics(selectedGraphics)
 
-    def addGraphicsEntered(self, name):
+    def addGraphicsEntered(self, index):
         '''
         Add a new chosen graphics type
         '''
         if not self._scene:
             return
+        if index == 0:
+            return
+        name = self.ui.add_graphics_combobox.itemText(index)
         graphicsType = Graphics.TYPE_INVALID
         fieldDomainType = Field.DOMAIN_TYPE_INVALID
         if name == "point":
@@ -162,15 +163,14 @@ class SceneEditorWidget(QtGui.QWidget):
         else:
             pass
         if graphicsType != Graphics.TYPE_INVALID:
-            self._scene.beginChange()
-            graphics = self._scene.createGraphics(graphicsType)
-            if fieldDomainType != Field.DOMAIN_TYPE_INVALID:
-                graphics.setFieldDomainType(fieldDomainType)
-            if fieldDomainType != Field.DOMAIN_TYPE_POINT:
-                coordinateField = self._getDefaultCoordinateField()
-                if coordinateField is not None:
-                    graphics.setCoordinateField(coordinateField)
-            self._scene.endChange()
+            with ChangeManager(self._scene):
+                graphics = self._scene.createGraphics(graphicsType)
+                if fieldDomainType != Field.DOMAIN_TYPE_INVALID:
+                    graphics.setFieldDomainType(fieldDomainType)
+                if fieldDomainType != Field.DOMAIN_TYPE_POINT:
+                    coordinateField = self._getDefaultCoordinateField()
+                    if coordinateField is not None:
+                        graphics.setCoordinateField(coordinateField)
             self.ui.graphics_editor.setGraphics(graphics)
             self._buildGraphicsList()
         self.ui.add_graphics_combobox.setCurrentIndex(0)

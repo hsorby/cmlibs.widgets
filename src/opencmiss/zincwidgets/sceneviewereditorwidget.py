@@ -8,23 +8,20 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-try:
-    from PySide2 import QtCore, QtGui
-except ImportError:
-    from PyQt4 import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 import math
 from opencmiss.zincwidgets.sceneviewereditorwidget_ui import Ui_SceneviewerEditorWidget
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.status import OK as ZINC_OK
 
-class SceneviewerEditorWidget(QtGui.QWidget):
+class SceneviewerEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         '''
         Call the super class init functions
         '''
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self._sceneviewer = None
         self._sceneviewernotifier = None
         self._enableUpdates = False

@@ -8,21 +8,18 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-try:
-    from PySide2 import QtCore, QtGui
-except ImportError:
-    from PyQt4 import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.status import OK as ZINC_OK
 
-class FieldChooserWidget(QtGui.QComboBox):
+class FieldChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
         '''
         Call the super class init functions
         '''
-        QtGui.QComboBox.__init__(self, parent)
+        QtWidgets.QComboBox.__init__(self, parent)
         self._nullObjectName = None
         self._region = None
         self._conditional = None

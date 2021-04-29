@@ -3,19 +3,16 @@
 ################################################################################
 ## Form generated from reading UI file 'sceneeditorwidget.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.14.2
+## Created by: Qt User Interface Compiler version 5.15.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import (QCoreApplication, QDate, QDateTime, QMetaObject,
-    QObject, QPoint, QRect, QSize, QTime, QUrl, Qt)
-from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
-    QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter,
-    QPixmap, QRadialGradient)
+from PySide2.QtCore import *
+from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from graphicseditorwidget import GraphicsEditorWidget
+from opencmiss.zincwidgets.graphicseditorwidget import GraphicsEditorWidget
 
 
 class Ui_SceneEditorWidget(object):
@@ -30,8 +27,8 @@ class Ui_SceneEditorWidget(object):
         SceneEditorWidget.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(SceneEditorWidget)
         self.verticalLayout.setSpacing(2)
-        self.verticalLayout.setContentsMargins(2, 2, 2, 2)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(2, 2, 2, 2)
         self.graphics_listview = QListView(SceneEditorWidget)
         self.graphics_listview.setObjectName(u"graphics_listview")
 
