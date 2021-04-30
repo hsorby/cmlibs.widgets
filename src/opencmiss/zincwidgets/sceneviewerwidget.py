@@ -4,7 +4,7 @@ Zinc Sceneviewer Widget
 Implements a Zinc Sceneviewer Widget on Python using PySide2,
 which renders the Zinc Scene with OpenGL and allows interactive
 transformation of the view.
-Widget is derived from QtOpenGL.QGLWidget.
+Widget is derived from QtWidgets.QOpenGLWidget
 
 This Source Code Form is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # See the examples at https://svn.physiomeproject.org/svn/cmiss/zinc/bindings/trunk/python/ for further
 # information.
 
-from PySide2 import QtCore, QtOpenGL
+from PySide2 import QtCore, QtWidgets
 
 # from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
@@ -69,17 +69,17 @@ class SelectionMode(object):
 # selectionMode end
 
 
-class SceneviewerWidget(QtOpenGL.QGLWidget):
+class SceneviewerWidget(QtWidgets.QOpenGLWidget):
     
     graphicsInitialized = QtCore.Signal()
 
     # init start
-    def __init__(self, parent=None, shared=None):
+    def __init__(self, parent=None):
         """
         Call the super class init functions, set the  Zinc context and the scene viewer handle to None.
         Initialise other attributes that deal with selection and the rotation of the plane.
         """
-        super(SceneviewerWidget, self).__init__(parent, shared)
+        super(SceneviewerWidget, self).__init__(parent)
         # Create a Zinc context from which all other objects can be derived either directly or indirectly.
         self._graphicsInitialized = False
         self._context = None
@@ -418,7 +418,7 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         repaint required event all other events are ignored.
         """
         if event.getChangeFlags() & Sceneviewerevent.CHANGE_FLAG_REPAINT_REQUIRED:
-            QtCore.QTimer.singleShot(0, self.updateGL)
+            QtCore.QTimer.singleShot(0, self.update)
 
 #  Not applicable at the current point in time.
 #     def _zincSelectionEvent(self, event):
@@ -459,7 +459,7 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         event.accept()
         if event.button() not in button_map:
             return
-        
+
         self._selection_position_start = (event.x(), event.y())
 
         if button_map[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT\
