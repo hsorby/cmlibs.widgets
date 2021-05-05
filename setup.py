@@ -64,6 +64,7 @@ setup(
     platforms=['any'],
     url='https://github.com/OpenCMISS-Bindings/opencmiss.zincwidgets/',
     license='Mozilla Public License',
+    license_files = ("LICENSE",),
     packages=find_packages("src"),
     package_dir={"": "src"},
     description=doc_lines[0],
