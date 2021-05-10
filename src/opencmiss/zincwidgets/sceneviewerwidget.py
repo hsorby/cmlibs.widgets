@@ -135,7 +135,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
         region = self._context.getDefaultRegion()
         scene = region.getScene()
-        self._sceneviewer.setScene(scene)
+        self.setScene(scene)
 
         self._sceneviewernotifier = self._sceneviewer.createSceneviewernotifier()
         self._sceneviewernotifier.setCallback(self._zincSceneviewerEvent)
@@ -491,93 +491,94 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
         if self._selection_mode != SelectionMode.NONE:
             self._removeSelectionBox()
-            x = event.x()
-            y = event.y()
-            # Construct a small frustum to look for nodes in.
-            scene = self._sceneviewer.getScene()
-            region = scene.getRegion()
-            region.beginHierarchicalChange()
 
             scenepicker = self.getScenepicker()
-            if (x != self._selection_position_start[0]) or (y != self._selection_position_start[1]):
-                # box select
-                left = min(x, self._selection_position_start[0])
-                right = max(x, self._selection_position_start[0])
-                bottom = min(y, self._selection_position_start[1])
-                top = max(y, self._selection_position_start[1])
-                scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, left, bottom, right, top);
-                if self._selection_mode == SelectionMode.EXCLUSIVE:
-                    self.clearSelection()
-                if self._nodeSelectMode or self._dataSelectMode or self._elemSelectMode:
-                    selectionGroup = self.getOrCreateSelectionGroup()
-                    if self._nodeSelectMode or self._dataSelectMode:
-                        scenepicker.addPickedNodesToFieldGroup(selectionGroup)
-                    if self._elemSelectMode:
-                        scenepicker.addPickedElementsToFieldGroup(selectionGroup)
-
-            else:
-                # point select - get nearest object only
-                scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                    x - self._selectTol, y - self._selectTol, x + self._selectTol, y + self._selectTol)
-                nearestGraphics = scenepicker.getNearestGraphics()
-                if (self._nodeSelectMode or self._dataSelectMode or self._elemSelectMode) \
-                        and (self._selection_mode == SelectionMode.EXCLUSIVE) \
-                        and not nearestGraphics.isValid():
-                    self.clearSelection()
-
-                if (self._nodeSelectMode and (nearestGraphics.getFieldDomainType() == Field.DOMAIN_TYPE_NODES)) or \
-                    (self._dataSelectMode and (nearestGraphics.getFieldDomainType() == Field.DOMAIN_TYPE_DATAPOINTS)):
-                    node = scenepicker.getNearestNode()
-                    if node.isValid():
-                        nodeset = node.getNodeset()
+            if scenepicker:
+                x = event.x()
+                y = event.y()
+                # Construct a small frustum to look for nodes in.
+                scene = self._sceneviewer.getScene()
+                region = scene.getRegion()
+                region.beginHierarchicalChange()
+                if (x != self._selection_position_start[0]) or (y != self._selection_position_start[1]):
+                    # box select
+                    left = min(x, self._selection_position_start[0])
+                    right = max(x, self._selection_position_start[0])
+                    bottom = min(y, self._selection_position_start[1])
+                    top = max(y, self._selection_position_start[1])
+                    scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, left, bottom, right, top);
+                    if self._selection_mode == SelectionMode.EXCLUSIVE:
+                        self.clearSelection()
+                    if self._nodeSelectMode or self._dataSelectMode or self._elemSelectMode:
                         selectionGroup = self.getOrCreateSelectionGroup()
-                        nodegroup = selectionGroup.getFieldNodeGroup(nodeset)
-                        if not nodegroup.isValid():
-                            nodegroup = selectionGroup.createFieldNodeGroup(nodeset)
-                        group = nodegroup.getNodesetGroup()
-                        if self._selection_mode == SelectionMode.EXCLUSIVE:
-                            remove_current = (group.getSize() == 1) and group.containsNode(node)
-                            selectionGroup.clear()
-                            if not remove_current:
-                                # re-find node group lost by above clear()
-                                nodegroup = selectionGroup.getFieldNodeGroup(nodeset)
-                                if not nodegroup.isValid():
-                                    nodegroup = selectionGroup.createFieldNodeGroup(nodeset)
-                                group = nodegroup.getNodesetGroup()
-                                group.addNode(node)
-                        elif self._selection_mode == SelectionMode.ADDITIVE:
-                            if group.containsNode(node):
-                                group.removeNode(node)
-                            else:
-                                group.addNode(node)
+                        if self._nodeSelectMode or self._dataSelectMode:
+                            scenepicker.addPickedNodesToFieldGroup(selectionGroup)
+                        if self._elemSelectMode:
+                            scenepicker.addPickedElementsToFieldGroup(selectionGroup)
 
-                if self._elemSelectMode and (nearestGraphics.getFieldDomainType() in \
-                        [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
-                    elem = scenepicker.getNearestElement()
-                    if elem.isValid():
-                        mesh = elem.getMesh()
-                        selectionGroup = self.getOrCreateSelectionGroup()
-                        elementgroup = selectionGroup.getFieldElementGroup(mesh)
-                        if not elementgroup.isValid():
-                            elementgroup = selectionGroup.createFieldElementGroup(mesh)
-                        group = elementgroup.getMeshGroup()
-                        if self._selection_mode == SelectionMode.EXCLUSIVE:
-                            remove_current = (group.getSize() == 1) and group.containsElement(elem)
-                            selectionGroup.clear()
-                            if not remove_current:
-                                # re-find element group lost by above clear()
-                                elementgroup = selectionGroup.getFieldElementGroup(mesh)
-                                if not elementgroup.isValid():
-                                    elementgroup = selectionGroup.createFieldElementGroup(mesh)
-                                group = elementgroup.getMeshGroup()
-                                group.addElement(elem)
-                        elif self._selection_mode == SelectionMode.ADDITIVE:
-                            if group.containsElement(elem):
-                                group.removeElement(elem)
-                            else:
-                                group.addElement(elem)
+                else:
+                    # point select - get nearest object only
+                    scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
+                        x - self._selectTol, y - self._selectTol, x + self._selectTol, y + self._selectTol)
+                    nearestGraphics = scenepicker.getNearestGraphics()
+                    if (self._nodeSelectMode or self._dataSelectMode or self._elemSelectMode) \
+                            and (self._selection_mode == SelectionMode.EXCLUSIVE) \
+                            and not nearestGraphics.isValid():
+                        self.clearSelection()
 
-            region.endHierarchicalChange()
+                    if (self._nodeSelectMode and (nearestGraphics.getFieldDomainType() == Field.DOMAIN_TYPE_NODES)) or \
+                        (self._dataSelectMode and (nearestGraphics.getFieldDomainType() == Field.DOMAIN_TYPE_DATAPOINTS)):
+                        node = scenepicker.getNearestNode()
+                        if node.isValid():
+                            nodeset = node.getNodeset()
+                            selectionGroup = self.getOrCreateSelectionGroup()
+                            nodegroup = selectionGroup.getFieldNodeGroup(nodeset)
+                            if not nodegroup.isValid():
+                                nodegroup = selectionGroup.createFieldNodeGroup(nodeset)
+                            group = nodegroup.getNodesetGroup()
+                            if self._selection_mode == SelectionMode.EXCLUSIVE:
+                                remove_current = (group.getSize() == 1) and group.containsNode(node)
+                                selectionGroup.clear()
+                                if not remove_current:
+                                    # re-find node group lost by above clear()
+                                    nodegroup = selectionGroup.getFieldNodeGroup(nodeset)
+                                    if not nodegroup.isValid():
+                                        nodegroup = selectionGroup.createFieldNodeGroup(nodeset)
+                                    group = nodegroup.getNodesetGroup()
+                                    group.addNode(node)
+                            elif self._selection_mode == SelectionMode.ADDITIVE:
+                                if group.containsNode(node):
+                                    group.removeNode(node)
+                                else:
+                                    group.addNode(node)
+
+                    if self._elemSelectMode and (nearestGraphics.getFieldDomainType() in \
+                            [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
+                        elem = scenepicker.getNearestElement()
+                        if elem.isValid():
+                            mesh = elem.getMesh()
+                            selectionGroup = self.getOrCreateSelectionGroup()
+                            elementgroup = selectionGroup.getFieldElementGroup(mesh)
+                            if not elementgroup.isValid():
+                                elementgroup = selectionGroup.createFieldElementGroup(mesh)
+                            group = elementgroup.getMeshGroup()
+                            if self._selection_mode == SelectionMode.EXCLUSIVE:
+                                remove_current = (group.getSize() == 1) and group.containsElement(elem)
+                                selectionGroup.clear()
+                                if not remove_current:
+                                    # re-find element group lost by above clear()
+                                    elementgroup = selectionGroup.getFieldElementGroup(mesh)
+                                    if not elementgroup.isValid():
+                                        elementgroup = selectionGroup.createFieldElementGroup(mesh)
+                                    group = elementgroup.getMeshGroup()
+                                    group.addElement(elem)
+                            elif self._selection_mode == SelectionMode.ADDITIVE:
+                                if group.containsElement(elem):
+                                    group.removeElement(elem)
+                                else:
+                                    group.addElement(elem)
+                region.endHierarchicalChange()
+
             self._selection_mode = SelectionMode.NONE
 
         elif self._use_zinc_mouse_event_handling:
