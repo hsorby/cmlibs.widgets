@@ -1,3 +1,3 @@
 
 # OpenCMISS Zinc widgets Python package initialisation file.
-__version__ = "2.0.3.dev1"
+__version__ = "2.0.4.dev1"

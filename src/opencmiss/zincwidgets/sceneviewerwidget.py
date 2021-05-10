@@ -473,6 +473,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
             scene_input.setButtonType(button_map[event.button()])
             scene_input.setModifierFlags(modifier_map(event.modifiers()))
+            self.makeCurrent()
             self._sceneviewer.processSceneviewerinput(scene_input)
             self._use_zinc_mouse_event_handling = True
 
@@ -584,6 +585,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
             scene_input.setPosition(event.x(), event.y())
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
             scene_input.setButtonType(button_map[event.button()])
+            self.makeCurrent()
             self._sceneviewer.processSceneviewerinput(scene_input)
 
     def mouseMoveEvent(self, event):
@@ -616,6 +618,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_MOTION_NOTIFY)
             if event.type() == QtCore.QEvent.Leave:
                 scene_input.setPosition(-1, -1)
+            self.makeCurrent()
             self._sceneviewer.processSceneviewerinput(scene_input)
 
     def _addUpdateSelectionBox(self, xdiff, ydiff, xoff, yoff):
