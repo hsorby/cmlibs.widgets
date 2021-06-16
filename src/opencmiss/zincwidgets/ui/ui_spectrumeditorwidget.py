@@ -17,7 +17,7 @@ from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
 from opencmiss.zincwidgets.ui import icons_rc
 
 class Ui_SpectrumEditorWidget(object):
-    def setupUi(self, shared_opengl_widget, SpectrumEditorWidget):
+    def setupUi(self, SpectrumEditorWidget):
         if not SpectrumEditorWidget.objectName():
             SpectrumEditorWidget.setObjectName(u"SpectrumEditorWidget")
         SpectrumEditorWidget.resize(300, 875)
@@ -82,7 +82,7 @@ class Ui_SpectrumEditorWidget(object):
 
         self.verticalLayout_2.addWidget(self.groupBox)
 
-        self.sceneviewerWidgetPreview = SceneviewerWidget(self.scrollAreaWidgetContents, shared_opengl_widget)
+        self.sceneviewerWidgetPreview = SceneviewerWidget(self.scrollAreaWidgetContents)
         self.sceneviewerWidgetPreview.setObjectName(u"sceneviewerWidgetPreview")
         sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy1.setHorizontalStretch(1)
