@@ -1,17 +1,21 @@
-"""
-Zinc Field Chooser Widget
+'''
+   Copyright 2015 University of Auckland
 
-Widget for choosing a field from a region, derived from QComboBox
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
-This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at http://mozilla.org/MPL/2.0/.
-"""
+       http://www.apache.org/licenses/LICENSE-2.0
 
-from PySide2 import QtCore, QtWidgets
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+'''
+from PySide2 import QtWidgets
 
 from opencmiss.zinc.field import Field
-from opencmiss.zinc.status import OK as ZINC_OK
 
 class FieldChooserWidget(QtWidgets.QComboBox):
 
@@ -24,14 +28,16 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         self._region = None
         self._conditional = None
         self._field = None
+        self._allowUnmanagedField = False
 
     def _fieldmoduleCallback(self, fieldmoduleevent):
         '''
         Callback for change in fields; may need to rebuild field list
         '''
         changeSummary = fieldmoduleevent.getSummaryFieldChangeFlags()
-        #print "_fieldmoduleCallback changeSummary =", changeSummary
-        if (0 != (changeSummary & (Field.CHANGE_FLAG_IDENTIFIER | Field.CHANGE_FLAG_ADD | Field.CHANGE_FLAG_REMOVE))) or ((self._conditional != None) and (0 != (changeSummary & Field.CHANGE_FLAG_DEFINITION))):
+        # print "_fieldmoduleCallback changeSummary =", changeSummary
+        if ((0 != (changeSummary & (Field.CHANGE_FLAG_IDENTIFIER | Field.CHANGE_FLAG_ADD | Field.CHANGE_FLAG_REMOVE))) or
+            ((self._conditional != None) and (0 != (changeSummary & Field.CHANGE_FLAG_DEFINITION)))):
             self._buildFieldList()
 
     def _buildFieldList(self):
@@ -47,7 +53,7 @@ class FieldChooserWidget(QtWidgets.QComboBox):
             field = fielditer.next()
             while field.isValid():
                 name = field.getName()
-                if field.isManaged() and ((self._conditional is None) or self._conditional(field)):
+                if (self._allowUnmanagedField or field.isManaged()) and ((self._conditional is None) or self._conditional(field)):
                     self.addItem(name)
                 field = fielditer.next()
         self.blockSignals(False)
@@ -72,7 +78,7 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         Enable a null object option with the supplied name e.g. '-' or '<select>'
         Default is None
         '''
-        self._nullObjectName  = nullObjectName
+        self._nullObjectName = nullObjectName
 
     def getRegion(self):
         return self._region
@@ -105,12 +111,15 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         '''
         Must call this from currentIndexChanged() slot to get/update current field
         '''
-        fieldName = str(self.currentText())
+        fieldName = self.currentText()
         if self._nullObjectName and (fieldName == self._nullObjectName):
             self._field = None
         else:
             self._field = self._region.getFieldmodule().findFieldByName(fieldName)
         return self._field
+    
+    def allowUnmanagedField(self, flag):
+        self._allowUnmanagedField = flag
 
     def setField(self, field):
         '''
@@ -118,7 +127,7 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         '''
         if not field or not field.isValid():
             self._field = None
-        elif not field.isManaged():
+        elif not self._allowUnmanagedField and not field.isManaged():
             print("Field chooser cannot set unmanaged field")
             self._field = None
         elif self._conditional and not self._conditional(field):
