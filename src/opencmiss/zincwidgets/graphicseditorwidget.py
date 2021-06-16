@@ -24,7 +24,7 @@ from opencmiss.zinc.graphics import Graphics, GraphicsStreamlines, Graphicslinea
 from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL
 from opencmiss.zinc.spectrum import Spectrum
 from opencmiss.zinc.status import OK as ZINC_OK
-from opencmiss.neon.core.neonlogger import NeonLogger
+from opencmiss.argon.core.argonlogger import ArgonLogger
 
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.ui_graphicseditorwidget import Ui_GraphicsEditorWidget

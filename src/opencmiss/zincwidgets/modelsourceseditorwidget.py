@@ -25,11 +25,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 from PySide2 import QtGui,QtWidgets
 
-# from opencmiss.neon.core.neonregion import NeonRegion
-from opencmiss.neon.core.neonmodelsources import NeonModelSourceFile
+from opencmiss.argon.core.argonmodelsources import ArgonModelSourceFile
 
 from opencmiss.zincwidgets.ui_modelsourceseditorwidget import Ui_ModelSourcesEditorWidget
-from opencmiss.neon.core.neonlogger import NeonLogger
+from opencmiss.argon.core.argonlogger import ArgonLogger
 
 
 class ModelSourcesEditorWidget(QtWidgets.QWidget):

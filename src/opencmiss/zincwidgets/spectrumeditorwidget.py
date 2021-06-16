@@ -20,8 +20,8 @@ from opencmiss.zinc.spectrum import Spectrum, Spectrumcomponent
 from opencmiss.zinc.status import OK as ZINC_OK
 
 from opencmiss.zincwidgets.ui_spectrumeditorwidget import Ui_SpectrumEditorWidget
-from opencmiss.neon.settings.mainsettings import FLOAT_STRING_FORMAT
-from opencmiss.neon.core.neonlogger import NeonLogger
+from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
+from opencmiss.argon.core.argonlogger import ArgonLogger
 
 COMPONENT_NAME_FORMAT = '{:d}. '
 SPECTRUM_DATA_ROLE = QtCore.Qt.UserRole + 1

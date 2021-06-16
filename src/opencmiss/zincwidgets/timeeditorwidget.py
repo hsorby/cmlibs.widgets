@@ -16,7 +16,7 @@
 from PySide2 import QtCore, QtWidgets
 
 from opencmiss.zincwidgets.ui_timeeditorwidget import Ui_TimeEditorWidget
-from opencmiss.neon.settings.mainsettings import FLOAT_STRING_FORMAT
+from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 
 
 class TimeEditorWidget(QtWidgets.QWidget):

@@ -22,7 +22,7 @@ from opencmiss.zinc.node import Node
 from opencmiss.zinc.field import Field, FieldEdgeDiscontinuity, FieldFindMeshLocation
 from opencmiss.zinc.fieldmodule import Fieldmodule
 from opencmiss.zinc.status import OK as ZINC_OK
-from opencmiss.neon.core.neonlogger import NeonLogger
+from opencmiss.argon.core.argonlogger import ArgonLogger
 
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget

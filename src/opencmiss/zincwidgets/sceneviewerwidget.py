@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtCore, QtOpenGL
 
 from opencmiss.zinc.scene import Scene
@@ -23,7 +23,7 @@ from opencmiss.zinc.scenecoordinatesystem import \
         SCENECOORDINATESYSTEM_WORLD
 from opencmiss.zinc.status import OK
 
-from opencmiss.neon.ui.zincwidgets.common import ProjectionMode, \
+from opencmiss.zincwidgets.definitions import ProjectionMode, \
     button_map, modifier_map
 
 
@@ -35,22 +35,23 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
 
     # init start
     def __init__(self, parent=None, shared=None):
-        '''
+        """
         Call the super class init functions, set the  Zinc context and the scene viewer handle to None.
         Initialise other attributes that deal with selection and the rotation of the plane.
-        '''
+        """
         QtOpenGL.QGLWidget.__init__(self, parent, shared)
         # Create a Zinc context from which all other objects can be derived either directly or indirectly.
+        self._handle_mouse_events = True
         self._graphicsInitialized = False
         self._context = None
         self._sceneviewer = None
         # init end
 
     def setContext(self, context):
-        '''
+        """
         Sets the context for this Zinc Scenviewer widget. Prompts creation of a new Zinc
         Sceneviewer, once graphics are initialised.
-        '''
+        """
         self._context = context
         if self._graphicsInitialized:
             self._createSceneviewer()
@@ -84,17 +85,17 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         self._sceneviewer.viewAll()
 
     def getSceneviewer(self):
-        '''
+        """
         Get the scene viewer for this ZincWidget.
-        '''
+        """
         return self._sceneviewer
 
     # initializeGL start
     def initializeGL(self):
-        '''
+        """
         The OpenGL context is ready for use. If Zinc Context has been set, create Zinc Sceneviewer, otherwise
         inform client who is required to set Context at a later time.
-        '''
+        """
         self._graphicsInitialized = True
         if self._context:
             self._createSceneviewer()
@@ -143,12 +144,12 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         return None
 
     def project(self, x, y, z):
-        '''
+        """
         Project the given point in global coordinates into window pixel coordinates
         with the origin at the window's top left pixel.
         Note the z pixel coordinate is a depth which is mapped so that -1 is
         on the far clipping plane, and +1 is on the near clipping plane.
-        '''
+        """
         in_coords = [x, y, z]
         result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WORLD, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, Scene(), in_coords)
         if result == OK:
@@ -157,12 +158,12 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         return None
 
     def unproject(self, x, y, z):
-        '''
+        """
         Unproject the given point in window pixel coordinates where the origin is
         at the window's top left pixel into global coordinates.
         Note the z pixel coordinate is a depth which is mapped so that -1 is
         on the far clipping plane, and +1 is on the near clipping plane.
-        '''
+        """
         in_coords = [x, y, z]
         result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, SCENECOORDINATESYSTEM_WORLD, Scene(), in_coords)
         if result == OK:
@@ -181,28 +182,28 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         self._sceneviewer.setTumbleRate(rate)
 
     def viewAll(self):
-        '''
+        """
         Helper method to set the current scene viewer to view everything
         visible in the current scene.
-        '''
+        """
         self._sceneviewer.viewAll()
 
     # paintGL start
     def paintGL(self):
-        '''
+        """
         Render the scene for this scene viewer.  The QGLWidget has already set up the
         correct OpenGL buffer for us so all we need do is render into it.  The scene viewer
         will clear the background so any OpenGL drawing of your own needs to go after this
         API call.
-        '''
+        """
         self._sceneviewer.renderScene()
         # paintGL end
 
     def _zincSceneviewerEvent(self, event):
-        '''
+        """
         Process a scene viewer event.  The updateGL() method is called for a
         repaint required event all other events are ignored.
-        '''
+        """
         if event.getChangeFlags() & Sceneviewerevent.CHANGE_FLAG_REPAINT_REQUIRED:
             QtCore.QTimer.singleShot(0, self.updateGL)
 
@@ -213,17 +214,17 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
 
     # resizeGL start
     def resizeGL(self, width, height):
-        '''
+        """
         Respond to widget resize events.
-        '''
+        """
         if self._sceneviewer:
             self._sceneviewer.setViewportSize(width, height)
         # resizeGL end
 
     def mousePressEvent(self, event):
-        '''
+        """
         Inform the scene viewer of a mouse press event.
-        '''
+        """
         scene_input = self._sceneviewer.createSceneviewerinput()
         scene_input.setPosition(event.x(), event.y())
         scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
@@ -231,13 +232,12 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         scene_input.setModifierFlags(modifier_map(event.modifiers()))
 
         self._sceneviewer.processSceneviewerinput(scene_input)
-
         self._handle_mouse_events = True
 
     def mouseReleaseEvent(self, event):
-        '''
+        """
         Inform the scene viewer of a mouse release event.
-        '''
+        """
         if self._handle_mouse_events:
             scene_input = self._sceneviewer.createSceneviewerinput()
             scene_input.setPosition(event.x(), event.y())
@@ -245,14 +245,15 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
             scene_input.setButtonType(button_map[event.button()])
 
             self._sceneviewer.processSceneviewerinput(scene_input)
+            self._handle_mouse_events = False
         else:
             event.ignore()
 
     def mouseMoveEvent(self, event):
-        '''
+        """
         Inform the scene viewer of a mouse move event and update the OpenGL scene to reflect this
         change to the viewport.
-        '''
+        """
         if self._handle_mouse_events:
             scene_input = self._sceneviewer.createSceneviewerinput()
             scene_input.setPosition(event.x(), event.y())
