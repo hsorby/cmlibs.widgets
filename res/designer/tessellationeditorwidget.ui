@@ -58,7 +58,7 @@
         </property>
         <property name="icon">
          <iconset resource="../icons.qrc">
-          <normaloff>:/neon/images/icons/list-add-icon.png</normaloff>:/neon/images/icons/list-add-icon.png</iconset>
+          <normaloff>:/zincwidgets/images/icons/list-add-icon.png</normaloff>:/zincwidgets/images/icons/list-add-icon.png</iconset>
         </property>
        </widget>
       </item>
@@ -72,7 +72,7 @@
         </property>
         <property name="icon">
          <iconset resource="../icons.qrc">
-          <normaloff>:/neon/images/icons/list-remove-icon.png</normaloff>:/neon/images/icons/list-remove-icon.png</iconset>
+          <normaloff>:/zincwidgets/images/icons/list-remove-icon.png</normaloff>:/zincwidgets/images/icons/list-remove-icon.png</iconset>
         </property>
        </widget>
       </item>

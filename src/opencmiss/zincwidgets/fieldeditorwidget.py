@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2016 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,19 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtCore, QtWidgets
 
 from numbers import Number
 
 from opencmiss.zinc.element import Element
 from opencmiss.zinc.node import Node
-from opencmiss.zinc.field import Field, FieldEdgeDiscontinuity, FieldFindMeshLocation
-from opencmiss.zinc.fieldmodule import Fieldmodule
-from opencmiss.zinc.status import OK as ZINC_OK
-from opencmiss.neon.core.neonlogger import NeonLogger
+from opencmiss.zinc.field import FieldEdgeDiscontinuity, FieldFindMeshLocation
+from opencmiss.argon.core.argonlogger import ArgonLogger
 
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
-from opencmiss.zincwidgets.ui_fieldeditorwidget import Ui_FieldEditorWidget
+from opencmiss.zincwidgets.ui.ui_fieldeditorwidget import Ui_FieldEditorWidget
 
 STRING_FLOAT_FORMAT = '{:.5g}'
 MeasureType = ["C1", "G1", "Surface Normal"]
@@ -35,31 +33,32 @@ MeshName = ["mesh1d", "mesh2d", "mesh3d"]
 FaceType = ["all", "any face", "no face", "xi1 = 0", "xi1 = 1", "xi2 = 0", "xi2 = 1", "xi3 = 0", "xi3 = 0"]
 ValueType = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2_ds2ds3", "d3_ds1ds2ds3"]
 
-FieldTypeToNumberofSourcesList = {'FieldAlias':1,'FieldLog':1, 'FieldExp':1,'FieldAbs':1,'FieldIdentity':1,
-                                    'FieldCoordinateTransformation':1,'FieldIsDefined':1,'FieldNot':1,
-                                    'FieldDeterminant':1,'FieldEigenvalues':1,'FieldEigenvectors':1,
-                                    'FieldMatrixInvert':1,'FieldTranspose':1,'FieldSin':1,'FieldCos':1,
-                                    'FieldTan':1,'FieldAsin':1,'FieldAcos':1,'FieldAtan':1,'FieldMagnitude':1,
-                                    'FieldNormalise':1,'FieldSumComponents':1,'FieldSqrt':1,'FieldAdd':2,'FieldPower':2,
-                                    'FieldMultiply':2, 'FieldDivide':2,'FieldSubtract':2,'FieldVectorCoordinateTransformation':2,
-                                    'FieldCurl':2, 'FieldDivergence':2,'FieldGradient':2,'FieldFibreAxes':2,
-                                    'FieldAnd':2, 'FieldEqualTo':2,'FieldGreaterThan':2,'FieldLessThan':2,
-                                    'FieldOr':2, 'FieldXor':2,'FieldProjection':2,'FieldMatrixMultiply':2,
-                                    'FieldTimeLookup':2, 'FieldAtan2':2,'FieldDotProduct':2,'FieldComponent':1,
-                                    'FieldConcatenate':-1,'FieldIf':3,'FieldConstant':0,'FieldStringConstant':0,
-                                    'FieldDerivative':1,'FieldEmbedded':2,'FieldStoredString':0,'FieldIsExterior':0,
-                                    'FieldIsOnFace':0,'FieldEdgeDiscontinuity':2,'FieldNodeValue':1,
-                                    'FieldStoredMeshLocation':1,'FieldFindMeshLocation':2,'FieldCrossProduct':-1,
-                                    'FieldTimeValue':0,'FieldFiniteElement':0}
+FieldTypeToNumberofSourcesList = {
+    'FieldAlias': 1, 'FieldLog': 1, 'FieldExp': 1, 'FieldAbs': 1, 'FieldIdentity': 1,
+    'FieldCoordinateTransformation': 1, 'FieldIsDefined': 1, 'FieldNot': 1,
+    'FieldDeterminant': 1, 'FieldEigenvalues': 1, 'FieldEigenvectors': 1,
+    'FieldMatrixInvert': 1, 'FieldTranspose': 1, 'FieldSin': 1, 'FieldCos': 1,
+    'FieldTan': 1, 'FieldAsin': 1, 'FieldAcos': 1, 'FieldAtan': 1, 'FieldMagnitude': 1,
+    'FieldNormalise': 1, 'FieldSumComponents': 1, 'FieldSqrt': 1, 'FieldAdd': 2, 'FieldPower': 2,
+    'FieldMultiply': 2, 'FieldDivide': 2, 'FieldSubtract': 2, 'FieldVectorCoordinateTransformation': 2,
+    'FieldCurl': 2, 'FieldDivergence': 2, 'FieldGradient': 2, 'FieldFibreAxes': 2,
+    'FieldAnd': 2, 'FieldEqualTo': 2, 'FieldGreaterThan': 2, 'FieldLessThan': 2,
+    'FieldOr': 2, 'FieldXor': 2, 'FieldProjection': 2, 'FieldMatrixMultiply': 2,
+    'FieldTimeLookup': 2, 'FieldAtan2': 2, 'FieldDotProduct': 2, 'FieldComponent': 1,
+    'FieldConcatenate': -1, 'FieldIf': 3, 'FieldConstant': 0, 'FieldStringConstant': 0,
+    'FieldDerivative': 1, 'FieldEmbedded': 2, 'FieldStoredString': 0, 'FieldIsExterior': 0,
+    'FieldIsOnFace': 0, 'FieldEdgeDiscontinuity': 2, 'FieldNodeValue': 1,
+    'FieldStoredMeshLocation': 1, 'FieldFindMeshLocation': 2, 'FieldCrossProduct': -1,
+    'FieldTimeValue': 0, 'FieldFiniteElement': 0}
+
 
 class FieldEditorWidget(QtWidgets.QWidget):
-    
     _fieldCreated = QtCore.Signal(Field, str)
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QWidget.__init__(self, parent)
         self._field = None
         self._fieldmodule = None
@@ -75,7 +74,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._timekeeper = None
         self._updateWidgets()
         self._makeConnections()
-        
+
     def _makeConnections(self):
         self.ui.coordinate_system_type_chooser.currentIndexChanged.connect(self.coordinateSystemTypeChanged)
         self.ui.coordinate_system_focus_lineedit.editingFinished.connect(self.coordinateSystemFocusEntered)
@@ -86,34 +85,34 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self.ui.field_type_chooser.currentIndexChanged.connect(self.fieldTypeChanged)
         self.ui.create_button.clicked.connect(self.createFieldPressed)
         self.ui.derived_values_lineedit.editingFinished.connect(self.derivedValuesEntered)
-        
+
     def derivedValuesEntered(self):
-        '''
+        """
         Set derived values
-        '''
+        """
         if self._fieldType == 'FieldComponent':
             values = self._parseVectorInteger(self.ui.derived_values_lineedit)
             if self._field and self._field.isValid():
                 numberOfComponents = self._field.getNumberOfComponents()
+                derivedField = self._field.castComponent()
                 if numberOfComponents == len(values):
-                    derivedField = self._field.castComponent()
                     for i in range(0, numberOfComponents):
-                        derivedField.setSourceComponentIndex(i+1, values[i])
+                        derivedField.setSourceComponentIndex(i + 1, values[i])
                 else:
-                    values = []               
+                    values = []
                     for i in range(1, 1 + numberOfComponents):
                         values.append(derivedField.getSourceComponentIndex(i))
             self._displayVectorInteger(self.ui.derived_values_lineedit, values)
         elif self._fieldType == 'FieldMatrixMultiply' or self._fieldType == 'FieldTranspose' \
-        or self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldNodeValue" \
-        or self._fieldType == "FieldDerivative":
+                or self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldNodeValue" \
+                or self._fieldType == "FieldDerivative":
             try:
                 value = int(self.ui.derived_values_lineedit.text())
             except:
                 value = 0
             if 1 > value:
                 self.ui.derived_values_lineedit.setText("")
-                NeonLogger.getLogger().error("Value must be a positive integer")
+                ArgonLogger.getLogger().error("Value must be a positive integer")
             else:
                 self.ui.derived_values_lineedit.setText(str(value))
         elif self._fieldType == 'FieldStringConstant':
@@ -131,16 +130,14 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 if numberOfComponents == len(values):
                     self._field.assignReal(fieldcache, values)
                 else:
-                    returnedValues = 0
                     returnedValues = self._field.evaluateReal(fieldcache, numberOfComponents)
                     values = returnedValues[1]
             self._displayVector(self.ui.derived_values_lineedit, values)
-            
+
     def createField(self):
         returnedField = None
         errorMessage = ""
         sourceFields = []
-        numberOfSourceFields = 0
         if self._fieldType == "FieldConcatenate" or self._fieldType == "FieldCrossProduct":
             numberOfSourceFields = int(self.ui.number_of_source_fields_lineedit.text())
         else:
@@ -148,14 +145,14 @@ class FieldEditorWidget(QtWidgets.QWidget):
         for i in range(0, numberOfSourceFields):
             sourceFields.append(self._sourceFieldChoosers[i][1].getField())
         if self._fieldType == "FieldLog" or self._fieldType == "FieldSqrt" or self._fieldType == "FieldExp" or \
-        self._fieldType == "FieldAbs" or self._fieldType == "FieldIdentity" or \
-        self._fieldType == "FieldNot" or self._fieldType == "FieldSin" or \
-        self._fieldType == "FieldCoordinateTransformation" or self._fieldType == "FieldAlias" or \
-        self._fieldType ==  "FieldCos" or self._fieldType == "FieldTan" or self._fieldType == "FieldAsin" or \
-        self._fieldType ==  "FieldAcos" or self._fieldType == "FieldAtan" or self._fieldType == "FieldMagnitude" or \
-        self._fieldType == "FieldNormalise" or self._fieldType == "FieldSumComponents" or \
-        self._fieldType == "FieldDeterminant"or self._fieldType == "FieldIsDefined" or \
-        self._fieldType == "FieldEigenvalues"or self._fieldType == "FieldMatrixInvert":
+                self._fieldType == "FieldAbs" or self._fieldType == "FieldIdentity" or \
+                self._fieldType == "FieldNot" or self._fieldType == "FieldSin" or \
+                self._fieldType == "FieldCoordinateTransformation" or self._fieldType == "FieldAlias" or \
+                self._fieldType == "FieldCos" or self._fieldType == "FieldTan" or self._fieldType == "FieldAsin" or \
+                self._fieldType == "FieldAcos" or self._fieldType == "FieldAtan" or self._fieldType == "FieldMagnitude" or \
+                self._fieldType == "FieldNormalise" or self._fieldType == "FieldSumComponents" or \
+                self._fieldType == "FieldDeterminant" or self._fieldType == "FieldIsDefined" or \
+                self._fieldType == "FieldEigenvalues" or self._fieldType == "FieldMatrixInvert":
             if sourceFields[0] and sourceFields[0].isValid():
                 methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
                 returnedField = methodToCall(sourceFields[0])
@@ -171,23 +168,23 @@ class FieldEditorWidget(QtWidgets.QWidget):
             else:
                 errorMessage = " Missing source field(s)."
         elif self._fieldType == "FieldAdd" or self._fieldType == "FieldPower" or self._fieldType == "FieldMultiply" or \
-        self._fieldType == "FieldDivide" or self._fieldType == "FieldSubtract" or self._fieldType == "FieldAnd" or \
-        self._fieldType == "FieldGreaterThan" or self._fieldType == "FieldLessThan"or self._fieldType == "FieldOr" or \
-        self._fieldType == "FieldXor" or self._fieldType == "FieldAtan2" or self._fieldType == "FieldDotProduct" or \
-        self._fieldType == 'FieldVectorCoordinateTransformation' or self._fieldType == 'FieldCurl' or \
-        self._fieldType == 'FieldDivergence' or self._fieldType == 'FieldEmbedded' or self._fieldType == 'FieldGradient' or \
-        self._fieldType == "FieldFibreAxes" or self._fieldType == "FieldProjection" or self._fieldType == "FieldTimeLookup" or \
-        self._fieldType == "FieldEqualTo":
+                self._fieldType == "FieldDivide" or self._fieldType == "FieldSubtract" or self._fieldType == "FieldAnd" or \
+                self._fieldType == "FieldGreaterThan" or self._fieldType == "FieldLessThan" or self._fieldType == "FieldOr" or \
+                self._fieldType == "FieldXor" or self._fieldType == "FieldAtan2" or self._fieldType == "FieldDotProduct" or \
+                self._fieldType == 'FieldVectorCoordinateTransformation' or self._fieldType == 'FieldCurl' or \
+                self._fieldType == 'FieldDivergence' or self._fieldType == 'FieldEmbedded' or self._fieldType == 'FieldGradient' or \
+                self._fieldType == "FieldFibreAxes" or self._fieldType == "FieldProjection" or self._fieldType == "FieldTimeLookup" or \
+                self._fieldType == "FieldEqualTo":
             if sourceFields[0] and sourceFields[0].isValid() and \
-            sourceFields[1] and sourceFields[1].isValid():
+                    sourceFields[1] and sourceFields[1].isValid():
                 methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
                 returnedField = methodToCall(sourceFields[0], sourceFields[1])
             else:
                 errorMessage = " Missing source field(s)."
         elif self._fieldType == "FieldIf":
             if sourceFields[0] and sourceFields[0].isValid() and \
-            sourceFields[1] and sourceFields[1].isValid() and \
-            sourceFields[2] and sourceFields[2].isValid():
+                    sourceFields[1] and sourceFields[1].isValid() and \
+                    sourceFields[2] and sourceFields[2].isValid():
                 methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
                 returnedField = methodToCall(sourceFields[0], sourceFields[1], sourceFields[2])
             else:
@@ -216,9 +213,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
             returnedField = methodToCall()
         elif self._fieldType == "FieldMatrixMultiply":
             if sourceFields[0] and sourceFields[0].isValid() and \
-            sourceFields[1] and sourceFields[1].isValid():
+                    sourceFields[1] and sourceFields[1].isValid():
                 value = int(self.ui.derived_values_lineedit.text())
-                returnedField = self._fieldmodule.createFieldMatrixMultiply(\
+                returnedField = self._fieldmodule.createFieldMatrixMultiply( \
                     value, sourceFields[0], sourceFields[1])
             else:
                 errorMessage = " Missing source field(s)."
@@ -227,13 +224,13 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 value = int(self.ui.derived_values_lineedit.text())
                 returnedField = self._fieldmodule.createFieldDerivative(sourceFields[0], value)
             else:
-                errorMessage = " Missing source field(s)."   
+                errorMessage = " Missing source field(s)."
         elif self._fieldType == "FieldTranspose":
             if sourceFields[0] and sourceFields[0].isValid():
                 value = int(self.ui.derived_values_lineedit.text())
                 returnedField = self._fieldmodule.createFieldTranspose(value, sourceFields[0])
             else:
-                errorMessage = " Missing source field(s)."   
+                errorMessage = " Missing source field(s)."
         elif self._fieldType == "FieldFiniteElement":
             value = int(self.ui.derived_values_lineedit.text())
             returnedField = self._fieldmodule.createFieldFiniteElement(value)
@@ -252,7 +249,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 if versionNumber > 0:
                     valueLabel = self.getDerivedChooser1Value()
                     returnedField = self._fieldmodule.createFieldNodeValue(sourceFields[0], \
-                        valueLabel, versionNumber)
+                                                                           valueLabel, versionNumber)
                 else:
                     errorMessage = " version number must be starting from 1."
             else:
@@ -269,7 +266,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 errorMessage = " Invalid mesh."
         elif self._fieldType == "FieldFindMeshLocation":
             if sourceFields[0] and sourceFields[0].isValid() and \
-                sourceFields[1] and sourceFields[1].isValid():
+                    sourceFields[1] and sourceFields[1].isValid():
                 meshDimension = self.getDerivedChooser2Value()
                 mesh = self._fieldmodule.findMeshByDimension(meshDimension)
                 if mesh and mesh.isValid():
@@ -297,35 +294,35 @@ class FieldEditorWidget(QtWidgets.QWidget):
             if self._timekeeper and self._timekeeper.isValid():
                 returnedField = self._fieldmodule.createFieldTimeValue(self._timekeeper)
             else:
-                errorMessage = " Missing timekeeper."    
-        if returnedField and returnedField.isValid(): 
+                errorMessage = " Missing timekeeper."
+        if returnedField and returnedField.isValid():
             returnedField.setManaged(True)
         else:
-            NeonLogger.getLogger().error("Can't create " + self._fieldType + "." + errorMessage)
+            ArgonLogger.getLogger().error("Can't create " + self._fieldType + "." + errorMessage)
         return returnedField
-        
+
     def createFieldPressed(self):
         if self._createMode and self._fieldmodule:
             if self._fieldType:
                 self._fieldmodule.beginChange()
                 returnedField = self.createField()
                 if returnedField and returnedField.isValid():
-                    if 0:
-                        text, ok = QtWidgets.QInputDialog.getText(self, 'Field Name Dialog', 'Enter field name:')
-                        if ok:
-                            returnedField.setName(text)
-                            self._fieldCreated.emit(returnedField, self._fieldType)
-                        else:
-                            returnedField.setManaged(False)
-                            returnedField = None
-                    else:
-                        if returnedField.getName() != self.ui.name_lineedit.text():
-                            returnedField.setName(self.ui.name_lineedit.text())
-                        self._fieldCreated.emit(returnedField, self._fieldType)
+                    # if 0:
+                    #     text, ok = QtWidgets.QInputDialog.getText(self, 'Field Name Dialog', 'Enter field name:')
+                    #     if ok:
+                    #         returnedField.setName(text)
+                    #         self._fieldCreated.emit(returnedField, self._fieldType)
+                    #     else:
+                    #         returnedField.setManaged(False)
+                    #         returnedField = None
+                    # else:
+                    if returnedField.getName() != self.ui.name_lineedit.text():
+                        returnedField.setName(self.ui.name_lineedit.text())
+                    self._fieldCreated.emit(returnedField, self._fieldType)
                 self._fieldmodule.endChange()
             else:
-                NeonLogger.getLogger().error("Must select a field type.")
-                    
+                ArgonLogger.getLogger().error("Must select a field type.")
+
     def getDerivedChooser1Value(self):
         index = self.ui.derived_chooser_1.currentIndex()
         if self._fieldType == "FieldEdgeDiscontinuity":
@@ -339,13 +336,13 @@ class FieldEditorWidget(QtWidgets.QWidget):
         elif self._fieldType == "FieldNodeValue":
             return index + Node.VALUE_LABEL_VALUE
         return 1;
-        
+
     def getDerivedChooser2Value(self):
         index = self.ui.derived_chooser_1.currentIndex()
         if self._fieldType == "FieldFindMeshLocation":
             return index + 1;
         return 1;
-        
+
     def derivedChooser1Changed(self, index):
         if self._field and self._field.isValid():
             if self._fieldType == "FieldEdgeDiscontinuity":
@@ -354,39 +351,40 @@ class FieldEditorWidget(QtWidgets.QWidget):
             elif self._fieldType == "FieldFindMeshLocation":
                 derivedField = self._field.castFindMeshLocation()
                 derivedField.setSearchMode(index + FieldFindMeshLocation.SEARCH_MODE_EXACT)
-                
+
     def sourceField2Changed(self, index):
         if self._field and self._field.isValid():
             if self._fieldType == "FieldEdgeDiscontinuity":
                 derivedField = self._field.castEdgetDiscontinuity()
-                derivedField.setConditionalField(self._sourceFieldChoosers[1][1].getField())    
+                derivedField.setConditionalField(self._sourceFieldChoosers[1][1].getField())
 
     def _updateChooser(self, chooser, items):
-        '''
+        """
         Rebuilds the list of items in the ComboBox from the material module
-        '''
+        """
         chooser.blockSignals(True)
         chooser.clear()
         for item in items:
             chooser.addItem(item)
         chooser.blockSignals(False)
-      #  self._displayFieldType()
-      
+
+    #  self._displayFieldType()
+
     def _setChooserValue(self, chooser, index):
         chooser.blockSignals(True)
         chooser.setCurrentIndex(index)
         chooser.blockSignals(False)
-    
+
     def _setChooserText(self, chooser, text):
         chooser.blockSignals(True)
         index = chooser.findText(text)
         chooser.setCurrentIndex(index)
         chooser.blockSignals(False)
-        
+
     def display_derived(self):
-        #print self._fieldType
-        #self.ui.derived_groupbox.setTitle(QtWidgets.QApplication.translate("FieldEditorWidget", self._fieldType + ":", None, QtWidgets.QApplication.UnicodeUTF8))
-        ''' hide everything at the beginning '''
+        # print self._fieldType
+        # self.ui.derived_groupbox.setTitle(QtWidgets.QApplication.translate("FieldEditorWidget", self._fieldType + ":", None, QtWidgets.QApplication.UnicodeUTF8))
+        """ hide everything at the beginning """
         self.ui.derived_chooser_1.hide()
         self.ui.derived_chooser_2.hide()
         self.ui.derived_values_lineedit.hide()
@@ -400,12 +398,12 @@ class FieldEditorWidget(QtWidgets.QWidget):
             if self._field and self._field.isValid():
                 numberOfComponents = self._field.getNumberOfComponents()
                 derivedField = self._field.castComponent()
-                values = []               
+                values = []
                 for i in range(1, 1 + numberOfComponents):
                     values.append(derivedField.getSourceComponentIndex(i))
                 self._displayVectorInteger(self.ui.derived_values_lineedit, values)
             else:
-                self.ui.derived_values_lineedit.setPlaceholderText("Enter values")         
+                self.ui.derived_values_lineedit.setPlaceholderText("Enter values")
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
             self.ui.derived_values_lineedit.setEnabled(True)
             self.ui.derived_values_label.show()
@@ -418,7 +416,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             if self._field and self._field.isValid():
                 index = self._field.castEdgeDiscontinuity().getMeasure() - FieldEdgeDiscontinuity.MEASURE_C1
                 self._sourceFieldChoosers[1][1].setField(conditionaField)
-                self._sourceFieldChoosers[1][1].currentIndexChanged.connect(self.sourceField2Changed)     
+                self._sourceFieldChoosers[1][1].currentIndexChanged.connect(self.sourceField2Changed)
             else:
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
             self._setChooserValue(self.ui.derived_chooser_1, index)
@@ -428,7 +426,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.derived_combo_label_1.show()
             self.ui.derived_chooser_1.show()
             self.ui.derived_groupbox.show()
-        elif self._fieldType == 'FieldFindMeshLocation':   
+        elif self._fieldType == 'FieldFindMeshLocation':
             self._updateChooser(self.ui.derived_chooser_1, SearchMode)
             self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Search Mode:", None, QtWidgets.QApplication.UnicodeUTF8))
             self._updateChooser(self.ui.derived_chooser_2, MeshName)
@@ -450,7 +448,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.derived_chooser_1.show()
             self.ui.derived_combo_label_2.show()
             self.ui.derived_chooser_2.show()
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh Field:", None, QtWidgets.QApplication.UnicodeUTF8))            
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh Field:", None, QtWidgets.QApplication.UnicodeUTF8))
             self.ui.derived_groupbox.show()
         elif self._fieldType == 'FieldStoredMeshLocation':
             if self._field and self._field.isValid():
@@ -504,7 +502,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Vector Field:", None, QtWidgets.QApplication.UnicodeUTF8))
             self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None, QtWidgets.QApplication.UnicodeUTF8))
             if not self._field or not self._field.isValid():
-                self._sourceFieldChoosers[0][1].setConditional(FieldIsOrientationScaleCapable)               
+                self._sourceFieldChoosers[0][1].setConditional(FieldIsOrientationScaleCapable)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsCoordinateCapable)
         elif self._fieldType == 'FieldCurl':
             self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Vector Field:", None, QtWidgets.QApplication.UnicodeUTF8))
@@ -556,7 +554,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 text = ""
                 valuesCount = self._field.getNumberOfComponents()
                 fieldcache = self._fieldmodule.createFieldcache()
-                values = self._field.evaluateReal(fieldcache, valuesCount)         
+                values = self._field.evaluateReal(fieldcache, valuesCount)
                 self._displayVector(self.ui.derived_values_lineedit, values[1])
             else:
                 self.ui.derived_values_lineedit.setPlaceholderText("Enter values")
@@ -601,34 +599,35 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Number Of Components:", None, QtWidgets.QApplication.UnicodeUTF8))
             self.ui.derived_values_lineedit.show()
             self.ui.derived_values_label.show()
-            
+
             self.ui.derived_groupbox.show()
         else:
-            if self._field and self._field.isValid(): 
+            if self._field and self._field.isValid():
                 numberOfSourceFields = self._field.getNumberOfSourceFields()
                 for i in range(0, numberOfSourceFields):
-                    self._sourceFieldChoosers[i][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Source Field " + str(i+1), None, QtWidgets.QApplication.UnicodeUTF8))
+                    self._sourceFieldChoosers[i][0].setText(
+                        QtWidgets.QApplication.translate("FieldEditorWidget", "Source Field " + str(i + 1), None, QtWidgets.QApplication.UnicodeUTF8))
             else:
                 if self._fieldType == "FieldLog" or self._fieldType == "FieldSqrt" or self._fieldType == "FieldExp" or \
-                self._fieldType == "FieldAbs" or self._fieldType == "FieldIdentity" or self._fieldType == "FieldConcatenate" or \
-                self._fieldType ==  "FieldCrossProduct" or self._fieldType == "FieldNot" or self._fieldType == "FieldSin" or \
-                self._fieldType ==  "FieldCos" or self._fieldType == "FieldTan" or self._fieldType == "FieldAsin" or \
-                self._fieldType ==  "FieldAcos" or self._fieldType == "FieldAtan" or self._fieldType == "FieldMagnitude" or \
-                self._fieldType == "FieldNormalise" or self._fieldType == "FieldSumComponents" or \
-                self._fieldType == "FieldCoordinateTransformation":
+                        self._fieldType == "FieldAbs" or self._fieldType == "FieldIdentity" or self._fieldType == "FieldConcatenate" or \
+                        self._fieldType == "FieldCrossProduct" or self._fieldType == "FieldNot" or self._fieldType == "FieldSin" or \
+                        self._fieldType == "FieldCos" or self._fieldType == "FieldTan" or self._fieldType == "FieldAsin" or \
+                        self._fieldType == "FieldAcos" or self._fieldType == "FieldAtan" or self._fieldType == "FieldMagnitude" or \
+                        self._fieldType == "FieldNormalise" or self._fieldType == "FieldSumComponents" or \
+                        self._fieldType == "FieldCoordinateTransformation":
                     self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
                 elif self._fieldType == "FieldAdd" or self._fieldType == "FieldPower" or self._fieldType == "FieldMultiply" or \
-                self._fieldType == "FieldDivide" or self._fieldType == "FieldSubtract" or self._fieldType == "FieldIf" or \
-                self._fieldType == "FieldAnd" or \
-                self._fieldType == "FieldGreaterThan" or self._fieldType == "FieldLessThan"or self._fieldType == "FieldOr" or \
-                self._fieldType == "FieldXor" or self._fieldType == "FieldAtan2" or self._fieldType == "FieldDotProduct":
+                        self._fieldType == "FieldDivide" or self._fieldType == "FieldSubtract" or self._fieldType == "FieldIf" or \
+                        self._fieldType == "FieldAnd" or \
+                        self._fieldType == "FieldGreaterThan" or self._fieldType == "FieldLessThan" or self._fieldType == "FieldOr" or \
+                        self._fieldType == "FieldXor" or self._fieldType == "FieldAtan2" or self._fieldType == "FieldDotProduct":
                     self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
                     self._sourceFieldChoosers[1][1].setConditional(FieldIsRealValued)
                 elif self._fieldType == "FieldDeterminant":
                     self._sourceFieldChoosers[0][1].setConditional(FieldIsDeterminantEligible)
                 elif self._fieldType == "FieldEigenvalues" or self._fieldType == "FieldMatrixInvert":
                     self._sourceFieldChoosers[0][1].setConditional(FieldIsSquareMatrix)
-                    
+
     def displaySourceFieldsChoosers(self, numberOfSourceFields):
         numberOfExistingWidgets = len(self._sourceFieldChoosers)
         if self._fieldType == "FieldConcatenate" or self._fieldType == "FieldCrossProduct":
@@ -654,11 +653,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
         numberOfExistingWidgets = len(self._sourceFieldChoosers)
         for i in range(0, numberOfSourceFields):
             self._sourceFieldChoosers[i][0].show()
-            self._sourceFieldChoosers[i][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Source Field " + str(i+1), None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[i][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Source Field " + str(i + 1), None, QtWidgets.QApplication.UnicodeUTF8))
             self._sourceFieldChoosers[i][1].show()
-            if self._field and self._field.isValid(): 
+            if self._field and self._field.isValid():
                 self._sourceFieldChoosers[i][1].setConditional(None)
-                self._sourceFieldChoosers[i][1].setField(self._field.getSourceField(i+1))
+                self._sourceFieldChoosers[i][1].setField(self._field.getSourceField(i + 1))
                 self._sourceFieldChoosers[i][1].setEnabled(False)
             else:
                 self._sourceFieldChoosers[i][1].setField(None)
@@ -670,19 +669,19 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._sourceFieldChoosers[i][1].setField(None)
             self._sourceFieldChoosers[i][1].disconnect(self._sourceFieldChoosers[i][1])
         self.ui.number_of_source_fields_lineedit.setText(str(numberOfSourceFields))
-        
+
     def displaySourceFields(self):
         numberOfSourceFields = 0
-        if self._field and self._field.isValid(): 
+        if self._field and self._field.isValid():
             numberOfSourceFields = self._field.getNumberOfSourceFields()
         elif self._fieldType and self._createMode:
             numberOfSourceFields = FieldTypeToNumberofSourcesList[self._fieldType]
         self.displaySourceFieldsChoosers(numberOfSourceFields)
-            
+
     def _coordinateSystemDisplay(self):
         type = Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN
-        foucs = 0              
-        if self._field and self._field.isValid(): 
+        foucs = 0
+        if self._field and self._field.isValid():
             type = self._field.getCoordinateSystemType()
             foucs = self._field.getCoordinateSystemFocus()
             newText = STRING_FLOAT_FORMAT.format(foucs)
@@ -694,10 +693,10 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.coordinate_system_type_chooser.blockSignals(True)
             self.ui.coordinate_system_type_chooser.setCurrentIndex(type - Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN)
             self.ui.coordinate_system_type_chooser.blockSignals(False)
-            self.ui.coordinate_system_groupbox.show() 
+            self.ui.coordinate_system_groupbox.show()
         else:
             self.ui.coordinate_system_groupbox.hide()
-            
+
     def _getNumberOfFields(self):
         numberOfFields = 0
         if self._fieldmodule and self._fieldmodule.isValid():
@@ -742,39 +741,39 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.name_label.show()
             self.ui.name_lineedit.show()
             numberOfFields = self._getNumberOfFields()
-            tempname = "temp" + str(numberOfFields+1)
+            tempname = "temp" + str(numberOfFields + 1)
             self.ui.name_lineedit.setText(tempname)
         else:
             self.ui.field_type_chooser.setEnabled(False)
             self.ui.create_button.hide()
             self.ui.name_label.hide()
             self.ui.name_lineedit.hide()
-            
+
     def setTimekeeper(self, timekeeper):
-        '''
+        """
         Set when timekeeper changes
-        '''
+        """
         self._timekeeper = timekeeper
 
     def setFieldmodule(self, fieldmodule):
-        '''
+        """
         Set when fieldmodule changes to initialised widgets dependent on fieldmodule
-        '''
+        """
         self._fieldmodule = fieldmodule
         for i in range(0, len(self._sourceFieldChoosers)):
             self._sourceFieldChoosers[i][1].setRegion(self._fieldmodule.getRegion())
         self._updateWidgets()
 
     def getField(self):
-        '''
+        """
         Get the field currently in the editor
-        '''
+        """
         return self._field
 
     def setField(self, field, fieldType):
-        '''
+        """
         Set the field to be edited
-        '''
+        """
         if field and field.isValid():
             self._field = field
             self._fieldType = fieldType
@@ -786,9 +785,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._updateWidgets()
 
     def _displayVectorInteger(self, widget, values):
-        '''
+        """
         Display real vector values in a widget. Also handle scalar
-        '''
+        """
         if isinstance(values, Number):
             newText = int(values)
         else:
@@ -796,21 +795,21 @@ class FieldEditorWidget(QtWidgets.QWidget):
         widget.setText(newText)
 
     def _parseVectorInteger(self, widget):
-        '''
+        """
         Return integer vector from comma separated text in line edit widget
-        '''
+        """
         text = widget.text()
         try:
             values = [int(value) for value in text.split(',')]
         except:
-            NeonLogger.getLogger().error("Value must be one or more integers")
+            ArgonLogger.getLogger().error("Value must be one or more integers")
             values = []
         return values
 
     def _displayVector(self, widget, values, numberFormat=STRING_FLOAT_FORMAT):
-        '''
+        """
         Display real vector values in a widget. Also handle scalar
-        '''
+        """
         if isinstance(values, Number):
             newText = STRING_FLOAT_FORMAT.format(values)
         else:
@@ -818,14 +817,14 @@ class FieldEditorWidget(QtWidgets.QWidget):
         widget.setText(newText)
 
     def _parseVector(self, widget):
-        '''
+        """
         Return real vector from comma separated text in line edit widget
-        '''
+        """
         text = widget.text()
         try:
             values = [float(value) for value in text.split(',')]
         except:
-            NeonLogger.getLogger().error("Value must be one or more real numbers")
+            ArgonLogger.getLogger().error("Value must be one or more real numbers")
             values = []
         return values
 
@@ -834,23 +833,23 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._field.setCoordinateSystemType(index + Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN)
 
     def managedClicked(self, isChecked):
-        '''
+        """
         The managed radio button was clicked
-        '''
+        """
         if self._field:
             self._field.setManaged(isChecked)
 
     def typeCoordinateClicked(self, isChecked):
-        '''
+        """
         type coordinate clicked 
-        '''
+        """
         if self._field:
             self._field.setTypeCoordinate(isChecked)
 
     def coordinateSystemFocusEntered(self):
-        '''
+        """
         Set coordinate system focus text in widget
-        '''
+        """
         coordinateSystemFocusText = self.ui.coordinate_system_focus_lineedit.text()
         try:
             coordinateSystemFocus = float(coordinateSystemFocusText)
@@ -858,11 +857,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
         except:
             print("Invalid coordinate system focus", coordinateSystemFocusText)
         self._coordinateSystemDisplay()
-        
+
     def fieldTypeChanged(self):
         self._fieldType = self.ui.field_type_chooser.getFieldType()
         self._updateWidgets()
-        
+
     def numberOfSourceFieldsEntered(self):
         numberOfSourceFieldsText = self.ui.number_of_source_fields_lineedit.text()
         try:
@@ -876,11 +875,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
         if self._fieldType == "FieldConcatenate" and self._fieldType == "FieldCrossProduct":
             for i in range(0, numberOfSourceFields):
                 self._sourceFieldChoosers[i][1].setConditional(FieldIsRealValued)
-        
+
     def enterCreateMode(self):
-        '''
+        """
         Set coordinate system focus text in widget
-        '''
+        """
         self._createMode = True
         self._field = None
         self._fieldType = None

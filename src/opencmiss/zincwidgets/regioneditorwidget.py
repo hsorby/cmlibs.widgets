@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,18 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
 """
-OpenCMISS-Neon Region Editor Widget
-
-Displays and allows editing of the the Neon region tree.
-"""
-
 from PySide2 import QtCore, QtWidgets
 
-from opencmiss.neon.core.neonregion import NeonRegion
-from opencmiss.zincwidgets.ui_regioneditorwidget import Ui_RegionEditorWidget
-from opencmiss.neon.core.neonlogger import NeonLogger
+from opencmiss.argon.core.argonregion import ArgonRegion
+from opencmiss.zincwidgets.ui.ui_regioneditorwidget import Ui_RegionEditorWidget
+from opencmiss.argon.core.argonlogger import ArgonLogger
+
+"""
+Region Editor Widget
+
+Displays and allows editing of the region tree.
+"""
 
 
 class RegionTreeItem(object):
@@ -76,7 +76,7 @@ class RegionTreeItem(object):
         if item:
             item._buildChildItems()
         else:
-            NeonLogger.getLogger().error("Missing item for region ", region.getDisplayName())
+            ArgonLogger.getLogger().error("Missing item for region ", region.getDisplayName())
 
 
 class RegionTreeModel(QtCore.QAbstractItemModel):
@@ -84,7 +84,7 @@ class RegionTreeModel(QtCore.QAbstractItemModel):
     def __init__(self, rootRegion, parent):
         QtCore.QAbstractItemModel.__init__(self, parent)
         self._rootRegion = rootRegion
-        dummyRegion = NeonRegion(None, None, None)
+        dummyRegion = ArgonRegion(None, None, None)
         self._invisibleRootItem = RegionTreeItem(dummyRegion, 0)
         if rootRegion is not None:
             rootItem = RegionTreeItem(rootRegion, 0, self._invisibleRootItem)
@@ -210,7 +210,7 @@ class RegionEditorWidget(QtWidgets.QWidget):
     def _clearRegion(self):
         region = self.getCurrentRegion()
         msgBox = QtWidgets.QMessageBox()
-        msgBox.setWindowTitle("Neon: Please confirm")
+        msgBox.setWindowTitle("Please confirm")
         msgBox.setText("Clear region " + region.getDisplayName() + " and remove its sub-regions?")
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
@@ -221,7 +221,7 @@ class RegionEditorWidget(QtWidgets.QWidget):
     def _removeRegion(self):
         region = self.getCurrentRegion()
         msgBox = QtWidgets.QMessageBox()
-        msgBox.setWindowTitle("Neon: Please confirm")
+        msgBox.setWindowTitle("Please confirm")
         msgBox.setText("Remove region " + region.getDisplayName() + " and all its sub-regions?")
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
@@ -244,9 +244,9 @@ class RegionEditorWidget(QtWidgets.QWidget):
             self.regionSelected.emit(changedRegion)
 
     def setRootRegion(self, rootRegion):
-        '''
-        :param rootRegion: The root NeonRegion
-        '''
+        """
+        :param rootRegion: The root ArgonRegion
+        """
         self._rootRegion = rootRegion
         self._rootRegion.connectRegionChange(self._regionChange)
         # rebuild tree
@@ -262,9 +262,9 @@ class RegionEditorWidget(QtWidgets.QWidget):
         self._ui.treeViewRegion.show()
 
     def _regionTreeItemClicked(self, index):
-        '''
+        """
         Calls back clients with newly selected region
-        '''
+        """
         model = index.model()
         region = model.getRegionAtIndex(index)
         # regionPath = region.getPath()

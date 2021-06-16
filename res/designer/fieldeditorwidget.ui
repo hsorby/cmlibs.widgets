@@ -305,7 +305,7 @@
   <customwidget>
    <class>FieldTypeChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/neon/ui/zincwidgets/fieldtypechooserwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/fieldtypechooserwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

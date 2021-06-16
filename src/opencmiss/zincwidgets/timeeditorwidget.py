@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,11 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtCore, QtWidgets
 
-from opencmiss.zincwidgets.ui_timeeditorwidget import Ui_TimeEditorWidget
-from opencmiss.neon.settings.mainsettings import FLOAT_STRING_FORMAT
+from opencmiss.zincwidgets.ui.ui_timeeditorwidget import Ui_TimeEditorWidget
+from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 
 
 class TimeEditorWidget(QtWidgets.QWidget):

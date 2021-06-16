@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,16 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
 """
-Neon Model Sources Editor Widget
+from PySide2 import QtGui, QtWidgets
+
+from opencmiss.argon.core.argonmodelsources import ArgonModelSourceFile
+
+from opencmiss.zincwidgets.ui.ui_modelsourceseditorwidget import Ui_ModelSourcesEditorWidget
+from opencmiss.argon.core.argonlogger import ArgonLogger
+
+"""
+Model Sources Editor Widget
 
 Dialog for creation and editing list of model sources (files/resources)
 read into a region in Qt / Python.
@@ -23,21 +30,14 @@ This Source Code Form is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
-from PySide2 import QtGui,QtWidgets
-
-# from opencmiss.neon.core.neonregion import NeonRegion
-from opencmiss.neon.core.neonmodelsources import NeonModelSourceFile
-
-from opencmiss.zincwidgets.ui_modelsourceseditorwidget import Ui_ModelSourcesEditorWidget
-from opencmiss.neon.core.neonlogger import NeonLogger
 
 
 class ModelSourcesEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QWidget.__init__(self, parent)
         self._region = None
         self._currentModelSource = None
@@ -56,7 +56,6 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
         self._ui.horizontalLayout.addWidget(self._ui.addMenu)
         # self._ui.addMenu = QtGui.QMenu(self._ui.frame)
 
-
         self._makeConnections()
 
     def _makeConnections(self):
@@ -72,7 +71,7 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
 
     def setRegion(self, region):
         """
-        :param region: NeonRegion to edit model sources for
+        :param region: ArgonRegion to edit model sources for
         """
         self._region = region
         self._buildSourcesList()
@@ -96,27 +95,15 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
                 if modelSource == self._currentModelSource:
                     currentIndex = self._itemModel.indexFromItem(item)
         self._ui.listViewModelSources.setModel(self._itemModel)
-        print(self._itemModel)
         if currentIndex is None:
             if len(modelSources) > 0:
                 modelSource = modelSources[0]
-                print('created my own index')
-                currentIndex = self._itemModel.createIndex(0, 0)#, self._itemModel.item(0))
+                currentIndex = self._itemModel.createIndex(0, 0)  # , self._itemModel.item(0))
             else:
                 modelSource = None
             self._setCurrentModelSource(modelSource)
         if currentIndex is not None:
-            print(currentIndex.row())
-            print(self._ui.listViewModelSources)
-            cI = self._ui.listViewModelSources.currentIndex()
-            print(cI.row())
-            print(cI.isValid())
-            print(currentIndex)
-            print(currentIndex.isValid())
-            print(currentIndex.model())
-            print(self._ui.listViewModelSources.model())
             self._ui.listViewModelSources.setCurrentIndex(currentIndex)
-            print("currentIndex")
         self._ui.listViewModelSources.show()
 
     def _refreshCurrentItem(self):
@@ -144,7 +131,7 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
         name = self._ui.comboBoxAddSource.currentText()
         modelSource = None
         if name == "File":
-            modelSource = NeonModelSourceFile(fileName="")
+            modelSource = ArgonModelSourceFile(fileName="")
             modelSource.setEdit(True)
         if modelSource:
             self._region.addModelSource(modelSource)
@@ -161,7 +148,7 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
     def _deleteSourceClicked(self):
         if self._region and self._currentModelSource:
             msgBox = QtWidgets.QMessageBox()
-            msgBox.setWindowTitle("Neon: Please confirm")
+            msgBox.setWindowTitle("Please confirm")
             msgBox.setText("Delete model data source?")
             # msgBox.setInformativeText("Please confirm action.")
             msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
@@ -222,5 +209,5 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
             self._currentModelSource.setTime(time)
             self._editedCurrentModelSource()
         except:
-             NeonLogger.getLogger().error("Invalid time", timeText)
+            ArgonLogger.getLogger().error("Invalid time", timeText)
         self._fileTimeDisplay()

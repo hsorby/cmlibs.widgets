@@ -14,10 +14,10 @@ from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
 
-from  opencmiss.neon.ui import icons_rc
+from opencmiss.zincwidgets.ui import icons_rc
 
 class Ui_SpectrumEditorWidget(object):
-    def setupUi(self, shared_opengl_widget, SpectrumEditorWidget):
+    def setupUi(self, SpectrumEditorWidget):
         if not SpectrumEditorWidget.objectName():
             SpectrumEditorWidget.setObjectName(u"SpectrumEditorWidget")
         SpectrumEditorWidget.resize(300, 875)
@@ -54,7 +54,7 @@ class Ui_SpectrumEditorWidget(object):
         self.pushButtonAddSpectrum = QPushButton(self.widget_2)
         self.pushButtonAddSpectrum.setObjectName(u"pushButtonAddSpectrum")
         icon = QIcon()
-        icon.addFile(u":/neon/images/icons/list-add-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u":/zincwidgets/images/icons/list-add-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonAddSpectrum.setIcon(icon)
 
         self.verticalLayout_3.addWidget(self.pushButtonAddSpectrum)
@@ -62,7 +62,7 @@ class Ui_SpectrumEditorWidget(object):
         self.pushButtonDeleteSpectrum = QPushButton(self.widget_2)
         self.pushButtonDeleteSpectrum.setObjectName(u"pushButtonDeleteSpectrum")
         icon1 = QIcon()
-        icon1.addFile(u":/neon/images/icons/list-remove-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(u":/zincwidgets/images/icons/list-remove-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonDeleteSpectrum.setIcon(icon1)
 
         self.verticalLayout_3.addWidget(self.pushButtonDeleteSpectrum)
@@ -82,7 +82,7 @@ class Ui_SpectrumEditorWidget(object):
 
         self.verticalLayout_2.addWidget(self.groupBox)
 
-        self.sceneviewerWidgetPreview = SceneviewerWidget(self.scrollAreaWidgetContents, shared_opengl_widget)
+        self.sceneviewerWidgetPreview = SceneviewerWidget(self.scrollAreaWidgetContents)
         self.sceneviewerWidgetPreview.setObjectName(u"sceneviewerWidgetPreview")
         sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy1.setHorizontalStretch(1)
@@ -144,7 +144,7 @@ class Ui_SpectrumEditorWidget(object):
         self.pushButtonMoveUpSpectrumComponent = QPushButton(self.widget_4)
         self.pushButtonMoveUpSpectrumComponent.setObjectName(u"pushButtonMoveUpSpectrumComponent")
         icon2 = QIcon()
-        icon2.addFile(u":/neon/images/icons/go-up-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon2.addFile(u":/zincwidgets/images/icons/go-up-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonMoveUpSpectrumComponent.setIcon(icon2)
 
         self.verticalLayout_5.addWidget(self.pushButtonMoveUpSpectrumComponent)
@@ -152,7 +152,7 @@ class Ui_SpectrumEditorWidget(object):
         self.pushButtonMoveDownSpectrumComponent = QPushButton(self.widget_4)
         self.pushButtonMoveDownSpectrumComponent.setObjectName(u"pushButtonMoveDownSpectrumComponent")
         icon3 = QIcon()
-        icon3.addFile(u":/neon/images/icons/go-down-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon3.addFile(u":/zincwidgets/images/icons/go-down-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonMoveDownSpectrumComponent.setIcon(icon3)
 
         self.verticalLayout_5.addWidget(self.pushButtonMoveDownSpectrumComponent)

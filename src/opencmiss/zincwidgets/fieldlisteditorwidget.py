@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2016 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,14 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
+from PySide2 import QtCore, QtGui, QtWidgets
+
+from opencmiss.zinc.status import OK as ZINC_OK
+from opencmiss.zinc.field import Field
+
+from opencmiss.zincwidgets.ui.ui_fieldlisteditorwidget import Ui_FieldListEditorWidget
+
 """
 Zinc Field List Editor Widget
 
@@ -23,60 +30,53 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-from PySide2 import QtCore, QtGui, QtWidgets
-
-from opencmiss.zinc.status import OK as ZINC_OK
-from opencmiss.zinc.field import Field
-
-from opencmiss.zincwidgets.ui_fieldlisteditorwidget import Ui_FieldListEditorWidget
-
 
 class FieldListEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QWidget.__init__(self, parent)
         self._fieldmodule = None
         # Using composition to include the visual element of the GUI.
         self.ui = Ui_FieldListEditorWidget()
         self._fieldItems = None
-        self._neonRegion = None
+        self._argonRegion = None
         self._timekeeper = None
         self.ui.setupUi(self)
         self._makeConnections()
         self._field = None
-        
+
     @QtCore.Slot(Field, str)
     def editorCreateField(self, field, fieldType):
-        self._neonRegion.addFieldTypeToDict(field, fieldType)
+        self._argonRegion.addFieldTypeToDict(field, fieldType)
         self.setField(field)
-        
+
     def _makeConnections(self):
         self.ui.field_listview.clicked.connect(self.fieldListItemClicked)
         self.ui.addFieldButton.clicked.connect(self.addFieldClicked)
         self.ui.field_editor._fieldCreated.connect(self.editorCreateField)
 
     def getFieldmodule(self):
-        '''
+        """
         Get the fieldmodule currently in the editor
-        '''
+        """
         return self._fieldmodule
-    
+
     def _fieldmoduleCallback(self, fieldmoduleevent):
-        '''
+        """
         Callback for change in fields; may need to rebuild field list
-        '''
+        """
         changeSummary = fieldmoduleevent.getSummaryFieldChangeFlags()
         # print "_fieldmoduleCallback changeSummary =", changeSummary
-        if (0 != (changeSummary & (Field.CHANGE_FLAG_IDENTIFIER | Field.CHANGE_FLAG_ADD | Field.CHANGE_FLAG_REMOVE))):
+        if 0 != (changeSummary & (Field.CHANGE_FLAG_IDENTIFIER | Field.CHANGE_FLAG_ADD | Field.CHANGE_FLAG_REMOVE)):
             self._buildFieldsList()
 
     def setTimekeeper(self, timekeeper):
-        '''
+        """
         Set the current scene in the editor
-        '''
+        """
         if not (timekeeper and timekeeper.isValid()):
             self._timekeeper = None
         else:
@@ -85,9 +85,9 @@ class FieldListEditorWidget(QtWidgets.QWidget):
             self.ui.field_editor.setTimekeeper(self._timekeeper)
 
     def setFieldmodule(self, fieldmodule):
-        '''
+        """
         Set the current scene in the editor
-        '''
+        """
         if not (fieldmodule and fieldmodule.isValid()):
             self._fieldmodule = None
         else:
@@ -100,13 +100,10 @@ class FieldListEditorWidget(QtWidgets.QWidget):
             self._fieldmodulenotifier.setCallback(self._fieldmoduleCallback)
         else:
             self._fieldmodulenotifier = None
-        
-    def setNeonRegion(self, neonRegion):
-        '''
-        Set the current scene in the editor
-        '''
-        self._neonRegion = neonRegion
-        
+
+    def setArgonRegion(self, argonRegion):
+        self._argonRegion = argonRegion
+
     def listItemEdited(self, item):
         field = item.data()
         if field and field.isValid():
@@ -115,12 +112,12 @@ class FieldListEditorWidget(QtWidgets.QWidget):
             if newName != oldName:
                 if field.setName(newName) != ZINC_OK:
                     item.setText(field.getName())
-                self._neonRegion.replaceFieldTypeKey(oldName, newName)
-        
+                self._argonRegion.replaceFieldTypeKey(oldName, newName)
+
     def _buildFieldsList(self):
-        '''
+        """
         Fill the graphics list view with the list of graphics for current region/scene
-        '''
+        """
         if self._fieldItems is not None:
             self._fieldItems.clear()  # Must clear or holds on to field references
         self._fieldItems = QtGui.QStandardItemModel(self.ui.field_listview)
@@ -148,7 +145,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         if selectedIndex:
             self.ui.field_listview.setCurrentIndex(selectedIndex)
         self.ui.field_listview.show()
-        
+
     def _displayField(self):
         if self._field and self._field.isValid():
             selectedIndex = None
@@ -164,8 +161,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
             if selectedIndex:
                 self.ui.field_listview.setCurrentIndex(selectedIndex)
             name = self._field.getName()
-            fieldType = None
-            fieldTypeDict = self._neonRegion.getFieldTypeDict()
+            fieldTypeDict = self._argonRegion.getFieldTypeDict()
             if name in fieldTypeDict:
                 fieldType = fieldTypeDict[name]
                 self.ui.field_editor.setField(self._field, fieldType)
@@ -181,18 +177,17 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         field = item.data()
         self._field = field
         self._displayField()
-            
+
     def setField(self, field):
-        '''
+        """
         Set the current selected field
-        '''
+        """
         if not field or not field.isValid():
             self._field = None
         else:
             self._field = field
         self._displayField()
-            
-    def addFieldClicked(self):
-        '''do the add field stuff'''
-        self.ui.field_editor.enterCreateMode()
 
+    def addFieldClicked(self):
+        """do the add field stuff"""
+        self.ui.field_editor.enterCreateMode()

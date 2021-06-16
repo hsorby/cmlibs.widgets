@@ -52,7 +52,7 @@ Topic :: Software Development :: Libraries :: Python Modules
 
 doc_lines = __doc__.split("\n")
 
-requires = ['opencmiss.utils >= 0.3.0', 'PySide2', 'opencmiss.zinc']
+requires = ['opencmiss.utils >= 0.3.0', 'PySide2', 'opencmiss.zinc', 'opencmiss.argon']
 
 setup(
     name='opencmiss.zincwidgets',
@@ -64,7 +64,7 @@ setup(
     platforms=['any'],
     url='https://github.com/OpenCMISS-Bindings/opencmiss.zincwidgets/',
     license='Mozilla Public License',
-    license_files = ("LICENSE",),
+    license_files=("LICENSE",),
     packages=find_packages("src"),
     package_dir={"": "src"},
     description=doc_lines[0],

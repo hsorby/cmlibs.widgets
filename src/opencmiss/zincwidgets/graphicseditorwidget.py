@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,31 +12,31 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtCore, QtWidgets
 
 from numbers import Number
 
-from opencmiss.zinc.field import Field
 from opencmiss.zinc.element import Element
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.graphics import Graphics, GraphicsStreamlines, Graphicslineattributes
 from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL
 from opencmiss.zinc.spectrum import Spectrum
 from opencmiss.zinc.status import OK as ZINC_OK
-from opencmiss.neon.core.neonlogger import NeonLogger
+
+from opencmiss.argon.core.argonlogger import ArgonLogger
+from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 
 from opencmiss.zincwidgets.fieldconditions import *
-from opencmiss.zincwidgets.ui_graphicseditorwidget import Ui_GraphicsEditorWidget
+from opencmiss.zincwidgets.ui.ui_graphicseditorwidget import Ui_GraphicsEditorWidget
 
-STRING_FLOAT_FORMAT = '{:.5g}'
 
 class GraphicsEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QWidget.__init__(self, parent)
         self._graphics = None
         # Using composition to include the visual element of the GUI.
@@ -172,9 +172,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._samplingModeDisplay()
 
     def setScene(self, scene):
-        '''
+        """
         Set when scene changes to initialised widgets dependent on scene
-        '''
+        """
         self.ui.material_chooser.setMaterialmodule(scene.getMaterialmodule())
         self.ui.glyph_chooser.setGlyphmodule(scene.getGlyphmodule())
         self.ui.spectrum_chooser.setSpectrummodule(scene.getSpectrummodule())
@@ -190,15 +190,15 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.line_orientation_scale_field_chooser.setRegion(region)
 
     def getGraphics(self):
-        '''
+        """
         Get the graphics currently in the editor
-        '''
+        """
         return self._graphics
 
     def setGraphics(self, graphics):
-        '''
+        """
         Set the graphics to be edited
-        '''
+        """
         if graphics and graphics.isValid():
             self._graphics = graphics
         else:
@@ -206,57 +206,57 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._updateWidgets()
 
     def _displayReal(self, widget, value):
-        '''
+        """
         Display real value in a widget
-        '''
-        newText = STRING_FLOAT_FORMAT.format(value)
+        """
+        newText = FLOAT_STRING_FORMAT.format(value)
         widget.setText(newText)
 
-    def _displayScale(self, widget, values, numberFormat=STRING_FLOAT_FORMAT):
-        '''
+    def _displayScale(self, widget, values, numberFormat=FLOAT_STRING_FORMAT):
+        """
         Display vector values in a widget, separated by '*'
-        '''
+        """
         newText = "*".join(numberFormat.format(value) for value in values)
         widget.setText(newText)
 
     def _parseScale(self, widget):
-        '''
+        """
         Return real vector from comma separated text in line edit widget
-        '''
+        """
         text = widget.text()
         values = [float(value) for value in text.split('*')]
         return values
 
     def _parseScaleInteger(self, widget):
-        '''
+        """
         Return integer vector from comma separated text in line edit widget
-        '''
+        """
         text = widget.text()
         values = [int(value) for value in text.split('*')]
         return values
 
-    def _displayVector(self, widget, values, numberFormat=STRING_FLOAT_FORMAT):
-        '''
+    def _displayVector(self, widget, values, numberFormat=FLOAT_STRING_FORMAT):
+        """
         Display real vector values in a widget. Also handle scalar
-        '''
+        """
         if isinstance(values, Number):
-            newText = STRING_FLOAT_FORMAT.format(values)
+            newText = FLOAT_STRING_FORMAT.format(values)
         else:
             newText = ", ".join(numberFormat.format(value) for value in values)
         widget.setText(newText)
 
     def _parseVector(self, widget):
-        '''
+        """
         Return real vector from comma separated text in line edit widget
-        '''
+        """
         text = widget.text()
         values = [float(value) for value in text.split(',')]
         return values
 
     def subgroupFieldChanged(self, index):
-        '''
+        """
         An item was selected at index in subgroup field chooser widget
-        '''
+        """
         if self._graphics:
             subgroupField = self.ui.subgroup_field_chooser.getField()
             if subgroupField:
@@ -265,9 +265,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 self._graphics.setSubgroupField(Field())
 
     def coordinateFieldChanged(self, index):
-        '''
+        """
         An item was selected at index in coordinate field chooser widget
-        '''
+        """
         if self._graphics:
             coordinateField = self.ui.coordinate_field_chooser.getField()
             if coordinateField:
@@ -276,9 +276,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 self._graphics.setCoordinateField(Field())
 
     def _scenecoordinatesystemDisplay(self):
-        '''
+        """
         Show the current state of the scenecoordinatesystem combo box
-        '''
+        """
         scenecoordinatesystem = SCENECOORDINATESYSTEM_LOCAL
         if self._graphics:
             scenecoordinatesystem = self._graphics.getScenecoordinatesystem()
@@ -291,9 +291,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             self._graphics.setScenecoordinatesystem(index + SCENECOORDINATESYSTEM_LOCAL)
 
     def dataFieldChanged(self, index):
-        '''
+        """
         An item was selected at index in data field chooser widget
-        '''
+        """
         if self._graphics:
             dataField = self.ui.data_field_chooser.getField()
             if dataField:
@@ -319,24 +319,24 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 self._graphics.setSpectrum(Spectrum())
 
     def tessellationChanged(self, index):
-        '''
+        """
         An item was selected at index in tessellation chooser widget
-        '''
+        """
         if self._graphics:
             tessellation = self.ui.tessellation_chooser.getTessellation()
             self._graphics.setTessellation(tessellation)
 
     def exteriorClicked(self, isChecked):
-        '''
+        """
         The exterior radiobutton was clicked
-        '''
+        """
         if self._graphics:
             self._graphics.setExterior(isChecked)
 
     def _faceDisplay(self):
-        '''
+        """
         Show the current state of the face combo box
-        '''
+        """
         faceType = Element.FACE_TYPE_ALL
         if self._graphics:
             faceType = self._graphics.getElementFaceType()
@@ -345,23 +345,23 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.face_combobox.blockSignals(False)
 
     def faceChanged(self, index):
-        '''
+        """
         Element face combo box changed
-        '''
+        """
         if self._graphics:
             self._graphics.setElementFaceType(index + Element.FACE_TYPE_ALL)
 
     def wireframeClicked(self, isChecked):
-        '''
+        """
         The wireframe surface render radiobutton was clicked
-        '''
+        """
         if self._graphics:
             self._graphics.setRenderPolygonMode(Graphics.RENDER_POLYGON_MODE_WIREFRAME if isChecked else Graphics.RENDER_POLYGON_MODE_SHADED)
 
     def glyphChanged(self, index):
-        '''
+        """
         An item was selected at index in glyph chooser widget
-        '''
+        """
         if self._graphics:
             pointattributes = self._graphics.getGraphicspointattributes()
             if (pointattributes.isValid()):
@@ -372,9 +372,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     pointattributes.setGlyph(Glyph())
 
     def materialChanged(self, index):
-        '''
+        """
         An item was selected at index in material chooser widget
-        '''
+        """
         if self._graphics:
             material = self.ui.material_chooser.getMaterial()
             self._graphics.setMaterial(material)
@@ -389,9 +389,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 contours.setIsoscalarField(isoscalarField)
 
     def _isovaluesDisplay(self):
-        '''
+        """
         Display the current iso values list
-        '''
+        """
         if self._graphics:
             contours = self._graphics.castContours()
             if contours.isValid():
@@ -404,9 +404,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.isovalues_lineedit.setText('')
 
     def isovaluesEntered(self):
-        '''
+        """
         Set iso values list from text in widget
-        '''
+        """
         try:
             isovalues = self._parseVector(self.ui.isovalues_lineedit)
             contours = self._graphics.castContours()
@@ -414,7 +414,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 if contours.setListIsovalues(isovalues) != ZINC_OK:
                     raise
         except:
-            NeonLogger.getLogger().error("Invalid isovalues")
+            ArgonLogger.getLogger().error("Invalid isovalues")
         self._isovaluesDisplay()
 
     def streamVectorFieldChanged(self, index):
@@ -427,9 +427,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 streamlines.setStreamVectorField(streamVectorField)
 
     def _streamlinesTrackLengthDisplay(self):
-        '''
+        """
         Display the current streamlines length
-        '''
+        """
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
@@ -439,9 +439,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.streamlines_track_length_lineedit.setText('')
 
     def streamlinesTrackLengthEntered(self):
-        '''
+        """
         Set iso values list from text in widget
-        '''
+        """
         streamlinesLengthText = self.ui.streamlines_track_length_lineedit.text()
         try:
             trackLength = float(streamlinesLengthText)
@@ -454,9 +454,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._streamlinesTrackLengthDisplay()
 
     def _streamlinesTrackDirectionDisplay(self):
-        '''
+        """
         Show the current state of the streamlines track direction combo box
-        '''
+        """
         streamlinesTrackDirection = GraphicsStreamlines.TRACK_DIRECTION_FORWARD
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
@@ -467,18 +467,18 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.streamlines_track_direction_combobox.blockSignals(False)
 
     def streamlinesTrackDirectionChanged(self, index):
-        '''
+        """
         Element streamlines track direction combo box changed
-        '''
+        """
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 streamlines.setTrackDirection(index + GraphicsStreamlines.TRACK_DIRECTION_FORWARD)
 
     def _streamlinesColourDataTypeDisplay(self):
-        '''
+        """
         Show the current state of the streamlines colour data type combo box
-        '''
+        """
         streamlinesColourDataType = GraphicsStreamlines.COLOUR_DATA_TYPE_FIELD
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
@@ -489,9 +489,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.streamlines_colour_data_type_combobox.blockSignals(False)
 
     def streamlinesColourDataTypeChanged(self, index):
-        '''
+        """
         Element streamlines colour data type combo box changed
-        '''
+        """
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
@@ -506,9 +506,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 scene.endChange()
 
     def _lineShapeDisplay(self):
-        '''
+        """
         Show the current state of the lineShape combo box
-        '''
+        """
         lineShapeType = Graphicslineattributes.SHAPE_TYPE_LINE
         if self._graphics:
             lineattributes = self._graphics.getGraphicslineattributes()
@@ -519,18 +519,18 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.line_shape_combobox.blockSignals(False)
 
     def lineShapeChanged(self, index):
-        '''
+        """
         Element lineShape combo box changed
-        '''
+        """
         if self._graphics:
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
                 lineattributes.setShapeType(index + Graphicslineattributes.SHAPE_TYPE_LINE)
 
     def _lineBaseSizeDisplay(self):
-        '''
+        """
         Display the current line base size
-        '''
+        """
         if self._graphics:
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
@@ -540,9 +540,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.line_base_size_lineedit.setText('0')
 
     def lineBaseSizeEntered(self):
-        '''
+        """
         Set line base size from text in widget
-        '''
+        """
         try:
             baseSize = self._parseScale(self.ui.line_base_size_lineedit)
             lineattributes = self._graphics.getGraphicslineattributes()
@@ -562,9 +562,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 lineattributes.setOrientationScaleField(orientationScaleField)
 
     def _lineScaleFactorsDisplay(self):
-        '''
+        """
         Display the current line scale factors
-        '''
+        """
         if self._graphics:
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
@@ -574,9 +574,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.line_scale_factors_lineedit.setText('0')
 
     def lineScaleFactorsEntered(self):
-        '''
+        """
         Set line scale factors from text in widget
-        '''
+        """
         try:
             scaleFactors = self._parseScale(self.ui.line_scale_factors_lineedit)
             lineattributes = self._graphics.getGraphicslineattributes()
@@ -587,9 +587,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._lineScaleFactorsDisplay()
 
     def _pointBaseSizeDisplay(self):
-        '''
+        """
         Display the current point base size
-        '''
+        """
         if self._graphics:
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
@@ -599,9 +599,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.point_base_size_lineedit.setText('0')
 
     def pointBaseSizeEntered(self):
-        '''
+        """
         Set point base size from text in widget
-        '''
+        """
         try:
             baseSize = self._parseScale(self.ui.point_base_size_lineedit)
             pointattributes = self._graphics.getGraphicspointattributes()
@@ -621,9 +621,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 pointattributes.setOrientationScaleField(orientationScaleField)
 
     def _pointScaleFactorsDisplay(self):
-        '''
+        """
         Display the current point scale factors
-        '''
+        """
         if self._graphics:
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
@@ -633,9 +633,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.point_scale_factors_lineedit.setText('0')
 
     def pointScaleFactorsEntered(self):
-        '''
+        """
         Set point scale factors from text in widget
-        '''
+        """
         try:
             scaleFactors = self._parseScale(self.ui.point_scale_factors_lineedit)
             pointattributes = self._graphics.getGraphicspointattributes()
@@ -655,9 +655,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 pointattributes.setLabelField(labelField)
 
     def _samplingModeDisplay(self):
-        '''
+        """
         Show the current state of the sampling mode combo box
-        '''
+        """
         samplingMode = Element.POINT_SAMPLING_MODE_CELL_CENTRES
         if self._graphics:
             samplingattributes = self._graphics.getGraphicssamplingattributes()
@@ -668,9 +668,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.sampling_mode_combobox.blockSignals(False)
 
     def samplingModeChanged(self, index):
-        '''
+        """
         Sampling mode combo box changed
-        '''
+        """
         if self._graphics:
             samplingattributes = self._graphics.getGraphicssamplingattributes()
             if samplingattributes.isValid():
