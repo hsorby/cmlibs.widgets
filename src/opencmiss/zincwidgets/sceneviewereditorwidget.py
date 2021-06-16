@@ -8,12 +8,16 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-from PySide2 import QtCore, QtWidgets
+try:
+    from PySide2 import QtCore, QtWidgets
+except ImportError:
+    from PyQt4 import QtCore, QtGui
 
 import math
-from opencmiss.zincwidgets.sceneviewereditorwidget_ui import Ui_SceneviewerEditorWidget
+
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.status import OK as ZINC_OK
+from opencmiss.zincwidgets.ui_sceneviewereditorwidget import Ui_SceneviewerEditorWidget
 
 class SceneviewerEditorWidget(QtWidgets.QWidget):
 
@@ -27,14 +31,14 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         self._enableUpdates = False
         self._maximumClippingDistance = 1
         # Using composition to include the visual element of the GUI.
-        self.ui = Ui_SceneviewerEditorWidget()
-        self.ui.setupUi(self)
+        self._ui = Ui_SceneviewerEditorWidget()
+        self._ui.setupUi(self)
 
     def getSceneviewer(self):
         '''
         Get the sceneviewer currently in the editor
         '''
-        return self._sceneviewer
+        return self._sceneviewer       
 
     def setSceneviewer(self, sceneviewer):
         '''
@@ -68,6 +72,8 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         changeFlags = event.getChangeFlags()
         if changeFlags & Sceneviewerevent.CHANGE_FLAG_TRANSFORM:
             self._displayViewSettings()
+        elif changeFlags & Sceneviewerevent.CHANGE_FLAG_TRANSFORM:
+            self.setSceneviewer(None)
 
     def _displayAllSettings(self):
         '''
@@ -81,11 +87,14 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         Show the current view-related scene viewer settings on the view widgets
         '''
         self.viewAngleDisplay()
-        self.eyePointDisplay()
-        self.lookatPointDisplay()
+        self.eyePositionDisplay()
+        self.lookatPositionDisplay()
         self.upVectorDisplay()
         self.nearClippingDisplay()
         self.farClippingDisplay()
+        self.antialiasDisplay()
+        self.lightBothSidesDisplay()
+        self.perturbLineDisplay()
 
     def _displayReal(self, widget, value):
         '''
@@ -135,14 +144,14 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         '''
         viewAngleRadians = self._sceneviewer.getViewAngle()
         viewAngleDegrees = viewAngleRadians*180.0/math.pi
-        self._displayReal(self.ui.view_angle, viewAngleDegrees)
+        self._displayReal(self._ui.view_angle, viewAngleDegrees)
 
     def viewAngleEntered(self):
         '''
         Set scene viewer diagonal view angle from value in the view angle widget
         '''
         try:
-            viewAngleRadians = float(self.ui.view_angle.text())*math.pi/180.0
+            viewAngleRadians = float(self._ui.view_angle.text())*math.pi/180.0
             if ZINC_OK != self._sceneviewer.setViewAngle(viewAngleRadians):
                 raise
         except:
@@ -151,54 +160,54 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
 
     def setLookatParametersNonSkew(self):
         '''
-        Set eye, lookat point and up vector simultaneous in non-skew projection
+        Set eye, lookat position and up vector simultaneous in non-skew projection
         '''
-        eye = self._parseVector(self.ui.eye_point)
-        lookat = self._parseVector(self.ui.lookat_point)
-        up_vector = self._parseVector(self.ui.up_vector)
+        eye = self._parseVector(self._ui.eye_position)
+        lookat = self._parseVector(self._ui.lookat_position)
+        up_vector = self._parseVector(self._ui.up_vector)
         if ZINC_OK != self._sceneviewer.setLookatParametersNonSkew(eye, lookat, up_vector):
             raise
 
-    def eyePointDisplay(self):
+    def eyePositionDisplay(self):
         '''
-        Display the current scene viewer eye point
+        Display the current scene viewer eye position
         '''
         result, eye = self._sceneviewer.getEyePosition()
-        self._displayVector(self.ui.eye_point, eye)
+        self._displayVector(self._ui.eye_position, eye)
 
-    def eyePointEntered(self):
+    def eyePositionEntered(self):
         '''
-        Set scene viewer wyw point from text in widget
+        Set scene viewer wyw position from text in widget
         '''
         try:
             self.setLookatParametersNonSkew()
         except:
-            print("Invalid eye point")
+            print("Invalid eye position")
             self.eyePositionDisplay()
 
-    def lookatPointDisplay(self):
+    def lookatPositionDisplay(self):
         '''
-        Display the current scene viewer lookat point
+        Display the current scene viewer lookat position
         '''
         result, lookat = self._sceneviewer.getLookatPosition()
-        self._displayVector(self.ui.lookat_point, lookat)
+        self._displayVector(self._ui.lookat_position, lookat)
 
-    def lookatPointEntered(self):
+    def lookatPositionEntered(self):
         '''
-        Set scene viewer lookat point from text in widget
+        Set scene viewer lookat position from text in widget
         '''
         try:
             self.setLookatParametersNonSkew()
         except:
-            print("Invalid lookat point")
+            print("Invalid lookat position")
             self.lookatPositionDisplay()
 
     def upVectorDisplay(self):
         '''
-        Display the current scene viewer eye point
+        Display the current scene viewer eye position
         '''
         result, up_vector = self._sceneviewer.getUpVector()
-        self._displayVector(self.ui.up_vector, up_vector)
+        self._displayVector(self._ui.up_vector, up_vector)
 
     def upVectorEntered(self):
         '''
@@ -217,9 +226,9 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         near = self._sceneviewer.getNearClippingPlane()
         value = int(10001.0*near/self._maximumClippingDistance) - 1
         # don't want signal for my change
-        self.ui.near_clipping_slider.blockSignals(True)
-        self.ui.near_clipping_slider.setValue(value)
-        self.ui.near_clipping_slider.blockSignals(False)
+        self._ui.near_clipping_slider.blockSignals(True)
+        self._ui.near_clipping_slider.setValue(value)
+        self._ui.near_clipping_slider.blockSignals(False)
 
     def nearClippingChanged(self, value):
         '''
@@ -233,9 +242,9 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         Display the current far clipping plane distance
         '''
         value = int(10001.0*self._sceneviewer.getFarClippingPlane()/self._maximumClippingDistance) - 1
-        self.ui.far_clipping_slider.blockSignals(True)
-        self.ui.far_clipping_slider.setValue(value)
-        self.ui.far_clipping_slider.blockSignals(False)
+        self._ui.far_clipping_slider.blockSignals(True)
+        self._ui.far_clipping_slider.setValue(value)
+        self._ui.far_clipping_slider.blockSignals(False)
 
     def farClippingChanged(self, value):
         '''
@@ -246,19 +255,64 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
 
     def backgroundColourDisplay(self):
         '''
-        Display the current scene viewer eye point
+        Display the current scene viewer eye position
         '''
         result, colourRGB = self._sceneviewer.getBackgroundColourRGB()
-        self._displayVector(self.ui.background_colour, colourRGB)
+        self._displayVector(self._ui.background_colour, colourRGB)
 
     def backgroundColourEntered(self):
         '''
         Set scene viewer diagonal view angle from value in the view angle widget
         '''
         try:
-            colourRGB = self._parseVector(self.ui.background_colour)
+            colourRGB = self._parseVector(self._ui.background_colour)
             if ZINC_OK != self._sceneviewer.setBackgroundColourRGB(colourRGB):
                 raise
         except:
             print("Invalid background colour")
         self.backgroundColourDisplay()
+
+    def antialiasDisplay(self):
+        '''
+        Display the current scene viewer antialias
+        '''
+        antialiasValue = self._sceneviewer.getAntialiasSampling()
+        self._ui.antialias.setText(str(antialiasValue))
+
+    def antialiasEntered(self):
+        '''
+        Set scene viewer diagonal view angle from value in the view angle widget
+        '''
+        try:
+            antialiasValue = int(self._ui.antialias.text())
+            if ZINC_OK != self._sceneviewer.setAntialiasSampling(antialiasValue):
+                raise
+        except:
+            print("Invalid antialias")
+        self.antialiasDisplay()
+
+    def lightBothSidesDisplay(self):
+        flag = self._sceneviewer.isLightingTwoSided()
+        if flag:
+            self._ui.light_both_sides_checkbox.setCheckState(QtCore.Qt.Checked)
+        else:
+            self._ui.light_both_sides_checkbox.setCheckState(QtCore.Qt.Unchecked)
+
+    def lightBothSidesStateChanged(self, state):
+        '''
+        Set scene viewer lighting two sided value
+        '''
+        self._sceneviewer.setLightingTwoSided(state)
+
+    def perturbLineDisplay(self):
+        flag = self._sceneviewer.getPerturbLinesFlag()
+        if flag:
+            self._ui.perturbline_checkbox.setCheckState(QtCore.Qt.Checked)
+        else:
+            self._ui.perturbline_checkbox.setCheckState(QtCore.Qt.Unchecked)
+            
+    def perturbLineStateChanged(self, state):
+        '''
+        Set scene viewer perturb lines value
+        '''
+        self._sceneviewer.setPerturbLinesFlag(state)

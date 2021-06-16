@@ -1,17 +1,20 @@
-"""
-Zinc Material Chooser Widget
+'''
+   Copyright 2015 University of Auckland
 
-Widget for chooses a material from a material module, derived from QComboBox
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
-This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at http://mozilla.org/MPL/2.0/.
-"""
+       http://www.apache.org/licenses/LICENSE-2.0
 
-from PySide2 import QtCore, QtWidgets
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+'''
+from PySide2 import QtWidgets
 
-from opencmiss.zinc.material import Material
-from opencmiss.zinc.status import OK as ZINC_OK
 
 class MaterialChooserWidget(QtWidgets.QComboBox):
 
@@ -61,7 +64,7 @@ class MaterialChooserWidget(QtWidgets.QComboBox):
         Enable a null object option with the supplied name e.g. '-' or '<select>'
         Default is None
         '''
-        self._nullObjectName  = nullObjectName
+        self._nullObjectName = nullObjectName
 
     def setMaterialmodule(self, materialmodule):
         '''
@@ -74,7 +77,7 @@ class MaterialChooserWidget(QtWidgets.QComboBox):
         '''
         Must call this from currentIndexChanged() slot to get/update current material
         '''
-        materialName = str(self.currentText())
+        materialName = self.currentText()
         if self._nullObjectName and (materialName == self._nullObjectName):
             self._material = None
         else:

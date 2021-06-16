@@ -13,10 +13,10 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
-from opencmiss.zincwidget.zincwidgets.materialchooserwidget import MaterialChooserWidget
-from opencmiss.zincwidget.zincwidgets.glyphchooserwidget import GlyphChooserWidget
-from opencmiss.zincwidget.zincwidgets.spectrumchooserwidget import SpectrumChooserWidget
-from opencmiss.zincwidget.zincwidgets.tessellationchooserwidget import TessellationChooserWidget
+from opencmiss.zincwidgets.materialchooserwidget import MaterialChooserWidget
+from opencmiss.zincwidgets.glyphchooserwidget import GlyphChooserWidget
+from opencmiss.zincwidgets.spectrumchooserwidget import SpectrumChooserWidget
+from opencmiss.zincwidgets.tessellationchooserwidget import TessellationChooserWidget
 
 
 class Ui_GraphicsEditorWidget(object):
