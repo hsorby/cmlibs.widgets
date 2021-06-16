@@ -187,7 +187,7 @@
   <customwidget>
    <class>GraphicsEditorWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/neon/ui/zincwidgets/graphicseditorwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/graphicseditorwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,14 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtCore, QtWidgets
 
 from opencmiss.zinc.sceneviewer import Sceneviewer
 from opencmiss.zinc.spectrum import Spectrum, Spectrumcomponent
 from opencmiss.zinc.status import OK as ZINC_OK
 
-from opencmiss.zincwidgets.ui_spectrumeditorwidget import Ui_SpectrumEditorWidget
+from opencmiss.zincwidgets.ui.ui_spectrumeditorwidget import Ui_SpectrumEditorWidget
 from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 from opencmiss.argon.core.argonlogger import ArgonLogger
 
@@ -105,9 +105,9 @@ class SpectrumEditorWidget(QtWidgets.QWidget):
         self._ui.comboBoxScale.setCurrentIndex(0)
 
     def _spectrummoduleCallback(self, spectrummoduleevent):
-        '''
+        """
         Callback for change in spectrums; may need to rebuild spectrum list
-        '''
+        """
         changeSummary = spectrummoduleevent.getSummarySpectrumChangeFlags()
         # print("Spectrum Editor: _spectrummoduleCallback changeSummary " + str(changeSummary))
         if 0 != (changeSummary & (Spectrum.CHANGE_FLAG_IDENTIFIER | Spectrum.CHANGE_FLAG_ADD | Spectrum.CHANGE_FLAG_REMOVE)):
@@ -311,7 +311,7 @@ class SpectrumEditorWidget(QtWidgets.QWidget):
     def _deleteSpectrumClicked(self):
         self._previewSpectrum(None)  # preview graphics references spectrum
         if not self._spectrums.removeSpectrumByName(self._currentSpectrumName):
-            NeonLogger.getLogger().error("Can't delete spectrum " + self._currentSpectrumName + " as it is in use")
+            ArgonLogger.getLogger().error("Can't delete spectrum " + self._currentSpectrumName + " as it is in use")
             self._updateUi()
 
     def _addSpectrumComponentClicked(self):
@@ -399,7 +399,7 @@ class SpectrumEditorWidget(QtWidgets.QWidget):
             if result != ZINC_OK:
                 raise ValueError("")
         except ValueError:
-            NeonLogger.getLogger().error("Error setting spectrum component data range minimum")
+            ArgonLogger.getLogger().error("Error setting spectrum component data range minimum")
         self._ui.lineEditDataRangeMin.setText(FLOAT_STRING_FORMAT.format(sc.getRangeMinimum()))
 
     def _dataRangeMaxEntered(self):
@@ -411,7 +411,7 @@ class SpectrumEditorWidget(QtWidgets.QWidget):
             if result != ZINC_OK:
                 raise ValueError("")
         except ValueError:
-            NeonLogger.getLogger().error("Error setting spectrum component data range maximum")
+            ArgonLogger.getLogger().error("Error setting spectrum component data range maximum")
         self._ui.lineEditDataRangeMax.setText(FLOAT_STRING_FORMAT.format(sc.getRangeMaximum()))
 
     def _colourRangeMinEntered(self):
@@ -423,7 +423,7 @@ class SpectrumEditorWidget(QtWidgets.QWidget):
             if result != ZINC_OK:
                 raise ValueError("")
         except ValueError:
-            NeonLogger.getLogger().error("Error setting spectrum component colour range minimum")
+            ArgonLogger.getLogger().error("Error setting spectrum component colour range minimum")
         self._ui.lineEditColourRangeMin.setText(FLOAT_STRING_FORMAT.format(sc.getColourMinimum()))
 
     def _colourRangeMaxEntered(self):
@@ -435,7 +435,7 @@ class SpectrumEditorWidget(QtWidgets.QWidget):
             if result != ZINC_OK:
                 raise ValueError("")
         except ValueError:
-            NeonLogger.getLogger().error("Error setting spectrum component colour range maximum")
+            ArgonLogger.getLogger().error("Error setting spectrum component colour range maximum")
         self._ui.lineEditColourRangeMax.setText(FLOAT_STRING_FORMAT.format(sc.getColourMaximum()))
 
     def _extendBelowClicked(self):
@@ -472,7 +472,7 @@ class SpectrumEditorWidget(QtWidgets.QWidget):
             if result != ZINC_OK:
                 raise ValueError("")
         except ValueError:
-            NeonLogger.getLogger().error("Error setting log scale exaggeration")
+            ArgonLogger.getLogger().error("Error setting log scale exaggeration")
         self._ui.lineEditExaggeration.setText(FLOAT_STRING_FORMAT.format(sc.getExaggeration()))
 
     def _moveDownSpectrumComponentClicked(self):
@@ -505,9 +505,9 @@ class SpectrumEditorWidget(QtWidgets.QWidget):
 
     def setSpectrums(self, spectrums):
         """
-        Sets the Neon spectrums object which supplies the zinc context and has utilities for
+        Sets the Argon spectrums object which supplies the zinc context and has utilities for
         managing spectrums.
-        :param spectrums: NeonSpectrums object
+        :param spectrums: ArgonSpectrums object
         """
         self._spectrums = spectrums
         self._currentSpectrumName = None

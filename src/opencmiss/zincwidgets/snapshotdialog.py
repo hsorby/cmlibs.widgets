@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,16 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 import json
 import os.path
 
-from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
-from opencmiss.neon.ui.dialogs.ui_snapshotdialog import Ui_SnapshotDialog
+from opencmiss.zincwidgets.ui.ui_snapshotdialog import Ui_SnapshotDialog
 
 
-class SnapshotDialog(QtGui.QDialog):
+class SnapshotDialog(QtWidgets.QDialog):
 
     sceneviewerInitialized = QtCore.Signal()
 
@@ -42,7 +42,7 @@ class SnapshotDialog(QtGui.QDialog):
         self._ui.widgetPreview.graphicsInitialized.connect(self.sceneviewerInitialized)
 
     def _filenamePushButtonClicked(self):
-        filename, _ = QtGui.QFileDialog.getSaveFileName(self, caption='Choose file ...', dir=self._location, filter="Image Format (*.png, *.jpeg);;All (*.*)")
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(self, caption='Choose file ...', dir=self._location, filter="Image Format (*.png, *.jpeg);;All (*.*)")
         if filename:
             self._location = os.path.dirname(filename)
             self._ui.lineEditFilename.setText(filename)

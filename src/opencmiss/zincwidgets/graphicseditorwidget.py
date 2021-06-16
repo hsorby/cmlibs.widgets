@@ -414,7 +414,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 if contours.setListIsovalues(isovalues) != ZINC_OK:
                     raise
         except:
-            NeonLogger.getLogger().error("Invalid isovalues")
+            ArgonLogger.getLogger().error("Invalid isovalues")
         self._isovaluesDisplay()
 
     def streamVectorFieldChanged(self, index):

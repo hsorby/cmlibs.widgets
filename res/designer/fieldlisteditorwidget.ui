@@ -138,7 +138,7 @@
   <customwidget>
    <class>FieldEditorWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/neon/ui/zincwidgets/fieldeditorwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/fieldeditorwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

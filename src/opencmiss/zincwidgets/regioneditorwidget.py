@@ -16,13 +16,13 @@
 from PySide2 import QtCore, QtWidgets
 
 from opencmiss.argon.core.argonregion import ArgonRegion
-from opencmiss.zincwidgets.ui_regioneditorwidget import Ui_RegionEditorWidget
+from opencmiss.zincwidgets.ui.ui_regioneditorwidget import Ui_RegionEditorWidget
 from opencmiss.argon.core.argonlogger import ArgonLogger
 
 """
-OpenCMISS-Neon Region Editor Widget
+Region Editor Widget
 
-Displays and allows editing of the the Neon region tree.
+Displays and allows editing of the region tree.
 """
 
 
@@ -210,7 +210,7 @@ class RegionEditorWidget(QtWidgets.QWidget):
     def _clearRegion(self):
         region = self.getCurrentRegion()
         msgBox = QtWidgets.QMessageBox()
-        msgBox.setWindowTitle("Neon: Please confirm")
+        msgBox.setWindowTitle("Please confirm")
         msgBox.setText("Clear region " + region.getDisplayName() + " and remove its sub-regions?")
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
@@ -221,7 +221,7 @@ class RegionEditorWidget(QtWidgets.QWidget):
     def _removeRegion(self):
         region = self.getCurrentRegion()
         msgBox = QtWidgets.QMessageBox()
-        msgBox.setWindowTitle("Neon: Please confirm")
+        msgBox.setWindowTitle("Please confirm")
         msgBox.setText("Remove region " + region.getDisplayName() + " and all its sub-regions?")
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
@@ -245,7 +245,7 @@ class RegionEditorWidget(QtWidgets.QWidget):
 
     def setRootRegion(self, rootRegion):
         """
-        :param rootRegion: The root NeonRegion
+        :param rootRegion: The root ArgonRegion
         """
         self._rootRegion = rootRegion
         self._rootRegion.connectRegionChange(self._regionChange)

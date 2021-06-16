@@ -658,22 +658,22 @@
   <customwidget>
    <class>MaterialChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/neon/ui/zincwidgets/materialchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/materialchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>GlyphChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/neon/ui/zincwidgets/glyphchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/glyphchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>SpectrumChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/neon/ui/zincwidgets/spectrumchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/spectrumchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>TessellationChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/neon/ui/zincwidgets/tessellationchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/tessellationchooserwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

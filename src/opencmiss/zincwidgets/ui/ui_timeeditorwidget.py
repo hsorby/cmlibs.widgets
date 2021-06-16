@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from opencmiss.neon.ui import icons_rc
+from opencmiss.zincwidgets.ui import icons_rc
 
 class Ui_TimeEditorWidget(object):
     def setupUi(self, TimeEditorWidget):
@@ -78,7 +78,7 @@ class Ui_TimeEditorWidget(object):
         self.pushButtonPlayReverse = QPushButton(self.groupBox)
         self.pushButtonPlayReverse.setObjectName(u"pushButtonPlayReverse")
         icon = QIcon()
-        icon.addFile(u":/neon/images/icons/playback-start-reverse-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u":/zincwidgets/images/icons/playback-start-reverse-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonPlayReverse.setIcon(icon)
 
         self.horizontalLayout.addWidget(self.pushButtonPlayReverse)
@@ -86,7 +86,7 @@ class Ui_TimeEditorWidget(object):
         self.pushButtonStop = QPushButton(self.groupBox)
         self.pushButtonStop.setObjectName(u"pushButtonStop")
         icon1 = QIcon()
-        icon1.addFile(u":/neon/images/icons/playback-stop-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(u":/zincwidgets/images/icons/playback-stop-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonStop.setIcon(icon1)
 
         self.horizontalLayout.addWidget(self.pushButtonStop)
@@ -94,7 +94,7 @@ class Ui_TimeEditorWidget(object):
         self.pushButtonPlay = QPushButton(self.groupBox)
         self.pushButtonPlay.setObjectName(u"pushButtonPlay")
         icon2 = QIcon()
-        icon2.addFile(u":/neon/images/icons/playback-start-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon2.addFile(u":/zincwidgets/images/icons/playback-start-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonPlay.setIcon(icon2)
 
         self.horizontalLayout.addWidget(self.pushButtonPlay)

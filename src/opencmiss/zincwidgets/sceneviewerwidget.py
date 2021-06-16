@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide2 import QtCore, QtOpenGL
+from PySide2 import QtCore, QtWidgets
 
 from opencmiss.zinc.scene import Scene
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
@@ -29,17 +29,17 @@ from opencmiss.zincwidgets.definitions import ProjectionMode, \
 
 # mapping from qt to zinc start
 # Create a button map of Qt mouse buttons to Zinc input buttons
-class SceneviewerWidget(QtOpenGL.QGLWidget):
+class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
     graphicsInitialized = QtCore.Signal()
 
     # init start
-    def __init__(self, parent=None, shared=None):
+    def __init__(self, parent=None):
         """
         Call the super class init functions, set the  Zinc context and the scene viewer handle to None.
         Initialise other attributes that deal with selection and the rotation of the plane.
         """
-        QtOpenGL.QGLWidget.__init__(self, parent, shared)
+        super(SceneviewerWidget, self).__init__(parent)
         # Create a Zinc context from which all other objects can be derived either directly or indirectly.
         self._handle_mouse_events = True
         self._graphicsInitialized = False
@@ -64,7 +64,7 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         self._sceneviewernotifier = None
 
         # From the scene viewer module we can create a scene viewer, we set up the
-        # scene viewer to have the same OpenGL properties as the QGLWidget.
+        # scene viewer to have the same OpenGL properties as the QOpenGLWidget.
         sceneviewermodule = self._context.getSceneviewermodule()
         self._sceneviewer = sceneviewermodule.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE, Sceneviewer.STEREO_MODE_DEFAULT)
         self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
@@ -191,7 +191,7 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
     # paintGL start
     def paintGL(self):
         """
-        Render the scene for this scene viewer.  The QGLWidget has already set up the
+        Render the scene for this scene viewer.  The QOpenGLWidget has already set up the
         correct OpenGL buffer for us so all we need do is render into it.  The scene viewer
         will clear the background so any OpenGL drawing of your own needs to go after this
         API call.

@@ -18,8 +18,8 @@ import json
 from PySide2 import QtCore, QtWidgets
 
 from opencmiss.zinc.status import OK as ZINC_OK
-from opencmiss.zincwidgets.ui_tessellationeditorwidget import Ui_TessellationEditorWidget
-from opencmiss.neon.ui.delegates.spinboxdelegate import SpinBoxDelegate
+from opencmiss.zincwidgets.ui.ui_tessellationeditorwidget import Ui_TessellationEditorWidget
+from opencmiss.zincwidgets.delegates.spinboxdelegate import SpinBoxDelegate
 
 TESSELLATION_NAME_FORMAT = 'tessellation{0}'
 TESSELLATION_DATA_ROLE = QtCore.Qt.UserRole + 1

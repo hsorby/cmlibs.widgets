@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SnapshotDialog</class>
  <widget class="QDialog" name="SnapshotDialog">
@@ -157,7 +158,7 @@
   <customwidget>
    <class>SceneviewerWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/neon/ui/zincwidgets/sceneviewerwidget.h</header>
+   <header>opencmiss/zincwidgets/sceneviewerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

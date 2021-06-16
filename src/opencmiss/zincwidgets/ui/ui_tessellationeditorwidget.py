@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from opencmiss.neon.ui import icons_rc
+from opencmiss.zincwidgets.ui import icons_rc
 
 class Ui_TessellationEditorWidget(object):
     def setupUi(self, TessellationEditorWidget):
@@ -41,7 +41,7 @@ class Ui_TessellationEditorWidget(object):
         self.pushButtonAddTessellation = QPushButton(self.groupBox)
         self.pushButtonAddTessellation.setObjectName(u"pushButtonAddTessellation")
         icon = QIcon()
-        icon.addFile(u":/neon/images/icons/list-add-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u":/zincwidgets/images/icons/list-add-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonAddTessellation.setIcon(icon)
 
         self.gridLayout.addWidget(self.pushButtonAddTessellation, 1, 0, 1, 1)
@@ -49,7 +49,7 @@ class Ui_TessellationEditorWidget(object):
         self.pushButtonDeleteTessellation = QPushButton(self.groupBox)
         self.pushButtonDeleteTessellation.setObjectName(u"pushButtonDeleteTessellation")
         icon1 = QIcon()
-        icon1.addFile(u":/neon/images/icons/list-remove-icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(u":/zincwidgets/images/icons/list-remove-icon.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButtonDeleteTessellation.setIcon(icon1)
 
         self.gridLayout.addWidget(self.pushButtonDeleteTessellation, 1, 1, 1, 1)
