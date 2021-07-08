@@ -15,7 +15,9 @@
 '''
 from PySide2 import QtWidgets, QtGui, QtCore
 
+from opencmiss.zinc.sceneviewer import Sceneviewer
 from opencmiss.zinc.material import Material
+from opencmiss.zinc.glyph import Glyph
 from opencmiss.zincwidgets.ui.ui_materialeditorwidget import Ui_MaterialEditor
 from opencmiss.utils.zinc.general import ChangeManager
 
@@ -32,6 +34,8 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._materialmodule = None
         self._materialmodulenotifier = None
         self._currentMaterial = None
+        self._tempMaterial = None
+        self._previewZincScene = None
 
         self._makeConnections()
         self._buildMaterialList()
@@ -56,6 +60,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             print("after", color)
             diffuseColour = [color.redF(), color.greenF(), color.blueF()]
             print(diffuseColour)
+            
 
     def _buildMaterialList(self):
         '''
@@ -101,6 +106,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._ui.diffuseSelectColour_button.setStyleSheet("background-color: {}".format(diffuseColour.name()))
         self._ui.emittedSelectColour_button.setStyleSheet("background-color: {}".format(emissionColour.name()))
         self._ui.specularSelectColour_button.setStyleSheet("background-color: {}".format(specularColour.name()))
+        self._previewMaterial(self._currentMaterial)
 
     def _getCurrentMaterialColour(self):
         result, ambientColour = self._currentMaterial.getAttributeReal3(Material.ATTRIBUTE_AMBIENT)
@@ -112,6 +118,44 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         intEmissionColour = QtGui.QColor(int(emissionColour[0]*255), int(emissionColour[1]*255), int(emissionColour[1]*255))
         intSpecularColour = QtGui.QColor(int(specularColour[0]*255), int(specularColour[1]*255), int(specularColour[1]*255))
         return intAmbientColour, intDiffuseColour, intEmissionColour, intSpecularColour
+
+    def _previewMaterial(self, material):
+        if self._previewZincScene is None:
+            return
+        if (material is None) or (not material.isValid()):
+            self._previewZincScene.removeAllGraphics()
+            return
+        points = self._previewZincScene.getFirstGraphics()
+        self._previewZincScene.beginChange()
+        if not points.isValid():
+            points = self._previewZincScene.createGraphicsPoints()
+            pointsattr = points.getGraphicspointattributes()
+            pointsattr.setBaseSize(1.0)
+        else:
+            pointsattr = points.getGraphicspointattributes()
+        colourSphere = self._createMaterialGlyphColourSphere()
+        pointsattr.setGlyph(colourSphere)
+        points.setMaterial(material)
+        self._previewZincScene.endChange()
+        sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
+        if sceneviewer:
+            sceneviewer.beginChange()
+            sceneviewer.setScene(self._previewZincScene)
+            sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PARALLEL)
+            sceneviewer.setNearClippingPlane(1.0)
+            sceneviewer.setFarClippingPlane(10.0)
+            sceneviewer.setViewAngle(0.25)
+            sceneviewer.endChange()
+
+    def _createMaterialGlyphColourSphere(self):
+            glyphmodule = self._zincContext.getGlyphmodule()
+
+            # create a new colour bar, matching Cmgui's defaults:
+            glyphmodule.beginChange()
+            colourSphere = glyphmodule.findGlyphByGlyphShapeType(Glyph.SHAPE_TYPE_SPHERE)
+            colourSphere.setManaged(True)
+            glyphmodule.endChange()
+            return colourSphere
 
     def _materialCreateClicked(self):
         """
@@ -210,7 +254,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._zincContext = zincContext
         self._ui.sceneviewerWidgetPreview.setContext(self._zincContext)
         self._previewZincRegion = self._zincContext.createRegion()
-        self._previewZincRegion.setName("Spectrum editor preview region")
+        self._previewZincRegion.setName("Material editor preview region")
         self._previewZincScene = self._previewZincRegion.getScene()
         sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
         if sceneviewer:
@@ -218,7 +262,6 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         # spectrummodule = self._zincContext.getSpectrummodule()
         # self._spectrummodulenotifier = spectrummodule.createSpectrummodulenotifier()
         # self._spectrummodulenotifier.setCallback(self._spectrummoduleCallback)
-        # self._buildSpectrumList()
         self.setMaterialmodule(self._zincContext.getMaterialmodule())
         self._buildMaterialList()
 
