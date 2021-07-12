@@ -144,12 +144,12 @@
    <item>
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="2" column="1">
-      <widget class="QComboBox" name="comboBox"/>
+      <widget class="QComboBox" name="texture_comboBox"/>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>TextLabel</string>
+        <string>Alpha : </string>
        </property>
       </widget>
      </item>
@@ -161,7 +161,10 @@
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QSlider" name="horizontalSlider_2">
+      <widget class="QSlider" name="shininess_slider">
+       <property name="maximum">
+        <number>100</number>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -182,13 +185,16 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="alpha_lineEdit"/>
      </item>
      <item row="0" column="3">
-      <widget class="QLineEdit" name="lineEdit_2"/>
+      <widget class="QLineEdit" name="shininess_lineEdit"/>
      </item>
      <item row="1" column="1">
-      <widget class="QSlider" name="horizontalSlider">
+      <widget class="QSlider" name="alpha_slider">
+       <property name="maximum">
+        <number>100</number>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -202,22 +208,25 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QComboBox" name="comboBox_2"/>
+      <widget class="QComboBox" name="region_comboBox"/>
      </item>
      <item row="4" column="1">
-      <widget class="QComboBox" name="comboBox_3"/>
+      <widget class="QComboBox" name="imageField_comboBox"/>
      </item>
      <item row="3" column="3">
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="bumpMapping_checkBox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
-        <string>CheckBox</string>
+        <string>Bump Mapping</string>
        </property>
       </widget>
      </item>
      <item row="2" column="3">
-      <widget class="QCheckBox" name="checkBox_2">
+      <widget class="QCheckBox" name="perPixelLighting_checkBox">
        <property name="text">
-        <string>CheckBox</string>
+        <string>Per Pixel Lighting</string>
        </property>
       </widget>
      </item>
@@ -225,24 +234,6 @@
    </item>
    <item>
     <widget class="SceneviewerWidget" name="sceneviewerWidgetPreview" native="true"/>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QPushButton" name="apply_button">
-       <property name="text">
-        <string>Apply</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="revert_button">
-       <property name="text">
-        <string>Revert</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>

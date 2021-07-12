@@ -113,10 +113,10 @@ class Ui_MaterialEditor(object):
 
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.comboBox = QComboBox(MaterialEditor)
-        self.comboBox.setObjectName(u"comboBox")
+        self.texture_comboBox = QComboBox(MaterialEditor)
+        self.texture_comboBox.setObjectName(u"texture_comboBox")
 
-        self.gridLayout_2.addWidget(self.comboBox, 2, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.texture_comboBox, 2, 1, 1, 1)
 
         self.label = QLabel(MaterialEditor)
         self.label.setObjectName(u"label")
@@ -128,11 +128,12 @@ class Ui_MaterialEditor(object):
 
         self.gridLayout_2.addWidget(self.label_2, 0, 2, 1, 1)
 
-        self.horizontalSlider_2 = QSlider(MaterialEditor)
-        self.horizontalSlider_2.setObjectName(u"horizontalSlider_2")
-        self.horizontalSlider_2.setOrientation(Qt.Horizontal)
+        self.shininess_slider = QSlider(MaterialEditor)
+        self.shininess_slider.setObjectName(u"shininess_slider")
+        self.shininess_slider.setMaximum(100)
+        self.shininess_slider.setOrientation(Qt.Horizontal)
 
-        self.gridLayout_2.addWidget(self.horizontalSlider_2, 1, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.shininess_slider, 1, 3, 1, 1)
 
         self.label_3 = QLabel(MaterialEditor)
         self.label_3.setObjectName(u"label_3")
@@ -144,46 +145,48 @@ class Ui_MaterialEditor(object):
 
         self.gridLayout_2.addWidget(self.label_4, 3, 0, 1, 1)
 
-        self.lineEdit = QLineEdit(MaterialEditor)
-        self.lineEdit.setObjectName(u"lineEdit")
+        self.alpha_lineEdit = QLineEdit(MaterialEditor)
+        self.alpha_lineEdit.setObjectName(u"alpha_lineEdit")
 
-        self.gridLayout_2.addWidget(self.lineEdit, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.alpha_lineEdit, 0, 1, 1, 1)
 
-        self.lineEdit_2 = QLineEdit(MaterialEditor)
-        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        self.shininess_lineEdit = QLineEdit(MaterialEditor)
+        self.shininess_lineEdit.setObjectName(u"shininess_lineEdit")
 
-        self.gridLayout_2.addWidget(self.lineEdit_2, 0, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.shininess_lineEdit, 0, 3, 1, 1)
 
-        self.horizontalSlider = QSlider(MaterialEditor)
-        self.horizontalSlider.setObjectName(u"horizontalSlider")
-        self.horizontalSlider.setOrientation(Qt.Horizontal)
+        self.alpha_slider = QSlider(MaterialEditor)
+        self.alpha_slider.setObjectName(u"alpha_slider")
+        self.alpha_slider.setMaximum(100)
+        self.alpha_slider.setOrientation(Qt.Horizontal)
 
-        self.gridLayout_2.addWidget(self.horizontalSlider, 1, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.alpha_slider, 1, 1, 1, 1)
 
         self.label_5 = QLabel(MaterialEditor)
         self.label_5.setObjectName(u"label_5")
 
         self.gridLayout_2.addWidget(self.label_5, 4, 0, 1, 1)
 
-        self.comboBox_2 = QComboBox(MaterialEditor)
-        self.comboBox_2.setObjectName(u"comboBox_2")
+        self.region_comboBox = QComboBox(MaterialEditor)
+        self.region_comboBox.setObjectName(u"region_comboBox")
 
-        self.gridLayout_2.addWidget(self.comboBox_2, 3, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.region_comboBox, 3, 1, 1, 1)
 
-        self.comboBox_3 = QComboBox(MaterialEditor)
-        self.comboBox_3.setObjectName(u"comboBox_3")
+        self.imageField_comboBox = QComboBox(MaterialEditor)
+        self.imageField_comboBox.setObjectName(u"imageField_comboBox")
 
-        self.gridLayout_2.addWidget(self.comboBox_3, 4, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.imageField_comboBox, 4, 1, 1, 1)
 
-        self.checkBox = QCheckBox(MaterialEditor)
-        self.checkBox.setObjectName(u"checkBox")
+        self.bumpMapping_checkBox = QCheckBox(MaterialEditor)
+        self.bumpMapping_checkBox.setObjectName(u"bumpMapping_checkBox")
+        self.bumpMapping_checkBox.setEnabled(False)
 
-        self.gridLayout_2.addWidget(self.checkBox, 3, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.bumpMapping_checkBox, 3, 3, 1, 1)
 
-        self.checkBox_2 = QCheckBox(MaterialEditor)
-        self.checkBox_2.setObjectName(u"checkBox_2")
+        self.perPixelLighting_checkBox = QCheckBox(MaterialEditor)
+        self.perPixelLighting_checkBox.setObjectName(u"perPixelLighting_checkBox")
 
-        self.gridLayout_2.addWidget(self.checkBox_2, 2, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.perPixelLighting_checkBox, 2, 3, 1, 1)
 
 
         self.verticalLayout.addLayout(self.gridLayout_2)
@@ -192,21 +195,6 @@ class Ui_MaterialEditor(object):
         self.sceneviewerWidgetPreview.setObjectName(u"sceneviewerWidgetPreview")
 
         self.verticalLayout.addWidget(self.sceneviewerWidgetPreview)
-
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.apply_button = QPushButton(MaterialEditor)
-        self.apply_button.setObjectName(u"apply_button")
-
-        self.horizontalLayout_2.addWidget(self.apply_button)
-
-        self.revert_button = QPushButton(MaterialEditor)
-        self.revert_button.setObjectName(u"revert_button")
-
-        self.horizontalLayout_2.addWidget(self.revert_button)
-
-
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
 
 
         self.retranslateUi(MaterialEditor)
@@ -226,14 +214,12 @@ class Ui_MaterialEditor(object):
         self.specularText_label.setText(QCoreApplication.translate("MaterialEditor", u"Specular Colour:", None))
         self.emittedSelectColour_button.setText(QCoreApplication.translate("MaterialEditor", u"Select Color", None))
         self.specularSelectColour_button.setText(QCoreApplication.translate("MaterialEditor", u"Select Color", None))
-        self.label.setText(QCoreApplication.translate("MaterialEditor", u"TextLabel", None))
+        self.label.setText(QCoreApplication.translate("MaterialEditor", u"Alpha : ", None))
         self.label_2.setText(QCoreApplication.translate("MaterialEditor", u"Shininess : ", None))
         self.label_3.setText(QCoreApplication.translate("MaterialEditor", u"Texture : ", None))
         self.label_4.setText(QCoreApplication.translate("MaterialEditor", u"Region : ", None))
         self.label_5.setText(QCoreApplication.translate("MaterialEditor", u"Image Field : ", None))
-        self.checkBox.setText(QCoreApplication.translate("MaterialEditor", u"CheckBox", None))
-        self.checkBox_2.setText(QCoreApplication.translate("MaterialEditor", u"CheckBox", None))
-        self.apply_button.setText(QCoreApplication.translate("MaterialEditor", u"Apply", None))
-        self.revert_button.setText(QCoreApplication.translate("MaterialEditor", u"Revert", None))
+        self.bumpMapping_checkBox.setText(QCoreApplication.translate("MaterialEditor", u"Bump Mapping", None))
+        self.perPixelLighting_checkBox.setText(QCoreApplication.translate("MaterialEditor", u"Per Pixel Lighting", None))
     # retranslateUi
 
