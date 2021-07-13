@@ -18,6 +18,7 @@ from PySide2 import QtWidgets, QtGui, QtCore
 from opencmiss.zinc.sceneviewer import Sceneviewer
 from opencmiss.zinc.material import Material
 from opencmiss.zinc.glyph import Glyph
+from opencmiss.zinc.status import OK as ZINC_OK
 from opencmiss.zincwidgets.ui.ui_materialeditorwidget import Ui_MaterialEditor
 from opencmiss.utils.zinc.general import ChangeManager
 
@@ -64,6 +65,27 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._ui.shininess_lineEdit.editingFinished.connect(self._shininessEntered)
         self._ui.shininess_slider.valueChanged.connect(self._shininessSliderValueChanged)
         self._ui.sceneviewerWidgetPreview.graphicsInitialized.connect(self._previewGraphicsInitialised)
+        self._ui.texture_comboBox.currentIndexChanged.connect(self._textureChanged)
+        self._ui.region_comboBox.currentIndexChanged.connect(self._regionChanged)
+        self._ui.imageField_comboBox.currentIndexChanged.connect(self._imageFieldChanged)
+
+    def _buildTextureComboBox(self):
+        pass
+
+    def _buildRegionComboBox(self):
+        pass
+    
+    def _buildImageFieldComboBox(self):
+        pass
+    
+    def _textureChanged(self):
+        pass
+
+    def _regionChanged(self):
+        pass
+    
+    def _imageFieldChanged(self):
+        pass
 
     def _buildMaterialList(self):
         '''
@@ -90,8 +112,23 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             self._ui.materials_listView.setModel(self._materialItems)
             if selectedIndex:
                 self._ui.materials_listView.setCurrentIndex(selectedIndex)
+            self._materialItems.itemChanged.connect(self._onMaterialItemChanged)
+            itemDelegate = QtWidgets.QItemDelegate(self._ui.materials_listView)
+            # itemDelegate.commitData(self._onMaterialItemChanged)
+            self._ui.materials_listView.setItemDelegate(itemDelegate)
             self._ui.materials_listView.show()
             self._displayMaterial()
+
+    def _onMaterialItemChanged(self, item):
+        """
+        For QStandardItemModel ItemChanged Signal, catch the item text edit event.
+        Update the material name.
+        """ 
+        newName = item.text()
+        if self._renameMaterial(item.data(), newName):
+            return
+        item.setText(item.data().getName())
+        QtWidgets.QMessageBox.information(self, "Info", "Can't change this material's name to %s."%newName)
 
     def _displayMaterial(self):
         '''
@@ -145,6 +182,9 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         colourF = [buttonColour.redF(), buttonColour.greenF(), buttonColour.blueF()]
         self._currentMaterial.setAttributeReal3(materialAttribute, colourF)
 
+    def _materialNameEntered(self):
+        print("item edit")
+
     def _alphaEntered(self):
         value = self._ui.alpha_lineEdit.text()
         self._currentMaterial.setAttributeReal(Material.ATTRIBUTE_ALPHA, value)
@@ -192,32 +232,16 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             pointsattr.setBaseSize(1.0)
         else:
             pointsattr = points.getGraphicspointattributes()
-        colourSphere = self._createMaterialGlyphColourSphere()
-        pointsattr.setGlyph(colourSphere)
+        pointsattr.setGlyphShapeType(Glyph.SHAPE_TYPE_SPHERE)
         points.setMaterial(self._currentMaterial)
 
         tessellationModule = self._previewZincScene.getTessellationmodule()
         tessellation = tessellationModule.createTessellation()
         tessellation.setManaged(True)
-        tessellation.setMinimumDivisions(999)
         tessellation.setCircleDivisions(999)
         
-        print(tessellation)
         points.setTessellation(tessellation)
         self._previewZincScene.endChange()
-        sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
-        if sceneviewer:
-            sceneviewer.beginChange()
-            sceneviewer.setScene(self._previewZincScene)
-            sceneviewer.endChange()
-
-    def _createMaterialGlyphColourSphere(self):
-        glyphmodule = self._zincContext.getGlyphmodule()
-        glyphmodule.beginChange()
-        colourSphere = glyphmodule.findGlyphByGlyphShapeType(Glyph.SHAPE_TYPE_SPHERE)
-        colourSphere.setManaged(True)
-        glyphmodule.endChange()
-        return colourSphere
 
     def _materialCreateClicked(self):
         """
@@ -247,7 +271,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         Select next step after, or before if none.
         """
         self._clearPreview()
-        self.removeMaterialByName(self._currentMaterial.getName())
+        self._removeMaterialByName(self._currentMaterial.getName())
 
     def _materialListItemClicked(self, modelIndex):
         """
@@ -281,27 +305,28 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._buildMaterialList()
 
     def _previewGraphicsInitialised(self):
-        sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()   
-        sceneviewer.setScene(self._previewZincScene)
+        sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
+        with ChangeManager(sceneviewer):
+            sceneviewer.setScene(self._previewZincScene)
+            sceneviewer.setZoomRate(0)
+            sceneviewer.setTumbleRate(0)
+            sceneviewer.setTranslationRate(0)
+            sceneviewer.setLookatParametersNonSkew([3.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])
+            sceneviewer.setViewAngle(0.679673818908244)
+            sceneviewer.setNearClippingPlane(2.4)
+            sceneviewer.setFarClippingPlane(3.0)
 
-    def renameMaterial(self, material, name):
+    def _renameMaterial(self, material, name):
         """
-        Renames material and its glyph
+        Renames material
         :return True on success, otherwise False (means name not set)
         """
-        colourBar = self.findOrCreateSpectrumGlyphColourBar(material)
         result = material.setName(name)
         if result == ZINC_OK:
-            glyphName = SPECTRUM_GLYPH_NAME_FORMAT.format(name)
-            tmpName = glyphName
-            i = 1
-            while (colourBar.setName(tmpName) != ZINC_OK):
-                tmpName = glyphName + str(i)
-                i += 1
             return True
         return False
 
-    def removeMaterialByName(self, name):
+    def _removeMaterialByName(self, name):
         """
         Unmanages material and its colour bar. Note material is only removed if neither are in use.
         :return True if material and colour bar removed, false if failed i.e. either are in use.
@@ -321,6 +346,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             material.setManaged(True)
             successfully_removed = False
             self._addMaterialToModelList(material, row)
+            QtWidgets.QMessageBox.information(self, "Info", "This material is still in use and can't be deleted.")
         else:
             successfully_removed = True
             index = self._materialItems.index(row,0)
