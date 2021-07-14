@@ -208,27 +208,10 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QComboBox" name="region_comboBox"/>
+      <widget class="RegionChooserWidget" name="region_comboBox" native="true"/>
      </item>
      <item row="4" column="1">
-      <widget class="QComboBox" name="imageField_comboBox"/>
-     </item>
-     <item row="3" column="3">
-      <widget class="QCheckBox" name="bumpMapping_checkBox">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Bump Mapping</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QCheckBox" name="perPixelLighting_checkBox">
-       <property name="text">
-        <string>Per Pixel Lighting</string>
-       </property>
-      </widget>
+      <widget class="FieldChooserWidget" name="imageField_comboBox"/>
      </item>
     </layout>
    </item>
@@ -242,6 +225,18 @@
    <class>SceneviewerWidget</class>
    <extends>QWidget</extends>
    <header>opencmiss/zincwidgets/sceneviewerwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>RegionChooserWidget</class>
+   <extends>QWidget</extends>
+   <header>opencmiss/zincwidgets/regionchooserwidget.h</header>
+   <container>1</container>
+  </customwidget>
+    <customwidget>
+   <class>FieldChooserWidget</class>
+   <extends>QWidget</extends>
+   <header>opencmiss/zincwidgets/fieldchooserwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

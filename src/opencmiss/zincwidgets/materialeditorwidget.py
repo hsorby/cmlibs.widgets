@@ -18,6 +18,7 @@ from PySide2 import QtWidgets, QtGui, QtCore
 from opencmiss.zinc.sceneviewer import Sceneviewer
 from opencmiss.zinc.material import Material
 from opencmiss.zinc.glyph import Glyph
+from opencmiss.zinc.field import Field
 from opencmiss.zinc.status import OK as ZINC_OK
 from opencmiss.zincwidgets.ui.ui_materialeditorwidget import Ui_MaterialEditor
 from opencmiss.utils.zinc.general import ChangeManager
@@ -70,22 +71,45 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._ui.imageField_comboBox.currentIndexChanged.connect(self._imageFieldChanged)
 
     def _buildTextureComboBox(self):
-        pass
+        self._ui.texture_comboBox.clear()
+        for i in range(4):
+            self._ui.texture_comboBox.addItem("%d"%(i + 1))
 
     def _buildRegionComboBox(self):
-        pass
+        # region = self._zincContext.getDefaultRegion().createChild("Test")
+        # imageField = region.getFieldmodule().createFieldImage()
+        # imageField.setManaged(True)
+        # imageField = region.getFieldmodule().createFieldImage()
+        # imageField.setManaged(True)
+        self._ui.region_comboBox.setRootRegion(self._zincContext.getDefaultRegion())
     
-    def _buildImageFieldComboBox(self):
-        pass
-    
-    def _textureChanged(self):
-        pass
+    def _buildImageFieldComboBox(self, region):
+        self._ui.imageField_comboBox.clear()
+        self._ui.imageField_comboBox.setConditional(self.field_is_image)
+        self._ui.imageField_comboBox.setRegion(region)
 
-    def _regionChanged(self):
-        pass
+    def field_is_image(self, field_in: Field):
+        """
+        Conditional function returning True if the field is an image field.
+        """
+        return field_in.castImage().isValid() and field_in.isManaged()
+
+    def _textureChanged(self, index):
+        print("texture changed", self._currentMaterial.getTextureField(index))
+        texture = self._currentMaterial.getTextureField(index)
+        print(texture.getFieldmodule())
+        print(texture.getFieldmodule().getRegion())
+        print(texture.castImage().isValid())
+
+    def _regionChanged(self, index):
+        self._buildImageFieldComboBox(self._ui.region_comboBox.getRegion())
     
-    def _imageFieldChanged(self):
-        pass
+    def _imageFieldChanged(self, index):
+        texture = self._ui.texture_comboBox.currentIndex() + 1
+        imageField = self._ui.region_comboBox.getRegion().getFieldmodule().findFieldByName(self._ui.imageField_comboBox.currentText())
+        self._currentMaterial.setTextureField(texture, imageField)
+
+
 
     def _buildMaterialList(self):
         '''
@@ -138,6 +162,8 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._updateAlpha()
         self._updateShininess()
         self._previewMaterial()
+        self._buildTextureComboBox()
+        self._buildRegionComboBox()
 
     def _updateButtonColour(self):
         if self._currentMaterial:
@@ -181,9 +207,6 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         buttonColour = attributeButton.palette().button().color()
         colourF = [buttonColour.redF(), buttonColour.greenF(), buttonColour.blueF()]
         self._currentMaterial.setAttributeReal3(materialAttribute, colourF)
-
-    def _materialNameEntered(self):
-        print("item edit")
 
     def _alphaEntered(self):
         value = self._ui.alpha_lineEdit.text()
@@ -230,24 +253,24 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             points = self._previewZincScene.createGraphicsPoints()
             pointsattr = points.getGraphicspointattributes()
             pointsattr.setBaseSize(1.0)
+            tessellationModule = self._previewZincScene.getTessellationmodule()
+            tessellation = tessellationModule.createTessellation()
+            tessellation.setManaged(False)
+            tessellation.setCircleDivisions(999)
+            points.setTessellation(tessellation)
         else:
             pointsattr = points.getGraphicspointattributes()
         pointsattr.setGlyphShapeType(Glyph.SHAPE_TYPE_SPHERE)
         points.setMaterial(self._currentMaterial)
 
-        tessellationModule = self._previewZincScene.getTessellationmodule()
-        tessellation = tessellationModule.createTessellation()
-        tessellation.setManaged(True)
-        tessellation.setCircleDivisions(999)
-        
-        points.setTessellation(tessellation)
+
         self._previewZincScene.endChange()
 
     def _materialCreateClicked(self):
         """
         Create a new material.
         """
-        name = 'bob'
+        name = 'temp'
         with ChangeManager(self._materialmodule):
             material = self._materialmodule.createMaterial()
             material.setName(name)
@@ -349,7 +372,10 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             QtWidgets.QMessageBox.information(self, "Info", "This material is still in use and can't be deleted.")
         else:
             successfully_removed = True
-            index = self._materialItems.index(row,0)
+            if row < self._materialItems.rowCount():
+                index = self._materialItems.index(row,0)
+            else:
+                index = self._materialItems.index(row - 1,0)
             self._ui.materials_listView.setCurrentIndex(index)
             item = self._materialItems.itemFromIndex(index)
             self._currentMaterial = item.data()

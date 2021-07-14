@@ -13,6 +13,8 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
+from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
+from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
 
 
 class Ui_MaterialEditor(object):
@@ -167,26 +169,15 @@ class Ui_MaterialEditor(object):
 
         self.gridLayout_2.addWidget(self.label_5, 4, 0, 1, 1)
 
-        self.region_comboBox = QComboBox(MaterialEditor)
+        self.region_comboBox = RegionChooserWidget(MaterialEditor)
         self.region_comboBox.setObjectName(u"region_comboBox")
 
         self.gridLayout_2.addWidget(self.region_comboBox, 3, 1, 1, 1)
 
-        self.imageField_comboBox = QComboBox(MaterialEditor)
+        self.imageField_comboBox = FieldChooserWidget(MaterialEditor)
         self.imageField_comboBox.setObjectName(u"imageField_comboBox")
 
         self.gridLayout_2.addWidget(self.imageField_comboBox, 4, 1, 1, 1)
-
-        self.bumpMapping_checkBox = QCheckBox(MaterialEditor)
-        self.bumpMapping_checkBox.setObjectName(u"bumpMapping_checkBox")
-        self.bumpMapping_checkBox.setEnabled(False)
-
-        self.gridLayout_2.addWidget(self.bumpMapping_checkBox, 3, 3, 1, 1)
-
-        self.perPixelLighting_checkBox = QCheckBox(MaterialEditor)
-        self.perPixelLighting_checkBox.setObjectName(u"perPixelLighting_checkBox")
-
-        self.gridLayout_2.addWidget(self.perPixelLighting_checkBox, 2, 3, 1, 1)
 
 
         self.verticalLayout.addLayout(self.gridLayout_2)
@@ -219,7 +210,5 @@ class Ui_MaterialEditor(object):
         self.label_3.setText(QCoreApplication.translate("MaterialEditor", u"Texture : ", None))
         self.label_4.setText(QCoreApplication.translate("MaterialEditor", u"Region : ", None))
         self.label_5.setText(QCoreApplication.translate("MaterialEditor", u"Image Field : ", None))
-        self.bumpMapping_checkBox.setText(QCoreApplication.translate("MaterialEditor", u"Bump Mapping", None))
-        self.perPixelLighting_checkBox.setText(QCoreApplication.translate("MaterialEditor", u"Per Pixel Lighting", None))
     # retranslateUi
 
