@@ -109,8 +109,6 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         imageField = self._ui.region_comboBox.getRegion().getFieldmodule().findFieldByName(self._ui.imageField_comboBox.currentText())
         self._currentMaterial.setTextureField(texture, imageField)
 
-
-
     def _buildMaterialList(self):
         '''
         Rebuilds the list of items in the Listview from the material module
@@ -256,7 +254,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             tessellationModule = self._previewZincScene.getTessellationmodule()
             tessellation = tessellationModule.createTessellation()
             tessellation.setManaged(False)
-            tessellation.setCircleDivisions(999)
+            tessellation.setCircleDivisions(48)
             points.setTessellation(tessellation)
         else:
             pointsattr = points.getGraphicspointattributes()
