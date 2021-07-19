@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtWidgets
 
 from opencmiss.zinc.field import Field
@@ -20,9 +20,9 @@ from opencmiss.zinc.field import Field
 class FieldChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QComboBox.__init__(self, parent)
         self._nullObjectName = None
         self._region = None
@@ -31,9 +31,9 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         self._allowUnmanagedField = False
 
     def _fieldmoduleCallback(self, fieldmoduleevent):
-        '''
+        """
         Callback for change in fields; may need to rebuild field list
-        '''
+        """
         changeSummary = fieldmoduleevent.getSummaryFieldChangeFlags()
         # print "_fieldmoduleCallback changeSummary =", changeSummary
         if ((0 != (changeSummary & (Field.CHANGE_FLAG_IDENTIFIER | Field.CHANGE_FLAG_ADD | Field.CHANGE_FLAG_REMOVE))) or
@@ -41,9 +41,9 @@ class FieldChooserWidget(QtWidgets.QComboBox):
             self._buildFieldList()
 
     def _buildFieldList(self):
-        '''
+        """
         Rebuilds the list of items in the ComboBox from the field module
-        '''
+        """
         self.blockSignals(True)
         self.clear()
         if self._region and self._region.isValid():
@@ -60,9 +60,9 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         self._displayField()
 
     def _displayField(self):
-        '''
+        """
         Display the currently chosen field in the ComboBox
-        '''
+        """
         self.blockSignals(True)
         if self._field:
             fieldName = self._field.getName()
@@ -74,19 +74,19 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         self.blockSignals(False)
 
     def setNullObjectName(self, nullObjectName):
-        '''
+        """
         Enable a null object option with the supplied name e.g. '-' or '<select>'
         Default is None
-        '''
+        """
         self._nullObjectName = nullObjectName
 
     def getRegion(self):
         return self._region
 
     def setRegion(self, region):
-        '''
+        """
         Sets the region that this widget chooses fields from
-        '''
+        """
         if region and region.isValid():
             self._region = region
         else:
@@ -100,17 +100,17 @@ class FieldChooserWidget(QtWidgets.QComboBox):
             self._fieldmodulenotifier = None
 
     def setConditional(self, conditional):
-        '''
+        """
         Set a callable which takes a field and returns true if field should be included
         Call before setting the current field
-        '''
+        """
         self._conditional = conditional
         self._buildFieldList()
 
     def getField(self):
-        '''
+        """
         Must call this from currentIndexChanged() slot to get/update current field
-        '''
+        """
         fieldName = self.currentText()
         if self._nullObjectName and (fieldName == self._nullObjectName):
             self._field = None
@@ -122,9 +122,9 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         self._allowUnmanagedField = flag
 
     def setField(self, field):
-        '''
+        """
         Set the currently selected field; call after setConditional
-        '''
+        """
         if not field or not field.isValid():
             self._field = None
         elif not self._allowUnmanagedField and not field.isManaged():

@@ -13,20 +13,20 @@ from PySide2 import QtCore, QtWidgets
 class RegionChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QComboBox.__init__(self, parent)
         self._rootRegion = None
         self._region = None
 
     def _getRegionIndex(self, findRegion, region, count):
-        '''
+        """
         Recursive function to determine the index of findRegion in the tree under region, starting
         at count. The index matches the position in the combobox.
         :return index, count. Index of findRegion under region tree or None if not found,
         and count of regions searched.
-        '''
+        """
         if region == findRegion:
             return count, count + 1
         child = region.getFirstChild()
@@ -52,9 +52,9 @@ class RegionChooserWidget(QtWidgets.QComboBox):
             child = child.getNextSibling()
 
     def _buildRegionList(self):
-        '''
+        """
         Rebuilds the list of items in the ComboBox from the region tree
-        '''
+        """
         self.blockSignals(True)
         self.clear()
         self._addRegionToListRecursive(self._rootRegion, '/')
@@ -62,9 +62,9 @@ class RegionChooserWidget(QtWidgets.QComboBox):
         self.setRegion(self._region)
 
     def _displayRegion(self):
-        '''
+        """
         Display the currently chosen region in the ComboBox
-        '''
+        """
         self.blockSignals(True)
         index, count = self._getRegionIndex(self._region, self._rootRegion, 0)
         self.setCurrentIndex(index)
@@ -74,18 +74,18 @@ class RegionChooserWidget(QtWidgets.QComboBox):
         return self._rootRegion
 
     def setRootRegion(self, rootRegion):
-        '''
+        """
         Sets the root region that this widget chooses regions from.
         Also sets current region to rootRegion.
-        '''
+        """
         self._rootRegion = rootRegion
         self._region = rootRegion
         self._buildRegionList()
 
     def getRegion(self):
-        '''
+        """
         Must call this from client's currentIndexChanged() slot to get/update current region
-        '''
+        """
         regionPath = str(self.currentText())
         self._region = self._rootRegion.findSubregionAtPath(regionPath)
         if not self._region.isValid():
@@ -93,9 +93,9 @@ class RegionChooserWidget(QtWidgets.QComboBox):
         return self._region
 
     def setRegion(self, region):
-        '''
+        """
         Set the currently selected region.
-        '''
+        """
         index, count = self._getRegionIndex(region, self._rootRegion, 0)
         if index is None:
             return

@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2017 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtWidgets
 
 from opencmiss.zinc.tessellation import Tessellation
@@ -21,9 +21,9 @@ from opencmiss.zinc.tessellation import Tessellation
 class TessellationChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QComboBox.__init__(self, parent)
         self._nullObjectName = None
         self._tessellationmodule = None
@@ -31,9 +31,9 @@ class TessellationChooserWidget(QtWidgets.QComboBox):
         self._tessellation = None
 
     def _tessellationmoduleCallback(self, tessellationmoduleevent):
-        '''
+        """
         Callback for change in tessellations; may need to rebuild tessellation list
-        '''
+        """
         changeSummary = tessellationmoduleevent.getSummaryTessellationChangeFlags()
         #print("_tessellationmoduleCallback changeSummary " + str(changeSummary))
         # Can't do this as may be received after new tessellation module is set!
@@ -43,9 +43,9 @@ class TessellationChooserWidget(QtWidgets.QComboBox):
             self._buildTessellationList()
 
     def _buildTessellationList(self):
-        '''
+        """
         Rebuilds the list of items in the ComboBox from the tessellation module
-        '''
+        """
         self.blockSignals(True)
         self.clear()
         if self._tessellationmodule:
@@ -61,9 +61,9 @@ class TessellationChooserWidget(QtWidgets.QComboBox):
         self._displayTessellation()
 
     def _displayTessellation(self):
-        '''
+        """
         Display the currently chosen tessellation in the ComboBox
-        '''
+        """
         self.blockSignals(True)
         if self._tessellation:
             tessellationName = self._tessellation.getName()
@@ -75,16 +75,16 @@ class TessellationChooserWidget(QtWidgets.QComboBox):
         self.blockSignals(False)
 
     def setNullObjectName(self, nullObjectName):
-        '''
+        """
         Enable a null object option with the supplied name e.g. '-' or '<select>'
         Default is None
-        '''
+        """
         self._nullObjectName = nullObjectName
 
     def setTessellationmodule(self, tessellationmodule):
-        '''
+        """
         Sets the tessellation module that this widget chooses tessellations from
-        '''
+        """
         if tessellationmodule and tessellationmodule.isValid():
             self._tessellationmodule = tessellationmodule
             self._tessellationmodulenotifier = tessellationmodule.createTessellationmodulenotifier()
@@ -95,9 +95,9 @@ class TessellationChooserWidget(QtWidgets.QComboBox):
         self._buildTessellationList()
 
     def getTessellation(self):
-        '''
+        """
         Must call this from currentIndexChanged() slot to get/update current tessellation
-        '''
+        """
         tessellationName = self.currentText()
         if self._nullObjectName and (tessellationName == self._nullObjectName):
             self._tessellation = None
@@ -106,9 +106,9 @@ class TessellationChooserWidget(QtWidgets.QComboBox):
         return self._tessellation
 
     def setTessellation(self, tessellation):
-        '''
+        """
         Set the currently selected tessellation
-        '''
+        """
         if not tessellation or not tessellation.isValid():
             self._tessellation = None
         else:

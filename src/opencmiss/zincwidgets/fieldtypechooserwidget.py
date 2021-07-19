@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2015 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtWidgets
 
 FieldTypes = ['FieldAbs', 'FieldAcos', 'FieldAdd', 'FieldAlias', 'FieldAnd', 'FieldAsin', \
@@ -34,18 +34,18 @@ FieldTypes = ['FieldAbs', 'FieldAcos', 'FieldAdd', 'FieldAlias', 'FieldAnd', 'Fi
 class FieldTypeChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QComboBox.__init__(self, parent)
         self._nullObjectName = "-"
         self._currentFieldType = None
         self._buildFieldTypeList()
 
     def _buildFieldTypeList(self):
-        '''
+        """
         Rebuilds the list of items in the ComboBox from the material module
-        '''
+        """
         self.blockSignals(True)
         self.clear()
         if self._nullObjectName:
@@ -56,9 +56,9 @@ class FieldTypeChooserWidget(QtWidgets.QComboBox):
       #  self._displayFieldType()
 
     def _displayFieldType(self):
-        '''
+        """
         Display the currently chosen field type in the ComboBox
-        '''
+        """
         self.blockSignals(True)
         if self._currentFieldType:
             index = self.findText(self._currentFieldType)
@@ -68,25 +68,25 @@ class FieldTypeChooserWidget(QtWidgets.QComboBox):
         self.blockSignals(False)
 
     def setNullObjectName(self, nullObjectName):
-        '''
+        """
         Enable a null object option with the supplied name e.g. '-' or '<select>'
         Default is None
-        '''
+        """
         self._nullObjectName = nullObjectName
 
     def getFieldType(self):
-        '''
+        """
         Must call this from currentIndexChanged() slot to get/update current material
-        '''
+        """
         fieldTypeName = self.currentText()
         if self._nullObjectName and (fieldTypeName == self._nullObjectName):
             fieldTypeName = None
         return fieldTypeName
     
     def setFieldType(self, fieldType):
-        '''
+        """
         Set the currently selected field; call after setConditional
-        '''
+        """
         if not fieldType:
             self._currentFieldType = None
         else:

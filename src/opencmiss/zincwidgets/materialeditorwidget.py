@@ -1,4 +1,4 @@
-'''
+"""
    Copyright 2016 University of Auckland
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,10 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-'''
+"""
 from PySide2 import QtWidgets, QtGui, QtCore
 
+from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zinc.sceneviewer import Sceneviewer
 from opencmiss.zinc.material import Material
 from opencmiss.zinc.glyph import Glyph
@@ -38,9 +39,9 @@ def QLineEdit_parseRealNonNegative(lineedit):
 class MaterialEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QWidget.__init__(self, parent)
         self._ui = Ui_MaterialEditor()
         self._ui.setupUi(self)
@@ -76,23 +77,12 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             self._ui.texture_comboBox.addItem("%d"%(i + 1))
 
     def _buildRegionComboBox(self):
-        # region = self._zincContext.getDefaultRegion().createChild("Test")
-        # imageField = region.getFieldmodule().createFieldImage()
-        # imageField.setManaged(True)
-        # imageField = region.getFieldmodule().createFieldImage()
-        # imageField.setManaged(True)
         self._ui.region_comboBox.setRootRegion(self._zincContext.getDefaultRegion())
     
     def _buildImageFieldComboBox(self, region):
         self._ui.imageField_comboBox.clear()
-        self._ui.imageField_comboBox.setConditional(self.field_is_image)
+        self._ui.imageField_comboBox.setConditional(is_field_image)
         self._ui.imageField_comboBox.setRegion(region)
-
-    def field_is_image(self, field_in: Field):
-        """
-        Conditional function returning True if the field is an image field.
-        """
-        return field_in.castImage().isValid() and field_in.isManaged()
 
     def _textureChanged(self, index):
         print("texture changed", self._currentMaterial.getTextureField(index))
@@ -110,9 +100,9 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._currentMaterial.setTextureField(texture, imageField)
 
     def _buildMaterialList(self):
-        '''
+        """
         Rebuilds the list of items in the Listview from the material module
-        '''
+        """
         selectedIndex = None
         if self._materialmodule:
             if self._nullObjectName:
@@ -153,9 +143,9 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         QtWidgets.QMessageBox.information(self, "Info", "Can't change this material's name to %s."%newName)
 
     def _displayMaterial(self):
-        '''
+        """
         Display the currently chosen material
-        '''
+        """
         self._updateButtonColour()
         self._updateAlpha()
         self._updateShininess()
@@ -186,7 +176,10 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         return intAmbientColour, intDiffuseColour, intEmissionColour, intSpecularColour
 
     def _selectColourClicked(self, event):
-        color = QtWidgets.QColorDialog.getColor()
+        sender = self.sender()
+        colorDialog = QtWidgets.QColorDialog(sender)
+        colorDialog.setCurrentColor(sender.palette().button().color())
+        color = colorDialog.getColor(initial = sender.palette().button().color())
         print(color)
         if color.isValid():
             self.sender().setStyleSheet("background-color: {}".format(color.name()))
@@ -208,7 +201,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
 
     def _alphaEntered(self):
         value = self._ui.alpha_lineEdit.text()
-        self._currentMaterial.setAttributeReal(Material.ATTRIBUTE_ALPHA, value)
+        self._currentMaterial.setAttributeReal(Material.ATTRIBUTE_ALPHA, float(value))
         self._updateAlpha()
 
     def _alphaSliderValueChanged(self):
@@ -223,7 +216,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
 
     def _shininessEntered(self):
         value = self._ui.shininess_lineEdit.text()
-        self._currentMaterial.setAttributeReal(Material.ATTRIBUTE_SHININESS, value)
+        self._currentMaterial.setAttributeReal(Material.ATTRIBUTE_SHININESS, float(value))
         self._updateShininess()
 
     def _shininessSliderValueChanged(self):
@@ -306,9 +299,9 @@ class MaterialEditorWidget(QtWidgets.QWidget):
            self._displayMaterial()
 
     def setMaterialmodule(self, materialmodule):
-        '''
+        """
         Sets the region that this widget chooses materials from
-        '''
+        """
         self._materialmodule = materialmodule
 
     def setZincContext(self, zincContext):
