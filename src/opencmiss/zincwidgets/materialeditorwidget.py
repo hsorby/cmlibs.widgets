@@ -71,33 +71,93 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._ui.region_comboBox.currentIndexChanged.connect(self._regionChanged)
         self._ui.imageField_comboBox.currentIndexChanged.connect(self._imageFieldChanged)
 
-    def _buildTextureComboBox(self):
-        self._ui.texture_comboBox.clear()
-        for i in range(4):
-            self._ui.texture_comboBox.addItem("%d"%(i + 1))
+    def setMaterialmodule(self, materialmodule):
+        self._materialmodule = materialmodule
 
-    def _buildRegionComboBox(self):
-        self._ui.region_comboBox.setRootRegion(self._zincContext.getDefaultRegion())
-    
-    def _buildImageFieldComboBox(self, region):
-        self._ui.imageField_comboBox.clear()
-        self._ui.imageField_comboBox.setConditional(is_field_image)
-        self._ui.imageField_comboBox.setRegion(region)
+    def setZincContext(self, zincContext):
+        """
+        Sets the Argon material object which supplies the zinc context and has utilities for
+        managing materials.
+        :param zincContext: zincContext object
+        """
+        self._zincContext = zincContext
+        self._ui.sceneviewerWidgetPreview.setContext(self._zincContext)
+        self._previewZincRegion = self._zincContext.createRegion()
+        self._previewZincRegion.setName("Material editor preview region")
+        self._previewZincScene = self._previewZincRegion.getScene()
+        self.setMaterialmodule(self._zincContext.getMaterialmodule())
+        self._buildMaterialList()
+        
+    def _materialCreateClicked(self):
+        """
+        Create a new material.
+        """
+        name = 'temp'
+        with ChangeManager(self._materialmodule):
+            material = self._materialmodule.createMaterial()
+            material.setName(name)
+            material.setManaged(True)
+        self._addMaterialToModelList(material)
 
-    def _textureChanged(self, index):
-        print("texture changed", self._currentMaterial.getTextureField(index))
-        texture = self._currentMaterial.getTextureField(index)
-        print(texture.getFieldmodule())
-        print(texture.getFieldmodule().getRegion())
-        print(texture.castImage().isValid())
+    def _addMaterialToModelList(self, material, row=0):
+        item = QtGui.QStandardItem(material.getName())
+        item.setData(material)
+        item.setEditable(True)
+        self._materialItems.insertRow(row, item)
+        index = self._materialItems.indexFromItem(item)
+        self._ui.materials_listView.setCurrentIndex(index)
+        self._currentMaterial = material
+        self._displayMaterial()
 
-    def _regionChanged(self, index):
-        self._buildImageFieldComboBox(self._ui.region_comboBox.getRegion())
-    
-    def _imageFieldChanged(self, index):
-        texture = self._ui.texture_comboBox.currentIndex() + 1
-        imageField = self._ui.region_comboBox.getRegion().getFieldmodule().findFieldByName(self._ui.imageField_comboBox.currentText())
-        self._currentMaterial.setTextureField(texture, imageField)
+    def _renameMaterial(self, material, name):
+        """
+        Renames material
+        :return True on success, otherwise False (means name not set)
+        """
+        result = material.setName(name)
+        if result == ZINC_OK:
+            return True
+        return False
+
+    def _materialDeleteClicked(self):
+        """
+        Delete the currently selected material.
+        """
+        self._clearPreview()
+        self._removeMaterialByName(self._currentMaterial.getName())
+
+    def _removeMaterialByName(self, name):
+        """
+        Unmanages material. Note material is only removed if not in use.
+        :return True if material removed, false if failed.
+        """
+        self._currentMaterial = None
+        items = self._materialItems.findItems(name)
+        item = items[0]
+        row = item.row()
+        self._materialItems.removeRow(row)
+        del item
+        material = self._materialmodule.findMaterialByName(name)
+        material.setManaged(False)
+        del material
+        material = self._materialmodule.findMaterialByName(name)
+        if material.isValid():
+            # I'm still in use.
+            material.setManaged(True)
+            successfully_removed = False
+            self._addMaterialToModelList(material, row)
+            QtWidgets.QMessageBox.information(self, "Info", "This material is still in use and can't be deleted.")
+        else:
+            successfully_removed = True
+            if row < self._materialItems.rowCount():
+                index = self._materialItems.index(row,0)
+            else:
+                index = self._materialItems.index(row - 1,0)
+            self._ui.materials_listView.setCurrentIndex(index)
+            item = self._materialItems.itemFromIndex(index)
+            self._currentMaterial = item.data()
+            self._displayMaterial()
+        return successfully_removed
 
     def _buildMaterialList(self):
         """
@@ -126,7 +186,6 @@ class MaterialEditorWidget(QtWidgets.QWidget):
                 self._ui.materials_listView.setCurrentIndex(selectedIndex)
             self._materialItems.itemChanged.connect(self._onMaterialItemChanged)
             itemDelegate = QtWidgets.QItemDelegate(self._ui.materials_listView)
-            # itemDelegate.commitData(self._onMaterialItemChanged)
             self._ui.materials_listView.setItemDelegate(itemDelegate)
             self._ui.materials_listView.show()
             self._displayMaterial()
@@ -141,6 +200,14 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             return
         item.setText(item.data().getName())
         QtWidgets.QMessageBox.information(self, "Info", "Can't change this material's name to %s."%newName)
+
+    def _materialListItemClicked(self, modelIndex):
+        model = modelIndex.model()
+        item = model.itemFromIndex(modelIndex)
+        material = item.data()
+        if material != self._currentMaterial:
+           self._currentMaterial = material
+           self._displayMaterial()
 
     def _displayMaterial(self):
         """
@@ -180,21 +247,19 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         colorDialog = QtWidgets.QColorDialog(sender)
         colorDialog.setCurrentColor(sender.palette().button().color())
         color = colorDialog.getColor(initial = sender.palette().button().color())
-        print(color)
         if color.isValid():
             self.sender().setStyleSheet("background-color: {}".format(color.name()))
-            self._setFourMaterialColour()
-            
-    def _setFourMaterialColour(self):
-        """
-        Apply material.
-        """
-        self._setMaterialColour(Material.ATTRIBUTE_AMBIENT, self._ui.ambientSelectColour_button)
-        self._setMaterialColour(Material.ATTRIBUTE_DIFFUSE, self._ui.diffuseSelectColour_button)
-        self._setMaterialColour(Material.ATTRIBUTE_EMISSION,self._ui.emittedSelectColour_button)
-        self._setMaterialColour(Material.ATTRIBUTE_SPECULAR,self._ui.specularSelectColour_button)
+            self._setMaterialColour(sender)
     
-    def _setMaterialColour(self, materialAttribute, attributeButton):
+    def _setMaterialColour(self, attributeButton):
+        if attributeButton == self._ui.ambientSelectColour_button:
+            materialAttribute = Material.ATTRIBUTE_AMBIENT
+        elif attributeButton == self._ui.diffuseSelectColour_button:
+            materialAttribute = Material.ATTRIBUTE_DIFFUSE
+        elif attributeButton == self._ui.emittedSelectColour_button:
+            materialAttribute = Material.ATTRIBUTE_EMISSION
+        elif attributeButton == self._ui.specularSelectColour_button:
+            materialAttribute = Material.ATTRIBUTE_SPECULAR
         buttonColour = attributeButton.palette().button().color()
         colourF = [buttonColour.redF(), buttonColour.greenF(), buttonColour.blueF()]
         self._currentMaterial.setAttributeReal3(materialAttribute, colourF)
@@ -229,6 +294,30 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._ui.shininess_slider.setValue(shininess*100)
         self._ui.shininess_lineEdit.setText(str(shininess))
 
+    def _buildTextureComboBox(self):
+        self._ui.texture_comboBox.clear()
+        for i in range(4):
+            self._ui.texture_comboBox.addItem("%d"%(i + 1))
+
+    def _buildRegionComboBox(self):
+        self._ui.region_comboBox.setRootRegion(self._zincContext.getDefaultRegion())
+    
+    def _buildImageFieldComboBox(self, region):
+        self._ui.imageField_comboBox.clear()
+        self._ui.imageField_comboBox.setConditional(is_field_image)
+        self._ui.imageField_comboBox.setRegion(region)
+
+    def _textureChanged(self, index):
+        texture = self._currentMaterial.getTextureField(index)
+
+    def _regionChanged(self, index):
+        self._buildImageFieldComboBox(self._ui.region_comboBox.getRegion())
+    
+    def _imageFieldChanged(self, index):
+        texture = self._ui.texture_comboBox.currentIndex() + 1
+        imageField = self._ui.region_comboBox.getRegion().getFieldmodule().findFieldByName(self._ui.imageField_comboBox.currentText())
+        self._currentMaterial.setTextureField(texture, imageField)
+
     def _clearPreview(self):
         self._previewZincScene.removeAllGraphics()
     
@@ -245,78 +334,20 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             pointsattr = points.getGraphicspointattributes()
             pointsattr.setBaseSize(1.0)
             tessellationModule = self._previewZincScene.getTessellationmodule()
-            tessellation = tessellationModule.createTessellation()
-            tessellation.setManaged(False)
-            tessellation.setCircleDivisions(48)
+            tessellation = tessellationModule.findTessellationByName("material_preview")
+            print("Get tessellation",tessellation)
+            if not tessellation.isValid():
+                print("Creat tessellation",tessellation)
+                tessellation = tessellationModule.createTessellation()
+                tessellation.setName("material_preview")
+                tessellation.setManaged(False)
+                tessellation.setCircleDivisions(48)
             points.setTessellation(tessellation)
         else:
             pointsattr = points.getGraphicspointattributes()
         pointsattr.setGlyphShapeType(Glyph.SHAPE_TYPE_SPHERE)
         points.setMaterial(self._currentMaterial)
-
-
         self._previewZincScene.endChange()
-
-    def _materialCreateClicked(self):
-        """
-        Create a new material.
-        """
-        name = 'temp'
-        with ChangeManager(self._materialmodule):
-            material = self._materialmodule.createMaterial()
-            material.setName(name)
-            material.setManaged(True)
-            # plus any number of other changes to the material module or materials it manages
-        self._addMaterialToModelList(material)
-
-    def _addMaterialToModelList(self, material, row=0):
-        item = QtGui.QStandardItem(material.getName())
-        item.setData(material)
-        item.setEditable(True)
-        self._materialItems.insertRow(row, item)
-        index = self._materialItems.indexFromItem(item)
-        self._ui.materials_listView.setCurrentIndex(index)
-        self._currentMaterial = material
-        self._displayMaterial()
-
-    def _materialDeleteClicked(self):
-        """
-        Delete the currently selected step, except for initial config.
-        Select next step after, or before if none.
-        """
-        self._clearPreview()
-        self._removeMaterialByName(self._currentMaterial.getName())
-
-    def _materialListItemClicked(self, modelIndex):
-        """
-        Changes current step and possibly changes checked/run status.
-        """
-        model = modelIndex.model()
-        item = model.itemFromIndex(modelIndex)
-        material = item.data()
-        if material != self._currentMaterial:
-           self._currentMaterial = material
-           self._displayMaterial()
-
-    def setMaterialmodule(self, materialmodule):
-        """
-        Sets the region that this widget chooses materials from
-        """
-        self._materialmodule = materialmodule
-
-    def setZincContext(self, zincContext):
-        """
-        Sets the Argon material object which supplies the zinc context and has utilities for
-        managing materials.
-        :param zincContext: zincContext object
-        """
-        self._zincContext = zincContext
-        self._ui.sceneviewerWidgetPreview.setContext(self._zincContext)
-        self._previewZincRegion = self._zincContext.createRegion()
-        self._previewZincRegion.setName("Material editor preview region")
-        self._previewZincScene = self._previewZincRegion.getScene()
-        self.setMaterialmodule(self._zincContext.getMaterialmodule())
-        self._buildMaterialList()
 
     def _previewGraphicsInitialised(self):
         sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
@@ -329,47 +360,3 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             sceneviewer.setViewAngle(0.679673818908244)
             sceneviewer.setNearClippingPlane(2.4)
             sceneviewer.setFarClippingPlane(3.0)
-
-    def _renameMaterial(self, material, name):
-        """
-        Renames material
-        :return True on success, otherwise False (means name not set)
-        """
-        result = material.setName(name)
-        if result == ZINC_OK:
-            return True
-        return False
-
-    def _removeMaterialByName(self, name):
-        """
-        Unmanages material and its colour bar. Note material is only removed if neither are in use.
-        :return True if material and colour bar removed, false if failed i.e. either are in use.
-        """
-        self._currentMaterial = None
-        items = self._materialItems.findItems(name)
-        item = items[0]
-        row = item.row()
-        self._materialItems.removeRow(row)
-        del item
-        material = self._materialmodule.findMaterialByName(name)
-        material.setManaged(False)
-        del material
-        material = self._materialmodule.findMaterialByName(name)
-        if material.isValid():
-            # I'm still in use.
-            material.setManaged(True)
-            successfully_removed = False
-            self._addMaterialToModelList(material, row)
-            QtWidgets.QMessageBox.information(self, "Info", "This material is still in use and can't be deleted.")
-        else:
-            successfully_removed = True
-            if row < self._materialItems.rowCount():
-                index = self._materialItems.index(row,0)
-            else:
-                index = self._materialItems.index(row - 1,0)
-            self._ui.materials_listView.setCurrentIndex(index)
-            item = self._materialItems.itemFromIndex(index)
-            self._currentMaterial = item.data()
-            self._displayMaterial()
-        return successfully_removed
-

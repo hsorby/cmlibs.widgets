@@ -46,7 +46,6 @@ class ExportWebGLDialog(QtWidgets.QDialog):
 
         self._makeConnections()
 
-
     def _makeConnections(self):
         self._ui.export_button.clicked.connect(self._exportWebGLClicked)
         self._ui.prefix_lineEdit.editingFinished.connect(self._prefixEntered)
@@ -55,9 +54,6 @@ class ExportWebGLDialog(QtWidgets.QDialog):
         self._ui.finishTime_lineEdit.editingFinished.connect(self._finishTimeEntered)
 
     def _displayExportWebGL(self):
-        """
-        Display the currently chosen exportWebGL
-        """
         self._ui.prefix_lineEdit.setText(self._argonModel._prefix)
         self._ui.timeSteps_lineEdit.setText(str(self._argonModel._numberOfTimeSteps))
         self._ui.initialTime_lineEdit.setText(str(self._argonModel._initialTime))
@@ -66,28 +62,35 @@ class ExportWebGLDialog(QtWidgets.QDialog):
     def _prefixEntered(self):
         value = self._ui.prefix_lineEdit.text()
         self._argonModel._prefix = value
+        self._displayExportWebGL()
 
     def _timeStepsEntered(self):
-        value = self._ui.timeSteps_lineEdit.text()
-        self._argonModel._numberOfTimeSteps = float(value)
+        value = QLineEdit_parseRealNonNegative(self._ui.timeSteps_lineEdit)
+        if value > 0.0:
+            self._argonModel._numberOfTimeSteps = int(value)
+        else:
+            print("Invalid Time Steps entered")
+        self._displayExportWebGL()
 
     def _initialTimeEntered(self):
-        value = self._ui.initialTime_lineEdit.text()
-        self._argonModel._initialTime = float(value)
+        value = QLineEdit_parseRealNonNegative(self._ui.initialTime_lineEdit)
+        if value > 0.0:
+            self._argonModel._initialTime = value
+        else:
+            print("Invalid Initial Time entered")
+        self._displayExportWebGL()
 
     def _finishTimeEntered(self):
-        value = self._ui.finishTime_lineEdit.text()
-        self._argonModel._finishTime = float(value)
+        value = QLineEdit_parseRealNonNegative(self._ui.finishTime_lineEdit)
+        if value > 0.0:
+            self._argonModel._finishTime = value
+        else:
+            print("Invalid Finish Time entered")
+        self._displayExportWebGL()
     
     def _exportWebGLClicked(self):
-        """
-        Export a new WebGL.
-        """
         self.accept()
 
     def setArgonModel(self, argonModel):
-        """
-        Sets the region that this widget chooses exportWebGLs from
-        """
         self._argonModel = argonModel
         self._displayExportWebGL()
