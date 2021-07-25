@@ -106,8 +106,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._materialItems.insertRow(row, item)
         index = self._materialItems.indexFromItem(item)
         self._ui.materials_listView.setCurrentIndex(index)
-        self._currentMaterial = material
-        self._displayMaterial()
+        self._updateCurrentMaterial(material)
 
     def _renameMaterial(self, material, name):
         """
@@ -155,8 +154,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
                 index = self._materialItems.index(row - 1,0)
             self._ui.materials_listView.setCurrentIndex(index)
             item = self._materialItems.itemFromIndex(index)
-            self._currentMaterial = item.data()
-            self._displayMaterial()
+            self._updateCurrentMaterial(item.data())
         return successfully_removed
 
     def _buildMaterialList(self):
@@ -170,7 +168,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             materialiter = self._materialmodule.createMaterialiterator()
             material = materialiter.next()
             if not self._currentMaterial:
-                self._currentMaterial = material
+                self._updateCurrentMaterial(material)
             while material.isValid():
                 name = None
                 name = material.getName()
@@ -188,7 +186,6 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             itemDelegate = QtWidgets.QItemDelegate(self._ui.materials_listView)
             self._ui.materials_listView.setItemDelegate(itemDelegate)
             self._ui.materials_listView.show()
-            self._displayMaterial()
 
     def _onMaterialItemChanged(self, item):
         """
@@ -202,12 +199,13 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         QtWidgets.QMessageBox.information(self, "Info", "Can't change this material's name to %s."%newName)
 
     def _materialListItemClicked(self, modelIndex):
-        model = modelIndex.model()
-        item = model.itemFromIndex(modelIndex)
-        material = item.data()
-        if material != self._currentMaterial:
-           self._currentMaterial = material
-           self._displayMaterial()
+        item = modelIndex.model().itemFromIndex(modelIndex)
+        if item.data() != self._currentMaterial:
+           self._updateCurrentMaterial(item.data())
+
+    def _updateCurrentMaterial(self, material):
+        self._currentMaterial = material
+        self._displayMaterial()
 
     def _displayMaterial(self):
         """
@@ -216,16 +214,12 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._updateButtonColour()
         self._updateAlpha()
         self._updateShininess()
-        self._previewMaterial()
         self._buildTextureComboBox()
         self._buildRegionComboBox()
+        self._previewMaterial()
 
     def _updateButtonColour(self):
-        if self._currentMaterial:
-            ambientColour, diffuseColour, emissionColour, specularColour = self._getCurrentMaterialColour()
-        else:
-            print("No Current Material")
-            ambientColour, diffuseColour, emissionColour, specularColour = QtGui.QColor(0,0,0),QtGui.QColor(0,0,0),QtGui.QColor(0,0,0),QtGui.QColor(0,0,0)
+        ambientColour, diffuseColour, emissionColour, specularColour = self._getCurrentMaterialColour()
         self._ui.ambientSelectColour_button.setStyleSheet("background-color: {}".format(ambientColour.name()))
         self._ui.diffuseSelectColour_button.setStyleSheet("background-color: {}".format(diffuseColour.name()))
         self._ui.emittedSelectColour_button.setStyleSheet("background-color: {}".format(emissionColour.name()))
@@ -335,9 +329,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             pointsattr.setBaseSize(1.0)
             tessellationModule = self._previewZincScene.getTessellationmodule()
             tessellation = tessellationModule.findTessellationByName("material_preview")
-            print("Get tessellation",tessellation)
             if not tessellation.isValid():
-                print("Creat tessellation",tessellation)
                 tessellation = tessellationModule.createTessellation()
                 tessellation.setName("material_preview")
                 tessellation.setManaged(False)
