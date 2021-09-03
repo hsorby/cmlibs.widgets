@@ -80,6 +80,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui = Ui_GraphicsEditorWidget()
         self.ui.setupUi(self)
         # base graphics attributes
+        self.ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
         self.ui.data_field_chooser.setNullObjectName('-')
         self.ui.coordinate_field_chooser.setNullObjectName('-')
         self.ui.coordinate_field_chooser.setConditional(FieldIsCoordinateCapable)
@@ -319,16 +320,15 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         faceType = Element.FACE_TYPE_ALL
         if self._graphics:
             faceType = self._graphics.getElementFaceType()
-        self.ui.face_combobox.blockSignals(True)
-        self.ui.face_combobox.setCurrentIndex(faceType - Element.FACE_TYPE_ALL)
-        self.ui.face_combobox.blockSignals(False)
+        self.ui.face_enumeration_chooser.setItem(faceType)
 
     def faceChanged(self, index):
         '''
         Element face combo box changed
         '''
         if self._graphics:
-            self._graphics.setElementFaceType(index + Element.FACE_TYPE_ALL)
+            faceType = self.ui.face_enumeration_chooser.getItem()
+            self._graphics.setElementFaceType(faceType)
 
     def wireframeClicked(self, isChecked):
         '''

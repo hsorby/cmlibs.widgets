@@ -14,6 +14,7 @@ from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
 from opencmiss.zincwidgets.materialchooserwidget import MaterialChooserWidget
+from opencmiss.zincwidgets.enumerationchooserwidget import EnumerationChooserWidget
 from opencmiss.zincwidgets.glyphchooserwidget import GlyphChooserWidget
 
 
@@ -22,7 +23,7 @@ class Ui_GraphicsEditorWidget(object):
         if not GraphicsEditorWidget.objectName():
             GraphicsEditorWidget.setObjectName(u"GraphicsEditorWidget")
         GraphicsEditorWidget.setEnabled(True)
-        GraphicsEditorWidget.resize(248, 883)
+        GraphicsEditorWidget.resize(248, 879)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -43,22 +44,6 @@ class Ui_GraphicsEditorWidget(object):
         self.formLayout_3 = QFormLayout(self.general_groupbox)
         self.formLayout_3.setObjectName(u"formLayout_3")
         self.formLayout_3.setContentsMargins(7, 7, 7, 7)
-        self.face_combobox = QComboBox(self.general_groupbox)
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.setObjectName(u"face_combobox")
-        sizePolicy.setHeightForWidth(self.face_combobox.sizePolicy().hasHeightForWidth())
-        self.face_combobox.setSizePolicy(sizePolicy)
-
-        self.formLayout_3.setWidget(3, QFormLayout.FieldRole, self.face_combobox)
-
         self.material_label = QLabel(self.general_groupbox)
         self.material_label.setObjectName(u"material_label")
 
@@ -70,6 +55,13 @@ class Ui_GraphicsEditorWidget(object):
         self.material_chooser.setSizePolicy(sizePolicy)
 
         self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.material_chooser)
+
+        self.face_enumeration_chooser = EnumerationChooserWidget(self.general_groupbox)
+        self.face_enumeration_chooser.setObjectName(u"face_enumeration_chooser")
+        sizePolicy.setHeightForWidth(self.face_enumeration_chooser.sizePolicy().hasHeightForWidth())
+        self.face_enumeration_chooser.setSizePolicy(sizePolicy)
+
+        self.formLayout_3.setWidget(3, QFormLayout.FieldRole, self.face_enumeration_chooser)
 
         self.data_field_label = QLabel(self.general_groupbox)
         self.data_field_label.setObjectName(u"data_field_label")
@@ -391,7 +383,6 @@ class Ui_GraphicsEditorWidget(object):
         self.label_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.labelFieldChanged)
         self.exterior_checkbox.clicked.connect(GraphicsEditorWidget.exteriorClicked)
         self.isoscalar_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.isoscalarFieldChanged)
-        self.face_combobox.currentIndexChanged.connect(GraphicsEditorWidget.faceChanged)
         self.wireframe_checkbox.clicked.connect(GraphicsEditorWidget.wireframeClicked)
         self.isovalues_lineedit.editingFinished.connect(GraphicsEditorWidget.isovaluesEntered)
         self.line_base_size_lineedit.editingFinished.connect(GraphicsEditorWidget.lineBaseSizeEntered)
@@ -405,6 +396,7 @@ class Ui_GraphicsEditorWidget(object):
         self.sampling_mode_combobox.currentIndexChanged.connect(GraphicsEditorWidget.samplingModeChanged)
         self.sampling_divisions_lineedit.editingFinished.connect(GraphicsEditorWidget.samplingDivisionsEntered)
         self.streamlines_colour_data_type_combobox.currentIndexChanged.connect(GraphicsEditorWidget.streamlinesColourDataTypeChanged)
+        self.face_enumeration_chooser.currentIndexChanged.connect(GraphicsEditorWidget.faceChanged)
 
         QMetaObject.connectSlotsByName(GraphicsEditorWidget)
     # setupUi
@@ -412,16 +404,6 @@ class Ui_GraphicsEditorWidget(object):
     def retranslateUi(self, GraphicsEditorWidget):
         GraphicsEditorWidget.setWindowTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Graphics Editor", None))
         self.general_groupbox.setTitle("")
-        self.face_combobox.setItemText(0, QCoreApplication.translate("GraphicsEditorWidget", u"all", None))
-        self.face_combobox.setItemText(1, QCoreApplication.translate("GraphicsEditorWidget", u"any face", None))
-        self.face_combobox.setItemText(2, QCoreApplication.translate("GraphicsEditorWidget", u"no face", None))
-        self.face_combobox.setItemText(3, QCoreApplication.translate("GraphicsEditorWidget", u"xi1 = 0", None))
-        self.face_combobox.setItemText(4, QCoreApplication.translate("GraphicsEditorWidget", u"xi1 = 1", None))
-        self.face_combobox.setItemText(5, QCoreApplication.translate("GraphicsEditorWidget", u"xi2 = 0", None))
-        self.face_combobox.setItemText(6, QCoreApplication.translate("GraphicsEditorWidget", u"xi2 = 1", None))
-        self.face_combobox.setItemText(7, QCoreApplication.translate("GraphicsEditorWidget", u"xi3 = 0", None))
-        self.face_combobox.setItemText(8, QCoreApplication.translate("GraphicsEditorWidget", u"xi3 = 1", None))
-
         self.material_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Material:", None))
         self.data_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Data field:", None))
         self.wireframe_checkbox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Wireframe", None))

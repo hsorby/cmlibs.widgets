@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>248</width>
-    <height>883</height>
+    <height>879</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -80,61 +80,6 @@
       <property name="bottomMargin">
        <number>7</number>
       </property>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="face_combobox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <item>
-         <property name="text">
-          <string>all</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>any face</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>no face</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi1 = 0</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi1 = 1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi2 = 0</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi2 = 1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi3 = 0</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi3 = 1</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="4" column="0">
        <widget class="QLabel" name="material_label">
         <property name="text">
@@ -144,6 +89,16 @@
       </item>
       <item row="4" column="1">
        <widget class="MaterialChooserWidget" name="material_chooser">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="EnumerationChooserWidget" name="face_enumeration_chooser">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -691,6 +646,11 @@
    <header>opencmiss/zincwidgets/materialchooserwidget.h</header>
   </customwidget>
   <customwidget>
+   <class>EnumerationChooserWidget</class>
+   <extends>QComboBox</extends>
+   <header>opencmiss/zincwidgets/enumerationchooserwidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>GlyphChooserWidget</class>
    <extends>QComboBox</extends>
    <header>opencmiss/zincwidgets/glyphchooserwidget.h</header>
@@ -1063,6 +1023,22 @@
     <hint type="destinationlabel">
      <x>123</x>
      <y>441</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>face_enumeration_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>faceChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>439</y>
     </hint>
    </hints>
   </connection>
