@@ -1,33 +1,36 @@
 """
-Zinc Material Chooser Widget
+   Copyright 2015 University of Auckland
 
-Widget for chooses a material from a material module, derived from QComboBox
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
-This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at http://mozilla.org/MPL/2.0/.
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
 """
+from PySide2 import QtWidgets
 
-from PySide2 import QtCore, QtWidgets
-
-from opencmiss.zinc.material import Material
-from opencmiss.zinc.status import OK as ZINC_OK
 
 class MaterialChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QComboBox.__init__(self, parent)
         self._nullObjectName = None
         self._materialmodule = None
         self._material = None
 
     def _buildMaterialList(self):
-        '''
+        """
         Rebuilds the list of items in the ComboBox from the material module
-        '''
+        """
         self.blockSignals(True)
         self.clear()
         if self._materialmodule:
@@ -43,9 +46,9 @@ class MaterialChooserWidget(QtWidgets.QComboBox):
         self._displayMaterial()
 
     def _displayMaterial(self):
-        '''
+        """
         Display the currently chosen material in the ComboBox
-        '''
+        """
         self.blockSignals(True)
         if self._material:
             materialName = self._material.getName()
@@ -57,24 +60,24 @@ class MaterialChooserWidget(QtWidgets.QComboBox):
         self.blockSignals(False)
 
     def setNullObjectName(self, nullObjectName):
-        '''
+        """
         Enable a null object option with the supplied name e.g. '-' or '<select>'
         Default is None
-        '''
-        self._nullObjectName  = nullObjectName
+        """
+        self._nullObjectName = nullObjectName
 
     def setMaterialmodule(self, materialmodule):
-        '''
+        """
         Sets the region that this widget chooses materials from
-        '''
+        """
         self._materialmodule = materialmodule
         self._buildMaterialList()
 
     def getMaterial(self):
-        '''
+        """
         Must call this from currentIndexChanged() slot to get/update current material
-        '''
-        materialName = str(self.currentText())
+        """
+        materialName = self.currentText()
         if self._nullObjectName and (materialName == self._nullObjectName):
             self._material = None
         else:
@@ -82,9 +85,9 @@ class MaterialChooserWidget(QtWidgets.QComboBox):
         return self._material
 
     def setMaterial(self, material):
-        '''
+        """
         Set the currently selected material
-        '''
+        """
         if not material or not material.isValid():
             self._material = None
         else:

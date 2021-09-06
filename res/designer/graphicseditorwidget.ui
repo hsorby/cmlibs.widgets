@@ -9,15 +9,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>248</width>
-    <height>883</height>
+    <width>298</width>
+    <height>964</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>180</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Graphics Editor</string>
@@ -43,18 +49,6 @@
    </property>
    <item>
     <widget class="QGroupBox" name="general_groupbox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -68,25 +62,105 @@
       <bool>false</bool>
      </property>
      <layout class="QFormLayout" name="formLayout_3">
-      <property name="leftMargin">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
+      <property name="margin">
        <number>7</number>
       </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
-       <number>7</number>
-      </property>
+      <item row="3" column="0">
+       <widget class="QLabel" name="coordinate_field_label">
+        <property name="text">
+         <string>Coordinates:</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="1">
+       <widget class="FieldChooserWidget" name="coordinate_field_chooser">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="scenecoordinatesystem_label">
+        <property name="text">
+         <string>Coord System:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="scenecoordinatesystem_combobox">
+        <item>
+         <property name="text">
+          <string>LOCAL</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>WORLD</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>NORMALISED_WINDOW_FILL</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>NORMALISED_WINDOW_FIT_CENTRE</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>NORMALISED_WINDOW_FIT_LEFT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>NORMALISED_WINDOW_FIT_RIGHT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>NORMALISED_WINDOW_FIT_BOTTOM</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>NORMALISED_WINDOW_FIT_TOP</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>WINDOW_PIXEL_BOTTOM_LEFT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>WINDOW_PIXEL_TOP_LEFT</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="exterior_checkbox">
+        <property name="text">
+         <string>Exterior</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="face_label">
+        <property name="text">
+         <string>Face:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
        <widget class="QComboBox" name="face_combobox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
         </property>
         <item>
          <property name="text">
@@ -135,103 +209,79 @@
         </item>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="8" column="0">
        <widget class="QLabel" name="material_label">
         <property name="text">
          <string>Material:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="8" column="1">
        <widget class="MaterialChooserWidget" name="material_chooser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="11" column="0">
        <widget class="QLabel" name="data_field_label">
         <property name="text">
          <string>Data field:</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="11" column="1">
        <widget class="FieldChooserWidget" name="data_field_chooser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="editable">
          <bool>false</bool>
         </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
        </widget>
       </item>
-      <item row="10" column="0" colspan="2">
-       <widget class="QCheckBox" name="wireframe_checkbox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+      <item row="12" column="0">
+       <widget class="QLabel" name="spectrum_label">
+        <property name="text">
+         <string>Spectrum:</string>
         </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
+       <widget class="SpectrumChooserWidget" name="spectrum_chooser"/>
+      </item>
+      <item row="7" column="0">
+       <widget class="QCheckBox" name="wireframe_checkbox">
         <property name="text">
          <string>Wireframe</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="face_label">
-        <property name="text">
-         <string>Face:</string>
-        </property>
-       </widget>
+      <item row="13" column="1">
+       <widget class="TessellationChooserWidget" name="tessellation_chooser"/>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="coordinate_field_label">
+      <item row="13" column="0">
+       <widget class="QLabel" name="tessellation_label">
         <property name="text">
-         <string>Coordinates:</string>
+         <string>Tessellation:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QCheckBox" name="exterior_checkbox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
+       <widget class="QLabel" name="subgroup_field_label">
         <property name="text">
-         <string>Exterior</string>
+         <string>Subgroup:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="FieldChooserWidget" name="coordinate_field_chooser"/>
+      <item row="2" column="1">
+       <widget class="FieldChooserWidget" name="subgroup_field_chooser"/>
       </item>
      </layout>
     </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="contours_groupbox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -254,27 +304,11 @@
       <property name="verticalSpacing">
        <number>7</number>
       </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>7</number>
       </property>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="isovalues_lineedit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="isovalues_lineedit"/>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="isoscalar_field_label">
@@ -284,7 +318,11 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="FieldChooserWidget" name="isoscalar_field_chooser"/>
+       <widget class="FieldChooserWidget" name="isoscalar_field_chooser">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="isovalues_label">
@@ -302,16 +340,10 @@
       <string>Streamlines:</string>
      </property>
      <layout class="QFormLayout" name="formLayout_5">
-      <property name="leftMargin">
-       <number>7</number>
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -323,11 +355,8 @@
       </item>
       <item row="0" column="1">
        <widget class="FieldChooserWidget" name="stream_vector_field_chooser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
         </property>
        </widget>
       </item>
@@ -350,6 +379,9 @@
       </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="streamlines_track_direction_combobox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
         <item>
          <property name="text">
           <string>forward</string>
@@ -362,8 +394,18 @@
         </item>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="streamlines_colour_data_type_label">
+        <property name="text">
+         <string>Colour data:</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="1">
        <widget class="QComboBox" name="streamlines_colour_data_type_combobox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
         <item>
          <property name="text">
           <string>field</string>
@@ -381,13 +423,6 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="streamlines_colour_data_type_label">
-        <property name="text">
-         <string>Colour data:</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -400,16 +435,7 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -421,6 +447,9 @@
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="line_shape_combobox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
         <item>
          <property name="text">
           <string>line</string>
@@ -451,14 +480,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="line_base_size_lineedit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="line_base_size_lineedit"/>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="line_orientation_scale_field_label">
@@ -475,6 +497,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
        </widget>
       </item>
       <item row="3" column="0">
@@ -485,32 +510,13 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLineEdit" name="line_scale_factors_lineedit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="line_scale_factors_lineedit"/>
       </item>
      </layout>
     </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="points_groupbox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -524,16 +530,7 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -545,11 +542,8 @@
       </item>
       <item row="0" column="1">
        <widget class="GlyphChooserWidget" name="glyph_chooser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
         </property>
        </widget>
       </item>
@@ -561,14 +555,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="point_base_size_lineedit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="point_base_size_lineedit"/>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="point_orientation_scale_field_label">
@@ -579,11 +566,8 @@
       </item>
       <item row="3" column="1">
        <widget class="FieldChooserWidget" name="point_orientation_scale_field_chooser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
         </property>
        </widget>
       </item>
@@ -603,23 +587,13 @@
       </item>
       <item row="7" column="1">
        <widget class="FieldChooserWidget" name="label_field_chooser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
         </property>
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="QLineEdit" name="point_scale_factors_lineedit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="point_scale_factors_lineedit"/>
       </item>
      </layout>
     </widget>
@@ -630,18 +604,21 @@
       <string>Sampling:</string>
      </property>
      <layout class="QFormLayout" name="formLayout_6">
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="sampling_divisions_lineedit"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="sampling_divisions_label">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="sampling_mode_label">
         <property name="text">
-         <string>Divisions  :</string>
+         <string>Mode:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="sampling_mode_combobox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
         <item>
          <property name="text">
           <string>cell centres</string>
@@ -652,13 +629,6 @@
           <string>cell corners</string>
          </property>
         </item>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="sampling_mode_label">
-        <property name="text">
-         <string>Mode:</string>
-        </property>
        </widget>
       </item>
      </layout>
@@ -688,12 +658,22 @@
   <customwidget>
    <class>MaterialChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/materialchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/materialchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>GlyphChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/glyphchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/ui/glyphchooserwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SpectrumChooserWidget</class>
+   <extends>QComboBox</extends>
+   <header>opencmiss/zincwidgets/ui/spectrumchooserwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TessellationChooserWidget</class>
+   <extends>QComboBox</extends>
+   <header>opencmiss/zincwidgets/ui/tessellationchooserwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -1035,22 +1015,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>sampling_divisions_lineedit</sender>
-   <signal>editingFinished()</signal>
-   <receiver>GraphicsEditorWidget</receiver>
-   <slot>samplingDivisionsEntered()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>159</x>
-     <y>482</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>123</x>
-     <y>441</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>streamlines_colour_data_type_combobox</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
@@ -1063,6 +1027,70 @@
     <hint type="destinationlabel">
      <x>123</x>
      <y>441</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spectrum_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>spectrumChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>229</x>
+     <y>245</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>180</x>
+     <y>503</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scenecoordinatesystem_combobox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>scenecoordinatesystemChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>229</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>180</x>
+     <y>503</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tessellation_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>tessellationChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>229</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>180</x>
+     <y>503</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>subgroup_field_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>subgroupFieldChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>148</x>
+     <y>481</y>
     </hint>
    </hints>
   </connection>
@@ -1091,5 +1119,9 @@
   <slot>samplingModeChanged(int)</slot>
   <slot>samplingDivisionsEntered()</slot>
   <slot>streamlinesColourDataTypeChanged(int)</slot>
+  <slot>spectrumChanged(int)</slot>
+  <slot>scenecoordinatesystemChanged(int)</slot>
+  <slot>tessellationChanged(int)</slot>
+  <slot>subgroupFieldChanged(int)</slot>
  </slots>
 </ui>

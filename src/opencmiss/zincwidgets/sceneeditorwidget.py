@@ -1,4 +1,26 @@
 """
+   Copyright 2015 University of Auckland
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+"""
+from PySide2 import QtCore, QtGui, QtWidgets
+
+from opencmiss.zinc.field import Field
+from opencmiss.zinc.graphics import Graphics
+
+from opencmiss.zincwidgets.ui.ui_sceneeditorwidget import Ui_SceneEditorWidget
+
+"""
 Zinc Scene Editor Widget
 
 Allows a Zinc Scene object to be edited in Qt / Python.
@@ -8,36 +30,30 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-from PySide2 import QtCore, QtGui, QtWidgets
-
-from opencmiss.zincwidgets.sceneeditorwidget_ui import Ui_SceneEditorWidget
-from opencmiss.zinc.field import Field
-from opencmiss.zinc.graphics import Graphics
-from opencmiss.zinc.status import OK as ZINC_OK
-from opencmiss.utils.zinc.general import ChangeManager
 
 class SceneEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        '''
+        """
         Call the super class init functions
-        '''
+        """
         QtWidgets.QWidget.__init__(self, parent)
         self._scene = None
         # Using composition to include the visual element of the GUI.
         self.ui = Ui_SceneEditorWidget()
+        self._graphicsItems = None
         self.ui.setupUi(self)
 
     def getScene(self):
-        '''
+        """
         Get the scene currently in the editor
-        '''
+        """
         return self._scene
 
     def setScene(self, scene):
-        '''
+        """
         Set the current scene in the editor
-        '''
+        """
         if not (scene and scene.isValid()):
             self._scene = None
         else:
@@ -48,46 +64,48 @@ class SceneEditorWidget(QtWidgets.QWidget):
         self._buildGraphicsList()
 
     def _getDefaultCoordinateField(self):
-        '''
+        """
         Get the first coordinate field from the current scene
-        '''
+        """
         if self._scene:
             fielditer = self._scene.getRegion().getFieldmodule().createFielditerator()
             field = fielditer.next()
             while field.isValid():
                 if field.isTypeCoordinate() and (field.getValueType() == Field.VALUE_TYPE_REAL) and \
-                  (field.getNumberOfComponents() <= 3) and field.castFiniteElement().isValid():
+                        (field.getNumberOfComponents() <= 3) and field.castFiniteElement().isValid():
                     return field
                 field = fielditer.next()
         return None
 
     def _getGraphicsDisplayName(self, graphics):
-        '''
-        Build a display name from the graphics type and domain
-        '''
-        type = graphics.getType()
+        """
+        Build a display name from the graphics graphics_type and domain
+        """
+        graphics_type = graphics.getType()
         fieldDomainType = graphics.getFieldDomainType()
-        if type == Graphics.TYPE_POINTS:
-           if fieldDomainType == Field.DOMAIN_TYPE_POINT:
-               return "point"
-           if fieldDomainType == Field.DOMAIN_TYPE_NODES:
-               return "node points"
-           if fieldDomainType == Field.DOMAIN_TYPE_DATAPOINTS:
-               return "data points"
-           return "element points"
-        elif type == Graphics.TYPE_LINES:
+        if graphics_type == Graphics.TYPE_POINTS:
+            if fieldDomainType == Field.DOMAIN_TYPE_POINT:
+                return "point"
+            if fieldDomainType == Field.DOMAIN_TYPE_NODES:
+                return "node points"
+            if fieldDomainType == Field.DOMAIN_TYPE_DATAPOINTS:
+                return "data points"
+            return "element points"
+        elif graphics_type == Graphics.TYPE_LINES:
             return "lines"
-        elif type == Graphics.TYPE_SURFACES:
+        elif graphics_type == Graphics.TYPE_SURFACES:
             return "surfaces"
-        elif type == Graphics.TYPE_CONTOURS:
+        elif graphics_type == Graphics.TYPE_CONTOURS:
             return "contours"
-        elif type == Graphics.TYPE_STREAMLINES:
+        elif graphics_type == Graphics.TYPE_STREAMLINES:
             return "streamlines"
 
     def _buildGraphicsList(self):
-        '''
+        """
         Fill the graphics list view with the list of graphics for current region/scene
-        '''
+        """
+        if self._graphicsItems is not None:
+            self._graphicsItems.clear()  # Must clear or holds on to graphics references
         self._graphicsItems = QtGui.QStandardItemModel(self.ui.graphics_listview)
         selectedIndex = None
         if self._scene:
@@ -106,18 +124,18 @@ class SceneEditorWidget(QtWidgets.QWidget):
                     selectedIndex = self._graphicsItems.indexFromItem(item)
                 graphics = self._scene.getNextGraphics(graphics)
         self.ui.graphics_listview.setModel(self._graphicsItems)
-        #self.ui.graphics_listview.setMovement(QtGui.QListView.Snap)
-        #self.ui.graphics_listview.setDragDropMode(QtGui.QListView.InternalMove)
-        #self.ui.graphics_listview.setDragDropOverwriteMode(False)
-        #self.ui.graphics_listview.setDropIndicatorShown(True)
+        # self.ui.graphics_listview.setMovement(QtGui.QListView.Snap)
+        # self.ui.graphics_listview.setDragDropMode(QtGui.QListView.InternalMove)
+        # self.ui.graphics_listview.setDragDropOverwriteMode(False)
+        # self.ui.graphics_listview.setDropIndicatorShown(True)
         if selectedIndex:
             self.ui.graphics_listview.setCurrentIndex(selectedIndex)
         self.ui.graphics_listview.show()
 
     def graphicsListItemClicked(self, modelIndex):
-        '''
+        """
         Either changes visibility flag or selects current graphics
-        '''
+        """
         model = modelIndex.model()
         item = model.item(modelIndex.row())
         graphics = item.data()
@@ -129,17 +147,15 @@ class SceneEditorWidget(QtWidgets.QWidget):
         if graphics == selectedGraphics:
             self.ui.graphics_editor.setGraphics(selectedGraphics)
 
-    def addGraphicsEntered(self, index):
-        '''
+    def addGraphicsEntered(self, name):
+        """
         Add a new chosen graphics type
-        '''
+        """
         if not self._scene:
             return
-        if index == 0:
-            return
-        name = self.ui.add_graphics_combobox.itemText(index)
         graphicsType = Graphics.TYPE_INVALID
         fieldDomainType = Field.DOMAIN_TYPE_INVALID
+        # name = str(combobox1.currentText())
         if name == "point":
             graphicsType = Graphics.TYPE_POINTS
             fieldDomainType = Field.DOMAIN_TYPE_POINT
@@ -163,22 +179,23 @@ class SceneEditorWidget(QtWidgets.QWidget):
         else:
             pass
         if graphicsType != Graphics.TYPE_INVALID:
-            with ChangeManager(self._scene):
-                graphics = self._scene.createGraphics(graphicsType)
-                if fieldDomainType != Field.DOMAIN_TYPE_INVALID:
-                    graphics.setFieldDomainType(fieldDomainType)
-                if fieldDomainType != Field.DOMAIN_TYPE_POINT:
-                    coordinateField = self._getDefaultCoordinateField()
-                    if coordinateField is not None:
-                        graphics.setCoordinateField(coordinateField)
+            self._scene.beginChange()
+            graphics = self._scene.createGraphics(graphicsType)
+            if fieldDomainType != Field.DOMAIN_TYPE_INVALID:
+                graphics.setFieldDomainType(fieldDomainType)
+            if fieldDomainType != Field.DOMAIN_TYPE_POINT:
+                coordinateField = self._getDefaultCoordinateField()
+                if coordinateField is not None:
+                    graphics.setCoordinateField(coordinateField)
+            self._scene.endChange()
             self.ui.graphics_editor.setGraphics(graphics)
             self._buildGraphicsList()
         self.ui.add_graphics_combobox.setCurrentIndex(0)
 
     def deleteGraphicsClicked(self):
-        '''
-        Add a new chosen graphics type
-        '''
+        """
+        Delete the current graphics type
+        """
         if not self._scene:
             return
         graphics = self.ui.graphics_editor.getGraphics()
@@ -188,6 +205,8 @@ class SceneEditorWidget(QtWidgets.QWidget):
                 nextGraphics = self._scene.getPreviousGraphics(graphics)
             if not (nextGraphics and nextGraphics.isValid()):
                 nextGraphics = self._scene.getFirstGraphics()
+            if nextGraphics == graphics:
+                nextGraphics = None
             self.ui.graphics_editor.setGraphics(nextGraphics)
             self._scene.removeGraphics(graphics)
             self._buildGraphicsList()
