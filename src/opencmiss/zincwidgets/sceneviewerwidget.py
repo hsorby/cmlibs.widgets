@@ -218,7 +218,8 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         Respond to widget resize events.
         """
         if self._sceneviewer:
-            self._sceneviewer.setViewportSize(width, height)
+            pixel_scale = self.window().devicePixelRatio()
+            self._sceneviewer.setViewportSize(width * pixel_scale, height * pixel_scale)
         # resizeGL end
 
     def mousePressEvent(self, event):
