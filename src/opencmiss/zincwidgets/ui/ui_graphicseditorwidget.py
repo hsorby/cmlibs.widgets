@@ -14,6 +14,7 @@ from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
 from opencmiss.zincwidgets.materialchooserwidget import MaterialChooserWidget
+from opencmiss.zincwidgets.enumerationchooserwidget import EnumerationChooserWidget
 from opencmiss.zincwidgets.glyphchooserwidget import GlyphChooserWidget
 from opencmiss.zincwidgets.spectrumchooserwidget import SpectrumChooserWidget
 from opencmiss.zincwidgets.tessellationchooserwidget import TessellationChooserWidget
@@ -41,9 +42,9 @@ class Ui_GraphicsEditorWidget(object):
         self.general_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.general_groupbox.setCheckable(False)
         self.formLayout_3 = QFormLayout(self.general_groupbox)
-        self.formLayout_3.setContentsMargins(7, 7, 7, 7)
         self.formLayout_3.setObjectName(u"formLayout_3")
         self.formLayout_3.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_3.setContentsMargins(7, 7, 7, 7)
         self.coordinate_field_label = QLabel(self.general_groupbox)
         self.coordinate_field_label.setObjectName(u"coordinate_field_label")
 
@@ -60,20 +61,10 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.scenecoordinatesystem_label)
 
-        self.scenecoordinatesystem_combobox = QComboBox(self.general_groupbox)
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.addItem("")
-        self.scenecoordinatesystem_combobox.setObjectName(u"scenecoordinatesystem_combobox")
+        self.scenecoordinatesystem_chooser = EnumerationChooserWidget(self.general_groupbox)
+        self.scenecoordinatesystem_chooser.setObjectName(u"scenecoordinatesystem_chooser")
 
-        self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.scenecoordinatesystem_combobox)
+        self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.scenecoordinatesystem_chooser)
 
         self.exterior_checkbox = QCheckBox(self.general_groupbox)
         self.exterior_checkbox.setObjectName(u"exterior_checkbox")
@@ -85,20 +76,15 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_3.setWidget(6, QFormLayout.LabelRole, self.face_label)
 
-        self.face_combobox = QComboBox(self.general_groupbox)
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.addItem("")
-        self.face_combobox.setObjectName(u"face_combobox")
-        self.face_combobox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.face_enumeration_chooser = EnumerationChooserWidget(self.general_groupbox)
+        self.face_enumeration_chooser.setObjectName(u"face_enumeration_chooser")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.face_enumeration_chooser.sizePolicy().hasHeightForWidth())
+        self.face_enumeration_chooser.setSizePolicy(sizePolicy1)
 
-        self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.face_combobox)
+        self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.face_enumeration_chooser)
 
         self.material_label = QLabel(self.general_groupbox)
         self.material_label.setObjectName(u"material_label")
@@ -166,11 +152,11 @@ class Ui_GraphicsEditorWidget(object):
         self.contours_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.contours_groupbox.setFlat(False)
         self.formLayout_2 = QFormLayout(self.contours_groupbox)
-        self.formLayout_2.setContentsMargins(7, 7, 7, 7)
         self.formLayout_2.setObjectName(u"formLayout_2")
         self.formLayout_2.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_2.setHorizontalSpacing(7)
         self.formLayout_2.setVerticalSpacing(7)
+        self.formLayout_2.setContentsMargins(7, 7, 7, 7)
         self.isovalues_lineedit = QLineEdit(self.contours_groupbox)
         self.isovalues_lineedit.setObjectName(u"isovalues_lineedit")
 
@@ -198,9 +184,9 @@ class Ui_GraphicsEditorWidget(object):
         self.streamlines_groupbox = QGroupBox(GraphicsEditorWidget)
         self.streamlines_groupbox.setObjectName(u"streamlines_groupbox")
         self.formLayout_5 = QFormLayout(self.streamlines_groupbox)
-        self.formLayout_5.setContentsMargins(7, 7, 7, 7)
         self.formLayout_5.setObjectName(u"formLayout_5")
         self.formLayout_5.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_5.setContentsMargins(7, 7, 7, 7)
         self.stream_vector_field_label = QLabel(self.streamlines_groupbox)
         self.stream_vector_field_label.setObjectName(u"stream_vector_field_label")
 
@@ -227,27 +213,20 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_5.setWidget(2, QFormLayout.LabelRole, self.streamline_track_direction_label)
 
-        self.streamlines_track_direction_combobox = QComboBox(self.streamlines_groupbox)
-        self.streamlines_track_direction_combobox.addItem("")
-        self.streamlines_track_direction_combobox.addItem("")
-        self.streamlines_track_direction_combobox.setObjectName(u"streamlines_track_direction_combobox")
-        self.streamlines_track_direction_combobox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.streamlines_track_direction_chooser = EnumerationChooserWidget(self.streamlines_groupbox)
+        self.streamlines_track_direction_chooser.setObjectName(u"streamlines_track_direction_chooser")
 
-        self.formLayout_5.setWidget(2, QFormLayout.FieldRole, self.streamlines_track_direction_combobox)
+        self.formLayout_5.setWidget(2, QFormLayout.FieldRole, self.streamlines_track_direction_chooser)
 
         self.streamlines_colour_data_type_label = QLabel(self.streamlines_groupbox)
         self.streamlines_colour_data_type_label.setObjectName(u"streamlines_colour_data_type_label")
 
         self.formLayout_5.setWidget(3, QFormLayout.LabelRole, self.streamlines_colour_data_type_label)
 
-        self.streamlines_colour_data_type_combobox = QComboBox(self.streamlines_groupbox)
-        self.streamlines_colour_data_type_combobox.addItem("")
-        self.streamlines_colour_data_type_combobox.addItem("")
-        self.streamlines_colour_data_type_combobox.addItem("")
-        self.streamlines_colour_data_type_combobox.setObjectName(u"streamlines_colour_data_type_combobox")
-        self.streamlines_colour_data_type_combobox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.streamlines_colour_data_type_chooser = EnumerationChooserWidget(self.streamlines_groupbox)
+        self.streamlines_colour_data_type_chooser.setObjectName(u"streamlines_colour_data_type_chooser")
 
-        self.formLayout_5.setWidget(3, QFormLayout.FieldRole, self.streamlines_colour_data_type_combobox)
+        self.formLayout_5.setWidget(3, QFormLayout.FieldRole, self.streamlines_colour_data_type_chooser)
 
 
         self.verticalLayout.addWidget(self.streamlines_groupbox)
@@ -255,23 +234,18 @@ class Ui_GraphicsEditorWidget(object):
         self.lines_groupbox = QGroupBox(GraphicsEditorWidget)
         self.lines_groupbox.setObjectName(u"lines_groupbox")
         self.formLayout_4 = QFormLayout(self.lines_groupbox)
-        self.formLayout_4.setContentsMargins(7, 7, 7, 7)
         self.formLayout_4.setObjectName(u"formLayout_4")
         self.formLayout_4.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_4.setContentsMargins(7, 7, 7, 7)
         self.line_shape_label = QLabel(self.lines_groupbox)
         self.line_shape_label.setObjectName(u"line_shape_label")
 
         self.formLayout_4.setWidget(0, QFormLayout.LabelRole, self.line_shape_label)
 
-        self.line_shape_combobox = QComboBox(self.lines_groupbox)
-        self.line_shape_combobox.addItem("")
-        self.line_shape_combobox.addItem("")
-        self.line_shape_combobox.addItem("")
-        self.line_shape_combobox.addItem("")
-        self.line_shape_combobox.setObjectName(u"line_shape_combobox")
-        self.line_shape_combobox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.line_shape_chooser = EnumerationChooserWidget(self.lines_groupbox)
+        self.line_shape_chooser.setObjectName(u"line_shape_chooser")
 
-        self.formLayout_4.setWidget(0, QFormLayout.FieldRole, self.line_shape_combobox)
+        self.formLayout_4.setWidget(0, QFormLayout.FieldRole, self.line_shape_chooser)
 
         self.line_base_size_label = QLabel(self.lines_groupbox)
         self.line_base_size_label.setObjectName(u"line_base_size_label")
@@ -290,9 +264,6 @@ class Ui_GraphicsEditorWidget(object):
 
         self.line_orientation_scale_field_chooser = FieldChooserWidget(self.lines_groupbox)
         self.line_orientation_scale_field_chooser.setObjectName(u"line_orientation_scale_field_chooser")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.line_orientation_scale_field_chooser.sizePolicy().hasHeightForWidth())
         self.line_orientation_scale_field_chooser.setSizePolicy(sizePolicy1)
         self.line_orientation_scale_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
@@ -316,9 +287,9 @@ class Ui_GraphicsEditorWidget(object):
         self.points_groupbox.setObjectName(u"points_groupbox")
         self.points_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.formLayout = QFormLayout(self.points_groupbox)
-        self.formLayout.setContentsMargins(7, 7, 7, 7)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout.setContentsMargins(7, 7, 7, 7)
         self.glyph_label = QLabel(self.points_groupbox)
         self.glyph_label.setObjectName(u"glyph_label")
 
@@ -411,23 +382,23 @@ class Ui_GraphicsEditorWidget(object):
         self.label_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.labelFieldChanged)
         self.exterior_checkbox.clicked.connect(GraphicsEditorWidget.exteriorClicked)
         self.isoscalar_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.isoscalarFieldChanged)
-        self.face_combobox.currentIndexChanged.connect(GraphicsEditorWidget.faceChanged)
         self.wireframe_checkbox.clicked.connect(GraphicsEditorWidget.wireframeClicked)
         self.isovalues_lineedit.editingFinished.connect(GraphicsEditorWidget.isovaluesEntered)
         self.line_base_size_lineedit.editingFinished.connect(GraphicsEditorWidget.lineBaseSizeEntered)
         self.line_orientation_scale_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.lineOrientationScaleFieldChanged)
         self.line_scale_factors_lineedit.editingFinished.connect(GraphicsEditorWidget.lineScaleFactorsEntered)
-        self.line_shape_combobox.currentIndexChanged.connect(GraphicsEditorWidget.lineShapeChanged)
+        self.line_shape_chooser.currentIndexChanged.connect(GraphicsEditorWidget.lineShapeChanged)
         self.stream_vector_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.streamVectorFieldChanged)
         self.streamlines_track_length_lineedit.editingFinished.connect(GraphicsEditorWidget.streamlinesTrackLengthEntered)
-        self.streamlines_track_direction_combobox.currentIndexChanged.connect(GraphicsEditorWidget.streamlinesTrackDirectionChanged)
         self.coordinate_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.coordinateFieldChanged)
         self.sampling_mode_combobox.currentIndexChanged.connect(GraphicsEditorWidget.samplingModeChanged)
-        self.streamlines_colour_data_type_combobox.currentIndexChanged.connect(GraphicsEditorWidget.streamlinesColourDataTypeChanged)
+        self.streamlines_track_direction_chooser.currentIndexChanged.connect(GraphicsEditorWidget.streamlinesTrackDirectionChanged)
+        self.streamlines_colour_data_type_chooser.currentIndexChanged.connect(GraphicsEditorWidget.streamlinesColourDataTypeChanged)
         self.spectrum_chooser.currentIndexChanged.connect(GraphicsEditorWidget.spectrumChanged)
-        self.scenecoordinatesystem_combobox.currentIndexChanged.connect(GraphicsEditorWidget.scenecoordinatesystemChanged)
         self.tessellation_chooser.currentIndexChanged.connect(GraphicsEditorWidget.tessellationChanged)
         self.subgroup_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.subgroupFieldChanged)
+        self.face_enumeration_chooser.currentIndexChanged.connect(GraphicsEditorWidget.faceChanged)
+        self.scenecoordinatesystem_chooser.currentIndexChanged.connect(GraphicsEditorWidget.scenecoordinatesystemChanged)
 
         QMetaObject.connectSlotsByName(GraphicsEditorWidget)
     # setupUi
@@ -437,29 +408,8 @@ class Ui_GraphicsEditorWidget(object):
         self.general_groupbox.setTitle("")
         self.coordinate_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Coordinates:", None))
         self.scenecoordinatesystem_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Coord System:", None))
-        self.scenecoordinatesystem_combobox.setItemText(0, QCoreApplication.translate("GraphicsEditorWidget", u"LOCAL", None))
-        self.scenecoordinatesystem_combobox.setItemText(1, QCoreApplication.translate("GraphicsEditorWidget", u"WORLD", None))
-        self.scenecoordinatesystem_combobox.setItemText(2, QCoreApplication.translate("GraphicsEditorWidget", u"NORMALISED_WINDOW_FILL", None))
-        self.scenecoordinatesystem_combobox.setItemText(3, QCoreApplication.translate("GraphicsEditorWidget", u"NORMALISED_WINDOW_FIT_CENTRE", None))
-        self.scenecoordinatesystem_combobox.setItemText(4, QCoreApplication.translate("GraphicsEditorWidget", u"NORMALISED_WINDOW_FIT_LEFT", None))
-        self.scenecoordinatesystem_combobox.setItemText(5, QCoreApplication.translate("GraphicsEditorWidget", u"NORMALISED_WINDOW_FIT_RIGHT", None))
-        self.scenecoordinatesystem_combobox.setItemText(6, QCoreApplication.translate("GraphicsEditorWidget", u"NORMALISED_WINDOW_FIT_BOTTOM", None))
-        self.scenecoordinatesystem_combobox.setItemText(7, QCoreApplication.translate("GraphicsEditorWidget", u"NORMALISED_WINDOW_FIT_TOP", None))
-        self.scenecoordinatesystem_combobox.setItemText(8, QCoreApplication.translate("GraphicsEditorWidget", u"WINDOW_PIXEL_BOTTOM_LEFT", None))
-        self.scenecoordinatesystem_combobox.setItemText(9, QCoreApplication.translate("GraphicsEditorWidget", u"WINDOW_PIXEL_TOP_LEFT", None))
-
         self.exterior_checkbox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Exterior", None))
         self.face_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Face:", None))
-        self.face_combobox.setItemText(0, QCoreApplication.translate("GraphicsEditorWidget", u"all", None))
-        self.face_combobox.setItemText(1, QCoreApplication.translate("GraphicsEditorWidget", u"any face", None))
-        self.face_combobox.setItemText(2, QCoreApplication.translate("GraphicsEditorWidget", u"no face", None))
-        self.face_combobox.setItemText(3, QCoreApplication.translate("GraphicsEditorWidget", u"xi1 = 0", None))
-        self.face_combobox.setItemText(4, QCoreApplication.translate("GraphicsEditorWidget", u"xi1 = 1", None))
-        self.face_combobox.setItemText(5, QCoreApplication.translate("GraphicsEditorWidget", u"xi2 = 0", None))
-        self.face_combobox.setItemText(6, QCoreApplication.translate("GraphicsEditorWidget", u"xi2 = 1", None))
-        self.face_combobox.setItemText(7, QCoreApplication.translate("GraphicsEditorWidget", u"xi3 = 0", None))
-        self.face_combobox.setItemText(8, QCoreApplication.translate("GraphicsEditorWidget", u"xi3 = 1", None))
-
         self.material_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Material:", None))
         self.data_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Data field:", None))
         self.spectrum_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Spectrum:", None))
@@ -473,21 +423,9 @@ class Ui_GraphicsEditorWidget(object):
         self.stream_vector_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Vector field:", None))
         self.streamlines_track_length_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Time length:", None))
         self.streamline_track_direction_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Direction:", None))
-        self.streamlines_track_direction_combobox.setItemText(0, QCoreApplication.translate("GraphicsEditorWidget", u"forward", None))
-        self.streamlines_track_direction_combobox.setItemText(1, QCoreApplication.translate("GraphicsEditorWidget", u"reverse", None))
-
         self.streamlines_colour_data_type_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Colour data:", None))
-        self.streamlines_colour_data_type_combobox.setItemText(0, QCoreApplication.translate("GraphicsEditorWidget", u"field", None))
-        self.streamlines_colour_data_type_combobox.setItemText(1, QCoreApplication.translate("GraphicsEditorWidget", u"magnitude", None))
-        self.streamlines_colour_data_type_combobox.setItemText(2, QCoreApplication.translate("GraphicsEditorWidget", u"travel time", None))
-
         self.lines_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Lines:", None))
         self.line_shape_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Shape:", None))
-        self.line_shape_combobox.setItemText(0, QCoreApplication.translate("GraphicsEditorWidget", u"line", None))
-        self.line_shape_combobox.setItemText(1, QCoreApplication.translate("GraphicsEditorWidget", u"ribbon", None))
-        self.line_shape_combobox.setItemText(2, QCoreApplication.translate("GraphicsEditorWidget", u"circle extrusion", None))
-        self.line_shape_combobox.setItemText(3, QCoreApplication.translate("GraphicsEditorWidget", u"square extrusion", None))
-
         self.line_base_size_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Base size:", None))
         self.line_orientation_scale_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Scale field:", None))
         self.line_scale_factors_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Scaling:", None))

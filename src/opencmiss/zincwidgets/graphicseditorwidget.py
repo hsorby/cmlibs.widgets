@@ -20,7 +20,7 @@ from numbers import Number
 from opencmiss.zinc.element import Element
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.graphics import Graphics, GraphicsStreamlines, Graphicslineattributes
-from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL
+from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, ScenecoordinatesystemEnumFromString, ScenecoordinatesystemEnumToString
 from opencmiss.zinc.spectrum import Spectrum
 from opencmiss.zinc.status import OK as ZINC_OK
 
@@ -44,6 +44,10 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.setupUi(self)
         # base graphics attributes
         self.ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
+        self.ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
+        self.ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
+        self.ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
+        self.ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
         self.ui.subgroup_field_chooser.setNullObjectName('-')
         self.ui.subgroup_field_chooser.setConditional(FieldIsScalar)
         self.ui.coordinate_field_chooser.setNullObjectName('-')
@@ -142,7 +146,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         isStreamline = (streamlines is not None) and streamlines.isValid()
         if not isStreamline:
             isStreamline = False
-        model = self.ui.line_shape_combobox.model()
+        model = self.ui.line_shape_chooser.model()
         model.item(1, 0).setEnabled(isStreamline)
         model.item(3, 0).setEnabled(isStreamline)
         self.ui.line_orientation_scale_field_label.setEnabled(not isStreamline)
@@ -283,13 +287,12 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         scenecoordinatesystem = SCENECOORDINATESYSTEM_LOCAL
         if self._graphics:
             scenecoordinatesystem = self._graphics.getScenecoordinatesystem()
-        self.ui.scenecoordinatesystem_combobox.blockSignals(True)
-        self.ui.scenecoordinatesystem_combobox.setCurrentIndex(scenecoordinatesystem - SCENECOORDINATESYSTEM_LOCAL)
-        self.ui.scenecoordinatesystem_combobox.blockSignals(False)
+        self.ui.scenecoordinatesystem_chooser.setItem(scenecoordinatesystem)
 
     def scenecoordinatesystemChanged(self, index):
         if self._graphics:
-            self._graphics.setScenecoordinatesystem(index + SCENECOORDINATESYSTEM_LOCAL)
+            scenecoordinatesystem = self.ui.scenecoordinatesystem_chooser.getItem()
+            self._graphics.setScenecoordinatesystem(scenecoordinatesystem)
 
     def dataFieldChanged(self, index):
         """
@@ -462,9 +465,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 streamlinesTrackDirection = streamlines.getTrackDirection()
-        self.ui.streamlines_track_direction_combobox.blockSignals(True)
-        self.ui.streamlines_track_direction_combobox.setCurrentIndex(streamlinesTrackDirection - GraphicsStreamlines.TRACK_DIRECTION_FORWARD)
-        self.ui.streamlines_track_direction_combobox.blockSignals(False)
+        self.ui.streamlines_track_direction_chooser.setItem(streamlinesTrackDirection)
 
     def streamlinesTrackDirectionChanged(self, index):
         """
@@ -484,9 +485,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 streamlinesColourDataType = streamlines.getColourDataType()
-        self.ui.streamlines_colour_data_type_combobox.blockSignals(True)
-        self.ui.streamlines_colour_data_type_combobox.setCurrentIndex(streamlinesColourDataType - GraphicsStreamlines.COLOUR_DATA_TYPE_FIELD)
-        self.ui.streamlines_colour_data_type_combobox.blockSignals(False)
+        self.ui.streamlines_colour_data_type_chooser.setItem(streamlinesColourDataType)
 
     def streamlinesColourDataTypeChanged(self, index):
         """
@@ -514,9 +513,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
                 lineShapeType = lineattributes.getShapeType()
-        self.ui.line_shape_combobox.blockSignals(True)
-        self.ui.line_shape_combobox.setCurrentIndex(lineShapeType - Graphicslineattributes.SHAPE_TYPE_LINE)
-        self.ui.line_shape_combobox.blockSignals(False)
+        self.ui.line_shape_chooser.setItem(lineShapeType)
 
     def lineShapeChanged(self, index):
         """

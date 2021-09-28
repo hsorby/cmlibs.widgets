@@ -1,7 +1,7 @@
 import os
 from PySide2 import QtWidgets, QtGui, QtCore
 from opencmiss.zincwidgets.exportwebgldialog import ExportWebGLDialog
-from opencmiss.zincwidgets.materialeditorwidget import MaterialEditorWidget
+from opencmiss.zincwidgets.graphicseditorwidget import GraphicsEditorWidget
 from opencmiss.zinc.material import Materialmodule
 from opencmiss.argon.core.argondocument import ArgonDocument
 
@@ -21,8 +21,8 @@ if __name__ == '__main__':
     zincContext = document.getZincContext()
     app = QtWidgets.QApplication(sys.argv)
     # w = ExportWebGLDialog()
-    w = MaterialEditorWidget()
-    w.setZincContext(zincContext)
+    w = GraphicsEditorWidget()
+    # w.setZincContext(zincContext)
     w.show()
     sys.exit(app.exec_())
 
