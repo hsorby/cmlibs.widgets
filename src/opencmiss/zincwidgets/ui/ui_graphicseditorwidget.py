@@ -356,13 +356,10 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_6.setWidget(0, QFormLayout.LabelRole, self.sampling_mode_label)
 
-        self.sampling_mode_combobox = QComboBox(self.sampling_groupbox)
-        self.sampling_mode_combobox.addItem("")
-        self.sampling_mode_combobox.addItem("")
-        self.sampling_mode_combobox.setObjectName(u"sampling_mode_combobox")
-        self.sampling_mode_combobox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.sampling_mode_chooser = EnumerationChooserWidget(self.sampling_groupbox)
+        self.sampling_mode_chooser.setObjectName(u"sampling_mode_chooser")
 
-        self.formLayout_6.setWidget(0, QFormLayout.FieldRole, self.sampling_mode_combobox)
+        self.formLayout_6.setWidget(0, QFormLayout.FieldRole, self.sampling_mode_chooser)
 
 
         self.verticalLayout.addWidget(self.sampling_groupbox)
@@ -389,9 +386,9 @@ class Ui_GraphicsEditorWidget(object):
         self.line_scale_factors_lineedit.editingFinished.connect(GraphicsEditorWidget.lineScaleFactorsEntered)
         self.line_shape_chooser.currentIndexChanged.connect(GraphicsEditorWidget.lineShapeChanged)
         self.stream_vector_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.streamVectorFieldChanged)
+        self.sampling_mode_chooser.currentIndexChanged.connect(GraphicsEditorWidget.samplingModeChanged)
         self.streamlines_track_length_lineedit.editingFinished.connect(GraphicsEditorWidget.streamlinesTrackLengthEntered)
         self.coordinate_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.coordinateFieldChanged)
-        self.sampling_mode_combobox.currentIndexChanged.connect(GraphicsEditorWidget.samplingModeChanged)
         self.streamlines_track_direction_chooser.currentIndexChanged.connect(GraphicsEditorWidget.streamlinesTrackDirectionChanged)
         self.streamlines_colour_data_type_chooser.currentIndexChanged.connect(GraphicsEditorWidget.streamlinesColourDataTypeChanged)
         self.spectrum_chooser.currentIndexChanged.connect(GraphicsEditorWidget.spectrumChanged)
@@ -437,8 +434,5 @@ class Ui_GraphicsEditorWidget(object):
         self.label_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Label field:", None))
         self.sampling_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Sampling:", None))
         self.sampling_mode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Mode:", None))
-        self.sampling_mode_combobox.setItemText(0, QCoreApplication.translate("GraphicsEditorWidget", u"cell centres", None))
-        self.sampling_mode_combobox.setItemText(1, QCoreApplication.translate("GraphicsEditorWidget", u"cell corners", None))
-
     # retranslateUi
 

@@ -513,20 +513,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="sampling_mode_combobox">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-        <item>
-         <property name="text">
-          <string>cell centres</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>cell corners</string>
-         </property>
-        </item>
+       <widget class="EnumerationChooserWidget" name="sampling_mode_chooser">
        </widget>
       </item>
      </layout>
@@ -836,6 +823,12 @@
      <y>394</y>
     </hint>
    </hints>
+  </connection>
+  <connection>
+   <sender>sampling_mode_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>samplingModeChanged(int)</slot>
   </connection>
   <connection>
    <sender>streamlines_track_length_lineedit</sender>

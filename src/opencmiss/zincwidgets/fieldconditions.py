@@ -91,6 +91,7 @@ def FieldIsSquareMatrix(field):
     numberOfComponents = field.getNumberOfComponents()
     if numberOfComponents > 1:
         sqrt1 = sqrt(numberOfComponents)
+        # TODO: Bug here. NameError: name 'floor' is not defined
         if 0 == floor(sqrt1) - sqrt1:
             return field.getValueType() == Field.VALUE_TYPE_REAL
     return False

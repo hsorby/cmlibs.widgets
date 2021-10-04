@@ -48,6 +48,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
         self.ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
         self.ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
+
+
         self.ui.subgroup_field_chooser.setNullObjectName('-')
         self.ui.subgroup_field_chooser.setConditional(FieldIsScalar)
         self.ui.coordinate_field_chooser.setNullObjectName('-')
@@ -69,6 +71,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.point_orientation_scale_field_chooser.setNullObjectName('-')
         self.ui.point_orientation_scale_field_chooser.setConditional(FieldIsOrientationScaleCapable)
         self.ui.label_field_chooser.setNullObjectName('-')
+        self.ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
+
+        
 
     def _updateWidgets(self):
         # base graphics attributes
@@ -660,9 +665,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             samplingattributes = self._graphics.getGraphicssamplingattributes()
             if samplingattributes.isValid():
                 samplingMode = samplingattributes.getElementPointSamplingMode()
-        self.ui.sampling_mode_combobox.blockSignals(True)
-        self.ui.sampling_mode_combobox.setCurrentIndex(samplingMode - Element.POINT_SAMPLING_MODE_CELL_CENTRES)
-        self.ui.sampling_mode_combobox.blockSignals(False)
+        self.ui.sampling_mode_chooser.setItem(samplingMode)
 
     def samplingModeChanged(self, index):
         """
@@ -671,4 +674,5 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             samplingattributes = self._graphics.getGraphicssamplingattributes()
             if samplingattributes.isValid():
-                samplingattributes.setElementPointSamplingMode(index + Element.POINT_SAMPLING_MODE_CELL_CENTRES)
+                samplingMode = self.ui.sampling_mode_chooser.getItem()
+                samplingattributes.setElementPointSamplingMode(samplingMode)
