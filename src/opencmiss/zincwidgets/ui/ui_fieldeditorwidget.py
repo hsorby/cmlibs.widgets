@@ -14,6 +14,7 @@ from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
 from opencmiss.zincwidgets.fieldtypechooserwidget import FieldTypeChooserWidget
+from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 
 
 class Ui_FieldEditorWidget(object):
@@ -55,8 +56,8 @@ class Ui_FieldEditorWidget(object):
         self.sourcefields_groupbox = QGroupBox(FieldEditorWidget)
         self.sourcefields_groupbox.setObjectName(u"sourcefields_groupbox")
         self.gridLayout_4 = QGridLayout(self.sourcefields_groupbox)
-        self.gridLayout_4.setContentsMargins(7, 7, 7, 7)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_4.setContentsMargins(7, 7, 7, 7)
         self.number_of_source_fields_label = QLabel(self.sourcefields_groupbox)
         self.number_of_source_fields_label.setObjectName(u"number_of_source_fields_label")
 
@@ -68,12 +69,29 @@ class Ui_FieldEditorWidget(object):
 
         self.gridLayout_4.addWidget(self.number_of_source_fields_lineedit, 0, 1, 1, 1)
 
+        self.region_of_apply_fields_label = QLabel(self.sourcefields_groupbox)
+        self.region_of_apply_fields_label.setObjectName(u"region_of_apply_fields_label")
+
+        self.gridLayout_4.addWidget(self.region_of_apply_fields_label, 1, 0, 1, 1)
+
+        self.region_of_apply_fields_chooser = RegionChooserWidget(self.sourcefields_groupbox)
+        self.region_of_apply_fields_chooser.setObjectName(u"region_of_apply_fields_chooser")
+
+        self.gridLayout_4.addWidget(self.region_of_apply_fields_chooser, 1, 1, 1, 1)
+
 
         self.gridLayout_2.addWidget(self.sourcefields_groupbox, 3, 0, 1, 2)
 
+        self.applyargumentfields_groupbox = QGroupBox(FieldEditorWidget)
+        self.applyargumentfields_groupbox.setObjectName(u"applyargumentfields_groupbox")
+        self.gridLayout_11 = QGridLayout(self.applyargumentfields_groupbox)
+        self.gridLayout_11.setObjectName(u"gridLayout_11")
+
+        self.gridLayout_2.addWidget(self.applyargumentfields_groupbox, 5, 0, 1, 2)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.gridLayout_2.addItem(self.verticalSpacer, 6, 0, 1, 1)
+        self.gridLayout_2.addItem(self.verticalSpacer, 7, 0, 1, 1)
 
         self.coordinate_system_groupbox = QGroupBox(FieldEditorWidget)
         self.coordinate_system_groupbox.setObjectName(u"coordinate_system_groupbox")
@@ -191,7 +209,7 @@ class Ui_FieldEditorWidget(object):
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.name_lineedit)
 
 
-        self.gridLayout_2.addWidget(self.create_group, 5, 0, 1, 2)
+        self.gridLayout_2.addWidget(self.create_group, 6, 0, 1, 2)
 
 
         self.retranslateUi(FieldEditorWidget)
@@ -204,6 +222,8 @@ class Ui_FieldEditorWidget(object):
         self.field_type_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Field type:", None))
         self.sourcefields_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Source fields:", None))
         self.number_of_source_fields_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Number of source fields:", None))
+        self.region_of_apply_fields_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Region of evaluate field:", None))
+        self.applyargumentfields_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Apply argument fields:", None))
         self.coordinate_system_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Coordinate System:", None))
         self.coordinate_system_type_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Type:", None))
         self.coordinate_system_type_chooser.setItemText(0, QCoreApplication.translate("FieldEditorWidget", u"Rectangular Cartesian", None))

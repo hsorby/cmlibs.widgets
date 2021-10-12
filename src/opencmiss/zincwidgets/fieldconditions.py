@@ -16,6 +16,12 @@
 from math import sqrt
 from opencmiss.zinc.field import Field
 
+def FieldIsRealArgument(field):
+    """
+    Conditional function returning true if the field is real argument
+    """
+    return field.castArgumentReal().isValid()
+
 def FieldIsRealValued(field):
     """
     Conditional function returning true if the field has real values

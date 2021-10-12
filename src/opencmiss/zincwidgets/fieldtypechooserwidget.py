@@ -15,7 +15,7 @@
 """
 from PySide2 import QtWidgets
 
-FieldTypes = ['FieldAbs', 'FieldAcos', 'FieldAdd', 'FieldAlias', 'FieldAnd', 'FieldAsin', \
+FieldTypes = ['FieldAbs', 'FieldAcos', 'FieldAdd', 'FieldAlias', 'FieldAnd', 'FieldApply', 'FieldArgumentReal', 'FieldAsin', \
               'FieldAtan', 'FieldAtan2', 'FieldComponent', 'FieldConcatenate', 'FieldConstant', \
               'FieldCoordinateTransformation', 'FieldCos', 'FieldCrossProduct', 'FieldCurl', \
               'FieldDerivative', 'FieldDeterminant', 'FieldDivergence', 'FieldDivide', \

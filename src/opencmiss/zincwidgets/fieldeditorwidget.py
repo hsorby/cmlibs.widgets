@@ -19,7 +19,7 @@ from numbers import Number
 
 from opencmiss.zinc.element import Element
 from opencmiss.zinc.node import Node
-from opencmiss.zinc.field import FieldEdgeDiscontinuity, FieldFindMeshLocation
+from opencmiss.zinc.field import FieldEdgeDiscontinuity, FieldFindMeshLocation, FieldApply
 from opencmiss.argon.core.argonlogger import ArgonLogger
 
 from opencmiss.zincwidgets.fieldconditions import *
@@ -34,7 +34,7 @@ FaceType = ["all", "any face", "no face", "xi1 = 0", "xi1 = 1", "xi2 = 0", "xi2 
 ValueType = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2_ds2ds3", "d3_ds1ds2ds3"]
 
 FieldTypeToNumberofSourcesList = {
-    'FieldAlias': 1, 'FieldLog': 1, 'FieldExp': 1, 'FieldAbs': 1, 'FieldIdentity': 1,
+    'FieldAlias': 1, 'FieldLog': 1, 'FieldExp': 1, 'FieldAbs': 1, 'FieldIdentity': 1, 'FieldApply': 1, 'FieldArgumentReal': 0,
     'FieldCoordinateTransformation': 1, 'FieldIsDefined': 1, 'FieldNot': 1,
     'FieldDeterminant': 1, 'FieldEigenvalues': 1, 'FieldEigenvectors': 1,
     'FieldMatrixInvert': 1, 'FieldTranspose': 1, 'FieldSin': 1, 'FieldCos': 1,
@@ -79,6 +79,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self.ui.coordinate_system_type_chooser.currentIndexChanged.connect(self.coordinateSystemTypeChanged)
         self.ui.coordinate_system_focus_lineedit.editingFinished.connect(self.coordinateSystemFocusEntered)
         self.ui.number_of_source_fields_lineedit.editingFinished.connect(self.numberOfSourceFieldsEntered)
+        self.ui.region_of_apply_fields_chooser.currentIndexChanged.connect(self.applyFieldRegionChanged)
         self.ui.type_coordinate_checkbox.stateChanged.connect(self.typeCoordinateClicked)
         self.ui.managed_checkbox.stateChanged.connect(self.managedClicked)
         self.ui.derived_chooser_1.currentIndexChanged.connect(self.derivedChooser1Changed)
@@ -105,7 +106,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._displayVectorInteger(self.ui.derived_values_lineedit, values)
         elif self._fieldType == 'FieldMatrixMultiply' or self._fieldType == 'FieldTranspose' \
                 or self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldNodeValue" \
-                or self._fieldType == "FieldDerivative":
+                or self._fieldType == "FieldDerivative" or self._fieldType == "FieldArgumentReal":
             try:
                 value = int(self.ui.derived_values_lineedit.text())
             except:
@@ -231,9 +232,10 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 returnedField = self._fieldmodule.createFieldTranspose(value, sourceFields[0])
             else:
                 errorMessage = " Missing source field(s)."
-        elif self._fieldType == "FieldFiniteElement":
+        elif self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldArgumentReal":
             value = int(self.ui.derived_values_lineedit.text())
-            returnedField = self._fieldmodule.createFieldFiniteElement(value)
+            methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
+            returnedField = methodToCall(value)
         elif self._fieldType == "FieldEdgeDiscontinuity":
             if sourceFields[0] and sourceFields[0].isValid():
                 returnedField = self._fieldmodule.createFieldEdgeDiscontinuity(sourceFields[0])
@@ -295,6 +297,14 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 returnedField = self._fieldmodule.createFieldTimeValue(self._timekeeper)
             else:
                 errorMessage = " Missing timekeeper."
+
+        elif self._fieldType == "FieldApply":
+            if sourceFields[0] and sourceFields[0].isValid():
+                methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
+                returnedField = methodToCall(sourceFields[0])
+            else:
+                errorMessage = " Missing source field(s)."
+
         if returnedField and returnedField.isValid():
             returnedField.setManaged(True)
         else:
@@ -392,6 +402,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self.ui.derived_combo_label_1.hide()
         self.ui.derived_combo_label_2.hide()
         self.ui.derived_groupbox.hide()
+        self.ui.applyargumentfields_groupbox.hide()
         if self._fieldType == 'FieldComponent':
             self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Component Indexes:", None))
             self.ui.derived_values_lineedit.show()
@@ -587,7 +598,8 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Time Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsScalar)
-        elif self._fieldType == "FieldFiniteElement":
+        elif self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldArgumentReal":
+            # TODO: check and change FieldArgumentReal display content
             if self._field and self._field.isValid():
                 text = str(self._field.getNumberOfComponents())
                 self.ui.derived_values_lineedit.setText(text)
@@ -601,6 +613,33 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.derived_values_label.show()
 
             self.ui.derived_groupbox.show()
+
+        elif self._fieldType == "FieldApply":
+            # TODO: check and change FieldArgumentReal display content
+            if self._field and self._field.isValid():
+                evaluateField = self._sourceFieldChoosers[0][1].getField()
+                fieldIterator = self._fieldmodule.createFielditerator()
+                field = fieldIterator.next()
+                self._argumentFieldPairs = []
+                index = 0
+                while field.isValid():
+                    # ArgonLogger.getLogger().error("Apply " + str(index))
+                    if field.castArgumentReal().isValid() and evaluateField.dependsOnField(field):
+                    # this is an argument field which must be bound to a source field
+                        # ArgonLogger.getLogger().error("Apply " + str(field))
+                        self.displayArgumentFieldsChoosers(index, field)
+                        index += 2
+                    field = fieldIterator.next()
+                self.bindFieldButton = QtWidgets.QPushButton(self.ui.applyargumentfields_groupbox)
+                
+                self.bindFieldButton.setObjectName(u"bindFieldButton")
+                self.bindFieldButton.setText(u"Bind Field")
+                self.bindFieldButton.clicked.connect(self.bindField)
+                self.ui.gridLayout_11.addWidget(self.bindFieldButton, index, 0, 1, 2)
+                self.ui.applyargumentfields_groupbox.show()
+            else:
+                self.ui.applyargumentfields_groupbox.hide()
+
         else:
             if self._field and self._field.isValid():
                 numberOfSourceFields = self._field.getNumberOfSourceFields()
@@ -628,7 +667,24 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 elif self._fieldType == "FieldEigenvalues" or self._fieldType == "FieldMatrixInvert":
                     self._sourceFieldChoosers[0][1].setConditional(FieldIsSquareMatrix)
 
+    def bindField(self):
+        ArgonLogger.getLogger().error("Apply " + str(len(self._argumentFieldPairs)))
+        aF = []
+        sF = []
+        for fieldPair in self._argumentFieldPairs:
+            aF.append(fieldPair[0].getField())
+            sF.append(fieldPair[1].getField())
+
+        # self._field.__class__ = FieldApply
+        # self._field.setBindArgumentSourceField(aF[0],sF[0])
+        
+        for fieldPair in self._argumentFieldPairs:
+            self._field.setBindArgumentSourceField(fieldPair[0].getField(),fieldPair[1].getField())
+
+
     def displaySourceFieldsChoosers(self, numberOfSourceFields):
+        self.ui.region_of_apply_fields_label.hide()
+        self.ui.region_of_apply_fields_chooser.hide()
         numberOfExistingWidgets = len(self._sourceFieldChoosers)
         if self._fieldType == "FieldConcatenate" or self._fieldType == "FieldCrossProduct":
             if numberOfSourceFields == -1:
@@ -636,9 +692,17 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.number_of_source_fields_lineedit.setEnabled(True)
         else:
             self.ui.number_of_source_fields_lineedit.setEnabled(False)
+        if self._fieldType == "FieldApply":
+            self.ui.region_of_apply_fields_label.show()
+            self.ui.region_of_apply_fields_chooser.show()
+            self.ui.region_of_apply_fields_chooser.setRootRegion(self._fieldmodule.getRegion().getRoot())
+            self.ui.region_of_apply_fields_chooser.setEnabled(True)
+            if self._field and self._field.isValid():
+                self.ui.region_of_apply_fields_chooser.setEnabled(False)
+
         if numberOfSourceFields > numberOfExistingWidgets:
             for i in range(numberOfExistingWidgets, numberOfSourceFields):
-                index = i + 1
+                index = i + 2
                 sourceFieldLabel = QtWidgets.QLabel(self.ui.sourcefields_groupbox)
                 sourceFieldLabel.setObjectName("sourcefield_label" + str(index))
                 self.ui.gridLayout_4.addWidget(sourceFieldLabel, index, 0, 1, 1)
@@ -669,6 +733,38 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._sourceFieldChoosers[i][1].setField(None)
             self._sourceFieldChoosers[i][1].disconnect(self._sourceFieldChoosers[i][1])
         self.ui.number_of_source_fields_lineedit.setText(str(numberOfSourceFields))
+
+    def applyFieldRegionChanged(self, index):
+        self._sourceFieldChoosers[0][1].setRegion(self.ui.region_of_apply_fields_chooser.getRegion())
+
+    def displayArgumentFieldsChoosers(self, index, argument_field):
+        argumentFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
+        argumentFieldLabel.setObjectName("argumentfield_label" + str(index))
+        argumentFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Argument Field " + str(int(index/2 + 1)), None))
+        self.ui.gridLayout_11.addWidget(argumentFieldLabel, index, 0, 1, 1)
+        argumentFieldChooser = FieldChooserWidget(self.ui.applyargumentfields_groupbox)
+        argumentFieldChooser.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+        argumentFieldChooser.setObjectName("argumentfield_chooser" + str(index))
+        argumentFieldChooser.setRegion(argument_field.getFieldmodule().getRegion())
+        argumentFieldChooser.setConditional(None)
+        argumentFieldChooser.setField(argument_field)
+        argumentFieldChooser.setEnabled(False)
+        argumentFieldChooser.disconnect(argumentFieldChooser)
+        self.ui.gridLayout_11.addWidget(argumentFieldChooser, index, 1, 1, 1)
+
+        sourceFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
+        sourceFieldLabel.setObjectName("applysourcefield_label" + str(index))
+        sourceFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Apply Source Field " + str(int(index/2 + 1)), None))
+        self.ui.gridLayout_11.addWidget(sourceFieldLabel, index + 1, 0, 1, 1)
+        sourceFieldChooser = FieldChooserWidget(self.ui.applyargumentfields_groupbox)
+        sourceFieldChooser.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+        sourceFieldChooser.setObjectName("applysourcefield_chooser" + str(index))
+        self.ui.gridLayout_11.addWidget(sourceFieldChooser, index + 1, 1, 1, 1)
+        sourceFieldChooser.allowUnmanagedField(True)
+        sourceFieldChooser.setNullObjectName("-")
+        sourceFieldChooser.setRegion(self._fieldmodule.getRegion())
+
+        self._argumentFieldPairs.append([argumentFieldChooser, sourceFieldChooser])
 
     def displaySourceFields(self):
         numberOfSourceFields = 0
@@ -733,6 +829,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.general_groupbox.hide()
             self.ui.coordinate_system_groupbox.hide()
             self.ui.derived_groupbox.hide()
+            self.ui.applyargumentfields_groupbox.hide()
             self.ui.sourcefields_groupbox.hide()
         self.ui.field_type_chooser.setFieldType(self._fieldType)
         if self._createMode == True:
