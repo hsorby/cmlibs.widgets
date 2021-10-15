@@ -623,10 +623,8 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 self._argumentFieldPairs = []
                 index = 0
                 while field.isValid():
-                    # ArgonLogger.getLogger().error("Apply " + str(index))
                     if field.castArgumentReal().isValid() and evaluateField.dependsOnField(field):
                     # this is an argument field which must be bound to a source field
-                        # ArgonLogger.getLogger().error("Apply " + str(field))
                         self.displayArgumentFieldsChoosers(index, field)
                         index += 2
                     field = fieldIterator.next()
@@ -668,18 +666,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
                     self._sourceFieldChoosers[0][1].setConditional(FieldIsSquareMatrix)
 
     def bindField(self):
-        ArgonLogger.getLogger().error("Apply " + str(len(self._argumentFieldPairs)))
-        aF = []
-        sF = []
-        for fieldPair in self._argumentFieldPairs:
-            aF.append(fieldPair[0].getField())
-            sF.append(fieldPair[1].getField())
-
-        # self._field.__class__ = FieldApply
-        # self._field.setBindArgumentSourceField(aF[0],sF[0])
-        
-        for fieldPair in self._argumentFieldPairs:
-            self._field.setBindArgumentSourceField(fieldPair[0].getField(),fieldPair[1].getField())
+        applyField = self._field.castApply()
+        if applyField.isValid():
+            for fieldPair in self._argumentFieldPairs:
+                applyField.setBindArgumentSourceField(fieldPair[0].getField(),fieldPair[1].getField())
+        self._updateWidgets()
 
 
     def displaySourceFieldsChoosers(self, numberOfSourceFields):
@@ -740,7 +731,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
     def displayArgumentFieldsChoosers(self, index, argument_field):
         argumentFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
         argumentFieldLabel.setObjectName("argumentfield_label" + str(index))
-        argumentFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Argument Field " + str(int(index/2 + 1)), None))
+        argumentFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Argument Field " + str(int(index/2 + 1)), None))
         self.ui.gridLayout_11.addWidget(argumentFieldLabel, index, 0, 1, 1)
         argumentFieldChooser = FieldChooserWidget(self.ui.applyargumentfields_groupbox)
         argumentFieldChooser.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
@@ -754,7 +745,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
         sourceFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
         sourceFieldLabel.setObjectName("applysourcefield_label" + str(index))
-        sourceFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Apply Source Field " + str(int(index/2 + 1)), None))
+        sourceFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Source Field " + str(int(index/2 + 1)), None))
         self.ui.gridLayout_11.addWidget(sourceFieldLabel, index + 1, 0, 1, 1)
         sourceFieldChooser = FieldChooserWidget(self.ui.applyargumentfields_groupbox)
         sourceFieldChooser.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
