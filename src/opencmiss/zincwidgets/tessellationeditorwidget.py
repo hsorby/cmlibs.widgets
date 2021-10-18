@@ -168,9 +168,9 @@ class TessellationEditorWidget(QtWidgets.QWidget):
 
         self._updateUi()
 
-    def setZincContext(self, zincContext):
-        self._context = zincContext
-        tm = zincContext.getTessellationmodule()
+    def setTessellations(self, tessellations):
+        self._context = tessellations.getZincContext()
+        tm = self._context.getTessellationmodule()
         ti = tm.createTessellationiterator()
         t = ti.next()
         self._ui.tableWidgetTessellations.blockSignals(True)

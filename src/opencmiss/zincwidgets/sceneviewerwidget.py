@@ -68,7 +68,8 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         sceneviewermodule = self._context.getSceneviewermodule()
         self._sceneviewer = sceneviewermodule.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE, Sceneviewer.STEREO_MODE_DEFAULT)
         self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
-        self._sceneviewer.setViewportSize(self.width(), self.height())
+        pixel_scale = self.window().devicePixelRatio()
+        self._sceneviewer.setViewportSize(self.width() * pixel_scale, self.height() * pixel_scale)
 
         # Get the default scene filter, which filters by visibility flags
         scenefiltermodule = self._context.getScenefiltermodule()
@@ -123,7 +124,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         result, eye, lookat, up = self._sceneviewer.getLookatParameters()
         if result == OK:
             angle = self._sceneviewer.getViewAngle()
-            return (eye, lookat, up, angle)
+            return eye, lookat, up, angle
 
         return None
 

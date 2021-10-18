@@ -70,7 +70,8 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
         self._sceneviewer = scene_viewer_module.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE,
                                                                   Sceneviewer.STEREO_MODE_DEFAULT)
         self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
-        self._sceneviewer.setViewportSize(self.width(), self.height())
+        pixel_scale = self.window().devicePixelRatio()
+        self._sceneviewer.setViewportSize(self.width() * pixel_scale, self.height() * pixel_scale)
 
         # Get the default scene filter, which filters by visibility flags
         scene_filter_module = self._context.getScenefiltermodule()
@@ -310,7 +311,8 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
         """
         Respond to widget resize events.
         """
-        self._sceneviewer.setViewportSize(width, height)
+        pixel_scale = self.window().devicePixelRatio()
+        self._sceneviewer.setViewportSize(width * pixel_scale, height * pixel_scale)
 
     def keyPressEvent(self, event):
         self.key_press_event(event)
