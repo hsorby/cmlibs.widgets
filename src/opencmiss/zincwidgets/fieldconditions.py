@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from math import sqrt
+from math import sqrt, floor
 from opencmiss.zinc.field import Field
 
 def FieldIsRealArgument(field):
@@ -97,7 +97,6 @@ def FieldIsSquareMatrix(field):
     numberOfComponents = field.getNumberOfComponents()
     if numberOfComponents > 1:
         sqrt1 = sqrt(numberOfComponents)
-        # TODO: Bug here. NameError: name 'floor' is not defined
         if 0 == floor(sqrt1) - sqrt1:
             return field.getValueType() == Field.VALUE_TYPE_REAL
     return False

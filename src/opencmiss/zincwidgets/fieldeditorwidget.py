@@ -599,7 +599,6 @@ class FieldEditorWidget(QtWidgets.QWidget):
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsScalar)
         elif self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldArgumentReal":
-            # TODO: check and change FieldArgumentReal display content
             if self._field and self._field.isValid():
                 text = str(self._field.getNumberOfComponents())
                 self.ui.derived_values_lineedit.setText(text)
@@ -615,7 +614,6 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.derived_groupbox.show()
 
         elif self._fieldType == "FieldApply":
-            # TODO: check and change FieldArgumentReal display content
             if self._field and self._field.isValid():
                 evaluateField = self._sourceFieldChoosers[0][1].getField()
                 fieldIterator = self._fieldmodule.createFielditerator()
@@ -671,7 +669,6 @@ class FieldEditorWidget(QtWidgets.QWidget):
             for fieldPair in self._argumentFieldPairs:
                 applyField.setBindArgumentSourceField(fieldPair[0].getField(),fieldPair[1].getField())
         self._updateWidgets()
-
 
     def displaySourceFieldsChoosers(self, numberOfSourceFields):
         self.ui.region_of_apply_fields_label.hide()
