@@ -1,6 +1,4 @@
-
-from PySide2 import QtCore
-from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
+from opencmiss.zincwidgets.definitions import BUTTON_MAP
 
 
 class AbstractHandler(object):
