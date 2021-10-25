@@ -4,7 +4,7 @@ Created on July 15, 2015
 @author: Richard Christie
 """
 from PySide2 import QtCore
-from opencmiss.maths.vectorops import add, cross, div, magnitude, mult, sub
+from opencmiss.maths import vectorops
 from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
 
 
@@ -57,14 +57,14 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
             result, eye = self._sceneviewer.getEyePosition()
             result, lookat = self._sceneviewer.getLookatPosition()
             result, up = self._sceneviewer.getUpVector()
-            lookatToEye = sub(eye, lookat)
-            eyeDistance = magnitude(lookatToEye)
-            front = div(lookatToEye, eyeDistance)
-            right = cross(up, front)
+            lookatToEye = vectorops.sub(eye, lookat)
+            eyeDistance = vectorops.magnitude(lookatToEye)
+            front = vectorops.div(lookatToEye, eyeDistance)
+            right = vectorops.cross(up, front)
             if self._active_button == QtCore.Qt.LeftButton:
-                mag = magnitude(delta)
-                prop = div(delta, mag)
-                axis = add(mult(up, prop[0]), mult(right, prop[1]))
+                mag = vectorops.magnitude(delta)
+                prop = vectorops.div(delta, mag)
+                axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
                 angle = mag*0.002
                 self._model.rotateModel(axis, angle)
             elif self._active_button == QtCore.Qt.MiddleButton:
@@ -75,7 +75,7 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
                     eyeScale = (t - b) / viewportHeight
                 else:
                     eyeScale = (r - l) / viewportWidth
-                offset = add(mult(right, eyeScale*delta[0]), mult(up, -eyeScale*delta[1]))
+                offset = vectorops.add(vectorops.mult(right, eyeScale*delta[0]), vectorops.mult(up, -eyeScale*delta[1]))
                 self._model.offsetModel(offset)
             elif self._active_button == QtCore.Qt.RightButton:
                 factor = 1.0 + delta[1]*0.0005
