@@ -33,29 +33,9 @@ from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.result import RESULT_OK
 
 from opencmiss.zincwidgets.definitions import ProjectionMode, \
-    button_map, modifier_map
+    BUTTON_MAP, modifier_map
 
 selection_group_name = 'cmiss_selection'
-
-# mapping from qt to zinc start
-# Create a button map of Qt mouse buttons to Zinc input buttons
-button_map = {QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
-              QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
-              QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
-
-
-# Create a modifier map of Qt modifier keys to Zinc modifier keys
-def modifier_map(qt_modifiers):
-    """
-    Return a Zinc Sceneviewerinput modifiers object that is created from
-    the Qt modifier flags passed in.
-    """
-    modifiers = Sceneviewerinput.MODIFIER_FLAG_NONE
-    if qt_modifiers & QtCore.Qt.SHIFT:
-        modifiers = modifiers | Sceneviewerinput.MODIFIER_FLAG_SHIFT
-
-    return modifiers
-# mapping from qt to zinc end
 
 
 SELECTION_RUBBERBAND_NAME = 'selection_rubberband'
@@ -105,7 +85,6 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         self._selectionBox = None  # created and destroyed on demand in mouse events
         self._selectionFilter = None  # Client-specified filter which is used in logical AND with sceneviewer filter in selection
         self._selectTol = 3.0  # how many pixels on all sides to add to selection box when a point is clicked on
-        self._ignore_mouse_events = False
         self._selectionKeyPressed = False
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self._selection_position_start = None
@@ -121,10 +100,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
             self._createSceneviewer()
 
     def getContext(self):
-        if self._context is not None:
-            return self._context
-        else:
-            raise RuntimeError("Zinc context has not been set in Sceneviewerwidget.")
+        return self._context
 
     def _createSceneviewer(self):
         # Following throws exception if you haven't called setContext() yet
@@ -136,7 +112,8 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         sceneviewermodule = self._context.getSceneviewermodule()
         self._sceneviewer = sceneviewermodule.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE, Sceneviewer.STEREO_MODE_DEFAULT)
         self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
-        self._sceneviewer.setViewportSize(self.width(), self.height())
+        pixel_scale = self.window().devicePixelRatio()
+        self._sceneviewer.setViewportSize(self.width() * pixel_scale, self.height() * pixel_scale)
 
         # Get the default scene filter, which filters by visibility flags
         scenefiltermodule = self._context.getScenefiltermodule()
@@ -281,7 +258,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         result, eye, lookat, up = self._sceneviewer.getLookatParameters()
         if result == RESULT_OK:
             angle = self._sceneviewer.getViewAngle()
-            return (eye, lookat, up, angle)
+            return eye, lookat, up, angle
 
         return None
 
@@ -406,7 +383,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         self._scenepicker.addPickedNodesToFieldGroup(selection_group)
 
     def setIgnoreMouseEvents(self, value):
-        self._ignore_mouse_events = value
+        self._handle_mouse_events = not value
 
     def viewAll(self):
         """
@@ -468,17 +445,17 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         Handle a mouse press event in the scene viewer.
         """
         self._use_zinc_mouse_event_handling = False  # Track when zinc should be handling mouse events
-        if self._ignore_mouse_events:
+        if not self._handle_mouse_events:
             event.ignore()
             return
 
         event.accept()
-        if event.button() not in button_map:
+        if event.button() not in BUTTON_MAP:
             return
 
         self._selection_position_start = (event.x(), event.y())
 
-        if button_map[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT\
+        if BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT\
                 and self._selectionKeyPressed and (self._nodeSelectMode or self._elemSelectMode):
             self._selection_mode = SelectionMode.EXCLUSIVE
             if event.modifiers() & QtCore.Qt.SHIFT:
@@ -487,7 +464,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
             scene_input = self._sceneviewer.createSceneviewerinput()
             scene_input.setPosition(event.x(), event.y())
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
-            scene_input.setButtonType(button_map[event.button()])
+            scene_input.setButtonType(BUTTON_MAP[event.button()])
             scene_input.setModifierFlags(modifier_map(event.modifiers()))
             self.makeCurrent()
             self._sceneviewer.processSceneviewerinput(scene_input)
@@ -497,12 +474,12 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         """
         Handle a mouse release event in the scene viewer.
         """
-        if self._ignore_mouse_events:
+        if not self._handle_mouse_events:
             event.ignore()
             return
         event.accept()
 
-        if event.button() not in button_map:
+        if event.button() not in BUTTON_MAP:
             return
 
         if self._selection_mode != SelectionMode.NONE:
@@ -601,10 +578,10 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
             scene_input = self._sceneviewer.createSceneviewerinput()
             scene_input.setPosition(event.x(), event.y())
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
-            scene_input.setButtonType(button_map[event.button()])
+            scene_input.setButtonType(BUTTON_MAP[event.button()])
             self.makeCurrent()
             self._sceneviewer.processSceneviewerinput(scene_input)
-            self._handle_mouse_events = False
+            #self._handle_mouse_events = False
         else:
             event.ignore()
 
@@ -613,7 +590,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         Handle a mouse move event in the scene viewer.
         Behaviour depends on modes set in original mouse press event.
         """
-        if self._ignore_mouse_events:
+        if not self._handle_mouse_events:
             event.ignore()
             return
 
