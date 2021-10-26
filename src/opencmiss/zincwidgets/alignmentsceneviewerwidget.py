@@ -4,7 +4,7 @@ Created on July 15, 2015
 @author: Richard Christie
 """
 from PySide2 import QtCore
-from opencmiss.utils.maths import vectorops
+from opencmiss.maths import vectorops
 from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
 
 
