@@ -7,7 +7,7 @@ SELECTION_RUBBERBAND_NAME = 'selection_rubberband'
 
 # mapping from qt to zinc start
 # Create a button map of Qt mouse buttons to Zinc input buttons
-button_map = {
+BUTTON_MAP = {
     QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
     QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
     QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT,
