@@ -32,30 +32,13 @@ from opencmiss.zinc.field import Field
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.result import RESULT_OK
 
-from opencmiss.zincwidgets.definitions import ProjectionMode, \
+from opencmiss.zincwidgets.definitions import ProjectionMode, SelectionMode,\
     BUTTON_MAP, modifier_map
 
 selection_group_name = 'cmiss_selection'
 
 
 SELECTION_RUBBERBAND_NAME = 'selection_rubberband'
-
-
-# projectionMode start
-class ProjectionMode(object):
-
-    PARALLEL = 0
-    PERSPECTIVE = 1
-# projectionMode end
-
-
-# selectionMode start
-class SelectionMode(object):
-
-    NONE = -1
-    EXCLUSIVE = 0
-    ADDITIVE = 1
-# selectionMode end
 
 
 class SceneviewerWidget(QtWidgets.QOpenGLWidget):
