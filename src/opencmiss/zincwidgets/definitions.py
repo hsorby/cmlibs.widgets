@@ -34,7 +34,7 @@ class ProjectionMode(object):
 
 
 class SelectionMode(object):
-    NONE = 1
+    NONE = -1
     EXCLUSIVE = 0
     ADDITIVE = 1
 

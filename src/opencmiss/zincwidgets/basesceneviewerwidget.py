@@ -30,12 +30,12 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
     # Create a signal to notify when the OpenGL scene is ready.
     graphics_initialized = QtCore.Signal()
 
-    def __init__(self, parent=None, shared=None):
+    def __init__(self, parent=None):
         """
         Call the super class init functions, set the  Zinc context and the scene viewer handle to None.
         Initialise other attributes that deal with selection and the rotation of the plane.
         """
-        QtOpenGL.QGLWidget.__init__(self, parent, shared)
+        super(BaseSceneviewerWidget, self).__init__(self, parent)
         InteractionManager.__init__(self)
         # Create a Zinc context from which all other objects can be derived either directly or indirectly.
         self._graphics_initialized = False
