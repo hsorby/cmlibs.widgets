@@ -16,25 +16,12 @@
 from PySide2 import QtWidgets, QtGui, QtCore
 
 from opencmiss.zincwidgets.fieldconditions import *
-from opencmiss.zinc.sceneviewer import Sceneviewer
 from opencmiss.zinc.material import Material
 from opencmiss.zinc.glyph import Glyph
-from opencmiss.zinc.field import Field
 from opencmiss.zinc.status import OK as ZINC_OK
 from opencmiss.zincwidgets.ui.ui_materialeditorwidget import Ui_MaterialEditor
 from opencmiss.utils.zinc.general import ChangeManager
 
-def QLineEdit_parseRealNonNegative(lineedit):
-    """
-    Return non-negative real value from line edit text, or negative if failed.
-    """
-    try:
-        value = float(lineedit.text())
-        if value >= 0.0:
-            return value
-    except:
-        pass
-    return -1.0
 
 class MaterialEditorWidget(QtWidgets.QWidget):
 
@@ -45,8 +32,11 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
         self._ui = Ui_MaterialEditor()
         self._ui.setupUi(self)
+
+        self._zincContext = None
+        self._previewZincRegion = None
         self._nullObjectName = None
-        self._materialmodule = None
+        self._materials = None
         self._materialmodulenotifier = None
         self._currentMaterial = None
         self._previewZincScene = None
@@ -71,30 +61,41 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._ui.region_comboBox.currentIndexChanged.connect(self._regionChanged)
         self._ui.imageField_comboBox.currentIndexChanged.connect(self._imageFieldChanged)
 
-    def setMaterialmodule(self, materialmodule):
-        self._materialmodule = materialmodule
-
-    def setZincContext(self, zincContext):
+    def setMaterials(self, materials):
         """
-        Sets the Argon material object which supplies the zinc context and has utilities for
+        Sets the Argon materials object which supplies the zinc context and has utilities for
         managing materials.
-        :param zincContext: zincContext object
+        :param materials: ArgonMaterials object
         """
-        self._zincContext = zincContext
+        self._materials = materials
+        self._zincContext = materials.getZincContext()
         self._ui.sceneviewerWidgetPreview.setContext(self._zincContext)
         self._previewZincRegion = self._zincContext.createRegion()
         self._previewZincRegion.setName("Material editor preview region")
         self._previewZincScene = self._previewZincRegion.getScene()
-        self.setMaterialmodule(self._zincContext.getMaterialmodule())
         self._buildMaterialList()
-        
+        sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
+        if sceneviewer:
+            self._setupPreviewScene(sceneviewer)
+        # material_module = self._zincContext.getMaterialmodule()
+        # self._materialmodulenotifier = material_module.createMaterialmodulenotifier()
+        # self._materialmodulenotifier.setCallback(self._materialmoduleCallback)
+        self._buildMaterialList()
+
+    def _materialmoduleCallback(self, materialModuleEvent):
+        changeSummary = materialModuleEvent.getSummarySpectrumChangeFlags()
+        # print("Material Editor: _materialmoduleCallback changeSummary " + str(changeSummary))
+        if 0 != (changeSummary & (Material.CHANGE_FLAG_IDENTIFIER | Material.CHANGE_FLAG_ADD | Material.CHANGE_FLAG_REMOVE)):
+            self._buildSpectrumList()
+
     def _materialCreateClicked(self):
         """
         Create a new material.
         """
         name = 'temp'
-        with ChangeManager(self._materialmodule):
-            material = self._materialmodule.createMaterial()
+        mm = self._zincContext.getMaterialmodule()
+        with ChangeManager(mm):
+            material = mm.createMaterial()
             material.setName(name)
             material.setManaged(True)
         self._addMaterialToModelList(material)
@@ -131,15 +132,16 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         :return True if material removed, false if failed.
         """
         self._currentMaterial = None
+        sm = self._zincContext.getMaterialmodule()
         items = self._materialItems.findItems(name)
         item = items[0]
         row = item.row()
         self._materialItems.removeRow(row)
         del item
-        material = self._materialmodule.findMaterialByName(name)
+        material = sm.findMaterialByName(name)
         material.setManaged(False)
         del material
-        material = self._materialmodule.findMaterialByName(name)
+        material = sm.findMaterialByName(name)
         if material.isValid():
             # I'm still in use.
             material.setManaged(True)
@@ -162,30 +164,30 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         Rebuilds the list of items in the Listview from the material module
         """
         selectedIndex = None
-        if self._materialmodule:
-            if self._nullObjectName:
-                self._ui.material_listView.addItem(self._nullObjectName)
-            materialiter = self._materialmodule.createMaterialiterator()
-            material = materialiter.next()
-            if not self._currentMaterial:
-                self._updateCurrentMaterial(material)
-            while material.isValid():
-                name = None
-                name = material.getName()
-                item = QtGui.QStandardItem(name)
-                item.setData(material)
-                item.setEditable(True)
-                self._materialItems.appendRow(item)     
-                if material.getName() == self._currentMaterial.getName():
-                    selectedIndex = self._materialItems.indexFromItem(item)
-                material = materialiter.next()
-            self._ui.materials_listView.setModel(self._materialItems)
-            if selectedIndex:
-                self._ui.materials_listView.setCurrentIndex(selectedIndex)
-            self._materialItems.itemChanged.connect(self._onMaterialItemChanged)
-            itemDelegate = QtWidgets.QItemDelegate(self._ui.materials_listView)
-            self._ui.materials_listView.setItemDelegate(itemDelegate)
-            self._ui.materials_listView.show()
+        mm = self._zincContext.getMaterialmodule()
+
+        if self._nullObjectName:
+            self._ui.material_listView.addItem(self._nullObjectName)
+        material_iter = mm.createMaterialiterator()
+        material = material_iter.next()
+        if not self._currentMaterial:
+            self._updateCurrentMaterial(material)
+        while material.isValid():
+            name = material.getName()
+            item = QtGui.QStandardItem(name)
+            item.setData(material)
+            item.setEditable(True)
+            self._materialItems.appendRow(item)
+            if material.getName() == self._currentMaterial.getName():
+                selectedIndex = self._materialItems.indexFromItem(item)
+            material = material_iter.next()
+        self._ui.materials_listView.setModel(self._materialItems)
+        if selectedIndex:
+            self._ui.materials_listView.setCurrentIndex(selectedIndex)
+        self._materialItems.itemChanged.connect(self._onMaterialItemChanged)
+        itemDelegate = QtWidgets.QItemDelegate(self._ui.materials_listView)
+        self._ui.materials_listView.setItemDelegate(itemDelegate)
+        self._ui.materials_listView.show()
 
     def _onMaterialItemChanged(self, item):
         """
@@ -341,8 +343,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         points.setMaterial(self._currentMaterial)
         self._previewZincScene.endChange()
 
-    def _previewGraphicsInitialised(self):
-        sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
+    def _setupPreviewScene(self, sceneviewer):
         with ChangeManager(sceneviewer):
             sceneviewer.setScene(self._previewZincScene)
             sceneviewer.setZoomRate(0)
@@ -352,3 +353,8 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             sceneviewer.setViewAngle(0.679673818908244)
             sceneviewer.setNearClippingPlane(2.4)
             sceneviewer.setFarClippingPlane(3.0)
+
+    def _previewGraphicsInitialised(self):
+        sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
+        if sceneviewer:
+            self._setupPreviewScene(sceneviewer)

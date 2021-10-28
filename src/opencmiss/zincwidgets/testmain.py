@@ -1,9 +1,7 @@
 import os
-from PySide2 import QtWidgets, QtGui, QtCore
-from opencmiss.zincwidgets.exportwebgldialog import ExportWebGLDialog
+from PySide2 import QtWidgets
 from opencmiss.zincwidgets.materialeditorwidget import MaterialEditorWidget
-from opencmiss.zinc.material import Materialmodule
-from opencmiss.argon.core.argondocument import ArgonDocument
+from opencmiss.argon.argondocument import ArgonDocument
 
 if __name__ == '__main__':
     import sys

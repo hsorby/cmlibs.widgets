@@ -17,6 +17,7 @@ from PySide2 import QtWidgets
 
 from opencmiss.zinc.field import Field
 
+
 class FieldChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
@@ -37,7 +38,7 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         changeSummary = fieldmoduleevent.getSummaryFieldChangeFlags()
         # print "_fieldmoduleCallback changeSummary =", changeSummary
         if ((0 != (changeSummary & (Field.CHANGE_FLAG_IDENTIFIER | Field.CHANGE_FLAG_ADD | Field.CHANGE_FLAG_REMOVE))) or
-            ((self._conditional != None) and (0 != (changeSummary & Field.CHANGE_FLAG_DEFINITION)))):
+                ((self._conditional != None) and (0 != (changeSummary & Field.CHANGE_FLAG_DEFINITION)))):
             self._buildFieldList()
 
     def _buildFieldList(self):
@@ -117,7 +118,7 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         else:
             self._field = self._region.getFieldmodule().findFieldByName(fieldName)
         return self._field
-    
+
     def allowUnmanagedField(self, flag):
         self._allowUnmanagedField = flag
 

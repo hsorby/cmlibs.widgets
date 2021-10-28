@@ -17,29 +17,27 @@ class Ui_ModelSourcesEditorWidget(object):
     def setupUi(self, ModelSourcesEditorWidget):
         if not ModelSourcesEditorWidget.objectName():
             ModelSourcesEditorWidget.setObjectName(u"ModelSourcesEditorWidget")
-        ModelSourcesEditorWidget.resize(269, 542)
+        ModelSourcesEditorWidget.resize(483, 604)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(ModelSourcesEditorWidget.sizePolicy().hasHeightForWidth())
         ModelSourcesEditorWidget.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(ModelSourcesEditorWidget)
-        self.verticalLayout.setSpacing(2)
-        self.verticalLayout.setContentsMargins(2, 2, 2, 2)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.listViewModelSources = QListView(ModelSourcesEditorWidget)
         self.listViewModelSources.setObjectName(u"listViewModelSources")
 
         self.verticalLayout.addWidget(self.listViewModelSources)
 
-        self.frame = QFrame(ModelSourcesEditorWidget)
-        self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout = QHBoxLayout(self.frame)
+        self.frameOldModelSources = QFrame(ModelSourcesEditorWidget)
+        self.frameOldModelSources.setObjectName(u"frameOldModelSources")
+        self.frameOldModelSources.setFrameShape(QFrame.StyledPanel)
+        self.frameOldModelSources.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout = QHBoxLayout(self.frameOldModelSources)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 7, 0, 7)
-        self.comboBoxAddSource = QComboBox(self.frame)
+        self.comboBoxAddSource = QComboBox(self.frameOldModelSources)
         self.comboBoxAddSource.addItem("")
         self.comboBoxAddSource.addItem("")
         self.comboBoxAddSource.addItem("")
@@ -52,58 +50,81 @@ class Ui_ModelSourcesEditorWidget(object):
 
         self.horizontalLayout.addWidget(self.comboBoxAddSource)
 
-        self.pushButtonApplySource = QPushButton(self.frame)
+        self.pushButtonApplySource = QPushButton(self.frameOldModelSources)
         self.pushButtonApplySource.setObjectName(u"pushButtonApplySource")
         self.pushButtonApplySource.setCheckable(True)
 
         self.horizontalLayout.addWidget(self.pushButtonApplySource)
 
-        self.pushButtonDeleteSource = QPushButton(self.frame)
+        self.pushButtonDeleteSource = QPushButton(self.frameOldModelSources)
         self.pushButtonDeleteSource.setObjectName(u"pushButtonDeleteSource")
 
         self.horizontalLayout.addWidget(self.pushButtonDeleteSource)
 
 
-        self.verticalLayout.addWidget(self.frame)
+        self.verticalLayout.addWidget(self.frameOldModelSources)
 
-        self.groupBoxFileSource = QGroupBox(ModelSourcesEditorWidget)
-        self.groupBoxFileSource.setObjectName(u"groupBoxFileSource")
+        self.groupBoxAddSource = QGroupBox(ModelSourcesEditorWidget)
+        self.groupBoxAddSource.setObjectName(u"groupBoxAddSource")
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.groupBoxFileSource.sizePolicy().hasHeightForWidth())
-        self.groupBoxFileSource.setSizePolicy(sizePolicy2)
-        self.formLayout = QFormLayout(self.groupBoxFileSource)
+        sizePolicy2.setHeightForWidth(self.groupBoxAddSource.sizePolicy().hasHeightForWidth())
+        self.groupBoxAddSource.setSizePolicy(sizePolicy2)
+        self.formLayout = QFormLayout(self.groupBoxAddSource)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setVerticalSpacing(2)
         self.formLayout.setContentsMargins(7, 2, 7, 2)
-        self.labelFileName = QLabel(self.groupBoxFileSource)
+        self.labelFileName = QLabel(self.groupBoxAddSource)
         self.labelFileName.setObjectName(u"labelFileName")
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.labelFileName)
 
-        self.labelTime = QLabel(self.groupBoxFileSource)
+        self.labelTime = QLabel(self.groupBoxAddSource)
         self.labelTime.setObjectName(u"labelTime")
 
         self.formLayout.setWidget(5, QFormLayout.LabelRole, self.labelTime)
 
-        self.lineEditTime = QLineEdit(self.groupBoxFileSource)
+        self.lineEditTime = QLineEdit(self.groupBoxAddSource)
         self.lineEditTime.setObjectName(u"lineEditTime")
 
         self.formLayout.setWidget(5, QFormLayout.FieldRole, self.lineEditTime)
 
-        self.lineEditFileName = QLineEdit(self.groupBoxFileSource)
+        self.lineEditFileName = QLineEdit(self.groupBoxAddSource)
         self.lineEditFileName.setObjectName(u"lineEditFileName")
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lineEditFileName)
 
-        self.pushButtonBrowseFileName = QPushButton(self.groupBoxFileSource)
+        self.pushButtonBrowseFileName = QPushButton(self.groupBoxAddSource)
         self.pushButtonBrowseFileName.setObjectName(u"pushButtonBrowseFileName")
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.pushButtonBrowseFileName)
 
 
-        self.verticalLayout.addWidget(self.groupBoxFileSource)
+        self.verticalLayout.addWidget(self.groupBoxAddSource)
+
+        self.tableViewModelSources = QTableView(ModelSourcesEditorWidget)
+        self.tableViewModelSources.setObjectName(u"tableViewModelSources")
+
+        self.verticalLayout.addWidget(self.tableViewModelSources)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
+
+        self.pushButtonAddSource = QPushButton(ModelSourcesEditorWidget)
+        self.pushButtonAddSource.setObjectName(u"pushButtonAddSource")
+
+        self.horizontalLayout_2.addWidget(self.pushButtonAddSource)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -123,9 +144,10 @@ class Ui_ModelSourcesEditorWidget(object):
 
         self.pushButtonApplySource.setText(QCoreApplication.translate("ModelSourcesEditorWidget", u"Apply", None))
         self.pushButtonDeleteSource.setText(QCoreApplication.translate("ModelSourcesEditorWidget", u"Delete...", None))
-        self.groupBoxFileSource.setTitle(QCoreApplication.translate("ModelSourcesEditorWidget", u"File Source:", None))
+        self.groupBoxAddSource.setTitle(QCoreApplication.translate("ModelSourcesEditorWidget", u"Add Source:", None))
         self.labelFileName.setText(QCoreApplication.translate("ModelSourcesEditorWidget", u"File name:", None))
         self.labelTime.setText(QCoreApplication.translate("ModelSourcesEditorWidget", u"Time:", None))
         self.pushButtonBrowseFileName.setText(QCoreApplication.translate("ModelSourcesEditorWidget", u"Browse...", None))
+        self.pushButtonAddSource.setText(QCoreApplication.translate("ModelSourcesEditorWidget", u"Add Source", None))
     # retranslateUi
 

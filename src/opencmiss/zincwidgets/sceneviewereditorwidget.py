@@ -69,7 +69,7 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         changeFlags = event.getChangeFlags()
         if changeFlags & Sceneviewerevent.CHANGE_FLAG_TRANSFORM:
             self._displayViewSettings()
-        elif changeFlags & Sceneviewerevent.CHANGE_FLAG_TRANSFORM:
+        elif changeFlags & Sceneviewerevent.CHANGE_FLAG_FINAL:
             self.setSceneviewer(None)
 
     def _displayAllSettings(self):

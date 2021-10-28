@@ -15,9 +15,9 @@
 """
 from PySide2 import QtCore, QtWidgets
 
-from opencmiss.argon.core.argonregion import ArgonRegion
+from opencmiss.argon.argonregion import ArgonRegion
 from opencmiss.zincwidgets.ui.ui_regioneditorwidget import Ui_RegionEditorWidget
-from opencmiss.argon.core.argonlogger import ArgonLogger
+from opencmiss.argon.argonlogger import ArgonLogger
 
 """
 Region Editor Widget

@@ -22,27 +22,20 @@
 """
 from PySide2 import QtCore, QtWidgets
 
-from opencmiss.zinc.scene import Scene
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
 from opencmiss.zinc.scenecoordinatesystem import \
-        SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, \
-        SCENECOORDINATESYSTEM_WORLD
+    SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, \
+    SCENECOORDINATESYSTEM_WORLD
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.result import RESULT_OK
 
-from opencmiss.zincwidgets.definitions import ProjectionMode, SelectionMode,\
-    BUTTON_MAP, modifier_map
-
-selection_group_name = 'cmiss_selection'
-
-
-SELECTION_RUBBERBAND_NAME = 'selection_rubberband'
+from opencmiss.zincwidgets.definitions import ProjectionMode, SelectionMode, \
+    BUTTON_MAP, modifier_map, SELECTION_GROUP_NAME
 
 
 class SceneviewerWidget(QtWidgets.QOpenGLWidget):
-
     graphicsInitialized = QtCore.Signal()
 
     # init start
@@ -58,6 +51,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         self._context = None
         self._sceneviewer = None
         self._scenepicker = None
+        self._use_zinc_mouse_event_handling = False
 
         # Selection attributes
         self._selectionKeyHandling = True  # set to False if parent widget is to handle selection key presses
@@ -142,7 +136,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         scene = self._sceneviewer.getScene()
         region = scene.getRegion()
         fieldmodule = region.getFieldmodule()
-        selectionGroup = fieldmodule.findFieldByName(selection_group_name)
+        selectionGroup = fieldmodule.findFieldByName(SELECTION_GROUP_NAME)
         if selectionGroup.isValid():
             selectionGroup = selectionGroup.castGroup()
             if selectionGroup.isValid():
@@ -150,7 +144,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         if not selectionGroup.isValid():
             fieldmodule.beginChange()
             selectionGroup = fieldmodule.createFieldGroup()
-            selectionGroup.setName(selection_group_name)
+            selectionGroup.setName(SELECTION_GROUP_NAME)
             fieldmodule.endChange()
         scene.setSelectionField(selectionGroup)
         return selectionGroup
@@ -166,7 +160,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         Get the scene viewer for this ZincWidget.
         """
         return self._sceneviewer
-    
+
     def setSelectionModeAdditive(self):
         self._selectionAlwaysAdditive = True
 
@@ -293,7 +287,8 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         on the far clipping plane, and +1 is on the near clipping plane.
         """
         in_coords = [x, y, z]
-        result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WORLD, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, self._sceneviewer.getScene(), in_coords)
+        result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WORLD, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, self._sceneviewer.getScene(),
+                                                                    in_coords)
         if result == RESULT_OK:
             return out_coords  # [out_coords[0] / out_coords[3], out_coords[1] / out_coords[3], out_coords[2] / out_coords[3]]
 
@@ -307,7 +302,8 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         on the far clipping plane, and +1 is on the near clipping plane.
         """
         in_coords = [x, y, z]
-        result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, SCENECOORDINATESYSTEM_WORLD, self._sceneviewer.getScene(), in_coords)
+        result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, SCENECOORDINATESYSTEM_WORLD, self._sceneviewer.getScene(),
+                                                                    in_coords)
         if result == RESULT_OK:
             return out_coords  # [out_coords[0] / out_coords[3], out_coords[1] / out_coords[3], out_coords[2] / out_coords[3]]
 
@@ -325,7 +321,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
     def _getNearestGraphic(self, x, y, domain_type):
         self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-            x - self._selectTol, y - self._selectTol, x + self._selectTol, y + self._selectTol)
+                                                  x - self._selectTol, y - self._selectTol, x + self._selectTol, y + self._selectTol)
         nearest_graphics = self._scenepicker.getNearestGraphics()
         if nearest_graphics.isValid() and nearest_graphics.getFieldDomainType() == domain_type:
             return nearest_graphics
@@ -357,7 +353,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
     def getNearestNode(self, x, y):
         self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-            x - self._selectTol, y - self._selectTol, x + self._selectTol, y + self._selectTol)
+                                                  x - self._selectTol, y - self._selectTol, x + self._selectTol, y + self._selectTol)
         node = self._scenepicker.getNearestNode()
 
         return node
@@ -394,10 +390,10 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         if event.getChangeFlags() & Sceneviewerevent.CHANGE_FLAG_REPAINT_REQUIRED:
             QtCore.QTimer.singleShot(0, self.update)
 
-#  Not applicable at the current point in time.
-#     def _zincSelectionEvent(self, event):
-#         print(event.getChangeFlags())
-#         print('go the selection change')
+    #  Not applicable at the current point in time.
+    #     def _zincSelectionEvent(self, event):
+    #         print(event.getChangeFlags())
+    #         print('go the selection change')
 
     # resizeGL start
     def resizeGL(self, width, height):
@@ -408,7 +404,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
             pixel_scale = self.window().devicePixelRatio()
             self._sceneviewer.setViewportSize(width * pixel_scale, height * pixel_scale)
         # resizeGL end
-        
+
     def keyPressEvent(self, event):
         if self._selectionKeyHandling and (event.key() == QtCore.Qt.Key_S) and (event.isAutoRepeat() == False):
             self._selectionKeyPressed = True
@@ -438,7 +434,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
         self._selection_position_start = (event.x(), event.y())
 
-        if BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT\
+        if BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT \
                 and self._selectionKeyPressed and (self._nodeSelectMode or self._elemSelectMode):
             self._selection_mode = SelectionMode.EXCLUSIVE
             if event.modifiers() & QtCore.Qt.SHIFT:
@@ -495,7 +491,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
                 else:
                     # point select - get nearest object only
                     scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                        x - self._selectTol, y - self._selectTol, x + self._selectTol, y + self._selectTol)
+                                                        x - self._selectTol, y - self._selectTol, x + self._selectTol, y + self._selectTol)
                     nearestGraphics = scenepicker.getNearestGraphics()
                     if (self._nodeSelectMode or self._dataSelectMode or self._elemSelectMode) \
                             and (self._selection_mode == SelectionMode.EXCLUSIVE) \
@@ -503,7 +499,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
                         self.clearSelection()
 
                     if (self._nodeSelectMode and (nearestGraphics.getFieldDomainType() == Field.DOMAIN_TYPE_NODES)) or \
-                        (self._dataSelectMode and (nearestGraphics.getFieldDomainType() == Field.DOMAIN_TYPE_DATAPOINTS)):
+                            (self._dataSelectMode and (nearestGraphics.getFieldDomainType() == Field.DOMAIN_TYPE_DATAPOINTS)):
                         node = scenepicker.getNearestNode()
                         if node.isValid():
                             nodeset = node.getNodeset()
@@ -528,8 +524,9 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
                                 else:
                                     group.addNode(node)
 
-                    if self._elemSelectMode and (nearestGraphics.getFieldDomainType() in \
-                            [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
+                    if self._elemSelectMode and \
+                            (nearestGraphics.getFieldDomainType() in
+                             [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
                         elem = scenepicker.getNearestElement()
                         if elem.isValid():
                             mesh = elem.getMesh()
@@ -562,9 +559,9 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
             scene_input.setPosition(event.x(), event.y())
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
-            self.makeCurrent()
+            # self.makeCurrent()
             self._sceneviewer.processSceneviewerinput(scene_input)
-            #self._handle_mouse_events = False
+            # self._handle_mouse_events = False
         else:
             event.ignore()
 
@@ -618,7 +615,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         attributes.setGlyphShapeType(Glyph.SHAPE_TYPE_CUBE_WIREFRAME)
         attributes.setBaseSize([xdiff, ydiff, 0.999])
         attributes.setGlyphOffset([xoff, -yoff, 0])
-        #self._selectionBox.setVisibilityFlag(True)
+        # self._selectionBox.setVisibilityFlag(True)
         scene.endChange()
 
     def _removeSelectionBox(self):
