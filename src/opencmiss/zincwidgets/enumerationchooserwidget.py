@@ -11,8 +11,8 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from PySide2 import QtCore, QtWidgets
 
 import re
+import copy
 from opencmiss.zinc.element import Element
-from opencmiss.zinc.field import Field
 from opencmiss.zinc.status import OK as ZINC_OK
 
 class EnumerationChooserWidget(QtWidgets.QComboBox):
@@ -22,11 +22,12 @@ class EnumerationChooserWidget(QtWidgets.QComboBox):
         Call the super class init functions
         '''
         QtWidgets.QComboBox.__init__(self, parent)
-        self._item = None
+        self._currentEnum = None
 
-    def setEnumsList(self, enumToString, stringToEnum):
+    def setEnumsList(self, enumToString, stringToEnum, validEnums: list = None):
         self._enumToString = enumToString
         self._stringToEnum = stringToEnum
+        self._validEnums = copy.copy(validEnums) if validEnums else None
         self._buildItemList()
 
     def _buildItemList(self):
@@ -46,11 +47,19 @@ class EnumerationChooserWidget(QtWidgets.QComboBox):
         self.blockSignals(False)
         self._displayItem()
 
-    def _getStringFromEnum(self, enum):
-        if self._enumToString == Field.DomainTypeEnumToString:
-            enumString = self._enumToString(2**(enum - 1))
+    def _getStringFromEnum(self, enumIndex):
+        """
+        :param enumIndex: a valid enum or an index + 1 into self._validEnums if set.
+        :return: Enumeration string or None if invalid enumIndex.
+        """
+        if self._validEnums:
+            if enumIndex <= len(self._validEnums):
+                enumString = self._enumToString(self._validEnums[enumIndex - 1])
+            else:
+                enumString = None
         else:
-            enumString = self._enumToString(enum)
+            enumString = self._enumToString(enumIndex)
+
         if not enumString:
             return None
         enumString = enumString.lower()
@@ -73,28 +82,34 @@ class EnumerationChooserWidget(QtWidgets.QComboBox):
         Display the currently chosen item in the ComboBox
         '''
         self.blockSignals(True)
-        if self._item:
-            itemName = self._getStringFromEnum(self._item)
+        if self._currentEnum:
+            itemName = self._getStringFromEnum(self._currentEnum)
             index = self.findText(itemName)
         else:
             index = 0
         self.setCurrentIndex(index)
         self.blockSignals(False)
 
-    def getItem(self):
+    def getEnum(self):
         '''
         Must call this from currentIndexChanged() slot to get/update current item
         '''
         itemName = str(self.currentText())
-        self._item = self._getEnumFromString(itemName)
-        return self._item
+        self._currentEnum = self._getEnumFromString(itemName)
+        return self._currentEnum
 
-    def setItem(self, item):
+    def setEnum(self, enum):
         '''
-        Set the currently selected item
+        Set the currently selected enum
         '''
-        if not item or not self._getStringFromEnum(item):
-            self._item = None
+        if not enum:
+            self._currentEnum = None
         else:
-            self._item = item
+            enumIndex = enum
+            if self._validEnums:
+                enumIndex = self._validEnums.index(enum) + 1  # throws exception if not found; can change if too severe
+            if self._getStringFromEnum(enumIndex):
+                self._currentEnum = enum
+            else:
+                self._currentEnum = None
         self._displayItem()

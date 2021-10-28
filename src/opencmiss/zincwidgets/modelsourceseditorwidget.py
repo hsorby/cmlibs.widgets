@@ -15,10 +15,10 @@
 """
 from PySide2 import QtGui, QtWidgets
 
-from opencmiss.argon.core.argonmodelsources import ArgonModelSourceFile
+from opencmiss.argon.modelsources import ArgonModelSourceFile
 
 from opencmiss.zincwidgets.ui.ui_modelsourceseditorwidget import Ui_ModelSourcesEditorWidget
-from opencmiss.argon.core.argonlogger import ArgonLogger
+from opencmiss.argon.logger import ArgonLogger
 
 """
 Model Sources Editor Widget

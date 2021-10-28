@@ -21,7 +21,7 @@ from opencmiss.zinc.status import OK as ZINC_OK
 
 from opencmiss.zincwidgets.ui.ui_spectrumeditorwidget import Ui_SpectrumEditorWidget
 from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
-from opencmiss.argon.core.argonlogger import ArgonLogger
+from opencmiss.argon.logger import ArgonLogger
 
 COMPONENT_NAME_FORMAT = '{:d}. '
 SPECTRUM_DATA_ROLE = QtCore.Qt.UserRole + 1
