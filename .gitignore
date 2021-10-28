@@ -1,3 +1,7 @@
+# VSCode local setting / Pyside2 ui compile file
+.vscode/
+uip.bat
+
 *.py[cod]
 
 # C extensions

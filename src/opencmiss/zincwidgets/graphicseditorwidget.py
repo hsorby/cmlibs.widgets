@@ -43,19 +43,19 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui = Ui_GraphicsEditorWidget()
         self._ui.setupUi(self)
         # base graphics attributes
-        self.ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
-        self.ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
-        self.ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
-        self.ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
-        self.ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
+        self._ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
+        self._ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
+        self._ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
+        self._ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
+        self._ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
 
-        self.ui.subgroup_field_chooser.setNullObjectName('-')
-        self.ui.subgroup_field_chooser.setConditional(FieldIsScalar)
-        self.ui.coordinate_field_chooser.setNullObjectName('-')
-        self.ui.coordinate_field_chooser.setConditional(FieldIsCoordinateCapable)
-        self.ui.data_field_chooser.setNullObjectName('-')
-        self.ui.data_field_chooser.setConditional(FieldIsRealValued)
-        self.ui.spectrum_chooser.setNullObjectName('-')
+        self._ui.subgroup_field_chooser.setNullObjectName('-')
+        self._ui.subgroup_field_chooser.setConditional(FieldIsScalar)
+        self._ui.coordinate_field_chooser.setNullObjectName('-')
+        self._ui.coordinate_field_chooser.setConditional(FieldIsCoordinateCapable)
+        self._ui.data_field_chooser.setNullObjectName('-')
+        self._ui.data_field_chooser.setConditional(FieldIsRealValued)
+        self._ui.spectrum_chooser.setNullObjectName('-')
         # contours
         self._ui.isoscalar_field_chooser.setNullObjectName('- choose -')
         self._ui.isoscalar_field_chooser.setConditional(FieldIsScalar)
@@ -66,11 +66,11 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.line_orientation_scale_field_chooser.setNullObjectName('-')
         self._ui.line_orientation_scale_field_chooser.setConditional(FieldIsScalar)
         # point attributes
-        self.ui.glyph_chooser.setNullObjectName('-')
-        self.ui.point_orientation_scale_field_chooser.setNullObjectName('-')
-        self.ui.point_orientation_scale_field_chooser.setConditional(FieldIsOrientationScaleCapable)
-        self.ui.label_field_chooser.setNullObjectName('-')
-        self.ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
+        self._ui.glyph_chooser.setNullObjectName('-')
+        self._ui.point_orientation_scale_field_chooser.setNullObjectName('-')
+        self._ui.point_orientation_scale_field_chooser.setConditional(FieldIsOrientationScaleCapable)
+        self._ui.label_field_chooser.setNullObjectName('-')
+        self._ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
 
         
 
@@ -150,7 +150,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         isStreamline = (streamlines is not None) and streamlines.isValid()
         if not isStreamline:
             isStreamline = False
-        model = self.ui.line_shape_chooser.model()
+        model = self._ui.line_shape_chooser.model()
         model.item(1, 0).setEnabled(isStreamline)
         model.item(3, 0).setEnabled(isStreamline)
         self._ui.line_orientation_scale_field_label.setEnabled(not isStreamline)
@@ -291,11 +291,11 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         scenecoordinatesystem = SCENECOORDINATESYSTEM_LOCAL
         if self._graphics:
             scenecoordinatesystem = self._graphics.getScenecoordinatesystem()
-        self.ui.scenecoordinatesystem_chooser.setEnum(scenecoordinatesystem)
+        self._ui.scenecoordinatesystem_chooser.setEnum(scenecoordinatesystem)
 
     def scenecoordinatesystemChanged(self, index):
         if self._graphics:
-            scenecoordinatesystem = self.ui.scenecoordinatesystem_chooser.getEnum()
+            scenecoordinatesystem = self._ui.scenecoordinatesystem_chooser.getEnum()
             self._graphics.setScenecoordinatesystem(scenecoordinatesystem)
 
     def dataFieldChanged(self, index):
@@ -348,14 +348,14 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         faceType = Element.FACE_TYPE_ALL
         if self._graphics:
             faceType = self._graphics.getElementFaceType()
-        self.ui.face_enumeration_chooser.setEnum(faceType)
+        self._ui.face_enumeration_chooser.setEnum(faceType)
 
     def faceChanged(self, index):
         """
         Element face combo box changed
         """
         if self._graphics:
-            faceType = self.ui.face_enumeration_chooser.getEnum()
+            faceType = self._ui.face_enumeration_chooser.getEnum()
             self._graphics.setElementFaceType(faceType)
 
     def wireframeClicked(self, isChecked):
@@ -469,7 +469,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 streamlinesTrackDirection = streamlines.getTrackDirection()
-        self.ui.streamlines_track_direction_chooser.setEnum(streamlinesTrackDirection)
+        self._ui.streamlines_track_direction_chooser.setEnum(streamlinesTrackDirection)
 
     def streamlinesTrackDirectionChanged(self, index):
         """
@@ -489,7 +489,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 streamlinesColourDataType = streamlines.getColourDataType()
-        self.ui.streamlines_colour_data_type_chooser.setEnum(streamlinesColourDataType)
+        self._ui.streamlines_colour_data_type_chooser.setEnum(streamlinesColourDataType)
 
     def streamlinesColourDataTypeChanged(self, index):
         """
@@ -517,7 +517,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
                 lineShapeType = lineattributes.getShapeType()
-        self.ui.line_shape_chooser.setEnum(lineShapeType)
+        self._ui.line_shape_chooser.setEnum(lineShapeType)
 
     def lineShapeChanged(self, index):
         """
@@ -664,7 +664,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             samplingattributes = self._graphics.getGraphicssamplingattributes()
             if samplingattributes.isValid():
                 samplingMode = samplingattributes.getElementPointSamplingMode()
-        self.ui.sampling_mode_chooser.setEnum(samplingMode)
+        self._ui.sampling_mode_chooser.setEnum(samplingMode)
 
     def samplingModeChanged(self, index):
         """
@@ -673,5 +673,5 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             samplingattributes = self._graphics.getGraphicssamplingattributes()
             if samplingattributes.isValid():
-                samplingMode = self.ui.sampling_mode_chooser.getEnum()
+                samplingMode = self._ui.sampling_mode_chooser.getEnum()
                 samplingattributes.setElementPointSamplingMode(samplingMode)
