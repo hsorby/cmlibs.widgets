@@ -4,7 +4,8 @@ Created on July 15, 2015
 @author: Richard Christie
 """
 from PySide2 import QtCore
-from opencmiss.utils.maths import vectorops
+
+from opencmiss.maths import vectorops
 from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
 
 
@@ -75,7 +76,7 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
                     eyeScale = (t - b) / viewportHeight
                 else:
                     eyeScale = (r - l) / viewportWidth
-                offset = vectorops.add(vectorops.mult(right, eyeScale*delta[0]), vectorops.mult(up, -eyeScale*delta[1]))
+                offset = vectorops.add(vectorops.mult(right, eyeScale * delta[0]), vectorops.mult(up, -eyeScale * delta[1]))
                 self._model.offsetModel(offset)
             elif self._active_button == QtCore.Qt.RightButton:
                 factor = 1.0 + delta[1]*0.0005

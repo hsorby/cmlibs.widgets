@@ -7,11 +7,11 @@ SELECTION_RUBBERBAND_NAME = 'selection_rubberband'
 
 # mapping from qt to zinc start
 # Create a button map of Qt mouse buttons to Zinc input buttons
-button_map = {
+BUTTON_MAP = {
     QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
     QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
     QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT,
-}
+    QtCore.Qt.NoButton: None}
 
 
 # Create a modifier map of Qt modifier keys to Zinc modifier keys
@@ -34,6 +34,13 @@ class ProjectionMode(object):
 
 
 class SelectionMode(object):
-    NONE = 1
+    NONE = -1
     EXCLUSIVE = 0
     ADDITIVE = 1
+
+
+class GraphicsSelectionMode(object):
+    ANY = -1
+    DATA = 0
+    ELEMENTS = 1
+    NODE = 2

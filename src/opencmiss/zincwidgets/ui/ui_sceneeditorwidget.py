@@ -13,6 +13,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.graphicseditorwidget import GraphicsEditorWidget
+from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 
 
 class Ui_SceneEditorWidget(object):
@@ -27,8 +28,8 @@ class Ui_SceneEditorWidget(object):
         SceneEditorWidget.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(SceneEditorWidget)
         self.verticalLayout.setSpacing(2)
-        self.verticalLayout.setContentsMargins(2, 2, 2, 2)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(2, 2, 2, 2)
         self.scrollArea = QScrollArea(SceneEditorWidget)
         self.scrollArea.setObjectName(u"scrollArea")
         sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -43,8 +44,8 @@ class Ui_SceneEditorWidget(object):
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 294, 719))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.graphics_listview = QListView(self.scrollAreaWidgetContents)
         self.graphics_listview.setObjectName(u"graphics_listview")
         sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
@@ -63,6 +64,11 @@ class Ui_SceneEditorWidget(object):
         self.horizontalLayout.setSpacing(2)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 2, 0, 2)
+        self.region_combobox = RegionChooserWidget(self.frame)
+        self.region_combobox.setObjectName(u"region_combobox")
+
+        self.horizontalLayout.addWidget(self.region_combobox)
+
         self.add_graphics_combobox = QComboBox(self.frame)
         self.add_graphics_combobox.addItem("")
         self.add_graphics_combobox.addItem("")
@@ -97,7 +103,6 @@ class Ui_SceneEditorWidget(object):
         self.graphics_editor.setObjectName(u"graphics_editor")
         sizePolicy1.setHeightForWidth(self.graphics_editor.sizePolicy().hasHeightForWidth())
         self.graphics_editor.setSizePolicy(sizePolicy1)
-        self.frame.raise_()
 
         self.verticalLayout_2.addWidget(self.graphics_editor)
 

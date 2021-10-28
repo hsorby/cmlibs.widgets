@@ -10,6 +10,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from PySide2 import QtCore, QtWidgets
 
+
 class RegionChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
@@ -20,6 +21,11 @@ class RegionChooserWidget(QtWidgets.QComboBox):
         self._rootRegion = None
         self._region = None
 
+        self._make_connections()
+
+    def _make_connections(self):
+        self.activated.connect(self._buildRegionList)
+
     def _getRegionIndex(self, findRegion, region, count):
         """
         Recursive function to determine the index of findRegion in the tree under region, starting
@@ -28,15 +34,16 @@ class RegionChooserWidget(QtWidgets.QComboBox):
         and count of regions searched.
         """
         if region == findRegion:
-            return count, count + 1
+            return count, None
         child = region.getFirstChild()
         while child.isValid():
-            count  = count + 1
-            index, count = self._getRegionIndex(child, findRegion, count)
-            if index is not None:
-                return index, count
+            count = count + 1
+            found, count = self._getRegionIndex(findRegion, child, count)
+            if found is not None:
+                return found, None
             child = child.getNextSibling()
-        return None
+
+        return None, count
 
     def _addRegionToListRecursive(self, region, parentPath):
         name = region.getName()
@@ -66,8 +73,8 @@ class RegionChooserWidget(QtWidgets.QComboBox):
         Display the currently chosen region in the ComboBox
         """
         self.blockSignals(True)
-        index, count = self._getRegionIndex(self._region, self._rootRegion, 0)
-        self.setCurrentIndex(index)
+        count, _ = self._getRegionIndex(self._region, self._rootRegion, 0)
+        self.setCurrentIndex(count)
         self.blockSignals(False)
 
     def getRootRegion(self):
@@ -96,8 +103,8 @@ class RegionChooserWidget(QtWidgets.QComboBox):
         """
         Set the currently selected region.
         """
-        index, count = self._getRegionIndex(region, self._rootRegion, 0)
-        if index is None:
+        count, _ = self._getRegionIndex(region, self._rootRegion, 0)
+        if count is None:
             return
         self._region = region
         self._displayRegion()

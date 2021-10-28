@@ -24,7 +24,7 @@ from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, Sc
 from opencmiss.zinc.spectrum import Spectrum
 from opencmiss.zinc.status import OK as ZINC_OK
 
-from opencmiss.argon.logger import ArgonLogger
+from opencmiss.argon.argonlogger import ArgonLogger
 from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 
 from opencmiss.zincwidgets.fieldconditions import *
@@ -40,8 +40,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
         self._graphics = None
         # Using composition to include the visual element of the GUI.
-        self.ui = Ui_GraphicsEditorWidget()
-        self.ui.setupUi(self)
+        self._ui = Ui_GraphicsEditorWidget()
+        self._ui.setupUi(self)
         # base graphics attributes
         self.ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
         self.ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
@@ -57,14 +57,14 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self.ui.data_field_chooser.setConditional(FieldIsRealValued)
         self.ui.spectrum_chooser.setNullObjectName('-')
         # contours
-        self.ui.isoscalar_field_chooser.setNullObjectName('- choose -')
-        self.ui.isoscalar_field_chooser.setConditional(FieldIsScalar)
+        self._ui.isoscalar_field_chooser.setNullObjectName('- choose -')
+        self._ui.isoscalar_field_chooser.setConditional(FieldIsScalar)
         # streamlines
-        self.ui.stream_vector_field_chooser.setNullObjectName('- choose -')
-        self.ui.stream_vector_field_chooser.setConditional(FieldIsStreamVectorCapable)
+        self._ui.stream_vector_field_chooser.setNullObjectName('- choose -')
+        self._ui.stream_vector_field_chooser.setConditional(FieldIsStreamVectorCapable)
         # line attributes
-        self.ui.line_orientation_scale_field_chooser.setNullObjectName('-')
-        self.ui.line_orientation_scale_field_chooser.setConditional(FieldIsScalar)
+        self._ui.line_orientation_scale_field_chooser.setNullObjectName('-')
+        self._ui.line_orientation_scale_field_chooser.setConditional(FieldIsScalar)
         # point attributes
         self.ui.glyph_chooser.setNullObjectName('-')
         self.ui.point_orientation_scale_field_chooser.setNullObjectName('-')
@@ -103,36 +103,36 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             pointattributes = self._graphics.getGraphicspointattributes()
             lineattributes = self._graphics.getGraphicslineattributes()
             samplingattributes = self._graphics.getGraphicssamplingattributes()
-            self.ui.general_groupbox.show()
+            self._ui.general_groupbox.show()
         else:
-            self.ui.general_groupbox.hide()
-        self.ui.subgroup_field_chooser.setField(subgroupField)
-        self.ui.coordinate_field_chooser.setField(coordinateField)
+            self._ui.general_groupbox.hide()
+        self._ui.subgroup_field_chooser.setField(subgroupField)
+        self._ui.coordinate_field_chooser.setField(coordinateField)
         self._scenecoordinatesystemDisplay()
-        self.ui.material_chooser.setMaterial(material)
-        self.ui.data_field_chooser.setField(dataField)
-        self.ui.spectrum_chooser.setSpectrum(spectrum)
-        self.ui.tessellation_chooser.setTessellation(tessellation)
-        self.ui.exterior_checkbox.setCheckState(QtCore.Qt.Checked if isExterior else QtCore.Qt.Unchecked)
+        self._ui.material_chooser.setMaterial(material)
+        self._ui.data_field_chooser.setField(dataField)
+        self._ui.spectrum_chooser.setSpectrum(spectrum)
+        self._ui.tessellation_chooser.setTessellation(tessellation)
+        self._ui.exterior_checkbox.setCheckState(QtCore.Qt.Checked if isExterior else QtCore.Qt.Unchecked)
         self._faceDisplay()
-        self.ui.wireframe_checkbox.setCheckState(QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
+        self._ui.wireframe_checkbox.setCheckState(QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
         # contours
         isoscalarField = None
         if contours and contours.isValid():
             isoscalarField = contours.getIsoscalarField()
-            self.ui.contours_groupbox.show()
+            self._ui.contours_groupbox.show()
         else:
-            self.ui.contours_groupbox.hide()
-        self.ui.isoscalar_field_chooser.setField(isoscalarField)
+            self._ui.contours_groupbox.hide()
+        self._ui.isoscalar_field_chooser.setField(isoscalarField)
         self._isovaluesDisplay()
         # streamlines
         streamVectorField = None
         if streamlines and streamlines.isValid():
             streamVectorField = streamlines.getStreamVectorField()
-            self.ui.streamlines_groupbox.show()
+            self._ui.streamlines_groupbox.show()
         else:
-            self.ui.streamlines_groupbox.hide()
-        self.ui.stream_vector_field_chooser.setField(streamVectorField)
+            self._ui.streamlines_groupbox.hide()
+        self._ui.stream_vector_field_chooser.setField(streamVectorField)
         self._streamlinesTrackLengthDisplay()
         self._streamlinesTrackDirectionDisplay()
         self._streamlinesColourDataTypeDisplay()
@@ -140,12 +140,12 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         lineOrientationScaleField = None
         if lineattributes and lineattributes.isValid():
             lineOrientationScaleField = lineattributes.getOrientationScaleField()
-            self.ui.lines_groupbox.show()
+            self._ui.lines_groupbox.show()
         else:
-            self.ui.lines_groupbox.hide()
+            self._ui.lines_groupbox.hide()
         self._lineShapeDisplay()
         self._lineBaseSizeDisplay()
-        self.ui.line_orientation_scale_field_chooser.setField(lineOrientationScaleField)
+        self._ui.line_orientation_scale_field_chooser.setField(lineOrientationScaleField)
         self._lineScaleFactorsDisplay()
         isStreamline = (streamlines is not None) and streamlines.isValid()
         if not isStreamline:
@@ -153,10 +153,10 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         model = self.ui.line_shape_chooser.model()
         model.item(1, 0).setEnabled(isStreamline)
         model.item(3, 0).setEnabled(isStreamline)
-        self.ui.line_orientation_scale_field_label.setEnabled(not isStreamline)
-        self.ui.line_orientation_scale_field_chooser.setEnabled(not isStreamline)
-        self.ui.line_scale_factors_label.setEnabled(not isStreamline)
-        self.ui.line_scale_factors_lineedit.setEnabled(not isStreamline)
+        self._ui.line_orientation_scale_field_label.setEnabled(not isStreamline)
+        self._ui.line_orientation_scale_field_chooser.setEnabled(not isStreamline)
+        self._ui.line_scale_factors_label.setEnabled(not isStreamline)
+        self._ui.line_scale_factors_lineedit.setEnabled(not isStreamline)
         # point attributes
         glyph = None
         pointOrientationScaleField = None
@@ -165,38 +165,38 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             glyph = pointattributes.getGlyph()
             pointOrientationScaleField = pointattributes.getOrientationScaleField()
             labelField = pointattributes.getLabelField()
-            self.ui.points_groupbox.show()
+            self._ui.points_groupbox.show()
         else:
-            self.ui.points_groupbox.hide()
-        self.ui.glyph_chooser.setGlyph(glyph)
+            self._ui.points_groupbox.hide()
+        self._ui.glyph_chooser.setGlyph(glyph)
         self._pointBaseSizeDisplay()
-        self.ui.point_orientation_scale_field_chooser.setField(pointOrientationScaleField)
+        self._ui.point_orientation_scale_field_chooser.setField(pointOrientationScaleField)
         self._pointScaleFactorsDisplay()
-        self.ui.label_field_chooser.setField(labelField)
+        self._ui.label_field_chooser.setField(labelField)
         # sampling attributes
         if samplingattributes and samplingattributes.isValid():
-            self.ui.sampling_groupbox.show()
+            self._ui.sampling_groupbox.show()
         else:
-            self.ui.sampling_groupbox.hide()
+            self._ui.sampling_groupbox.hide()
         self._samplingModeDisplay()
 
     def setScene(self, scene):
         """
         Set when scene changes to initialised widgets dependent on scene
         """
-        self.ui.material_chooser.setMaterialmodule(scene.getMaterialmodule())
-        self.ui.glyph_chooser.setGlyphmodule(scene.getGlyphmodule())
-        self.ui.spectrum_chooser.setSpectrummodule(scene.getSpectrummodule())
-        self.ui.tessellation_chooser.setTessellationmodule(scene.getTessellationmodule())
+        self._ui.material_chooser.setMaterialmodule(scene.getMaterialmodule())
+        self._ui.glyph_chooser.setGlyphmodule(scene.getGlyphmodule())
+        self._ui.spectrum_chooser.setSpectrummodule(scene.getSpectrummodule())
+        self._ui.tessellation_chooser.setTessellationmodule(scene.getTessellationmodule())
         region = scene.getRegion()
-        self.ui.subgroup_field_chooser.setRegion(region)
-        self.ui.coordinate_field_chooser.setRegion(region)
-        self.ui.data_field_chooser.setRegion(region)
-        self.ui.isoscalar_field_chooser.setRegion(region)
-        self.ui.stream_vector_field_chooser.setRegion(region)
-        self.ui.point_orientation_scale_field_chooser.setRegion(region)
-        self.ui.label_field_chooser.setRegion(region)
-        self.ui.line_orientation_scale_field_chooser.setRegion(region)
+        self._ui.subgroup_field_chooser.setRegion(region)
+        self._ui.coordinate_field_chooser.setRegion(region)
+        self._ui.data_field_chooser.setRegion(region)
+        self._ui.isoscalar_field_chooser.setRegion(region)
+        self._ui.stream_vector_field_chooser.setRegion(region)
+        self._ui.point_orientation_scale_field_chooser.setRegion(region)
+        self._ui.label_field_chooser.setRegion(region)
+        self._ui.line_orientation_scale_field_chooser.setRegion(region)
 
     def getGraphics(self):
         """
@@ -267,7 +267,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         An item was selected at index in subgroup field chooser widget
         """
         if self._graphics:
-            subgroupField = self.ui.subgroup_field_chooser.getField()
+            subgroupField = self._ui.subgroup_field_chooser.getField()
             if subgroupField:
                 self._graphics.setSubgroupField(subgroupField)
             else:
@@ -278,7 +278,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         An item was selected at index in coordinate field chooser widget
         """
         if self._graphics:
-            coordinateField = self.ui.coordinate_field_chooser.getField()
+            coordinateField = self._ui.coordinate_field_chooser.getField()
             if coordinateField:
                 self._graphics.setCoordinateField(coordinateField)
             else:
@@ -303,7 +303,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         An item was selected at index in data field chooser widget
         """
         if self._graphics:
-            dataField = self.ui.data_field_chooser.getField()
+            dataField = self._ui.data_field_chooser.getField()
             if dataField:
                 scene = self._graphics.getScene()
                 scene.beginChange()
@@ -312,7 +312,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     spectrummodule = scene.getSpectrummodule()
                     spectrum = spectrummodule.getDefaultSpectrum()
                     self._graphics.setSpectrum(spectrum)
-                    self.ui.spectrum_chooser.setSpectrum(spectrum)
+                    self._ui.spectrum_chooser.setSpectrum(spectrum)
                 self._graphics.setDataField(dataField)
                 scene.endChange()
             else:
@@ -320,7 +320,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
 
     def spectrumChanged(self, index):
         if self._graphics:
-            spectrum = self.ui.spectrum_chooser.getSpectrum()
+            spectrum = self._ui.spectrum_chooser.getSpectrum()
             if spectrum:
                 self._graphics.setSpectrum(spectrum)
             else:
@@ -331,7 +331,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         An item was selected at index in tessellation chooser widget
         """
         if self._graphics:
-            tessellation = self.ui.tessellation_chooser.getTessellation()
+            tessellation = self._ui.tessellation_chooser.getTessellation()
             self._graphics.setTessellation(tessellation)
 
     def exteriorClicked(self, isChecked):
@@ -372,7 +372,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             pointattributes = self._graphics.getGraphicspointattributes()
             if (pointattributes.isValid()):
-                glyph = self.ui.glyph_chooser.getGlyph()
+                glyph = self._ui.glyph_chooser.getGlyph()
                 if glyph:
                     pointattributes.setGlyph(glyph)
                 else:
@@ -383,14 +383,14 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         An item was selected at index in material chooser widget
         """
         if self._graphics:
-            material = self.ui.material_chooser.getMaterial()
+            material = self._ui.material_chooser.getMaterial()
             self._graphics.setMaterial(material)
 
     def isoscalarFieldChanged(self, index):
         if self._graphics:
             contours = self._graphics.castContours()
             if contours.isValid():
-                isoscalarField = self.ui.isoscalar_field_chooser.getField()
+                isoscalarField = self._ui.isoscalar_field_chooser.getField()
                 if not isoscalarField:
                     isoscalarField = Field()
                 contours.setIsoscalarField(isoscalarField)
@@ -406,16 +406,16 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 if count > 1:
                     count, isovalues = contours.getListIsovalues(count)
                 if count > 0:
-                    self._displayVector(self.ui.isovalues_lineedit, isovalues)
+                    self._displayVector(self._ui.isovalues_lineedit, isovalues)
                     return
-        self.ui.isovalues_lineedit.setText('')
+        self._ui.isovalues_lineedit.setText('')
 
     def isovaluesEntered(self):
         """
         Set iso values list from text in widget
         """
         try:
-            isovalues = self._parseVector(self.ui.isovalues_lineedit)
+            isovalues = self._parseVector(self._ui.isovalues_lineedit)
             contours = self._graphics.castContours()
             if contours.isValid():
                 if contours.setListIsovalues(isovalues) != ZINC_OK:
@@ -428,7 +428,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
-                streamVectorField = self.ui.stream_vector_field_chooser.getField()
+                streamVectorField = self._ui.stream_vector_field_chooser.getField()
                 if not streamVectorField:
                     streamVectorField = Field()
                 streamlines.setStreamVectorField(streamVectorField)
@@ -441,15 +441,15 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 trackLength = streamlines.getTrackLength()
-                self._displayReal(self.ui.streamlines_track_length_lineedit, trackLength)
+                self._displayReal(self._ui.streamlines_track_length_lineedit, trackLength)
                 return
-        self.ui.streamlines_track_length_lineedit.setText('')
+        self._ui.streamlines_track_length_lineedit.setText('')
 
     def streamlinesTrackLengthEntered(self):
         """
         Set iso values list from text in widget
         """
-        streamlinesLengthText = self.ui.streamlines_track_length_lineedit.text()
+        streamlinesLengthText = self._ui.streamlines_track_length_lineedit.text()
         try:
             trackLength = float(streamlinesLengthText)
             streamlines = self._graphics.castStreamlines()
@@ -536,16 +536,16 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
                 _, baseSize = lineattributes.getBaseSize(2)
-                self._displayScale(self.ui.line_base_size_lineedit, baseSize)
+                self._displayScale(self._ui.line_base_size_lineedit, baseSize)
                 return
-        self.ui.line_base_size_lineedit.setText('0')
+        self._ui.line_base_size_lineedit.setText('0')
 
     def lineBaseSizeEntered(self):
         """
         Set line base size from text in widget
         """
         try:
-            baseSize = self._parseScale(self.ui.line_base_size_lineedit)
+            baseSize = self._parseScale(self._ui.line_base_size_lineedit)
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.setBaseSize(baseSize) != ZINC_OK:
                 raise
@@ -557,7 +557,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
-                orientationScaleField = self.ui.line_orientation_scale_field_chooser.getField()
+                orientationScaleField = self._ui.line_orientation_scale_field_chooser.getField()
                 if not orientationScaleField:
                     orientationScaleField = Field()
                 lineattributes.setOrientationScaleField(orientationScaleField)
@@ -570,16 +570,16 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
                 _, scaleFactors = lineattributes.getScaleFactors(2)
-                self._displayScale(self.ui.line_scale_factors_lineedit, scaleFactors)
+                self._displayScale(self._ui.line_scale_factors_lineedit, scaleFactors)
                 return
-        self.ui.line_scale_factors_lineedit.setText('0')
+        self._ui.line_scale_factors_lineedit.setText('0')
 
     def lineScaleFactorsEntered(self):
         """
         Set line scale factors from text in widget
         """
         try:
-            scaleFactors = self._parseScale(self.ui.line_scale_factors_lineedit)
+            scaleFactors = self._parseScale(self._ui.line_scale_factors_lineedit)
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.setScaleFactors(scaleFactors) != ZINC_OK:
                 raise
@@ -595,16 +595,16 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
                 _, baseSize = pointattributes.getBaseSize(3)
-                self._displayScale(self.ui.point_base_size_lineedit, baseSize)
+                self._displayScale(self._ui.point_base_size_lineedit, baseSize)
                 return
-        self.ui.point_base_size_lineedit.setText('0')
+        self._ui.point_base_size_lineedit.setText('0')
 
     def pointBaseSizeEntered(self):
         """
         Set point base size from text in widget
         """
         try:
-            baseSize = self._parseScale(self.ui.point_base_size_lineedit)
+            baseSize = self._parseScale(self._ui.point_base_size_lineedit)
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.setBaseSize(baseSize) != ZINC_OK:
                 raise
@@ -616,7 +616,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
-                orientationScaleField = self.ui.point_orientation_scale_field_chooser.getField()
+                orientationScaleField = self._ui.point_orientation_scale_field_chooser.getField()
                 if not orientationScaleField:
                     orientationScaleField = Field()
                 pointattributes.setOrientationScaleField(orientationScaleField)
@@ -629,16 +629,16 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
                 _, scaleFactors = pointattributes.getScaleFactors(3)
-                self._displayScale(self.ui.point_scale_factors_lineedit, scaleFactors)
+                self._displayScale(self._ui.point_scale_factors_lineedit, scaleFactors)
                 return
-        self.ui.point_scale_factors_lineedit.setText('0')
+        self._ui.point_scale_factors_lineedit.setText('0')
 
     def pointScaleFactorsEntered(self):
         """
         Set point scale factors from text in widget
         """
         try:
-            scaleFactors = self._parseScale(self.ui.point_scale_factors_lineedit)
+            scaleFactors = self._parseScale(self._ui.point_scale_factors_lineedit)
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.setScaleFactors(scaleFactors) != ZINC_OK:
                 raise
@@ -650,7 +650,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
-                labelField = self.ui.label_field_chooser.getField()
+                labelField = self._ui.label_field_chooser.getField()
                 if not labelField:
                     labelField = Field()
                 pointattributes.setLabelField(labelField)

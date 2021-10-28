@@ -19,8 +19,8 @@ from numbers import Number
 
 from opencmiss.zinc.element import Element
 from opencmiss.zinc.node import Node
-from opencmiss.zinc.field import FieldEdgeDiscontinuity, FieldFindMeshLocation, FieldApply
-from opencmiss.argon.logger import ArgonLogger
+from opencmiss.zinc.field import FieldEdgeDiscontinuity, FieldFindMeshLocation
+from opencmiss.argon.argonlogger import ArgonLogger
 
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
