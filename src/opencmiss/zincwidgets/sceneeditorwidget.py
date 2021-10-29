@@ -47,14 +47,14 @@ class SceneEditorWidget(QtWidgets.QWidget):
         self._make_connections()
 
     def _make_connections(self):
-        self._ui.region_combobox.currentIndexChanged.connect(self._region_changed)
+        self._ui.region_chooser.currentIndexChanged.connect(self._region_changed)
 
     def _region_changed(self, index):
-        region = self._ui.region_combobox.getRegion()
+        region = self._ui.region_chooser.getRegion()
         self.setScene(region.getScene())
 
     def setZincRootRegion(self, root_region):
-        self._ui.region_combobox.setRootRegion(root_region)
+        self._ui.region_chooser.setRootRegion(root_region)
         self.setScene(root_region.getScene())
 
     def getScene(self):
