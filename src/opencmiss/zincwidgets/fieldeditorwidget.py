@@ -617,7 +617,8 @@ class FieldEditorWidget(QtWidgets.QWidget):
         elif self._fieldType == "FieldApply":
             if self._field and self._field.isValid():
                 evaluateField = self._sourceFieldChoosers[0][1].getField()
-                fieldIterator = self._fieldmodule.createFielditerator()
+                evaluateFieldmodule = evaluateField.getFieldmodule()
+                fieldIterator = evaluateFieldmodule.createFielditerator()
                 field = fieldIterator.next()
                 self._argumentFieldPairs = []
                 index = 0
@@ -686,8 +687,13 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.region_of_apply_fields_chooser.show()
             self.ui.region_of_apply_fields_chooser.setRootRegion(self._fieldmodule.getRegion().getRoot())
             self.ui.region_of_apply_fields_chooser.setEnabled(True)
+            evaluateRegion = self._fieldmodule.getRegion()
             if self._field and self._field.isValid():
+                evaluateField = self._field.getSourceField(1)
+                if (evaluateField) and evaluateField.isValid():
+                    evaluateRegion = evaluateField.getFieldmodule().getRegion()
                 self.ui.region_of_apply_fields_chooser.setEnabled(False)
+            self.ui.region_of_apply_fields_chooser.setRegion(evaluateRegion)
 
         if numberOfSourceFields > numberOfExistingWidgets:
             for i in range(numberOfExistingWidgets, numberOfSourceFields):
@@ -710,7 +716,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._sourceFieldChoosers[i][1].show()
             if self._field and self._field.isValid():
                 self._sourceFieldChoosers[i][1].setConditional(None)
-                self._sourceFieldChoosers[i][1].setField(self._field.getSourceField(i + 1))
+                sourceField = self._field.getSourceField(i + 1)
+                if (sourceField) and sourceField.isValid():
+                    sourceRegion = sourceField.getFieldmodule().getRegion()
+                    self._sourceFieldChoosers[i][1].setRegion(sourceRegion)
+                self._sourceFieldChoosers[i][1].setField(sourceField)
                 self._sourceFieldChoosers[i][1].setEnabled(False)
             else:
                 self._sourceFieldChoosers[i][1].setField(None)
