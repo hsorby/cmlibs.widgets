@@ -66,10 +66,15 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.scenecoordinatesystem_chooser)
 
-        self.exterior_checkbox = QCheckBox(self.general_groupbox)
-        self.exterior_checkbox.setObjectName(u"exterior_checkbox")
+        self.boundarymode_label = QLabel(self.general_groupbox)
+        self.boundarymode_label.setObjectName(u"boundarymode_label")
 
-        self.formLayout_3.setWidget(5, QFormLayout.LabelRole, self.exterior_checkbox)
+        self.formLayout_3.setWidget(5, QFormLayout.LabelRole, self.boundarymode_label)
+
+        self.boundarymode_chooser = EnumerationChooserWidget(self.general_groupbox)
+        self.boundarymode_chooser.setObjectName(u"boundarymode_chooser")
+
+        self.formLayout_3.setWidget(5, QFormLayout.FieldRole, self.boundarymode_chooser)
 
         self.face_label = QLabel(self.general_groupbox)
         self.face_label.setObjectName(u"face_label")
@@ -377,7 +382,6 @@ class Ui_GraphicsEditorWidget(object):
         self.point_scale_factors_lineedit.editingFinished.connect(GraphicsEditorWidget.pointScaleFactorsEntered)
         self.point_orientation_scale_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.pointOrientationScaleFieldChanged)
         self.label_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.labelFieldChanged)
-        self.exterior_checkbox.clicked.connect(GraphicsEditorWidget.exteriorClicked)
         self.isoscalar_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.isoscalarFieldChanged)
         self.wireframe_checkbox.clicked.connect(GraphicsEditorWidget.wireframeClicked)
         self.isovalues_lineedit.editingFinished.connect(GraphicsEditorWidget.isovaluesEntered)
@@ -396,6 +400,7 @@ class Ui_GraphicsEditorWidget(object):
         self.subgroup_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.subgroupFieldChanged)
         self.face_enumeration_chooser.currentIndexChanged.connect(GraphicsEditorWidget.faceChanged)
         self.scenecoordinatesystem_chooser.currentIndexChanged.connect(GraphicsEditorWidget.scenecoordinatesystemChanged)
+        self.boundarymode_chooser.currentIndexChanged.connect(GraphicsEditorWidget.boundarymodeChanged)
 
         QMetaObject.connectSlotsByName(GraphicsEditorWidget)
     # setupUi
@@ -405,7 +410,7 @@ class Ui_GraphicsEditorWidget(object):
         self.general_groupbox.setTitle("")
         self.coordinate_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Coordinates:", None))
         self.scenecoordinatesystem_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Coord System:", None))
-        self.exterior_checkbox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Exterior", None))
+        self.boundarymode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Boundary Mode:", None))
         self.face_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Face:", None))
         self.material_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Material:", None))
         self.data_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Data field:", None))

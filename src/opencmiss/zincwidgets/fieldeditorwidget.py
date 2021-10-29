@@ -68,6 +68,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         # base graphics attributes
         self.ui.field_type_chooser.setNullObjectName('-')
         self.ui.coordinate_system_type_chooser.setNullObjectName('-')
+        self._bindFieldButton = None
         self._sourceFieldChoosers = []
         self._fieldType = None
         self._createMode = True
@@ -626,12 +627,12 @@ class FieldEditorWidget(QtWidgets.QWidget):
                         self.displayArgumentFieldsChoosers(index, field)
                         index += 2
                     field = fieldIterator.next()
-                self.bindFieldButton = QtWidgets.QPushButton(self.ui.applyargumentfields_groupbox)
-                
-                self.bindFieldButton.setObjectName(u"bindFieldButton")
-                self.bindFieldButton.setText(u"Bind Field")
-                self.bindFieldButton.clicked.connect(self.bindField)
-                self.ui.gridLayout_11.addWidget(self.bindFieldButton, index, 0, 1, 2)
+                if self._bindFieldButton == None:
+                    self._bindFieldButton = QtWidgets.QPushButton(self.ui.applyargumentfields_groupbox)
+                    self._bindFieldButton.setObjectName(u"bindFieldButton")
+                    self._bindFieldButton.setText(u"Bind Field")
+                    self._bindFieldButton.clicked.connect(self.bindField)
+                    self.ui.gridLayout_11.addWidget(self._bindFieldButton, index, 0, 1, 2)
                 self.ui.applyargumentfields_groupbox.show()
             else:
                 self.ui.applyargumentfields_groupbox.hide()

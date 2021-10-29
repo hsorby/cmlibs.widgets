@@ -102,11 +102,14 @@
        <widget class="EnumerationChooserWidget" name="scenecoordinatesystem_chooser"/>
       </item>
       <item row="5" column="0">
-       <widget class="QCheckBox" name="exterior_checkbox">
+       <widget class="QLabel" name="boundarymode_label">
         <property name="text">
-         <string>Exterior</string>
+         <string>Boundary Mode:</string>
         </property>
        </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="EnumerationChooserWidget" name="boundarymode_chooser"/>
       </item>
       <item row="6" column="0">
        <widget class="QLabel" name="face_label">
@@ -681,22 +684,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>exterior_checkbox</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>GraphicsEditorWidget</receiver>
-   <slot>exteriorClicked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>60</x>
-     <y>69</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>isoscalar_field_chooser</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
@@ -1006,6 +993,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>boundarymode_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>boundarymodeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>439</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>materialChanged(int)</slot>
@@ -1015,7 +1018,6 @@
   <slot>labelFieldChanged(int)</slot>
   <slot>pointBaseSizeEntered()</slot>
   <slot>pointScaleFactorsEntered()</slot>
-  <slot>exteriorClicked(bool)</slot>
   <slot>isoscalarFieldChanged(int)</slot>
   <slot>faceChanged(int)</slot>
   <slot>wireframeClicked(bool)</slot>

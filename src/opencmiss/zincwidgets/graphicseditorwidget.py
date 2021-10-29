@@ -45,6 +45,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         # base graphics attributes
         self._ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
         self._ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
+        self._ui.boundarymode_chooser.setEnumsList(Graphics.BoundaryModeEnumToString, Graphics.BoundaryModeEnumFromString)
         self._ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
         self._ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
         self._ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
@@ -82,7 +83,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         dataField = None
         spectrum = None
         tessellation = None
-        isExterior = False
         isWireframe = False
         pointattributes = None
         lineattributes = None
@@ -96,7 +96,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             dataField = self._graphics.getDataField()
             spectrum = self._graphics.getSpectrum()
             tessellation = self._graphics.getTessellation()
-            isExterior = self._graphics.isExterior()
             isWireframe = self._graphics.getRenderPolygonMode() == Graphics.RENDER_POLYGON_MODE_WIREFRAME
             contours = self._graphics.castContours()
             streamlines = self._graphics.castStreamlines()
@@ -113,7 +112,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.data_field_chooser.setField(dataField)
         self._ui.spectrum_chooser.setSpectrum(spectrum)
         self._ui.tessellation_chooser.setTessellation(tessellation)
-        self._ui.exterior_checkbox.setCheckState(QtCore.Qt.Checked if isExterior else QtCore.Qt.Unchecked)
+        self._boundarymodeDisplay()
         self._faceDisplay()
         self._ui.wireframe_checkbox.setCheckState(QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
         # contours
@@ -334,12 +333,19 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             tessellation = self._ui.tessellation_chooser.getTessellation()
             self._graphics.setTessellation(tessellation)
 
-    def exteriorClicked(self, isChecked):
+    def _boundarymodeDisplay(self):
         """
-        The exterior radiobutton was clicked
+        Show the current state of the boundarymode enumeration chooser
         """
+        boundarymode = Graphics.BOUNDARY_MODE_INVALID
         if self._graphics:
-            self._graphics.setExterior(isChecked)
+            boundarymode = self._graphics.getBoundaryMode()
+        self._ui.boundarymode_chooser.setEnum(boundarymode)
+
+    def boundarymodeChanged(self, index):
+        if self._graphics:
+            boundarymode = self._ui.boundarymode_chooser.getEnum()
+            self._graphics.setBoundaryMode(boundarymode)
 
     def _faceDisplay(self):
         """
