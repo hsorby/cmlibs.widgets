@@ -15,6 +15,7 @@
 """
 from PySide2 import QtCore, QtGui, QtWidgets
 
+from opencmiss.argon.argonlogger import ArgonLogger
 from opencmiss.zinc.status import OK as ZINC_OK
 from opencmiss.zinc.field import Field
 
@@ -31,6 +32,23 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
 
+def findArgonRegionFromZincRegion(rootArgonRegion, zincRegion):
+    """
+    Recursively find ArgonRegion within tree starting at supplied
+    argonRegion which wraps the given zincRegion.
+    :param rootArgonRegion: Root ArgonRegion of tree to search.
+    :param zincRegion: Zinc Region to match.
+    :return: ArgonRegion or None
+    """
+    if rootArgonRegion.getZincRegion() == zincRegion:
+        return rootArgonRegion
+    for index in range(rootArgonRegion.getChildCount()):
+        argonRegion = findArgonRegionFromZincRegion(rootArgonRegion.getChild(index), zincRegion)
+        if argonRegion:
+            return argonRegion
+    return None
+
+
 class FieldListEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
@@ -38,13 +56,14 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         Call the super class init functions
         """
         QtWidgets.QWidget.__init__(self, parent)
-        self._fieldmodule = None
         # Using composition to include the visual element of the GUI.
-        self.ui = Ui_FieldListEditorWidget()
+        self._ui = Ui_FieldListEditorWidget()
         self._fieldItems = None
+        self._rootArgonRegion = None
         self._argonRegion = None
+        self._fieldmodule = None
         self._timekeeper = None
-        self.ui.setupUi(self)
+        self._ui.setupUi(self)
         self._makeConnections()
         self._field = None
 
@@ -54,9 +73,11 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         self.setField(field)
 
     def _makeConnections(self):
-        self.ui.field_listview.clicked.connect(self.fieldListItemClicked)
-        self.ui.addFieldButton.clicked.connect(self.addFieldClicked)
-        self.ui.field_editor._fieldCreated.connect(self.editorCreateField)
+        self._ui.region_chooser.currentIndexChanged.connect(self._region_changed)
+        self._ui.field_listview.clicked.connect(self.fieldListItemClicked)
+        self._ui.add_field_button.clicked.connect(self.addFieldClicked)
+        self._ui.delete_field_button.clicked.connect(self.deleteFieldClicked)
+        self._ui.field_editor._fieldCreated.connect(self.editorCreateField)
 
     def getFieldmodule(self):
         """
@@ -82,9 +103,9 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         else:
             self._timekeeper = timekeeper
         if self._timekeeper:
-            self.ui.field_editor.setTimekeeper(self._timekeeper)
+            self._ui.field_editor.setTimekeeper(self._timekeeper)
 
-    def setFieldmodule(self, fieldmodule):
+    def _setFieldmodule(self, fieldmodule):
         """
         Set the current scene in the editor
         """
@@ -93,7 +114,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         else:
             self._fieldmodule = fieldmodule
         if self._fieldmodule:
-            self.ui.field_editor.setFieldmodule(self._fieldmodule)
+            self._ui.field_editor.setFieldmodule(self._fieldmodule)
         self._buildFieldsList()
         if self._fieldmodule:
             self._fieldmodulenotifier = self._fieldmodule.createFieldmodulenotifier()
@@ -101,8 +122,18 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         else:
             self._fieldmodulenotifier = None
 
-    def setArgonRegion(self, argonRegion):
+    def _setArgonRegion(self, argonRegion):
         self._argonRegion = argonRegion
+        self._setFieldmodule(self._argonRegion.getZincRegion().getFieldmodule())
+
+    def setRootArgonRegion(self, rootArgonRegion):
+        """
+        Supply new root region on opening new document.
+        :param rootArgonRegion: Root ArgonRegion
+        """
+        self._rootArgonRegion = rootArgonRegion
+        self._ui.region_chooser.setRootRegion(self._rootArgonRegion.getZincRegion())
+        self._setArgonRegion(rootArgonRegion)
 
     def listItemEdited(self, item):
         field = item.data()
@@ -120,10 +151,10 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         """
         if self._fieldItems is not None:
             self._fieldItems.clear()  # Must clear or holds on to field references
-        self._fieldItems = QtGui.QStandardItemModel(self.ui.field_listview)
+        self._fieldItems = QtGui.QStandardItemModel(self._ui.field_listview)
         selectedIndex = None
         if self._fieldmodule:
-            selectedField = self.ui.field_editor.getField()
+            selectedField = self._ui.field_editor.getField()
             fieldIterator = self._fieldmodule.createFielditerator()
             field = fieldIterator.next()
             while field and field.isValid():
@@ -136,15 +167,15 @@ class FieldListEditorWidget(QtWidgets.QWidget):
                 if selectedField and field == selectedField:
                     selectedIndex = self._fieldItems.indexFromItem(item)
                 field = fieldIterator.next()
-        self.ui.field_listview.setModel(self._fieldItems)
+        self._ui.field_listview.setModel(self._fieldItems)
         self._fieldItems.itemChanged.connect(self.listItemEdited)
-        # self.ui.graphics_listview.setMovement(QtGui.QListView.Snap)
-        # self.ui.graphics_listview.setDragDropMode(QtGui.QListView.InternalMove)
-        # self.ui.graphics_listview.setDragDropOverwriteMode(False)
-        # self.ui.graphics_listview.setDropIndicatorShown(True)
+        # self._ui.graphics_listview.setMovement(QtGui.QListView.Snap)
+        # self._ui.graphics_listview.setDragDropMode(QtGui.QListView.InternalMove)
+        # self._ui.graphics_listview.setDragDropOverwriteMode(False)
+        # self._ui.graphics_listview.setDropIndicatorShown(True)
         if selectedIndex:
-            self.ui.field_listview.setCurrentIndex(selectedIndex)
-        self.ui.field_listview.show()
+            self._ui.field_listview.setCurrentIndex(selectedIndex)
+        self._ui.field_listview.show()
 
     def _displayField(self):
         if self._field and self._field.isValid():
@@ -159,17 +190,22 @@ class FieldListEditorWidget(QtWidgets.QWidget):
                     break
                 i += 1
             if selectedIndex:
-                self.ui.field_listview.setCurrentIndex(selectedIndex)
+                self._ui.field_listview.setCurrentIndex(selectedIndex)
             name = self._field.getName()
             fieldTypeDict = self._argonRegion.getFieldTypeDict()
             if name in fieldTypeDict:
                 fieldType = fieldTypeDict[name]
-                self.ui.field_editor.setField(self._field, fieldType)
+                self._ui.field_editor.setField(self._field, fieldType)
             else:
-                self.ui.field_editor.setField(self._field, None)
+                self._ui.field_editor.setField(self._field, None)
         else:
             self.field_listview.clearSelection()
-            self.ui.field_editor.setField(None, None)
+            self._ui.field_editor.setField(None, None)
+
+    def _region_changed(self, index):
+        zincRegion = self._ui.region_chooser.getRegion()
+        argonRegion = findArgonRegionFromZincRegion(self._rootArgonRegion, zincRegion)
+        self._setArgonRegion(argonRegion)
 
     def fieldListItemClicked(self, modelIndex):
         model = modelIndex.model()
@@ -190,4 +226,32 @@ class FieldListEditorWidget(QtWidgets.QWidget):
 
     def addFieldClicked(self):
         """do the add field stuff"""
-        self.ui.field_editor.enterCreateMode()
+        self._ui.field_editor.enterCreateMode()
+
+    def deleteFieldClicked(self):
+        """
+        Unmanage a field which will remove it if not in use.
+        If it is in use, restore its previous managed state.
+        """
+        if self._field and self._field.isValid():
+            if self._field.isManaged():
+                name = self._field.getName()
+                # remove references to field in field editor, list items and field member
+                self._ui.field_editor.setField(None, None)
+                model = self._ui.field_listview.model()
+                item = model.findItems(name)[0]
+                item.setData(None)
+                self._field.setManaged(False)
+                self._field = None
+                field = self._fieldmodule.findFieldByName(name)
+                if field and field.isValid():
+                    ArgonLogger.getLogger().info("Can't delete field '" + name + "' while it is in use")
+                    # restore field in editor
+                    self._field = field
+                    self._field.setManaged(True)
+                    item.setData(field)
+                    fieldType = None
+                    fieldTypeDict = self._argonRegion.getFieldTypeDict()
+                    if name in fieldTypeDict:
+                        fieldType = fieldTypeDict[name]
+                    self._ui.field_editor.setField(self._field, fieldType)

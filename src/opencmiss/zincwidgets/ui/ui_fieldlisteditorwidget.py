@@ -13,6 +13,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.fieldeditorwidget import FieldEditorWidget
+from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 
 
 class Ui_FieldListEditorWidget(object):
@@ -27,8 +28,8 @@ class Ui_FieldListEditorWidget(object):
         FieldListEditorWidget.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(FieldListEditorWidget)
         self.verticalLayout.setSpacing(2)
-        self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(2, 2, 2, 2)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.scrollArea = QScrollArea(FieldListEditorWidget)
         self.scrollArea.setObjectName(u"scrollArea")
         sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -43,8 +44,28 @@ class Ui_FieldListEditorWidget(object):
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 298, 723))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.region_frame = QFrame(self.scrollAreaWidgetContents)
+        self.region_frame.setObjectName(u"region_frame")
+        self.region_frame.setFrameShape(QFrame.StyledPanel)
+        self.region_frame.setFrameShadow(QFrame.Raised)
+        self.formLayout = QFormLayout(self.region_frame)
+        self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setContentsMargins(0, 2, 0, 2)
+        self.region_label = QLabel(self.region_frame)
+        self.region_label.setObjectName(u"region_label")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.region_label)
+
+        self.region_chooser = RegionChooserWidget(self.region_frame)
+        self.region_chooser.setObjectName(u"region_chooser")
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.region_chooser)
+
+
+        self.verticalLayout_2.addWidget(self.region_frame)
+
         self.field_listview = QListView(self.scrollAreaWidgetContents)
         self.field_listview.setObjectName(u"field_listview")
         sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
@@ -63,10 +84,15 @@ class Ui_FieldListEditorWidget(object):
         self.horizontalLayout.setSpacing(2)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 2, 0, 2)
-        self.addFieldButton = QPushButton(self.frame)
-        self.addFieldButton.setObjectName(u"addFieldButton")
+        self.add_field_button = QPushButton(self.frame)
+        self.add_field_button.setObjectName(u"add_field_button")
 
-        self.horizontalLayout.addWidget(self.addFieldButton)
+        self.horizontalLayout.addWidget(self.add_field_button)
+
+        self.delete_field_button = QPushButton(self.frame)
+        self.delete_field_button.setObjectName(u"delete_field_button")
+
+        self.horizontalLayout.addWidget(self.delete_field_button)
 
 
         self.verticalLayout_2.addWidget(self.frame)
@@ -90,6 +116,8 @@ class Ui_FieldListEditorWidget(object):
 
     def retranslateUi(self, FieldListEditorWidget):
         FieldListEditorWidget.setWindowTitle(QCoreApplication.translate("FieldListEditorWidget", u"Field List Editor", None))
-        self.addFieldButton.setText(QCoreApplication.translate("FieldListEditorWidget", u"Add Field", None))
+        self.region_label.setText(QCoreApplication.translate("FieldListEditorWidget", u"Region:", None))
+        self.add_field_button.setText(QCoreApplication.translate("FieldListEditorWidget", u"Add...", None))
+        self.delete_field_button.setText(QCoreApplication.translate("FieldListEditorWidget", u"Delete", None))
     # retranslateUi
 

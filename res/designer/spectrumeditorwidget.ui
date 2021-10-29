@@ -488,7 +488,7 @@
   <customwidget>
    <class>SceneviewerWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/zincwidgets/ui/sceneviewerwidget.h</header>
+   <header>opencmiss/zincwidgets/sceneviewerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
