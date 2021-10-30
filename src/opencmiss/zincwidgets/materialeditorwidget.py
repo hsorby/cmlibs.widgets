@@ -23,6 +23,116 @@ from opencmiss.zincwidgets.ui.ui_materialeditorwidget import Ui_MaterialEditor
 from opencmiss.utils.zinc.general import ChangeManager
 
 
+class MaterialModel(QtCore.QAbstractListModel):
+
+    def __init__(self, parent=None):
+        super(MaterialModel, self).__init__(parent)
+        self._material_names = []
+        self._material_module = None
+
+    def setMaterialModule(self, material_module):
+        self._material_module = material_module
+        self._build_material_names_list()
+
+    def getMaterialForIndex(self, index):
+        return self._material_module.findMaterialByName(self._material_names[index.row()])
+
+    def _try_to_remove_material(self, name):
+        can_remove = True
+        mm = self._material_module
+        with ChangeManager(mm):
+            material = mm.findMaterialByName(name)
+            material.setManaged(False)
+            del material
+
+        recovered_material = self._material_module.findMaterialByName(name)
+        if recovered_material.isValid():
+            # I'm still in use.
+            recovered_material.setManaged(True)
+            can_remove = False
+
+        return can_remove
+
+    def _build_material_names_list(self):
+        material_iterator = self._material_module.createMaterialiterator()
+        material = material_iterator.next()
+
+        while material.isValid():
+            self._material_names.append(material.getName())
+            material = material_iterator.next()
+
+    def rowCount(self, parent_index):
+        return len(self._material_names)
+
+    def headerData(self, section, orientation, role):
+        return ['Materials']
+
+    def flags(self, index):
+        if index.isValid():
+            if index.column() == 0:
+                return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
+
+        return QtCore.Qt.NoItemFlags
+
+    def data(self, index, role):
+        if not index.isValid():
+            return None
+
+        if role == QtCore.Qt.DisplayRole:
+            return self._material_names[index.row()]
+
+        return None
+
+    def setData(self, index, value, role):
+        if index.isValid():
+            if role == QtCore.Qt.EditRole:
+                current_name = self._material_names[index.row()]
+                material = self._material_module.findMaterialByName(current_name)
+                result = material.setName(value)
+                if result == ZINC_OK:
+                    self._material_names[index.row()] = value
+                    return True
+
+        return False
+
+    def addData(self):
+        index = self.index(-1, 0)
+        row_count = len(self._material_names)
+        self.beginInsertRows(index, row_count, row_count)
+        name = 'temp'
+        mm = self._material_module
+        with ChangeManager(mm):
+            material = mm.createMaterial()
+            material.setName(name)
+            material.setManaged(True)
+            del material
+        self._material_names.append(name)
+        self.endInsertRows()
+
+    def removeData(self, index_list):
+        """
+        Only handling single selection, changes would be needed if
+        multiple selection was enabled for any views.
+        """
+        parent = self.createIndex(-1, 0)
+        success = False
+        for index in index_list:
+            self.beginRemoveRows(parent, index.row(), index.row())
+            name = self._material_names[index.row()]
+            success = self._try_to_remove_material(name)
+            if success:
+                self._material_names.pop(index.row())
+            self.endRemoveRows()
+
+        return success
+
+    def reset(self):
+        self.beginResetModel()
+        self._material_names = []
+        self._build_material_names_list()
+        self.endResetModel()
+
+
 class MaterialEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
@@ -39,15 +149,19 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._materials = None
         self._materialmodulenotifier = None
         self._currentMaterial = None
+        self._currentMaterialIndex = None
         self._previewZincScene = None
 
-        self._materialItems = QtGui.QStandardItemModel(self._ui.materials_listView)
+        self._material_model = MaterialModel()
+        self._ui.materials_listView.setModel(self._material_model)
+        self._ui.materials_listView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+
         self._makeConnections()
 
     def _makeConnections(self):
         self._ui.create_button.clicked.connect(self._materialCreateClicked)
         self._ui.delete_button.clicked.connect(self._materialDeleteClicked)
-        self._ui.materials_listView.clicked[QtCore.QModelIndex].connect(self._materialListItemClicked)
+        self._ui.materials_listView.clicked.connect(self._materialListItemClicked)
         self._ui.ambientSelectColour_button.clicked.connect(self._selectColourClicked)
         self._ui.diffuseSelectColour_button.clicked.connect(self._selectColourClicked)
         self._ui.emittedSelectColour_button.clicked.connect(self._selectColourClicked)
@@ -73,137 +187,49 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._previewZincRegion = self._zincContext.createRegion()
         self._previewZincRegion.setName("Material editor preview region")
         self._previewZincScene = self._previewZincRegion.getScene()
-        self._buildMaterialList()
         sceneviewer = self._ui.sceneviewerWidgetPreview.getSceneviewer()
         if sceneviewer:
             self._setupPreviewScene(sceneviewer)
-        # material_module = self._zincContext.getMaterialmodule()
+
+        material_module = self._zincContext.getMaterialmodule()
+        self._material_model.setMaterialModule(material_module)
+        # Sadly not possible.
         # self._materialmodulenotifier = material_module.createMaterialmodulenotifier()
         # self._materialmodulenotifier.setCallback(self._materialmoduleCallback)
-        self._buildMaterialList()
 
     def _materialmoduleCallback(self, materialModuleEvent):
+        """
+        Material module does not have a notifier.
+        """
         changeSummary = materialModuleEvent.getSummarySpectrumChangeFlags()
-        # print("Material Editor: _materialmoduleCallback changeSummary " + str(changeSummary))
         if 0 != (changeSummary & (Material.CHANGE_FLAG_IDENTIFIER | Material.CHANGE_FLAG_ADD | Material.CHANGE_FLAG_REMOVE)):
-            self._buildSpectrumList()
+            self._material_model.reset()
 
     def _materialCreateClicked(self):
         """
         Create a new material.
         """
-        name = 'temp'
-        mm = self._zincContext.getMaterialmodule()
-        with ChangeManager(mm):
-            material = mm.createMaterial()
-            material.setName(name)
-            material.setManaged(True)
-        self._addMaterialToModelList(material)
-
-    def _addMaterialToModelList(self, material, row=0):
-        item = QtGui.QStandardItem(material.getName())
-        item.setData(material)
-        item.setEditable(True)
-        self._materialItems.insertRow(row, item)
-        index = self._materialItems.indexFromItem(item)
-        self._ui.materials_listView.setCurrentIndex(index)
-        self._updateCurrentMaterial(material)
-
-    def _renameMaterial(self, material, name):
-        """
-        Renames material
-        :return True on success, otherwise False (means name not set)
-        """
-        result = material.setName(name)
-        if result == ZINC_OK:
-            return True
-        return False
+        index = self._material_model.createIndex(self._material_model.rowCount(None), 0)
+        self._material_model.addData()
+        self._ui.materials_listView.selectionModel().setCurrentIndex(index, QtCore.QItemSelectionModel.SelectCurrent)
+        self._updateCurrentMaterial(self._material_model.getMaterialForIndex(index))
 
     def _materialDeleteClicked(self):
         """
         Delete the currently selected material.
         """
-        self._clearPreview()
-        self._removeMaterialByName(self._currentMaterial.getName())
-
-    def _removeMaterialByName(self, name):
-        """
-        Unmanages material. Note material is only removed if not in use.
-        :return True if material removed, false if failed.
-        """
-        self._currentMaterial = None
-        sm = self._zincContext.getMaterialmodule()
-        items = self._materialItems.findItems(name)
-        item = items[0]
-        row = item.row()
-        self._materialItems.removeRow(row)
-        del item
-        material = sm.findMaterialByName(name)
-        material.setManaged(False)
-        del material
-        material = sm.findMaterialByName(name)
-        if material.isValid():
-            # I'm still in use.
-            material.setManaged(True)
-            successfully_removed = False
-            self._addMaterialToModelList(material, row)
+        selection = self._ui.materials_listView.selectedIndexes()
+        self._clearCurrentMaterial()
+        if not self._material_model.removeData(selection):
+            if len(selection):
+                # Re-instate current material after failed deletion.
+                self._materialListItemClicked(selection[0])
             QtWidgets.QMessageBox.information(self, "Info", "This material is still in use and can't be deleted.")
-        else:
-            successfully_removed = True
-            if row < self._materialItems.rowCount():
-                index = self._materialItems.index(row,0)
-            else:
-                index = self._materialItems.index(row - 1,0)
-            self._ui.materials_listView.setCurrentIndex(index)
-            item = self._materialItems.itemFromIndex(index)
-            self._updateCurrentMaterial(item.data())
-        return successfully_removed
-
-    def _buildMaterialList(self):
-        """
-        Rebuilds the list of items in the Listview from the material module
-        """
-        selectedIndex = None
-        mm = self._zincContext.getMaterialmodule()
-
-        if self._nullObjectName:
-            self._ui.material_listView.addItem(self._nullObjectName)
-        material_iter = mm.createMaterialiterator()
-        material = material_iter.next()
-        if not self._currentMaterial:
-            self._updateCurrentMaterial(material)
-        while material.isValid():
-            name = material.getName()
-            item = QtGui.QStandardItem(name)
-            item.setData(material)
-            item.setEditable(True)
-            self._materialItems.appendRow(item)
-            if material.getName() == self._currentMaterial.getName():
-                selectedIndex = self._materialItems.indexFromItem(item)
-            material = material_iter.next()
-        self._ui.materials_listView.setModel(self._materialItems)
-        if selectedIndex:
-            self._ui.materials_listView.setCurrentIndex(selectedIndex)
-        self._materialItems.itemChanged.connect(self._onMaterialItemChanged)
-        itemDelegate = QtWidgets.QItemDelegate(self._ui.materials_listView)
-        self._ui.materials_listView.setItemDelegate(itemDelegate)
-        self._ui.materials_listView.show()
-
-    def _onMaterialItemChanged(self, item):
-        """
-        For QStandardItemModel ItemChanged Signal, catch the item text edit event.
-        Update the material name.
-        """ 
-        newName = item.text()
-        if self._renameMaterial(item.data(), newName):
-            return
-        item.setText(item.data().getName())
-        QtWidgets.QMessageBox.information(self, "Info", "Can't change this material's name to %s."%newName)
 
     def _materialListItemClicked(self, modelIndex):
-        item = modelIndex.model().itemFromIndex(modelIndex)
-        if item.data() != self._currentMaterial:
-           self._updateCurrentMaterial(item.data())
+        if modelIndex.row() != self._currentMaterialIndex:
+            self._currentMaterialIndex = modelIndex.row()
+            self._updateCurrentMaterial(self._material_model.getMaterialForIndex(modelIndex))
 
     def _updateCurrentMaterial(self, material):
         self._currentMaterial = material
@@ -314,7 +340,9 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         imageField = self._ui.region_comboBox.getRegion().getFieldmodule().findFieldByName(self._ui.imageField_comboBox.currentText())
         self._currentMaterial.setTextureField(texture, imageField)
 
-    def _clearPreview(self):
+    def _clearCurrentMaterial(self):
+        self._currentMaterial = None
+        self._currentMaterialIndex = None
         self._previewZincScene.removeAllGraphics()
     
     def _previewMaterial(self):
