@@ -23,16 +23,7 @@
    <property name="spacing">
     <number>2</number>
    </property>
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>2</number>
    </property>
    <item>
@@ -62,18 +53,43 @@
        <property name="spacing">
         <number>0</number>
        </property>
-       <property name="leftMargin">
+       <property name="margin">
         <number>0</number>
        </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
+       <item>
+        <widget class="QFrame" name="region_frame">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QFormLayout" name="formLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>2</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>2</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="region_label">
+            <property name="text">
+             <string>Region:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="RegionChooserWidget" name="region_chooser"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
        <item>
         <widget class="QListView" name="field_listview">
          <property name="sizePolicy">
@@ -109,9 +125,16 @@
            <number>2</number>
           </property>
           <item>
-           <widget class="QPushButton" name="addFieldButton">
+           <widget class="QPushButton" name="add_field_button">
             <property name="text">
-             <string>Add Field</string>
+             <string>Add...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="delete_field_button">
+            <property name="text">
+             <string>Delete</string>
             </property>
            </widget>
           </item>
@@ -138,7 +161,13 @@
   <customwidget>
    <class>FieldEditorWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/zincwidgets/ui/fieldeditorwidget.h</header>
+   <header>opencmiss/zincwidgets/fieldeditorwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>RegionChooserWidget</class>
+   <extends>QComboBox</extends>
+   <header>opencmiss/zincwidgets/regionchooserwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

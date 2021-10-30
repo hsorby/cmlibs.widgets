@@ -12,8 +12,8 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from opencmiss.zincwidgets.graphicseditorwidget import GraphicsEditorWidget
 from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
+from opencmiss.zincwidgets.graphicseditorwidget import GraphicsEditorWidget
 
 
 class Ui_SceneEditorWidget(object):
@@ -28,8 +28,8 @@ class Ui_SceneEditorWidget(object):
         SceneEditorWidget.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(SceneEditorWidget)
         self.verticalLayout.setSpacing(2)
-        self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(2, 2, 2, 2)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.scrollArea = QScrollArea(SceneEditorWidget)
         self.scrollArea.setObjectName(u"scrollArea")
         sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -44,8 +44,28 @@ class Ui_SceneEditorWidget(object):
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 294, 719))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.region_frame = QFrame(self.scrollAreaWidgetContents)
+        self.region_frame.setObjectName(u"region_frame")
+        self.region_frame.setFrameShape(QFrame.StyledPanel)
+        self.region_frame.setFrameShadow(QFrame.Raised)
+        self.formLayout = QFormLayout(self.region_frame)
+        self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setContentsMargins(0, 2, 0, 2)
+        self.region_label = QLabel(self.region_frame)
+        self.region_label.setObjectName(u"region_label")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.region_label)
+
+        self.region_chooser = RegionChooserWidget(self.region_frame)
+        self.region_chooser.setObjectName(u"region_chooser")
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.region_chooser)
+
+
+        self.verticalLayout_2.addWidget(self.region_frame)
+
         self.graphics_listview = QListView(self.scrollAreaWidgetContents)
         self.graphics_listview.setObjectName(u"graphics_listview")
         sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
@@ -64,11 +84,6 @@ class Ui_SceneEditorWidget(object):
         self.horizontalLayout.setSpacing(2)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 2, 0, 2)
-        self.region_combobox = RegionChooserWidget(self.frame)
-        self.region_combobox.setObjectName(u"region_combobox")
-
-        self.horizontalLayout.addWidget(self.region_combobox)
-
         self.add_graphics_combobox = QComboBox(self.frame)
         self.add_graphics_combobox.addItem("")
         self.add_graphics_combobox.addItem("")
@@ -121,6 +136,7 @@ class Ui_SceneEditorWidget(object):
 
     def retranslateUi(self, SceneEditorWidget):
         SceneEditorWidget.setWindowTitle(QCoreApplication.translate("SceneEditorWidget", u"Scene Editor", None))
+        self.region_label.setText(QCoreApplication.translate("SceneEditorWidget", u"Region:", None))
         self.add_graphics_combobox.setItemText(0, QCoreApplication.translate("SceneEditorWidget", u"Add...", None))
         self.add_graphics_combobox.setItemText(1, QCoreApplication.translate("SceneEditorWidget", u"---", None))
         self.add_graphics_combobox.setItemText(2, QCoreApplication.translate("SceneEditorWidget", u"point", None))
