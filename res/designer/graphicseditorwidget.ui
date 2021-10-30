@@ -65,7 +65,16 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="3" column="0">
@@ -90,65 +99,17 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QComboBox" name="scenecoordinatesystem_combobox">
-        <item>
-         <property name="text">
-          <string>LOCAL</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>WORLD</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>NORMALISED_WINDOW_FILL</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>NORMALISED_WINDOW_FIT_CENTRE</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>NORMALISED_WINDOW_FIT_LEFT</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>NORMALISED_WINDOW_FIT_RIGHT</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>NORMALISED_WINDOW_FIT_BOTTOM</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>NORMALISED_WINDOW_FIT_TOP</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>WINDOW_PIXEL_BOTTOM_LEFT</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>WINDOW_PIXEL_TOP_LEFT</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="EnumerationChooserWidget" name="scenecoordinatesystem_chooser"/>
       </item>
       <item row="5" column="0">
-       <widget class="QCheckBox" name="exterior_checkbox">
+       <widget class="QLabel" name="boundarymode_label">
         <property name="text">
-         <string>Exterior</string>
+         <string>Boundary Mode:</string>
         </property>
        </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="EnumerationChooserWidget" name="boundarymode_chooser"/>
       </item>
       <item row="6" column="0">
        <widget class="QLabel" name="face_label">
@@ -158,55 +119,13 @@
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="QComboBox" name="face_combobox">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
+       <widget class="EnumerationChooserWidget" name="face_enumeration_chooser">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <item>
-         <property name="text">
-          <string>all</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>any face</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>no face</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi1 = 0</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi1 = 1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi2 = 0</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi2 = 1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi3 = 0</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>xi3 = 1</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="8" column="0">
@@ -304,7 +223,16 @@
       <property name="verticalSpacing">
        <number>7</number>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="1" column="1">
@@ -343,7 +271,16 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -378,20 +315,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="streamlines_track_direction_combobox">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-        <item>
-         <property name="text">
-          <string>forward</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>reverse</string>
-         </property>
-        </item>
+       <widget class="EnumerationChooserWidget" name="streamlines_track_direction_chooser">
        </widget>
       </item>
       <item row="3" column="0">
@@ -402,25 +326,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QComboBox" name="streamlines_colour_data_type_combobox">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-        <item>
-         <property name="text">
-          <string>field</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>magnitude</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>travel time</string>
-         </property>
-        </item>
+       <widget class="EnumerationChooserWidget" name="streamlines_colour_data_type_chooser">
        </widget>
       </item>
      </layout>
@@ -435,7 +341,16 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -446,30 +361,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="line_shape_combobox">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-        <item>
-         <property name="text">
-          <string>line</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ribbon</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>circle extrusion</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>square extrusion</string>
-         </property>
-        </item>
+       <widget class="EnumerationChooserWidget" name="line_shape_chooser">
        </widget>
       </item>
       <item row="1" column="0">
@@ -530,7 +422,16 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -615,20 +516,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="sampling_mode_combobox">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-        <item>
-         <property name="text">
-          <string>cell centres</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>cell corners</string>
-         </property>
-        </item>
+       <widget class="EnumerationChooserWidget" name="sampling_mode_chooser">
        </widget>
       </item>
      </layout>
@@ -658,22 +546,27 @@
   <customwidget>
    <class>MaterialChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/ui/materialchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/materialchooserwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EnumerationChooserWidget</class>
+   <extends>QComboBox</extends>
+   <header>opencmiss/zincwidgets/enumerationchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>GlyphChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/ui/glyphchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/glyphchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>SpectrumChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/ui/spectrumchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/spectrumchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>TessellationChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/ui/tessellationchooserwidget.h</header>
+   <header>opencmiss/zincwidgets/tessellationchooserwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -791,22 +684,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>exterior_checkbox</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>GraphicsEditorWidget</receiver>
-   <slot>exteriorClicked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>60</x>
-     <y>69</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>isoscalar_field_chooser</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
@@ -815,22 +692,6 @@
     <hint type="sourcelabel">
      <x>162</x>
      <y>250</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>114</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>face_combobox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>GraphicsEditorWidget</receiver>
-   <slot>faceChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>180</x>
-     <y>60</y>
     </hint>
     <hint type="destinationlabel">
      <x>114</x>
@@ -919,7 +780,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>line_shape_combobox</sender>
+   <sender>line_shape_chooser</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>lineShapeChanged(int)</slot>
@@ -949,6 +810,12 @@
      <y>394</y>
     </hint>
    </hints>
+  </connection>
+  <connection>
+   <sender>sampling_mode_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>samplingModeChanged(int)</slot>
   </connection>
   <connection>
    <sender>streamlines_track_length_lineedit</sender>
@@ -1014,8 +881,24 @@
     </hint>
    </hints>
   </connection>
+    <connection>
+   <sender>streamlines_track_direction_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>streamlinesTrackDirectionChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>422</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>441</y>
+    </hint>
+   </hints>
+  </connection>
   <connection>
-   <sender>streamlines_colour_data_type_combobox</sender>
+   <sender>streamlines_colour_data_type_chooser</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>streamlinesColourDataTypeChanged(int)</slot>
@@ -1039,22 +922,6 @@
     <hint type="sourcelabel">
      <x>229</x>
      <y>245</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>180</x>
-     <y>503</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenecoordinatesystem_combobox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>GraphicsEditorWidget</receiver>
-   <slot>scenecoordinatesystemChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>229</x>
-     <y>61</y>
     </hint>
     <hint type="destinationlabel">
      <x>180</x>
@@ -1094,6 +961,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>face_enumeration_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>faceChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>439</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scenecoordinatesystem_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>scenecoordinatesystemChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>439</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>boundarymode_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>boundarymodeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>439</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>materialChanged(int)</slot>
@@ -1103,7 +1018,6 @@
   <slot>labelFieldChanged(int)</slot>
   <slot>pointBaseSizeEntered()</slot>
   <slot>pointScaleFactorsEntered()</slot>
-  <slot>exteriorClicked(bool)</slot>
   <slot>isoscalarFieldChanged(int)</slot>
   <slot>faceChanged(int)</slot>
   <slot>wireframeClicked(bool)</slot>

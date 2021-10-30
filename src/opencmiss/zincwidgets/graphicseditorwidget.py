@@ -20,7 +20,7 @@ from numbers import Number
 from opencmiss.zinc.element import Element
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.graphics import Graphics, GraphicsStreamlines, Graphicslineattributes
-from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL
+from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, ScenecoordinatesystemEnumFromString, ScenecoordinatesystemEnumToString
 from opencmiss.zinc.spectrum import Spectrum
 from opencmiss.zinc.status import OK as ZINC_OK
 
@@ -43,6 +43,13 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui = Ui_GraphicsEditorWidget()
         self._ui.setupUi(self)
         # base graphics attributes
+        self._ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
+        self._ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
+        self._ui.boundarymode_chooser.setEnumsList(Graphics.BoundaryModeEnumToString, Graphics.BoundaryModeEnumFromString)
+        self._ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
+        self._ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
+        self._ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
+
         self._ui.subgroup_field_chooser.setNullObjectName('-')
         self._ui.subgroup_field_chooser.setConditional(FieldIsScalar)
         self._ui.coordinate_field_chooser.setNullObjectName('-')
@@ -64,6 +71,9 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.point_orientation_scale_field_chooser.setNullObjectName('-')
         self._ui.point_orientation_scale_field_chooser.setConditional(FieldIsOrientationScaleCapable)
         self._ui.label_field_chooser.setNullObjectName('-')
+        self._ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
+
+        
 
     def _updateWidgets(self):
         # base graphics attributes
@@ -73,7 +83,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         dataField = None
         spectrum = None
         tessellation = None
-        isExterior = False
         isWireframe = False
         pointattributes = None
         lineattributes = None
@@ -87,7 +96,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             dataField = self._graphics.getDataField()
             spectrum = self._graphics.getSpectrum()
             tessellation = self._graphics.getTessellation()
-            isExterior = self._graphics.isExterior()
             isWireframe = self._graphics.getRenderPolygonMode() == Graphics.RENDER_POLYGON_MODE_WIREFRAME
             contours = self._graphics.castContours()
             streamlines = self._graphics.castStreamlines()
@@ -104,7 +112,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.data_field_chooser.setField(dataField)
         self._ui.spectrum_chooser.setSpectrum(spectrum)
         self._ui.tessellation_chooser.setTessellation(tessellation)
-        self._ui.exterior_checkbox.setCheckState(QtCore.Qt.Checked if isExterior else QtCore.Qt.Unchecked)
+        self._boundarymodeDisplay()
         self._faceDisplay()
         self._ui.wireframe_checkbox.setCheckState(QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
         # contours
@@ -141,7 +149,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         isStreamline = (streamlines is not None) and streamlines.isValid()
         if not isStreamline:
             isStreamline = False
-        model = self._ui.line_shape_combobox.model()
+        model = self._ui.line_shape_chooser.model()
         model.item(1, 0).setEnabled(isStreamline)
         model.item(3, 0).setEnabled(isStreamline)
         self._ui.line_orientation_scale_field_label.setEnabled(not isStreamline)
@@ -282,13 +290,12 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         scenecoordinatesystem = SCENECOORDINATESYSTEM_LOCAL
         if self._graphics:
             scenecoordinatesystem = self._graphics.getScenecoordinatesystem()
-        self._ui.scenecoordinatesystem_combobox.blockSignals(True)
-        self._ui.scenecoordinatesystem_combobox.setCurrentIndex(scenecoordinatesystem - SCENECOORDINATESYSTEM_LOCAL)
-        self._ui.scenecoordinatesystem_combobox.blockSignals(False)
+        self._ui.scenecoordinatesystem_chooser.setEnum(scenecoordinatesystem)
 
     def scenecoordinatesystemChanged(self, index):
         if self._graphics:
-            self._graphics.setScenecoordinatesystem(index + SCENECOORDINATESYSTEM_LOCAL)
+            scenecoordinatesystem = self._ui.scenecoordinatesystem_chooser.getEnum()
+            self._graphics.setScenecoordinatesystem(scenecoordinatesystem)
 
     def dataFieldChanged(self, index):
         """
@@ -326,12 +333,19 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             tessellation = self._ui.tessellation_chooser.getTessellation()
             self._graphics.setTessellation(tessellation)
 
-    def exteriorClicked(self, isChecked):
+    def _boundarymodeDisplay(self):
         """
-        The exterior radiobutton was clicked
+        Show the current state of the boundarymode enumeration chooser
         """
+        boundarymode = Graphics.BOUNDARY_MODE_INVALID
         if self._graphics:
-            self._graphics.setExterior(isChecked)
+            boundarymode = self._graphics.getBoundaryMode()
+        self._ui.boundarymode_chooser.setEnum(boundarymode)
+
+    def boundarymodeChanged(self, index):
+        if self._graphics:
+            boundarymode = self._ui.boundarymode_chooser.getEnum()
+            self._graphics.setBoundaryMode(boundarymode)
 
     def _faceDisplay(self):
         """
@@ -340,16 +354,15 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         faceType = Element.FACE_TYPE_ALL
         if self._graphics:
             faceType = self._graphics.getElementFaceType()
-        self._ui.face_combobox.blockSignals(True)
-        self._ui.face_combobox.setCurrentIndex(faceType - Element.FACE_TYPE_ALL)
-        self._ui.face_combobox.blockSignals(False)
+        self._ui.face_enumeration_chooser.setEnum(faceType)
 
     def faceChanged(self, index):
         """
         Element face combo box changed
         """
         if self._graphics:
-            self._graphics.setElementFaceType(index + Element.FACE_TYPE_ALL)
+            faceType = self._ui.face_enumeration_chooser.getEnum()
+            self._graphics.setElementFaceType(faceType)
 
     def wireframeClicked(self, isChecked):
         """
@@ -462,9 +475,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 streamlinesTrackDirection = streamlines.getTrackDirection()
-        self._ui.streamlines_track_direction_combobox.blockSignals(True)
-        self._ui.streamlines_track_direction_combobox.setCurrentIndex(streamlinesTrackDirection - GraphicsStreamlines.TRACK_DIRECTION_FORWARD)
-        self._ui.streamlines_track_direction_combobox.blockSignals(False)
+        self._ui.streamlines_track_direction_chooser.setEnum(streamlinesTrackDirection)
 
     def streamlinesTrackDirectionChanged(self, index):
         """
@@ -484,9 +495,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 streamlinesColourDataType = streamlines.getColourDataType()
-        self._ui.streamlines_colour_data_type_combobox.blockSignals(True)
-        self._ui.streamlines_colour_data_type_combobox.setCurrentIndex(streamlinesColourDataType - GraphicsStreamlines.COLOUR_DATA_TYPE_FIELD)
-        self._ui.streamlines_colour_data_type_combobox.blockSignals(False)
+        self._ui.streamlines_colour_data_type_chooser.setEnum(streamlinesColourDataType)
 
     def streamlinesColourDataTypeChanged(self, index):
         """
@@ -514,9 +523,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
                 lineShapeType = lineattributes.getShapeType()
-        self._ui.line_shape_combobox.blockSignals(True)
-        self._ui.line_shape_combobox.setCurrentIndex(lineShapeType - Graphicslineattributes.SHAPE_TYPE_LINE)
-        self._ui.line_shape_combobox.blockSignals(False)
+        self._ui.line_shape_chooser.setEnum(lineShapeType)
 
     def lineShapeChanged(self, index):
         """
@@ -663,9 +670,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             samplingattributes = self._graphics.getGraphicssamplingattributes()
             if samplingattributes.isValid():
                 samplingMode = samplingattributes.getElementPointSamplingMode()
-        self._ui.sampling_mode_combobox.blockSignals(True)
-        self._ui.sampling_mode_combobox.setCurrentIndex(samplingMode - Element.POINT_SAMPLING_MODE_CELL_CENTRES)
-        self._ui.sampling_mode_combobox.blockSignals(False)
+        self._ui.sampling_mode_chooser.setEnum(samplingMode)
 
     def samplingModeChanged(self, index):
         """
@@ -674,4 +679,5 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             samplingattributes = self._graphics.getGraphicssamplingattributes()
             if samplingattributes.isValid():
-                samplingattributes.setElementPointSamplingMode(index + Element.POINT_SAMPLING_MODE_CELL_CENTRES)
+                samplingMode = self._ui.sampling_mode_chooser.getEnum()
+                samplingattributes.setElementPointSamplingMode(samplingMode)

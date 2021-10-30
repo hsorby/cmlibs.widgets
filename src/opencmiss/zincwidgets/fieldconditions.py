@@ -13,8 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from math import sqrt
+from math import sqrt, floor
 from opencmiss.zinc.field import Field
+
+def FieldIsRealArgument(field):
+    """
+    Conditional function returning true if the field is real argument
+    """
+    return field.castArgumentReal().isValid()
 
 def FieldIsRealValued(field):
     """

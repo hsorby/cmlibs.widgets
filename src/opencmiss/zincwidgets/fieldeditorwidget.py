@@ -34,7 +34,7 @@ FaceType = ["all", "any face", "no face", "xi1 = 0", "xi1 = 1", "xi2 = 0", "xi2 
 ValueType = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2_ds2ds3", "d3_ds1ds2ds3"]
 
 FieldTypeToNumberofSourcesList = {
-    'FieldAlias': 1, 'FieldLog': 1, 'FieldExp': 1, 'FieldAbs': 1, 'FieldIdentity': 1,
+    'FieldAlias': 1, 'FieldLog': 1, 'FieldExp': 1, 'FieldAbs': 1, 'FieldIdentity': 1, 'FieldApply': 1, 'FieldArgumentReal': 0,
     'FieldCoordinateTransformation': 1, 'FieldIsDefined': 1, 'FieldNot': 1,
     'FieldDeterminant': 1, 'FieldEigenvalues': 1, 'FieldEigenvectors': 1,
     'FieldMatrixInvert': 1, 'FieldTranspose': 1, 'FieldSin': 1, 'FieldCos': 1,
@@ -68,6 +68,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         # base graphics attributes
         self.ui.field_type_chooser.setNullObjectName('-')
         self.ui.coordinate_system_type_chooser.setNullObjectName('-')
+        self._bindFieldButton = None
         self._sourceFieldChoosers = []
         self._fieldType = None
         self._createMode = True
@@ -79,6 +80,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self.ui.coordinate_system_type_chooser.currentIndexChanged.connect(self.coordinateSystemTypeChanged)
         self.ui.coordinate_system_focus_lineedit.editingFinished.connect(self.coordinateSystemFocusEntered)
         self.ui.number_of_source_fields_lineedit.editingFinished.connect(self.numberOfSourceFieldsEntered)
+        self.ui.region_of_apply_fields_chooser.currentIndexChanged.connect(self.applyFieldRegionChanged)
         self.ui.type_coordinate_checkbox.stateChanged.connect(self.typeCoordinateClicked)
         self.ui.managed_checkbox.stateChanged.connect(self.managedClicked)
         self.ui.derived_chooser_1.currentIndexChanged.connect(self.derivedChooser1Changed)
@@ -105,7 +107,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._displayVectorInteger(self.ui.derived_values_lineedit, values)
         elif self._fieldType == 'FieldMatrixMultiply' or self._fieldType == 'FieldTranspose' \
                 or self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldNodeValue" \
-                or self._fieldType == "FieldDerivative":
+                or self._fieldType == "FieldDerivative" or self._fieldType == "FieldArgumentReal":
             try:
                 value = int(self.ui.derived_values_lineedit.text())
             except:
@@ -231,9 +233,10 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 returnedField = self._fieldmodule.createFieldTranspose(value, sourceFields[0])
             else:
                 errorMessage = " Missing source field(s)."
-        elif self._fieldType == "FieldFiniteElement":
+        elif self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldArgumentReal":
             value = int(self.ui.derived_values_lineedit.text())
-            returnedField = self._fieldmodule.createFieldFiniteElement(value)
+            methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
+            returnedField = methodToCall(value)
         elif self._fieldType == "FieldEdgeDiscontinuity":
             if sourceFields[0] and sourceFields[0].isValid():
                 returnedField = self._fieldmodule.createFieldEdgeDiscontinuity(sourceFields[0])
@@ -295,6 +298,14 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 returnedField = self._fieldmodule.createFieldTimeValue(self._timekeeper)
             else:
                 errorMessage = " Missing timekeeper."
+
+        elif self._fieldType == "FieldApply":
+            if sourceFields[0] and sourceFields[0].isValid():
+                methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
+                returnedField = methodToCall(sourceFields[0])
+            else:
+                errorMessage = " Missing source field(s)."
+
         if returnedField and returnedField.isValid():
             returnedField.setManaged(True)
         else:
@@ -383,7 +394,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def display_derived(self):
         # print self._fieldType
-        # self.ui.derived_groupbox.setTitle(QtWidgets.QApplication.translate("FieldEditorWidget", self._fieldType + ":", None, QtWidgets.QApplication.UnicodeUTF8))
+        # self.ui.derived_groupbox.setTitle(QtWidgets.QApplication.translate("FieldEditorWidget", self._fieldType + ":", None))
         """ hide everything at the beginning """
         self.ui.derived_chooser_1.hide()
         self.ui.derived_chooser_2.hide()
@@ -392,8 +403,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self.ui.derived_combo_label_1.hide()
         self.ui.derived_combo_label_2.hide()
         self.ui.derived_groupbox.hide()
+        self.ui.applyargumentfields_groupbox.hide()
         if self._fieldType == 'FieldComponent':
-            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Component Indexes:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Component Indexes:", None))
             self.ui.derived_values_lineedit.show()
             if self._field and self._field.isValid():
                 numberOfComponents = self._field.getNumberOfComponents()
@@ -420,17 +432,17 @@ class FieldEditorWidget(QtWidgets.QWidget):
             else:
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
             self._setChooserValue(self.ui.derived_chooser_1, index)
-            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Measure:", None, QtWidgets.QApplication.UnicodeUTF8))
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Conditional Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Measure:", None))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Conditional Field:", None))
             self._sourceFieldChoosers[1][1].setEnabled(True)
             self.ui.derived_combo_label_1.show()
             self.ui.derived_chooser_1.show()
             self.ui.derived_groupbox.show()
         elif self._fieldType == 'FieldFindMeshLocation':
             self._updateChooser(self.ui.derived_chooser_1, SearchMode)
-            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Search Mode:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Search Mode:", None))
             self._updateChooser(self.ui.derived_chooser_2, MeshName)
-            self.ui.derived_combo_label_2.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_combo_label_2.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh:", None))
             index = 0
             if self._field and self._field.isValid():
                 derivedField = self._field.castFindMeshLocation()
@@ -448,7 +460,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.derived_chooser_1.show()
             self.ui.derived_combo_label_2.show()
             self.ui.derived_chooser_2.show()
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh Field:", None))
             self.ui.derived_groupbox.show()
         elif self._fieldType == 'FieldStoredMeshLocation':
             if self._field and self._field.isValid():
@@ -456,13 +468,13 @@ class FieldEditorWidget(QtWidgets.QWidget):
             else:
                 self.ui.derived_chooser_1.setEnabled(True)
             self._updateChooser(self.ui.derived_chooser_1, MeshName)
-            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh:", None))
             self.ui.derived_combo_label_1.show()
             self.ui.derived_chooser_1.show()
             self.ui.derived_groupbox.show()
             self.ui.derived_groupbox.show()
         elif self._fieldType == 'FieldDerivative':
-            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Xi Index:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Xi Index:", None))
             self.ui.derived_values_lineedit.show()
             self.ui.derived_values_label.show()
             self.ui.derived_groupbox.show()
@@ -473,7 +485,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             else:
                 self.ui.derived_values_lineedit.setEnabled(False)
         elif self._fieldType == 'FieldMatrixMultiply' or self._fieldType == 'FieldTranspose':
-            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Number of Rows:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Number of Rows:", None))
             self.ui.derived_values_lineedit.show()
             self.ui.derived_values_label.show()
             self.ui.derived_groupbox.show()
@@ -493,31 +505,31 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 self.ui.derived_values_lineedit.setText(text)
             else:
                 self.ui.derived_values_lineedit.setPlaceholderText("Enter strings")
-            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "String Values:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "String Values:", None))
             self.ui.derived_values_lineedit.show()
             self.ui.derived_values_label.show()
             self.ui.derived_values_lineedit.setEnabled(True)
             self.ui.derived_groupbox.show()
         elif self._fieldType == 'FieldVectorCoordinateTransformation':
-            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Vector Field:", None, QtWidgets.QApplication.UnicodeUTF8))
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Vector Field:", None))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsOrientationScaleCapable)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsCoordinateCapable)
         elif self._fieldType == 'FieldCurl':
-            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Vector Field:", None, QtWidgets.QApplication.UnicodeUTF8))
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Vector Field:", None))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRCAndThreeComponents)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsRCAndThreeComponents)
         elif self._fieldType == 'FieldDivergence':
-            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Vector Field:", None, QtWidgets.QApplication.UnicodeUTF8))
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Vector Field:", None))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRCAndCoordinateCapable)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsRCAndCoordinateCapable)
         elif self._fieldType == 'FieldEmbedded':
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Embedded Location:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Embedded Location:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsMeshLocation)
@@ -527,12 +539,12 @@ class FieldEditorWidget(QtWidgets.QWidget):
             else:
                 self.ui.derived_chooser_1.setEnabled(True)
             self._updateChooser(self.ui.derived_chooser_1, FaceType)
-            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Face Type:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Face Type:", None))
             self.ui.derived_combo_label_1.show()
             self.ui.derived_chooser_1.show()
             self.ui.derived_groupbox.show()
         elif self._fieldType == "FieldNodeValue":
-            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Version Number:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Version Number:", None))
             self.ui.derived_values_lineedit.show()
             self.ui.derived_values_label.show()
             self._updateChooser(self.ui.derived_chooser_1, ValueType)
@@ -545,7 +557,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 self.ui.derived_values_lineedit.setEnabled(True)
                 self.ui.derived_values_lineedit.setPlaceholderText("Enter Version Number")
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsFiniteElement)
-            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Value Type:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Value Type:", None))
             self.ui.derived_combo_label_1.show()
             self.ui.derived_chooser_1.show()
             self.ui.derived_groupbox.show()
@@ -558,36 +570,36 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 self._displayVector(self.ui.derived_values_lineedit, values[1])
             else:
                 self.ui.derived_values_lineedit.setPlaceholderText("Enter values")
-            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Constant Values:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Constant Values:", None))
             self.ui.derived_values_lineedit.show()
             self.ui.derived_values_label.show()
             self.ui.derived_values_lineedit.setEnabled(True)
             self.ui.derived_groupbox.show()
         elif self._fieldType == "FieldGradient":
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsCoordinateCapable)
         elif self._fieldType == "FieldFibreAxes":
-            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Fibre Field:", None, QtWidgets.QApplication.UnicodeUTF8))
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Fibre Field:", None))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Coordinate Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsCoordinateCapable)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsCoordinateCapable)
         elif self._fieldType == "FieldEigenvectors":
-            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Eigenvalues Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[0][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Eigenvalues Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsEigenvalues)
         elif self._fieldType == "FieldProjection":
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Projection Matrix Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Projection Matrix Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsRealValued)
         elif self._fieldType == "FieldTimeLookup":
-            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Time Field:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Time Field:", None))
             if not self._field or not self._field.isValid():
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsScalar)
-        elif self._fieldType == "FieldFiniteElement":
+        elif self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldArgumentReal":
             if self._field and self._field.isValid():
                 text = str(self._field.getNumberOfComponents())
                 self.ui.derived_values_lineedit.setText(text)
@@ -596,17 +608,42 @@ class FieldEditorWidget(QtWidgets.QWidget):
             else:
                 self.ui.derived_values_lineedit.setPlaceholderText("Enter values")
                 self.ui.derived_values_lineedit.setEnabled(True)
-            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Number Of Components:", None, QtWidgets.QApplication.UnicodeUTF8))
+            self.ui.derived_values_label.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Number Of Components:", None))
             self.ui.derived_values_lineedit.show()
             self.ui.derived_values_label.show()
 
             self.ui.derived_groupbox.show()
+
+        elif self._fieldType == "FieldApply":
+            if self._field and self._field.isValid():
+                evaluateField = self._sourceFieldChoosers[0][1].getField()
+                evaluateFieldmodule = evaluateField.getFieldmodule()
+                fieldIterator = evaluateFieldmodule.createFielditerator()
+                field = fieldIterator.next()
+                self._argumentFieldPairs = []
+                index = 0
+                while field.isValid():
+                    if field.castArgumentReal().isValid() and evaluateField.dependsOnField(field):
+                    # this is an argument field which must be bound to a source field
+                        self.displayArgumentFieldsChoosers(index, field)
+                        index += 2
+                    field = fieldIterator.next()
+                if self._bindFieldButton == None:
+                    self._bindFieldButton = QtWidgets.QPushButton(self.ui.applyargumentfields_groupbox)
+                    self._bindFieldButton.setObjectName(u"bindFieldButton")
+                    self._bindFieldButton.setText(u"Bind Field")
+                    self._bindFieldButton.clicked.connect(self.bindField)
+                    self.ui.gridLayout_11.addWidget(self._bindFieldButton, index, 0, 1, 2)
+                self.ui.applyargumentfields_groupbox.show()
+            else:
+                self.ui.applyargumentfields_groupbox.hide()
+
         else:
             if self._field and self._field.isValid():
                 numberOfSourceFields = self._field.getNumberOfSourceFields()
                 for i in range(0, numberOfSourceFields):
                     self._sourceFieldChoosers[i][0].setText(
-                        QtWidgets.QApplication.translate("FieldEditorWidget", "Source Field " + str(i + 1), None, QtWidgets.QApplication.UnicodeUTF8))
+                        QtWidgets.QApplication.translate("FieldEditorWidget", "Source Field " + str(i + 1), None))
             else:
                 if self._fieldType == "FieldLog" or self._fieldType == "FieldSqrt" or self._fieldType == "FieldExp" or \
                         self._fieldType == "FieldAbs" or self._fieldType == "FieldIdentity" or self._fieldType == "FieldConcatenate" or \
@@ -628,7 +665,16 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 elif self._fieldType == "FieldEigenvalues" or self._fieldType == "FieldMatrixInvert":
                     self._sourceFieldChoosers[0][1].setConditional(FieldIsSquareMatrix)
 
+    def bindField(self):
+        applyField = self._field.castApply()
+        if applyField.isValid():
+            for fieldPair in self._argumentFieldPairs:
+                applyField.setBindArgumentSourceField(fieldPair[0].getField(),fieldPair[1].getField())
+        self._updateWidgets()
+
     def displaySourceFieldsChoosers(self, numberOfSourceFields):
+        self.ui.region_of_apply_fields_label.hide()
+        self.ui.region_of_apply_fields_chooser.hide()
         numberOfExistingWidgets = len(self._sourceFieldChoosers)
         if self._fieldType == "FieldConcatenate" or self._fieldType == "FieldCrossProduct":
             if numberOfSourceFields == -1:
@@ -636,9 +682,22 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.number_of_source_fields_lineedit.setEnabled(True)
         else:
             self.ui.number_of_source_fields_lineedit.setEnabled(False)
+        if self._fieldType == "FieldApply":
+            self.ui.region_of_apply_fields_label.show()
+            self.ui.region_of_apply_fields_chooser.show()
+            self.ui.region_of_apply_fields_chooser.setRootRegion(self._fieldmodule.getRegion().getRoot())
+            self.ui.region_of_apply_fields_chooser.setEnabled(True)
+            evaluateRegion = self._fieldmodule.getRegion()
+            if self._field and self._field.isValid():
+                evaluateField = self._field.getSourceField(1)
+                if (evaluateField) and evaluateField.isValid():
+                    evaluateRegion = evaluateField.getFieldmodule().getRegion()
+                self.ui.region_of_apply_fields_chooser.setEnabled(False)
+            self.ui.region_of_apply_fields_chooser.setRegion(evaluateRegion)
+
         if numberOfSourceFields > numberOfExistingWidgets:
             for i in range(numberOfExistingWidgets, numberOfSourceFields):
-                index = i + 1
+                index = i + 2
                 sourceFieldLabel = QtWidgets.QLabel(self.ui.sourcefields_groupbox)
                 sourceFieldLabel.setObjectName("sourcefield_label" + str(index))
                 self.ui.gridLayout_4.addWidget(sourceFieldLabel, index, 0, 1, 1)
@@ -653,11 +712,15 @@ class FieldEditorWidget(QtWidgets.QWidget):
         numberOfExistingWidgets = len(self._sourceFieldChoosers)
         for i in range(0, numberOfSourceFields):
             self._sourceFieldChoosers[i][0].show()
-            self._sourceFieldChoosers[i][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Source Field " + str(i + 1), None, QtWidgets.QApplication.UnicodeUTF8))
+            self._sourceFieldChoosers[i][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Source Field " + str(i + 1), None))
             self._sourceFieldChoosers[i][1].show()
             if self._field and self._field.isValid():
                 self._sourceFieldChoosers[i][1].setConditional(None)
-                self._sourceFieldChoosers[i][1].setField(self._field.getSourceField(i + 1))
+                sourceField = self._field.getSourceField(i + 1)
+                if (sourceField) and sourceField.isValid():
+                    sourceRegion = sourceField.getFieldmodule().getRegion()
+                    self._sourceFieldChoosers[i][1].setRegion(sourceRegion)
+                self._sourceFieldChoosers[i][1].setField(sourceField)
                 self._sourceFieldChoosers[i][1].setEnabled(False)
             else:
                 self._sourceFieldChoosers[i][1].setField(None)
@@ -669,6 +732,38 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._sourceFieldChoosers[i][1].setField(None)
             self._sourceFieldChoosers[i][1].disconnect(self._sourceFieldChoosers[i][1])
         self.ui.number_of_source_fields_lineedit.setText(str(numberOfSourceFields))
+
+    def applyFieldRegionChanged(self, index):
+        self._sourceFieldChoosers[0][1].setRegion(self.ui.region_of_apply_fields_chooser.getRegion())
+
+    def displayArgumentFieldsChoosers(self, index, argument_field):
+        argumentFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
+        argumentFieldLabel.setObjectName("argumentfield_label" + str(index))
+        argumentFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Argument Field " + str(int(index/2 + 1)), None))
+        self.ui.gridLayout_11.addWidget(argumentFieldLabel, index, 0, 1, 1)
+        argumentFieldChooser = FieldChooserWidget(self.ui.applyargumentfields_groupbox)
+        argumentFieldChooser.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+        argumentFieldChooser.setObjectName("argumentfield_chooser" + str(index))
+        argumentFieldChooser.setRegion(argument_field.getFieldmodule().getRegion())
+        argumentFieldChooser.setConditional(None)
+        argumentFieldChooser.setField(argument_field)
+        argumentFieldChooser.setEnabled(False)
+        argumentFieldChooser.disconnect(argumentFieldChooser)
+        self.ui.gridLayout_11.addWidget(argumentFieldChooser, index, 1, 1, 1)
+
+        sourceFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
+        sourceFieldLabel.setObjectName("applysourcefield_label" + str(index))
+        sourceFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Source Field " + str(int(index/2 + 1)), None))
+        self.ui.gridLayout_11.addWidget(sourceFieldLabel, index + 1, 0, 1, 1)
+        sourceFieldChooser = FieldChooserWidget(self.ui.applyargumentfields_groupbox)
+        sourceFieldChooser.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+        sourceFieldChooser.setObjectName("applysourcefield_chooser" + str(index))
+        self.ui.gridLayout_11.addWidget(sourceFieldChooser, index + 1, 1, 1, 1)
+        sourceFieldChooser.allowUnmanagedField(True)
+        sourceFieldChooser.setNullObjectName("-")
+        sourceFieldChooser.setRegion(self._fieldmodule.getRegion())
+
+        self._argumentFieldPairs.append([argumentFieldChooser, sourceFieldChooser])
 
     def displaySourceFields(self):
         numberOfSourceFields = 0
@@ -733,6 +828,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.general_groupbox.hide()
             self.ui.coordinate_system_groupbox.hide()
             self.ui.derived_groupbox.hide()
+            self.ui.applyargumentfields_groupbox.hide()
             self.ui.sourcefields_groupbox.hide()
         self.ui.field_type_chooser.setFieldType(self._fieldType)
         if self._createMode == True:
