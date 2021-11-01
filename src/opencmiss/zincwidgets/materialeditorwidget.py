@@ -85,8 +85,9 @@ class MaterialModel(QtCore.QAbstractListModel):
 
     def setData(self, index, value, role):
         if index.isValid():
+            value = value.rstrip()
             if role == QtCore.Qt.EditRole and value:
-                current_name = self._material_names[index.row()].rstrip()
+                current_name = self._material_names[index.row()]
                 material = self._material_module.findMaterialByName(current_name)
                 result = material.setName(value)
                 if result == ZINC_OK:
