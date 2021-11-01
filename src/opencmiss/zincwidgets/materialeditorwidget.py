@@ -99,13 +99,11 @@ class MaterialModel(QtCore.QAbstractListModel):
         index = self.index(-1, 0)
         row_count = len(self._material_names)
         self.beginInsertRows(index, row_count, row_count)
-        name = 'temp'
         mm = self._material_module
         with ChangeManager(mm):
             material = mm.createMaterial()
-            material.setName(name)
+            name = material.getName()
             material.setManaged(True)
-            del material
         self._material_names.append(name)
         self.endInsertRows()
 
@@ -211,6 +209,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         """
         index = self._material_model.createIndex(self._material_model.rowCount(None), 0)
         self._material_model.addData()
+        self._ui.materials_listView.clearSelection()
         self._ui.materials_listView.selectionModel().setCurrentIndex(index, QtCore.QItemSelectionModel.SelectCurrent)
         self._updateCurrentMaterial(self._material_model.getMaterialForIndex(index))
 
@@ -220,7 +219,9 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         """
         selection = self._ui.materials_listView.selectedIndexes()
         self._clearCurrentMaterial()
-        if not self._material_model.removeData(selection):
+        if self._material_model.removeData(selection):
+            self._ui.materials_listView.clearSelection()
+        else:
             if len(selection):
                 # Re-instate current material after failed deletion.
                 self._materialListItemClicked(selection[0])
