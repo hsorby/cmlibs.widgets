@@ -39,9 +39,8 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
            super(AlignmentSceneviewerWidget, self).keyReleaseEvent(event)
 
     def mousePressEvent(self, event):
-        if self._active_button != QtCore.Qt.NoButton:
-            return
         if self._model.isStateAlign() and self._alignKeyPressed:
+            print('align mode is active')
             self._use_zinc_mouse_event_handling = False  # needed as not calling super mousePressEvent
             self._active_button = event.button()
             # shift-Left button becomes middle button, to support Mac

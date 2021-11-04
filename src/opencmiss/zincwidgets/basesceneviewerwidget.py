@@ -35,13 +35,16 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
         Call the super class init functions, set the  Zinc context and the scene viewer handle to None.
         Initialise other attributes that deal with selection and the rotation of the plane.
         """
-        super(BaseSceneviewerWidget, self).__init__(self, parent)
+        super(BaseSceneviewerWidget, self).__init__(parent)
         InteractionManager.__init__(self)
         # Create a Zinc context from which all other objects can be derived either directly or indirectly.
         self._graphics_initialized = False
         self._context = None
         self._sceneviewer = None
         self._scene_picker = None
+
+        # Retina displays require a scaling factor most other devices have a scale factor of 1.
+        self._pixel_scale = self.window().devicePixelRatio()
 
         # Client-specified filter which is used in logical AND with sceneviewer filter in selection
         self._selection_filter = None
@@ -92,6 +95,9 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
             self._sceneviewer.setScene(scene)
             self._scene_picker = scene.createScenepicker()
             self.set_selectionfilter(self._selection_filter)
+
+    def get_pixel_scale(self):
+        return self._pixel_scale
 
     def get_zinc_sceneviewer(self):
         """
@@ -296,11 +302,11 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
 
     def _zinc_sceneviewer_event(self, event):
         """
-        Process a scene viewer event.  The updateGL() method is called for a
+        Process a scene viewer event.  The update() method is called for a
         repaint required event all other events are ignored.
         """
         if event.getChangeFlags() & Sceneviewerevent.CHANGE_FLAG_REPAINT_REQUIRED:
-            QtCore.QTimer.singleShot(0, self.updateGL)
+            QtCore.QTimer.singleShot(0, self.update)
 
     #  Not applicable at the current point in time.
     #     def _zincSelectionEvent(self, event):
@@ -311,8 +317,7 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
         """
         Respond to widget resize events.
         """
-        pixel_scale = self.window().devicePixelRatio()
-        self._sceneviewer.setViewportSize(width * pixel_scale, height * pixel_scale)
+        self._sceneviewer.setViewportSize(width * self._pixel_scale, height * self._pixel_scale)
 
     def keyPressEvent(self, event):
         self.key_press_event(event)

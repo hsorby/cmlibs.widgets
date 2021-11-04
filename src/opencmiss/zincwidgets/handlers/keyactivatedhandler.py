@@ -1,7 +1,7 @@
 
 from abc import ABC
 
-from opencmiss.zinchandlers.abstracthandler import AbstractHandler
+from opencmiss.zincwidgets.handlers.abstracthandler import AbstractHandler
 
 
 class KeyActivatedHandler(AbstractHandler, ABC):

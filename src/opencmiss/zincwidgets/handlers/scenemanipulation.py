@@ -1,5 +1,7 @@
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
-from opencmiss.zincwidgets.handlers.abstracthandler import AbstractHandler, BUTTON_MAP, modifier_map
+
+from opencmiss.zincwidgets.definitions import BUTTON_MAP, modifier_map
+from opencmiss.zincwidgets.handlers.abstracthandler import AbstractHandler
 
 
 class SceneManipulation(AbstractHandler):
