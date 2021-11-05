@@ -24,29 +24,12 @@ class ModelAlignment(KeyActivatedHandler):
 
     def enter(self):
         pass
-        # self._lastMousePos = None
-        # self._active_button = QtCore.Qt.NoButton
 
     def leave(self):
         pass
 
-    # def key_press_event(self, event):
-    #     """
-    #     Holding down the 'A' key performs alignment (if align mode is on)
-    #     """
-    #     if (event.key() == QtCore.Qt.Key_A) and event.isAutoRepeat() is False:
-    #         self._alignKeyPressed = True
-    #         event.setAccepted(True)
-
-    # def key_release_event(self, event):
-    #     if (event.key() == QtCore.Qt.Key_A) and event.isAutoRepeat() is False:
-    #         self._alignKeyPressed = False
-    #         event.setAccepted(True)
-
     def mouse_press_event(self, event):
-        # print('align mode is active')
         self._active_button = event.button()
-        # shift-Left button becomes middle button, to support Mac
         if self._active_button == QtCore.Qt.LeftButton and event.modifiers() & QtCore.Qt.SHIFT:
             self._active_button = QtCore.Qt.MiddleButton
         pixel_scale = self._scene_viewer.get_pixel_scale()
@@ -70,35 +53,12 @@ class ModelAlignment(KeyActivatedHandler):
             viewportWidth = self._scene_viewer.width()
             viewportHeight = self._scene_viewer.height()
             if self._active_button == QtCore.Qt.LeftButton:
-                # dx = -delta[1] / mag
-                # dy = delta[0] / mag
-                # radius = min([viewportWidth, viewportHeight]) / 2.0
-                # d = dx * (pos[0] - 0.5 * (viewportWidth - 1)) + dy * (pos[1] - 0.5 * (viewportHeight - 1))
-                # d = min(max(-radius, d), radius)
-                # angle = 1.0 * mag / radius
-                # # angle = 1.0 * mag / d
-                #
-                # b = up[:]
-                # b = normalize(b)
-                # a = sub(lookat, eye)
-                # a = normalize(a)
-                # c = cross(b, a)
-                # c = normalize(c)
-                #
-                # e = add(mult(c, dx), mult(b, dy))
-                #
-                # phi = acos(d / radius) - 0.5 * pi
-                # sin_phi = sin(phi)
-                # cos_phi = cos(phi)
-                # axis = add(mult(a, sin_phi), mult(e, cos_phi))
                 prop = vectorops.div(delta, mag)
                 axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
                 angle = mag * 0.002
                 self._model.rotateModel(axis, angle)
             elif self._active_button == QtCore.Qt.MiddleButton:
                 result, l, r, b, t, near, far = self._zinc_sceneviewer.getViewingVolume()
-                # viewportWidth = self._scene_viewer.width()
-                # viewportHeight = self._scene_viewer.height()
                 if viewportWidth > viewportHeight:
                     eyeScale = (t - b) / viewportHeight
                 else:
