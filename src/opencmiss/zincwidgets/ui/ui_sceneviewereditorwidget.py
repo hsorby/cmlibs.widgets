@@ -17,7 +17,7 @@ class Ui_SceneviewerEditorWidget(object):
     def setupUi(self, SceneviewerEditorWidget):
         if not SceneviewerEditorWidget.objectName():
             SceneviewerEditorWidget.setObjectName(u"SceneviewerEditorWidget")
-        SceneviewerEditorWidget.resize(227, 689)
+        SceneviewerEditorWidget.resize(285, 689)
         self.verticalLayout = QVBoxLayout(SceneviewerEditorWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.view_all_button = QPushButton(SceneviewerEditorWidget)
@@ -145,6 +145,29 @@ class Ui_SceneviewerEditorWidget(object):
 
         self.verticalLayout.addWidget(self.background_colour)
 
+        self.transparency_mode_frame = QFrame(SceneviewerEditorWidget)
+        self.transparency_mode_frame.setObjectName(u"transparency_mode_frame")
+        self.transparency_mode_frame.setFrameShape(QFrame.StyledPanel)
+        self.transparency_mode_frame.setFrameShadow(QFrame.Raised)
+        self.formLayout_2 = QFormLayout(self.transparency_mode_frame)
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.formLayout_2.setContentsMargins(0, 2, 0, 2)
+        self.transparency_mode_label = QLabel(self.transparency_mode_frame)
+        self.transparency_mode_label.setObjectName(u"transparency_mode_label")
+
+        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.transparency_mode_label)
+
+        self.transparency_mode_comboBox = QComboBox(self.transparency_mode_frame)
+        self.transparency_mode_comboBox.addItem("")
+        self.transparency_mode_comboBox.addItem("")
+        self.transparency_mode_comboBox.addItem("")
+        self.transparency_mode_comboBox.setObjectName(u"transparency_mode_comboBox")
+
+        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.transparency_mode_comboBox)
+
+
+        self.verticalLayout.addWidget(self.transparency_mode_frame)
+
         self.light_both_sides_checkbox = QCheckBox(SceneviewerEditorWidget)
         self.light_both_sides_checkbox.setObjectName(u"light_both_sides_checkbox")
         self.light_both_sides_checkbox.setEnabled(True)
@@ -177,6 +200,7 @@ class Ui_SceneviewerEditorWidget(object):
         self.antialias.editingFinished.connect(SceneviewerEditorWidget.antialiasEntered)
         self.perturbline_checkbox.clicked.connect(SceneviewerEditorWidget.perturbLineStateChanged)
         self.light_both_sides_checkbox.clicked.connect(SceneviewerEditorWidget.lightBothSidesStateChanged)
+        self.transparency_mode_comboBox.currentIndexChanged.connect(SceneviewerEditorWidget.transparencyModeChanged)
 
         QMetaObject.connectSlotsByName(SceneviewerEditorWidget)
     # setupUi
@@ -194,6 +218,11 @@ class Ui_SceneviewerEditorWidget(object):
         self.near_clipping_label.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Near:", None))
         self.far_clipping_label.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Far:", None))
         self.background_colour_label.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Background colour R, G, B:", None))
+        self.transparency_mode_label.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Transparency mode:", None))
+        self.transparency_mode_comboBox.setItemText(0, QCoreApplication.translate("SceneviewerEditorWidget", u"fast", None))
+        self.transparency_mode_comboBox.setItemText(1, QCoreApplication.translate("SceneviewerEditorWidget", u"slow", None))
+        self.transparency_mode_comboBox.setItemText(2, QCoreApplication.translate("SceneviewerEditorWidget", u"order independent", None))
+
         self.light_both_sides_checkbox.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Light Both Sides", None))
         self.perturbline_checkbox.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Perturb Line", None))
     # retranslateUi

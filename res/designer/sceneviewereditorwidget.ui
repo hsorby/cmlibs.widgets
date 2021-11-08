@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>227</width>
+    <width>285</width>
     <height>689</height>
    </rect>
   </property>
@@ -204,6 +204,56 @@
     </widget>
    </item>
    <item>
+    <widget class="QFrame" name="transparency_mode_frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="transparency_mode_label">
+        <property name="text">
+         <string>Transparency mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="transparency_mode_comboBox">
+        <item>
+         <property name="text">
+          <string>fast</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>slow</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>order independent</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QCheckBox" name="light_both_sides_checkbox">
      <property name="enabled">
       <bool>true</bool>
@@ -269,8 +319,8 @@
    <slot>perspectiveStateChanged(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>181</x>
-     <y>119</y>
+     <x>192</x>
+     <y>117</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -285,8 +335,8 @@
    <slot>viewAngleEntered()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>137</x>
-     <y>175</y>
+     <x>148</x>
+     <y>169</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -301,8 +351,8 @@
    <slot>eyePositionEntered()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>137</x>
-     <y>231</y>
+     <x>148</x>
+     <y>221</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -317,8 +367,8 @@
    <slot>lookatPositionEntered()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>137</x>
-     <y>287</y>
+     <x>148</x>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -333,8 +383,8 @@
    <slot>upVectorEntered()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>137</x>
-     <y>343</y>
+     <x>148</x>
+     <y>325</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -349,8 +399,8 @@
    <slot>nearClippingChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>157</x>
-     <y>403</y>
+     <x>219</x>
+     <y>382</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -365,8 +415,8 @@
    <slot>farClippingChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>157</x>
-     <y>444</y>
+     <x>219</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -381,8 +431,8 @@
    <slot>backgroundColourEntered()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>137</x>
-     <y>511</y>
+     <x>148</x>
+     <y>482</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -438,6 +488,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>transparency_mode_comboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>SceneviewerEditorWidget</receiver>
+   <slot>transparencyModeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>183</x>
+     <y>507</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>675</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>viewAll()</slot>
@@ -453,5 +519,6 @@
   <slot>lightBothsidesStateChanged(bool)</slot>
   <slot>perturbLineStateChanged(bool)</slot>
   <slot>lightBothSidesStateChanged(bool)</slot>
+  <slot>transparencyModeChanged(int)</slot>
  </slots>
 </ui>
