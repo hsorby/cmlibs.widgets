@@ -21,7 +21,9 @@ class InteractionManager(object):
             self._active_handler = handler
 
     def unregister_handler(self, handler):
-        if handler != self._fallback_handler:
+        # Check to make sure we are not trying to unregister the fallback handler, that is a no-no.
+        # But, we also check to make sure that the handler to unregister is actually registered in the first place.
+        if handler != self._fallback_handler and handler.get_mode() in self._handlers:
             self._handlers.pop(handler.get_mode())
 
             if hasattr(handler, 'get_key_code'):

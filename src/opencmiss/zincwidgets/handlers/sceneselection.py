@@ -1,9 +1,11 @@
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.glyph import Glyph
+
 from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
-from opencmiss.zinchandlers.abstracthandler import BUTTON_MAP
-from opencmiss.zinchandlers.keyactivatedhandler import KeyActivatedHandler
+
+from opencmiss.zincwidgets.definitions import BUTTON_MAP, GraphicsSelectionMode, SelectionMode, SELECTION_GROUP_NAME
+from opencmiss.zincwidgets.handlers.keyactivatedhandler import KeyActivatedHandler
 
 
 class SceneSelection(KeyActivatedHandler):
