@@ -67,16 +67,7 @@
       <string>Source fields:</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>7</number>
       </property>
       <item row="0" column="0">
@@ -93,7 +84,7 @@
         </property>
        </widget>
       </item>
-    <item row="1" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="region_of_apply_fields_label">
         <property name="text">
          <string>Region of evaluate field:</string>
@@ -101,19 +92,17 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="RegionChooserWidget" name="region_of_apply_fields_chooser">
-       </widget>
+       <widget class="RegionChooserWidget" name="region_of_apply_fields_chooser"/>
       </item>
      </layout>
     </widget>
    </item>
-    <item row="5" column="0" colspan="2">
+   <item row="5" column="0" colspan="2">
     <widget class="QGroupBox" name="applyargumentfields_groupbox">
      <property name="title">
       <string>Apply argument fields:</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_11">
-     </layout>
+     <layout class="QGridLayout" name="gridLayout_11"/>
     </widget>
    </item>
    <item row="7" column="0">
@@ -210,27 +199,23 @@
       <string>Derived Parameters:</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_9">
-      <item row="0" column="2">
-       <widget class="QLineEdit" name="derived_values_lineedit">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="2">
        <widget class="QComboBox" name="derived_chooser_1"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="derived_values_label">
-        <property name="text">
-         <string>Constant Values:</string>
-        </property>
-       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="derived_combo_label_1">
         <property name="text">
          <string>Derived combo1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QComboBox" name="derived_chooser_2"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="derived_values_label">
+        <property name="text">
+         <string>Constant Values:</string>
         </property>
        </widget>
       </item>
@@ -241,8 +226,22 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QComboBox" name="derived_chooser_2"/>
+      <item row="0" column="2">
+       <widget class="QLineEdit" name="derived_values_lineedit">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="derived_combo_label_3">
+        <property name="text">
+         <string>Derived combo3</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QComboBox" name="derived_chooser_3"/>
       </item>
      </layout>
     </widget>
@@ -327,7 +326,7 @@
    <extends>QComboBox</extends>
    <header>opencmiss/zincwidgets/fieldtypechooserwidget.h</header>
   </customwidget>
-    <customwidget>
+  <customwidget>
    <class>RegionChooserWidget</class>
    <extends>QComboBox</extends>
    <header>opencmiss/zincwidgets/regionchooserwidget.h</header>
