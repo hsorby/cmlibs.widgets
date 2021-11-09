@@ -30,6 +30,8 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         # Using composition to include the visual element of the GUI.
         self._ui = Ui_SceneviewerEditorWidget()
         self._ui.setupUi(self)
+        # Future once enum string conversions added for this type:
+        #self._ui.transparency_mode_chooser.setEnumsList(Sceneviewer.TransparencyModeEnumToString, Element.TransparencyModeEnumFromString)
 
     def getSceneviewer(self):
         """
@@ -90,6 +92,7 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         self.nearClippingDisplay()
         self.farClippingDisplay()
         self.antialiasDisplay()
+        self.transparencyModeDisplay()
         self.lightBothSidesDisplay()
         self.perturbLineDisplay()
 
@@ -287,6 +290,39 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         except:
             print("Invalid antialias")
         self.antialiasDisplay()
+
+    TRANSPARENCY_MODE_MAP = [
+        ("fast", Sceneviewer.TRANSPARENCY_MODE_FAST),
+        ("slow", Sceneviewer.TRANSPARENCY_MODE_SLOW),
+        ("order independent", Sceneviewer.TRANSPARENCY_MODE_ORDER_INDEPENDENT)
+    ]
+
+    def transparencyModeDisplay(self):
+        """
+        Display the current scene viewer transparency mode
+        """
+        transparencyMode = self._sceneviewer.getTransparencyMode()
+        # future:
+        # self._ui.transparency_mode_chooser.setEnum(transparencyMode)
+        self._ui.transparency_mode_comboBox.blockSignals(True)
+        self._ui.transparency_mode_comboBox.setCurrentIndex(transparencyMode - Sceneviewer.TRANSPARENCY_MODE_FAST)
+        self._ui.transparency_mode_comboBox.blockSignals(False)
+
+    def transparencyModeChanged(self, index):
+        """
+        Transparency mode combo box changed.
+        """
+        enumName = str(self._ui.transparency_mode_comboBox.currentText())
+        # future:
+        # transparencyMode = self._ui.transparency_mode_chooser.getEnum()
+        transparencyMode = \
+            Sceneviewer.TRANSPARENCY_MODE_FAST if enumName == "fast" else \
+            Sceneviewer.TRANSPARENCY_MODE_SLOW if enumName == "slow" else \
+            Sceneviewer.TRANSPARENCY_MODE_ORDER_INDEPENDENT if enumName == "order independent" else \
+            Sceneviewer.TRANSPARENCY_MODE_INVALID
+        self._sceneviewer.setTransparencyMode(transparencyMode)
+        if transparencyMode == Sceneviewer.TRANSPARENCY_MODE_ORDER_INDEPENDENT:
+            self._sceneviewer.setTransparencyLayers(6)  # a good if conservative default value
 
     def lightBothSidesDisplay(self):
         flag = self._sceneviewer.isLightingTwoSided()
