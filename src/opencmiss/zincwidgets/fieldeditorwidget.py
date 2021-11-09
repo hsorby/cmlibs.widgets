@@ -15,12 +15,14 @@
 """
 from PySide2 import QtCore, QtWidgets
 
+from copy import copy
 from numbers import Number
 
-from opencmiss.zinc.element import Element
-from opencmiss.zinc.node import Node
-from opencmiss.zinc.field import FieldEdgeDiscontinuity, FieldFindMeshLocation
 from opencmiss.argon.argonlogger import ArgonLogger
+from opencmiss.zinc.element import Element
+from opencmiss.zinc.field import FieldEdgeDiscontinuity, FieldFindMeshLocation
+from opencmiss.zinc.node import Node
+from opencmiss.zinc.status import OK as ZINC_OK
 
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
@@ -48,7 +50,7 @@ FieldTypeToNumberofSourcesList = {
     'FieldConcatenate': -1, 'FieldIf': 3, 'FieldConstant': 0, 'FieldStringConstant': 0,
     'FieldDerivative': 1, 'FieldEmbedded': 2, 'FieldStoredString': 0, 'FieldIsExterior': 0,
     'FieldIsOnFace': 0, 'FieldEdgeDiscontinuity': 2, 'FieldNodeValue': 1,
-    'FieldStoredMeshLocation': 1, 'FieldFindMeshLocation': 2, 'FieldCrossProduct': -1,
+    'FieldStoredMeshLocation': 0, 'FieldFindMeshLocation': 2, 'FieldCrossProduct': -1,
     'FieldTimeValue': 0, 'FieldFiniteElement': 0}
 
 
@@ -84,6 +86,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self.ui.type_coordinate_checkbox.stateChanged.connect(self.typeCoordinateClicked)
         self.ui.managed_checkbox.stateChanged.connect(self.managedClicked)
         self.ui.derived_chooser_1.currentIndexChanged.connect(self.derivedChooser1Changed)
+        self.ui.derived_chooser_3.currentIndexChanged.connect(self.derivedChooser3Changed)
         self.ui.field_type_chooser.currentIndexChanged.connect(self.fieldTypeChanged)
         self.ui.create_button.clicked.connect(self.createFieldPressed)
         self.ui.derived_values_lineedit.editingFinished.connect(self.derivedValuesEntered)
@@ -270,14 +273,17 @@ class FieldEditorWidget(QtWidgets.QWidget):
         elif self._fieldType == "FieldFindMeshLocation":
             if sourceFields[0] and sourceFields[0].isValid() and \
                     sourceFields[1] and sourceFields[1].isValid():
-                meshDimension = self.getDerivedChooser2Value()
-                mesh = self._fieldmodule.findMeshByDimension(meshDimension)
+                meshName = self.getDerivedChooser2Value()
+                mesh = self._fieldmodule.findMeshByName(meshName)
                 if mesh and mesh.isValid():
                     returnedField = self._fieldmodule.createFieldFindMeshLocation( \
                         sourceFields[0], sourceFields[1], mesh)
                     if returnedField and returnedField.isValid():
                         searchMode = self.getDerivedChooser1Value()
                         returnedField.setSearchMode(searchMode)
+                        searchMeshName = self.getDerivedChooser3Value()
+                        searchMesh = self._fieldmodule.findMeshByName(searchMeshName)
+                        returnedField.setSearchMesh(searchMesh)
                 else:
                     errorMessage = " Invalid mesh."
             else:
@@ -341,18 +347,23 @@ class FieldEditorWidget(QtWidgets.QWidget):
         elif self._fieldType == "FieldFindMeshLocation":
             return index + FieldFindMeshLocation.SEARCH_MODE_EXACT
         elif self._fieldType == "FieldStoredMeshLocation":
-            return index + 1;
+            return index + 1
         elif self._fieldType == "FieldIsOnFace":
             return index + Element.FACE_TYPE_ALL
         elif self._fieldType == "FieldNodeValue":
             return index + Node.VALUE_LABEL_VALUE
-        return 1;
+        return 1
 
     def getDerivedChooser2Value(self):
-        index = self.ui.derived_chooser_1.currentIndex()
         if self._fieldType == "FieldFindMeshLocation":
-            return index + 1;
-        return 1;
+            return self.ui.derived_chooser_2.currentText()
+        return None
+
+    def getDerivedChooser3Value(self):
+        index = self.ui.derived_chooser_3.currentIndex()
+        if self._fieldType == "FieldFindMeshLocation":
+            return self.ui.derived_chooser_3.currentText()
+        return None
 
     def derivedChooser1Changed(self, index):
         if self._field and self._field.isValid():
@@ -362,6 +373,18 @@ class FieldEditorWidget(QtWidgets.QWidget):
             elif self._fieldType == "FieldFindMeshLocation":
                 derivedField = self._field.castFindMeshLocation()
                 derivedField.setSearchMode(index + FieldFindMeshLocation.SEARCH_MODE_EXACT)
+
+    def derivedChooser3Changed(self, index):
+        if self._field and self._field.isValid():
+            if self._fieldType == "FieldFindMeshLocation":
+                derivedField = self._field.castFindMeshLocation()
+                searchMeshName = self.getDerivedChooser3Value()
+                searchMesh = self._fieldmodule.findMeshByName(searchMeshName)
+                result = derivedField.setSearchMesh(searchMesh)
+                if result != ZINC_OK:
+                    # invalid mesh e.g. higher dimension --> restore previous value
+                    searchMeshName = derivedField.getSearchMesh().getName()
+                    self._setChooserText(self.ui.derived_chooser_3, searchMeshName)
 
     def sourceField2Changed(self, index):
         if self._field and self._field.isValid():
@@ -398,10 +421,12 @@ class FieldEditorWidget(QtWidgets.QWidget):
         """ hide everything at the beginning """
         self.ui.derived_chooser_1.hide()
         self.ui.derived_chooser_2.hide()
+        self.ui.derived_chooser_3.hide()
         self.ui.derived_values_lineedit.hide()
         self.ui.derived_values_label.hide()
         self.ui.derived_combo_label_1.hide()
         self.ui.derived_combo_label_2.hide()
+        self.ui.derived_combo_label_3.hide()
         self.ui.derived_groupbox.hide()
         self.ui.applyargumentfields_groupbox.hide()
         if self._fieldType == 'FieldComponent':
@@ -443,6 +468,15 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Search Mode:", None))
             self._updateChooser(self.ui.derived_chooser_2, MeshName)
             self.ui.derived_combo_label_2.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh:", None))
+            searchMeshNames = copy(MeshName)
+            field_iterator = self._fieldmodule.createFielditerator()
+            field = field_iterator.next()
+            while field.isValid():
+                if field.castElementGroup().isValid():
+                    searchMeshNames.append(field.getName())
+                field = field_iterator.next()
+            self._updateChooser(self.ui.derived_chooser_3, searchMeshNames)
+            self.ui.derived_combo_label_3.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Search mesh:", None))
             index = 0
             if self._field and self._field.isValid():
                 derivedField = self._field.castFindMeshLocation()
@@ -451,23 +485,33 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 meshName = derivedField.getMesh().getName()
                 self._setChooserText(self.ui.derived_chooser_2, meshName)
                 self.ui.derived_chooser_2.setEnabled(False)
+                searchMeshName = derivedField.getSearchMesh().getName()
+                self._setChooserText(self.ui.derived_chooser_3, searchMeshName)
             else:
                 self.ui.derived_chooser_2.setEnabled(True)
                 self._sourceFieldChoosers[0][1].setConditional(FieldIsRealValued)
                 self._sourceFieldChoosers[1][1].setConditional(FieldIsRealValued)
+                self._setChooserText(self.ui.derived_chooser_2, MeshName[-1])  # default to mesh3d
+                self._setChooserText(self.ui.derived_chooser_3, MeshName[-1])  # default to mesh3d
             self.ui.derived_chooser_1.setEnabled(True)
             self.ui.derived_combo_label_1.show()
             self.ui.derived_chooser_1.show()
             self.ui.derived_combo_label_2.show()
             self.ui.derived_chooser_2.show()
+            self.ui.derived_combo_label_3.show()
+            self.ui.derived_chooser_3.show()
             self._sourceFieldChoosers[1][0].setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh Field:", None))
             self.ui.derived_groupbox.show()
         elif self._fieldType == 'FieldStoredMeshLocation':
+            self._updateChooser(self.ui.derived_chooser_1, MeshName)
             if self._field and self._field.isValid():
+                derivedField = self._field.castStoredMeshLocation()
+                meshName = derivedField.getMesh().getName()
+                self._setChooserText(self.ui.derived_chooser_1, meshName)
                 self.ui.derived_chooser_1.setEnabled(False)
             else:
                 self.ui.derived_chooser_1.setEnabled(True)
-            self._updateChooser(self.ui.derived_chooser_1, MeshName)
+                self._setChooserText(self.ui.derived_chooser_1, MeshName[-1])  # default to mesh3d
             self.ui.derived_combo_label_1.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Mesh:", None))
             self.ui.derived_combo_label_1.show()
             self.ui.derived_chooser_1.show()

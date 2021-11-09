@@ -56,8 +56,8 @@ class Ui_FieldEditorWidget(object):
         self.sourcefields_groupbox = QGroupBox(FieldEditorWidget)
         self.sourcefields_groupbox.setObjectName(u"sourcefields_groupbox")
         self.gridLayout_4 = QGridLayout(self.sourcefields_groupbox)
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_4.setContentsMargins(7, 7, 7, 7)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.number_of_source_fields_label = QLabel(self.sourcefields_groupbox)
         self.number_of_source_fields_label.setObjectName(u"number_of_source_fields_label")
 
@@ -134,36 +134,46 @@ class Ui_FieldEditorWidget(object):
         self.derived_groupbox.setObjectName(u"derived_groupbox")
         self.gridLayout_9 = QGridLayout(self.derived_groupbox)
         self.gridLayout_9.setObjectName(u"gridLayout_9")
-        self.derived_values_lineedit = QLineEdit(self.derived_groupbox)
-        self.derived_values_lineedit.setObjectName(u"derived_values_lineedit")
-        self.derived_values_lineedit.setEnabled(False)
-
-        self.gridLayout_9.addWidget(self.derived_values_lineedit, 0, 2, 1, 1)
-
         self.derived_chooser_1 = QComboBox(self.derived_groupbox)
         self.derived_chooser_1.setObjectName(u"derived_chooser_1")
 
         self.gridLayout_9.addWidget(self.derived_chooser_1, 1, 2, 1, 1)
-
-        self.derived_values_label = QLabel(self.derived_groupbox)
-        self.derived_values_label.setObjectName(u"derived_values_label")
-
-        self.gridLayout_9.addWidget(self.derived_values_label, 0, 0, 1, 1)
 
         self.derived_combo_label_1 = QLabel(self.derived_groupbox)
         self.derived_combo_label_1.setObjectName(u"derived_combo_label_1")
 
         self.gridLayout_9.addWidget(self.derived_combo_label_1, 1, 0, 1, 1)
 
+        self.derived_chooser_2 = QComboBox(self.derived_groupbox)
+        self.derived_chooser_2.setObjectName(u"derived_chooser_2")
+
+        self.gridLayout_9.addWidget(self.derived_chooser_2, 2, 2, 1, 1)
+
+        self.derived_values_label = QLabel(self.derived_groupbox)
+        self.derived_values_label.setObjectName(u"derived_values_label")
+
+        self.gridLayout_9.addWidget(self.derived_values_label, 0, 0, 1, 1)
+
         self.derived_combo_label_2 = QLabel(self.derived_groupbox)
         self.derived_combo_label_2.setObjectName(u"derived_combo_label_2")
 
         self.gridLayout_9.addWidget(self.derived_combo_label_2, 2, 0, 1, 1)
 
-        self.derived_chooser_2 = QComboBox(self.derived_groupbox)
-        self.derived_chooser_2.setObjectName(u"derived_chooser_2")
+        self.derived_values_lineedit = QLineEdit(self.derived_groupbox)
+        self.derived_values_lineedit.setObjectName(u"derived_values_lineedit")
+        self.derived_values_lineedit.setEnabled(False)
 
-        self.gridLayout_9.addWidget(self.derived_chooser_2, 2, 2, 1, 1)
+        self.gridLayout_9.addWidget(self.derived_values_lineedit, 0, 2, 1, 1)
+
+        self.derived_combo_label_3 = QLabel(self.derived_groupbox)
+        self.derived_combo_label_3.setObjectName(u"derived_combo_label_3")
+
+        self.gridLayout_9.addWidget(self.derived_combo_label_3, 3, 0, 1, 1)
+
+        self.derived_chooser_3 = QComboBox(self.derived_groupbox)
+        self.derived_chooser_3.setObjectName(u"derived_chooser_3")
+
+        self.gridLayout_9.addWidget(self.derived_chooser_3, 3, 2, 1, 1)
 
 
         self.gridLayout_2.addWidget(self.derived_groupbox, 4, 0, 1, 2)
@@ -235,9 +245,10 @@ class Ui_FieldEditorWidget(object):
 
         self.coordinate_system_focus_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Focus:", None))
         self.derived_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Derived Parameters:", None))
-        self.derived_values_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Constant Values:", None))
         self.derived_combo_label_1.setText(QCoreApplication.translate("FieldEditorWidget", u"Derived combo1", None))
+        self.derived_values_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Constant Values:", None))
         self.derived_combo_label_2.setText(QCoreApplication.translate("FieldEditorWidget", u"Derived combo2", None))
+        self.derived_combo_label_3.setText(QCoreApplication.translate("FieldEditorWidget", u"Derived combo3", None))
         self.general_groupbox.setTitle("")
         self.type_coordinate_checkbox.setText(QCoreApplication.translate("FieldEditorWidget", u"Is Coordinate", None))
         self.managed_checkbox.setText(QCoreApplication.translate("FieldEditorWidget", u"Managed", None))
