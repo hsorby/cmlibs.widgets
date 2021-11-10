@@ -124,26 +124,57 @@ class SceneEditorWidget(QtWidgets.QWidget):
         if self._scene:
             selectedGraphics = self._ui.graphics_editor.getGraphics()
             graphics = self._scene.getFirstGraphics()
+            index = 0
             while graphics and graphics.isValid():
                 name = self._getGraphicsDisplayName(graphics)
                 item = QtGui.QStandardItem(name)
-                item.setData(graphics)
+                item.setData(index)
                 item.setCheckable(True)
                 item.setEditable(False)
+                item.setDropEnabled(False)
                 visible = graphics.getVisibilityFlag()
                 item.setCheckState(QtCore.Qt.Checked if visible else QtCore.Qt.Unchecked)
                 self._graphicsItems.appendRow(item)
                 if graphics == selectedGraphics:
                     selectedIndex = self._graphicsItems.indexFromItem(item)
                 graphics = self._scene.getNextGraphics(graphics)
+                index += 1
         self._ui.graphics_listview.setModel(self._graphicsItems)
-        # self._ui.graphics_listview.setMovement(QtGui.QListView.Snap)
-        # self._ui.graphics_listview.setDragDropMode(QtGui.QListView.InternalMove)
-        # self._ui.graphics_listview.setDragDropOverwriteMode(False)
-        # self._ui.graphics_listview.setDropIndicatorShown(True)
         if selectedIndex:
             self._ui.graphics_listview.setCurrentIndex(selectedIndex)
+        self._graphicsItems.itemChanged.connect(self._onGraphicsListItemChanged)
+        self._graphicsItems.rowsRemoved.connect(self._onGraphicsListRowsRemoved)
         self._ui.graphics_listview.show()
+
+    def _onGraphicsListItemChanged(self,item):
+        """
+        For QStandardItemModel ItemChanged Signal, catch the drag and drop event.
+        Update the order of graphics in scene.
+        """ 
+        model = self._graphicsItems
+        prevRow = item.data()
+        newRow = item.index().row()
+        if newRow != prevRow:
+            movingGraphics = self._scene.getFirstGraphics()
+            refGraphics = self._scene.getFirstGraphics()
+            while prevRow > 0 or newRow > 0 and movingGraphics.isValid():
+                if prevRow > 0:
+                    movingGraphics = self._scene.getNextGraphics(movingGraphics)
+                    prevRow -= 1
+                if newRow > 0:
+                    refGraphics = self._scene.getNextGraphics(refGraphics)
+                    newRow -= 1
+            self._scene.moveGraphicsBefore(movingGraphics , refGraphics)
+
+    def _onGraphicsListRowsRemoved(self):
+        """
+        Update model item data after Drag and Drop
+        """
+        ind = 0 
+        while self._graphicsItems.item(ind):
+            self._graphicsItems.item(ind).setData(ind) 
+            ind += 1
+
 
     def graphicsListItemClicked(self, modelIndex):
         """
@@ -151,14 +182,17 @@ class SceneEditorWidget(QtWidgets.QWidget):
         """
         model = modelIndex.model()
         item = model.item(modelIndex.row())
-        graphics = item.data()
+        index = item.data()
+        graphics = self._scene.getFirstGraphics()
+        while index > 0 and graphics.isValid():
+            graphics = self._scene.getNextGraphics(graphics)
+            index -= 1
         visibilityFlag = item.checkState() == QtCore.Qt.Checked
         graphics.setVisibilityFlag(visibilityFlag)
         selectedModelIndex = self._ui.graphics_listview.currentIndex()
-        selectedItem = model.item(selectedModelIndex.row())
-        selectedGraphics = selectedItem.data()
-        if graphics == selectedGraphics:
-            self._ui.graphics_editor.setGraphics(selectedGraphics)
+        if modelIndex.row() == selectedModelIndex.row():
+            self._selectedIndex = self._graphicsItems.indexFromItem(item)
+            self._ui.graphics_editor.setGraphics(graphics)
 
     def addGraphicsEntered(self, name):
         """

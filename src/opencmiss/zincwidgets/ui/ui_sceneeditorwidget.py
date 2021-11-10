@@ -73,6 +73,10 @@ class Ui_SceneEditorWidget(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.graphics_listview.sizePolicy().hasHeightForWidth())
         self.graphics_listview.setSizePolicy(sizePolicy2)
+        self.graphics_listview.setAcceptDrops(True)
+        self.graphics_listview.setDragEnabled(True)
+        self.graphics_listview.setDragDropMode(QAbstractItemView.InternalMove)
+        self.graphics_listview.setDefaultDropAction(Qt.MoveAction)
 
         self.verticalLayout_2.addWidget(self.graphics_listview)
 
