@@ -76,7 +76,12 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
             file_names.append(source_file.getFileName())
 
         try:
-            self._common_path = os.path.commonpath(file_names)
+            if len(file_names) == 1:
+                self._common_path = os.path.dirname(file_names[0])
+            else:
+                self._common_path = os.path.commonpath(file_names)
+
+            self._common_path += os.path.sep
         except ValueError:
             self._common_path = ''
 
