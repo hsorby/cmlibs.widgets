@@ -73,7 +73,7 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
         file_names = []
         for entry in self._data:
             source_file = self._data[entry]
-            file_names.append(source_file.getFileName())
+            file_names.append(os.path.normpath(source_file.getFileName()))
 
         try:
             if len(file_names) == 1:
@@ -129,7 +129,7 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
 
         if role == QtCore.Qt.DisplayRole:
             if index.column() == 0:
-                return item.getFileName().replace(self._common_path, '')
+                return os.path.normpath(item.getFileName()).replace(self._common_path, '')
             elif index.column() == 1:
                 return item.getType()
             elif index.column() == 2:
@@ -292,16 +292,7 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
         # Using composition to include the visual element of the GUI.
         self._ui = Ui_ModelSourcesEditorWidget()
         self._ui.setupUi(self)
-        # Extra UI code not possible with Designer
-        # self._ui.action_Hello = QtWidgets.QAction(self)
-        # self._ui.action_Hello.setText("Hello")
-        #
-        # self._ui.addMenu = QtWidgets.QMenu(self._ui.frame)
-        # self._ui.addMenu.setTitle("Bob")
-        # self._ui.addMenu.addAction(self._ui.action_Hello)
-        # self._ui.addMenu.show()
-        # self._ui.horizontalLayout.addWidget(self._ui.addMenu)
-        # # self._ui.addMenu = QtGui.QMenu(self._ui.frame)
+
         self._update_ui()
         self._makeConnections()
 
@@ -345,6 +336,7 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
         """
         Fill the list view with the list of model sources for current region
         """
+        # This function should no longer be used, delete in the next version.
         self._itemModel = QtGui.QStandardItemModel(self._ui.listViewModelSources)
         currentIndex = None
         modelSources = []
