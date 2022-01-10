@@ -14,6 +14,7 @@ from PySide2.QtWidgets import *
 
 from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 from opencmiss.zincwidgets.graphicseditorwidget import GraphicsEditorWidget
+from opencmiss.zincwidgets.draggablelistwidget import DraggableListWidget
 
 
 class Ui_SceneEditorWidget(object):
@@ -66,19 +67,10 @@ class Ui_SceneEditorWidget(object):
 
         self.verticalLayout_2.addWidget(self.region_frame)
 
-        self.graphics_listview = QListView(self.scrollAreaWidgetContents)
-        self.graphics_listview.setObjectName(u"graphics_listview")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.graphics_listview.sizePolicy().hasHeightForWidth())
-        self.graphics_listview.setSizePolicy(sizePolicy2)
-        self.graphics_listview.setAcceptDrops(True)
-        self.graphics_listview.setDragEnabled(True)
-        self.graphics_listview.setDragDropMode(QAbstractItemView.InternalMove)
-        self.graphics_listview.setDefaultDropAction(Qt.MoveAction)
+        self.graphics_listWidget = DraggableListWidget(self.scrollAreaWidgetContents)
+        self.graphics_listWidget.setObjectName(u"graphics_listWidget")
 
-        self.verticalLayout_2.addWidget(self.graphics_listview)
+        self.verticalLayout_2.addWidget(self.graphics_listWidget)
 
         self.frame = QFrame(self.scrollAreaWidgetContents)
         self.frame.setObjectName(u"frame")
@@ -100,6 +92,9 @@ class Ui_SceneEditorWidget(object):
         self.add_graphics_combobox.addItem("")
         self.add_graphics_combobox.addItem("")
         self.add_graphics_combobox.setObjectName(u"add_graphics_combobox")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.add_graphics_combobox.sizePolicy().hasHeightForWidth())
         self.add_graphics_combobox.setSizePolicy(sizePolicy2)
 
@@ -131,7 +126,7 @@ class Ui_SceneEditorWidget(object):
 
 
         self.retranslateUi(SceneEditorWidget)
-        self.graphics_listview.clicked.connect(SceneEditorWidget.graphicsListItemClicked)
+        self.graphics_listWidget.itemClicked.connect(SceneEditorWidget.graphicsListItemClicked)
         self.add_graphics_combobox.currentTextChanged.connect(SceneEditorWidget.addGraphicsEntered)
         self.delete_graphics_button.clicked.connect(SceneEditorWidget.deleteGraphicsClicked)
 
