@@ -8,5 +8,7 @@
     <file>images/icons/list-remove-icon.png</file>
     <file>images/icons/list-add-icon.png</file>
     <file>images/icons/list-add-disabled-icon.png</file>
+    <file>images/icons/layout-single-scene.png</file>
+    <file>images/icons/layout-four-scenes.png</file>
   </qresource>
 </RCC>
