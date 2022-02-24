@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-import icons_rc
+from opencmiss.zincwidgets.ui import icons_rc
 
 class Ui_SceneLayoutChooserDialog(object):
     def setupUi(self, SceneLayoutChooserDialog):
