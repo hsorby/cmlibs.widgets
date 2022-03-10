@@ -12,14 +12,36 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
+
 
 class Ui_SceneviewerEditorWidget(object):
     def setupUi(self, SceneviewerEditorWidget):
         if not SceneviewerEditorWidget.objectName():
             SceneviewerEditorWidget.setObjectName(u"SceneviewerEditorWidget")
-        SceneviewerEditorWidget.resize(285, 689)
+        SceneviewerEditorWidget.resize(305, 689)
         self.verticalLayout = QVBoxLayout(SceneviewerEditorWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.region_frame = QFrame(SceneviewerEditorWidget)
+        self.region_frame.setObjectName(u"region_frame")
+        self.region_frame.setFrameShape(QFrame.StyledPanel)
+        self.region_frame.setFrameShadow(QFrame.Raised)
+        self.formLayout_3 = QFormLayout(self.region_frame)
+        self.formLayout_3.setObjectName(u"formLayout_3")
+        self.formLayout_3.setContentsMargins(0, 2, 0, 2)
+        self.region_label = QLabel(self.region_frame)
+        self.region_label.setObjectName(u"region_label")
+
+        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.region_label)
+
+        self.region_chooser = RegionChooserWidget(self.region_frame)
+        self.region_chooser.setObjectName(u"region_chooser")
+
+        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.region_chooser)
+
+
+        self.verticalLayout.addWidget(self.region_frame)
+
         self.view_all_button = QPushButton(SceneviewerEditorWidget)
         self.view_all_button.setObjectName(u"view_all_button")
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
@@ -207,6 +229,7 @@ class Ui_SceneviewerEditorWidget(object):
 
     def retranslateUi(self, SceneviewerEditorWidget):
         SceneviewerEditorWidget.setWindowTitle(QCoreApplication.translate("SceneviewerEditorWidget", u"Sceneviewer Editor", None))
+        self.region_label.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Region:", None))
         self.view_all_button.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"View All", None))
         self.antialias_label.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Antialias:", None))
         self.perspective_checkbox.setText(QCoreApplication.translate("SceneviewerEditorWidget", u"Perspective projection", None))

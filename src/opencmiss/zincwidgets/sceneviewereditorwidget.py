@@ -32,6 +32,18 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         self._ui.setupUi(self)
         # Future once enum string conversions added for this type:
         #self._ui.transparency_mode_chooser.setEnumsList(Sceneviewer.TransparencyModeEnumToString, Element.TransparencyModeEnumFromString)
+        self._make_connections()
+
+    def _make_connections(self):
+        self._ui.region_chooser.currentIndexChanged.connect(self._region_changed)
+
+    def _region_changed(self):
+        region = self._ui.region_chooser.getRegion()
+        self._sceneviewer.setScene(region.getScene())
+
+    def setZincRootRegion(self, root_region):
+        self._ui.region_chooser.setRootRegion(root_region)
+        # self.setScene(root_region.getScene())
 
     def getSceneviewer(self):
         """
@@ -53,7 +65,12 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         self._maximumClippingDistance = sceneviewer.getFarClippingPlane()
         self._sceneviewernotifier = sceneviewer.createSceneviewernotifier()
         self.setEnableUpdates(self._enableUpdates)
+        scene_region = self._sceneviewer.getScene().getRegion()
+        self._ui.region_chooser.setRegion(scene_region)
         self._displayAllSettings()
+
+    def setScene(self, scene):
+        self._sceneviewer.setScene(scene)
 
     def setEnableUpdates(self, enableUpdates):
         self._enableUpdates = enableUpdates

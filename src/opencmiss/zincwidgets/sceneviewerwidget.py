@@ -20,7 +20,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide2 import QtCore, QtWidgets
+from PySide2 import QtCore, QtGui, QtWidgets
 
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
@@ -36,7 +36,9 @@ from opencmiss.zincwidgets.definitions import ProjectionMode, SelectionMode, \
 
 
 class SceneviewerWidget(QtWidgets.QOpenGLWidget):
+
     graphicsInitialized = QtCore.Signal()
+    currentChanged = QtCore.Signal()
 
     # init start
     def __init__(self, parent=None):
@@ -66,6 +68,18 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self._selection_position_start = None
         # init end
+
+    def paintEvent(self, event):
+        super(SceneviewerWidget, self).paintEvent(event)
+
+        if self.hasFocus():
+            painter = QtGui.QPainter(self)
+            painter.setPen(QtGui.QPen(QtGui.QBrush(QtCore.Qt.magenta), 2))
+            painter.drawRect(QtCore.QRect(1, 1, self.width() - 2, self.height() - 2))
+
+    def focusInEvent(self, event) -> None:
+        super(SceneviewerWidget, self).focusInEvent(event)
+        self.currentChanged.emit()
 
     def setContext(self, context):
         """
