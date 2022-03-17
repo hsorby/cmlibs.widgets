@@ -907,6 +907,8 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._fieldmodule = fieldmodule
         for i in range(0, len(self._sourceFieldChoosers)):
             self._sourceFieldChoosers[i][1].setRegion(self._fieldmodule.getRegion())
+
+        self._initialise()
         self._updateWidgets()
 
     def getField(self):
@@ -924,9 +926,8 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._fieldType = fieldType
             self._createMode = False
         else:
-            self._field = None
-            self._fieldType = None
-            self._createMode = True
+            self._initialise_create_mode()
+
         self._updateWidgets()
 
     def _displayVectorInteger(self, widget, values):
@@ -1025,7 +1026,15 @@ class FieldEditorWidget(QtWidgets.QWidget):
         """
         Set coordinate system focus text in widget
         """
-        self._createMode = True
+        self._initialise_create_mode()
+        self._updateWidgets()
+
+    def _initialise_create_mode(self):
         self._field = None
         self._fieldType = None
-        self._updateWidgets()
+        self._createMode = True
+
+    def _initialise(self):
+        self._field = None
+        self._fieldType = None
+        self._createMode = False
