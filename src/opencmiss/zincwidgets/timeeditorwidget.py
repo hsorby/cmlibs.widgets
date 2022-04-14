@@ -103,6 +103,13 @@ class TimeEditorWidget(QtWidgets.QWidget):
         self._ui.horizontalSliderTime.setMaximum(DEFAULT_NUM_STEPS - 1)
         self._ui.horizontalSliderTime.setValue(self._calcSliderValueFromTime(time, DEFAULT_NUM_STEPS, min_time, max_time))
 
+    def _updateTimes(self):
+        min_time = self._timekeeper.getMinimumTime()
+        max_time = self._timekeeper.getMaximumTime()
+        self._ui.doubleSpinBoxMinimumTime.setValue(min_time)
+        self._ui.doubleSpinBoxMaximumTime.setValue(max_time)
+        self._setTime(self._timekeeper.getTime())
+
     def _minimumTimeValueChanged(self, value):
         if value > self._timekeeper.getMaximumTime():
             self._ui.doubleSpinBoxMinimumTime.setValue(self._timekeeper.getMinimumTime())
@@ -168,3 +175,6 @@ class TimeEditorWidget(QtWidgets.QWidget):
         self._timekeeper = zincContext.getTimekeepermodule().getDefaultTimekeeper()
         self._initUi()
         self._updateUi()
+
+    def showEvent(self, event):
+        self._updateTimes()
