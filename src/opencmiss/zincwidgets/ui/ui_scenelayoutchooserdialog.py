@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from opencmiss.zincwidgets.ui import icons_rc
+from  . import icons_rc
 
 class Ui_SceneLayoutChooserDialog(object):
     def setupUi(self, SceneLayoutChooserDialog):
@@ -63,7 +63,7 @@ class Ui_SceneLayoutChooserDialog(object):
     # setupUi
 
     def retranslateUi(self, SceneLayoutChooserDialog):
-        SceneLayoutChooserDialog.setWindowTitle(QCoreApplication.translate("SceneLayoutChooserDialog", u"SceneLayoutChooserDialog", None))
+        SceneLayoutChooserDialog.setWindowTitle(QCoreApplication.translate("SceneLayoutChooserDialog", u"Scene Layout Chooser", None))
         self.groupBox.setTitle(QCoreApplication.translate("SceneLayoutChooserDialog", u"Select layout:", None))
         self.radioButtonLayout1.setText("")
         self.radioButtonLayout2x2Grid.setText("")

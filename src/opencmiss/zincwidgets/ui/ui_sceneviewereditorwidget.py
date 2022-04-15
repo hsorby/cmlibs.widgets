@@ -19,106 +19,132 @@ class Ui_SceneviewerEditorWidget(object):
     def setupUi(self, SceneviewerEditorWidget):
         if not SceneviewerEditorWidget.objectName():
             SceneviewerEditorWidget.setObjectName(u"SceneviewerEditorWidget")
-        SceneviewerEditorWidget.resize(305, 689)
-        self.verticalLayout = QVBoxLayout(SceneviewerEditorWidget)
+        SceneviewerEditorWidget.resize(476, 743)
+        self.horizontalLayout_2 = QHBoxLayout(SceneviewerEditorWidget)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.widget_container = QFrame(SceneviewerEditorWidget)
+        self.widget_container.setObjectName(u"widget_container")
+        self.widget_container.setFrameShape(QFrame.NoFrame)
+        self.widget_container.setFrameShadow(QFrame.Plain)
+        self.widget_container.setLineWidth(0)
+        self.verticalLayout = QVBoxLayout(self.widget_container)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.region_frame = QFrame(SceneviewerEditorWidget)
+        self.verticalLayout.setContentsMargins(0, 0, 7, 0)
+        self.region_frame = QFrame(self.widget_container)
         self.region_frame.setObjectName(u"region_frame")
-        self.region_frame.setFrameShape(QFrame.StyledPanel)
+        self.region_frame.setFrameShape(QFrame.NoFrame)
         self.region_frame.setFrameShadow(QFrame.Raised)
-        self.formLayout_3 = QFormLayout(self.region_frame)
-        self.formLayout_3.setObjectName(u"formLayout_3")
-        self.formLayout_3.setContentsMargins(0, 2, 0, 2)
+        self.horizontalLayout_3 = QHBoxLayout(self.region_frame)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.region_label = QLabel(self.region_frame)
         self.region_label.setObjectName(u"region_label")
 
-        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.region_label)
+        self.horizontalLayout_3.addWidget(self.region_label)
 
         self.region_chooser = RegionChooserWidget(self.region_frame)
         self.region_chooser.setObjectName(u"region_chooser")
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.region_chooser.sizePolicy().hasHeightForWidth())
+        self.region_chooser.setSizePolicy(sizePolicy)
 
-        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.region_chooser)
+        self.horizontalLayout_3.addWidget(self.region_chooser)
 
 
         self.verticalLayout.addWidget(self.region_frame)
 
-        self.view_all_button = QPushButton(SceneviewerEditorWidget)
+        self.view_all_frame = QFrame(self.widget_container)
+        self.view_all_frame.setObjectName(u"view_all_frame")
+        self.view_all_frame.setFrameShape(QFrame.NoFrame)
+        self.view_all_frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout = QHBoxLayout(self.view_all_frame)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.view_all_button = QPushButton(self.view_all_frame)
         self.view_all_button.setObjectName(u"view_all_button")
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.view_all_button.sizePolicy().hasHeightForWidth())
         self.view_all_button.setSizePolicy(sizePolicy)
 
-        self.verticalLayout.addWidget(self.view_all_button)
+        self.horizontalLayout.addWidget(self.view_all_button)
 
-        self.antialias_label = QLabel(SceneviewerEditorWidget)
+        self.horizontalSpacer_2 = QSpacerItem(157, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_2)
+
+
+        self.verticalLayout.addWidget(self.view_all_frame)
+
+        self.antialias_label = QLabel(self.widget_container)
         self.antialias_label.setObjectName(u"antialias_label")
 
         self.verticalLayout.addWidget(self.antialias_label)
 
-        self.antialias = QLineEdit(SceneviewerEditorWidget)
+        self.antialias = QLineEdit(self.widget_container)
         self.antialias.setObjectName(u"antialias")
         sizePolicy.setHeightForWidth(self.antialias.sizePolicy().hasHeightForWidth())
         self.antialias.setSizePolicy(sizePolicy)
 
         self.verticalLayout.addWidget(self.antialias)
 
-        self.perspective_checkbox = QCheckBox(SceneviewerEditorWidget)
+        self.perspective_checkbox = QCheckBox(self.widget_container)
         self.perspective_checkbox.setObjectName(u"perspective_checkbox")
         self.perspective_checkbox.setChecked(True)
 
         self.verticalLayout.addWidget(self.perspective_checkbox)
 
-        self.view_angle_label = QLabel(SceneviewerEditorWidget)
+        self.view_angle_label = QLabel(self.widget_container)
         self.view_angle_label.setObjectName(u"view_angle_label")
 
         self.verticalLayout.addWidget(self.view_angle_label)
 
-        self.view_angle = QLineEdit(SceneviewerEditorWidget)
+        self.view_angle = QLineEdit(self.widget_container)
         self.view_angle.setObjectName(u"view_angle")
         sizePolicy.setHeightForWidth(self.view_angle.sizePolicy().hasHeightForWidth())
         self.view_angle.setSizePolicy(sizePolicy)
 
         self.verticalLayout.addWidget(self.view_angle)
 
-        self.eye_position_label = QLabel(SceneviewerEditorWidget)
+        self.eye_position_label = QLabel(self.widget_container)
         self.eye_position_label.setObjectName(u"eye_position_label")
 
         self.verticalLayout.addWidget(self.eye_position_label)
 
-        self.eye_position = QLineEdit(SceneviewerEditorWidget)
+        self.eye_position = QLineEdit(self.widget_container)
         self.eye_position.setObjectName(u"eye_position")
         sizePolicy.setHeightForWidth(self.eye_position.sizePolicy().hasHeightForWidth())
         self.eye_position.setSizePolicy(sizePolicy)
 
         self.verticalLayout.addWidget(self.eye_position)
 
-        self.lookat_position_label = QLabel(SceneviewerEditorWidget)
+        self.lookat_position_label = QLabel(self.widget_container)
         self.lookat_position_label.setObjectName(u"lookat_position_label")
 
         self.verticalLayout.addWidget(self.lookat_position_label)
 
-        self.lookat_position = QLineEdit(SceneviewerEditorWidget)
+        self.lookat_position = QLineEdit(self.widget_container)
         self.lookat_position.setObjectName(u"lookat_position")
         sizePolicy.setHeightForWidth(self.lookat_position.sizePolicy().hasHeightForWidth())
         self.lookat_position.setSizePolicy(sizePolicy)
 
         self.verticalLayout.addWidget(self.lookat_position)
 
-        self.up_vector_label = QLabel(SceneviewerEditorWidget)
+        self.up_vector_label = QLabel(self.widget_container)
         self.up_vector_label.setObjectName(u"up_vector_label")
 
         self.verticalLayout.addWidget(self.up_vector_label)
 
-        self.up_vector = QLineEdit(SceneviewerEditorWidget)
+        self.up_vector = QLineEdit(self.widget_container)
         self.up_vector.setObjectName(u"up_vector")
         sizePolicy.setHeightForWidth(self.up_vector.sizePolicy().hasHeightForWidth())
         self.up_vector.setSizePolicy(sizePolicy)
 
         self.verticalLayout.addWidget(self.up_vector)
 
-        self.clipping_planes_groupbox = QGroupBox(SceneviewerEditorWidget)
+        self.clipping_planes_groupbox = QGroupBox(self.widget_container)
         self.clipping_planes_groupbox.setObjectName(u"clipping_planes_groupbox")
         sizePolicy.setHeightForWidth(self.clipping_planes_groupbox.sizePolicy().hasHeightForWidth())
         self.clipping_planes_groupbox.setSizePolicy(sizePolicy)
@@ -155,21 +181,21 @@ class Ui_SceneviewerEditorWidget(object):
 
         self.verticalLayout.addWidget(self.clipping_planes_groupbox)
 
-        self.background_colour_label = QLabel(SceneviewerEditorWidget)
+        self.background_colour_label = QLabel(self.widget_container)
         self.background_colour_label.setObjectName(u"background_colour_label")
 
         self.verticalLayout.addWidget(self.background_colour_label)
 
-        self.background_colour = QLineEdit(SceneviewerEditorWidget)
+        self.background_colour = QLineEdit(self.widget_container)
         self.background_colour.setObjectName(u"background_colour")
         sizePolicy.setHeightForWidth(self.background_colour.sizePolicy().hasHeightForWidth())
         self.background_colour.setSizePolicy(sizePolicy)
 
         self.verticalLayout.addWidget(self.background_colour)
 
-        self.transparency_mode_frame = QFrame(SceneviewerEditorWidget)
+        self.transparency_mode_frame = QFrame(self.widget_container)
         self.transparency_mode_frame.setObjectName(u"transparency_mode_frame")
-        self.transparency_mode_frame.setFrameShape(QFrame.StyledPanel)
+        self.transparency_mode_frame.setFrameShape(QFrame.NoFrame)
         self.transparency_mode_frame.setFrameShadow(QFrame.Raised)
         self.formLayout_2 = QFormLayout(self.transparency_mode_frame)
         self.formLayout_2.setObjectName(u"formLayout_2")
@@ -190,23 +216,26 @@ class Ui_SceneviewerEditorWidget(object):
 
         self.verticalLayout.addWidget(self.transparency_mode_frame)
 
-        self.light_both_sides_checkbox = QCheckBox(SceneviewerEditorWidget)
+        self.light_both_sides_checkbox = QCheckBox(self.widget_container)
         self.light_both_sides_checkbox.setObjectName(u"light_both_sides_checkbox")
         self.light_both_sides_checkbox.setEnabled(True)
         self.light_both_sides_checkbox.setChecked(True)
 
         self.verticalLayout.addWidget(self.light_both_sides_checkbox)
 
-        self.perturbline_checkbox = QCheckBox(SceneviewerEditorWidget)
+        self.perturbline_checkbox = QCheckBox(self.widget_container)
         self.perturbline_checkbox.setObjectName(u"perturbline_checkbox")
         self.perturbline_checkbox.setEnabled(True)
         self.perturbline_checkbox.setChecked(False)
 
         self.verticalLayout.addWidget(self.perturbline_checkbox)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 21, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
+
+
+        self.horizontalLayout_2.addWidget(self.widget_container)
 
 
         self.retranslateUi(SceneviewerEditorWidget)
