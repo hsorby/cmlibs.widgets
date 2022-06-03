@@ -5,11 +5,21 @@ from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
 
 
 class ViewWidget(QtWidgets.QWidget):
+    """
+    A widget that holds sceneviewers in a specific layout.
+    """
 
     graphicsReady = QtCore.Signal()
     currentChanged = QtCore.Signal()
 
     def __init__(self, scenes, grid_description=None, parent=None):
+        """
+        Create a view widget with a list of scenes and associated grid description.
+
+        :param scenes: A list of scenes.
+        :param grid_description: A dictionary describing the grid layout of the widgets. (Not currently used.)
+        :param parent: Parent widget
+        """
         super(ViewWidget, self).__init__(parent)
         layout = QtWidgets.QGridLayout()
         self.setLayout(layout)
@@ -53,16 +63,34 @@ class ViewWidget(QtWidgets.QWidget):
             self.graphicsReady.emit()
 
     def getSceneviewer(self, row, col):
+        """
+        Get the sceneviewer from the view widget layout at position defined by the row and column.
+
+        :param row: The row index of the sceneviewer.
+        :param col: The column index of the sceneviewer.
+        :return: opencmiss.zinc.sceneviewer.Sceneviewer
+        """
         layout = self.layout()
         sceneviewer_widget = layout.itemAtPosition(row, col).widget()
         return sceneviewer_widget.getSceneviewer()
 
     def getActiveSceneviewer(self):
+        """
+        Get the currently active sceneviewer.  Returns None if there is no currently
+        active sceneviewer.
+
+        :return: opencmiss.zinc.sceneviewer.Sceneviewer
+        """
         if self._active_sceneviewer is not None:
             return self._active_sceneviewer.getSceneviewer()
 
         return None
 
     def setContext(self, context):
+        """
+        Set the context for all sceneviewers in the view widget.
+
+        :param context: opencmiss.zinc.context.Context.
+        """
         for sceneviewer in self._sceneviewers:
             sceneviewer.setContext(context)
