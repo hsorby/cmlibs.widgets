@@ -20,8 +20,16 @@ from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 
 
 class TimeEditorWidget(QtWidgets.QWidget):
+    """
+    Provides display and manipulation of the current time in a Zinc Context.
+    """
 
     def __init__(self, parent=None):
+        """
+        Create a time editor widget.
+
+        :param parent: Parent widget for this widget.
+        """
         super(TimeEditorWidget, self).__init__(parent)
         self._ui = Ui_TimeEditorWidget()
         self._ui.setupUi(self)
@@ -171,6 +179,11 @@ class TimeEditorWidget(QtWidgets.QWidget):
         self._play()
 
     def setZincContext(self, zincContext):
+        """
+        Set the Zinc Context to the time editor.
+
+        :param zincContext: An opencmiss.zinc.context.Context.
+        """
         self._context = zincContext
         self._timekeeper = zincContext.getTimekeepermodule().getDefaultTimekeeper()
         self._initUi()
