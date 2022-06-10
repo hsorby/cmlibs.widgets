@@ -6,5 +6,16 @@ The **OpenCMISS ZincWidgets** is a collection of PySide2 widgets to interface be
 Widgets
 -------
 
-* :doc:`timeeditorwidget`
-* :doc:`viewwidget`
+.. toctree::
+
+   fieldeditorwidget
+   graphicseditorwidget
+   materialeditorwidget
+   modelsourceseditorwidget
+   regioneditorwidget
+   sceneeditorwidget
+   sceneviewerwidget
+   spectrumeditorwidget
+   tessellationwidget
+   timeeditorwidget
+   viewwidget
