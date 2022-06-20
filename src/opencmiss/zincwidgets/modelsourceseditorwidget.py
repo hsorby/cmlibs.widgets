@@ -388,7 +388,7 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
         name = self._ui.comboBoxAddSource.currentText()
         modelSource = None
         if name == "File":
-            modelSource = ArgonModelSourceFile(fileName="")
+            modelSource = ArgonModelSourceFile(file_name="")
             modelSource.setEdit(True)
         if modelSource:
             self._region.addModelSource(modelSource)

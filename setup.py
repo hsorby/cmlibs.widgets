@@ -52,7 +52,7 @@ Topic :: Software Development :: Libraries :: Python Modules
 
 doc_lines = __doc__.split("\n")
 
-requires = ['opencmiss.maths', 'opencmiss.utils >= 0.4.0', 'PySide2', 'opencmiss.zinc >= 3.5.1', 'opencmiss.argon >= 0.2.3']
+requires = ['opencmiss.maths', 'opencmiss.utils >= 0.4.0', 'PySide2', 'opencmiss.zinc >= 3.7.0', 'opencmiss.argon >= 0.2.3']
 
 setup(
     name='opencmiss.zincwidgets',
