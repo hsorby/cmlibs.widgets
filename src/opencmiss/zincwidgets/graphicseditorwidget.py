@@ -343,6 +343,11 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.boundarymode_chooser.setEnum(boundarymode)
 
     def boundarymodeChanged(self, index):
+        """
+        Change the current state of the boundarymode enumeration chooser
+
+        :param index: The index of boundarymode enumeration after change.
+        """
         if self._graphics:
             boundarymode = self._ui.boundarymode_chooser.getEnum()
             self._graphics.setBoundaryMode(boundarymode)
