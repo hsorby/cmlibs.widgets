@@ -1,8 +1,33 @@
 Field Editor Widget
 ===================
 
-The **Field Editor Widget** is a control to manipulate and observe the current field.
+The **Field Editor Widget** is a control to add, remove, and modify fields in a region.
+
+Field list
+----------
+
+Above the field list, there's a region chooser. 
+The field list shows all defined fields in the selected region.
+Below the field list, two buttons allow you to add new field or delete selected field.
+
+Settings editor
+---------------
+
+The settings editor is where each field is set up.
+It contains a number of controls.
+
+* Field type chooser: This drop down menu shows the field type of current field. It's disabled for existing fields, and enabled when create new field.
+* Managed checkbox: This checkbox allows you to set if the field is managed.
+* Is Coordinate checkbox: This checkbox allows you to set if the field is coordinate.
+* Coordinate system type: This drop down menu shows the coordinate system type of current field.
+* Focus: This text box shows the focus number. 
+* Name: This text box only displayed when creating new field, allows you to identify the name of the field.
+* Number of source fields: This text box shows the number of source fields needed for current type of field.
+* Source field: This drop down menu allows you to select existing field as a source field for a new field, only enabled when creating new field.
+* Component indexes: This text box shows and allows you to change the component indexes of selected field.
+
+API
+---
 
 .. autoclass:: opencmiss.zincwidgets.fieldeditorwidget.FieldEditorWidget
    :members:
-The **Field Editor Widget** is a control to add, remove, and modify fields in a region.
