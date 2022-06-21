@@ -66,6 +66,8 @@ class SceneEditorWidget(QtWidgets.QWidget):
     def setScene(self, scene):
         """
         Set the current scene in the editor
+
+        :param scene: zinc.scene
         """
         if not (scene and scene.isValid()):
             self._scene = None
@@ -163,6 +165,8 @@ class SceneEditorWidget(QtWidgets.QWidget):
     def addGraphicsEntered(self, name):
         """
         Add a new chosen graphics type
+
+        :param name: string
         """
         if not self._scene:
             return
