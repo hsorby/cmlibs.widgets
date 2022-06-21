@@ -3,6 +3,13 @@ Region Editor Widget
 
 The **Region Editor Widget** is a control to add, remove, and modify the region structure of a context.
 
+.. _fig-opencmiss-zincwidgets-region-editor-widget:
+
+.. figure:: _images/region-editor-widget.png
+   :alt: Region editor widget.
+
+   Region editor widget.
+
 Region Tree
 -----------
 

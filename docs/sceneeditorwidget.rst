@@ -3,6 +3,13 @@ Scene Editor Widget
 
 The **Scene Editor Widget** is a control to add, remove, and modify the graphics of a scene.
 
+.. _fig-opencmiss-zincwidgets-scene-editor-widget:
+
+.. figure:: _images/scene-editor-widget.png
+   :alt: Scene editor widget.
+
+   Scene editor widget.
+
 Graphics list
 -------------
 

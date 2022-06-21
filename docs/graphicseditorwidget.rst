@@ -3,6 +3,13 @@ Graphics Editor Widget
 
 The **Graphics Editor Widget** is a control to add, remove, and modify the graphics of a scene.
 
+.. _fig-opencmiss-zincwidgets-graphics-editor-widget:
+
+.. figure:: _images/graphics-editor-widget.png
+   :alt: Graphics editor widget.
+
+   Graphics editor widget.
+
 Settings editor
 ---------------
 

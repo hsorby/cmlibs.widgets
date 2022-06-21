@@ -3,6 +3,13 @@ Field Editor Widget
 
 The **Field Editor Widget** is a control to add, remove, and modify fields in a region.
 
+.. _fig-opencmiss-zincwidgets-field-editor-widget:
+
+.. figure:: _images/field-editor-widget.png
+   :alt: Field editor widget.
+
+   Field editor widget.
+
 Field list
 ----------
 

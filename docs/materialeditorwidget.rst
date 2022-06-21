@@ -3,6 +3,13 @@ Material Editor Widget
 
 The **Material Editor Widget** is a control to add, remove, and modify materials.
 
+.. _fig-opencmiss-zincwidgets-material-editor-widget:
+
+.. figure:: _images/material-editor-widget.png
+   :alt: Material editor widget.
+
+   Material editor widget.
+
 Material list
 -------------
 
