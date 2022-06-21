@@ -6,11 +6,11 @@ The **Scene Editor Widget** is a control to add, remove, and modify the graphics
 Graphics list
 -------------
 
-The graphics list shows all the defined graphics in current scene, there's a checkbox at the front
-of each graphic. This checkbox allows you to set if the graphic is displayed.
-There's a region chooser above the graphics list, which allows you to select the region.
-Below the graphics list, there is a drop down menu allows you to add new graphics.
-And a button allow you to delete selected graphic. 
+The graphics list displays all the defined graphics in the current scene, each with a checkbox in front of it. 
+This checkbox allows you to set whether to display this graphic.
+Above the chart list is a region selector that allows you to select the region of current scene.
+Below the list of graphics, there is a drop-down menu that allows you to add a new graphic.
+There is also a button that allows you to delete the selected graph.
 
 API
 ---

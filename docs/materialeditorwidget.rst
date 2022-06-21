@@ -6,19 +6,20 @@ The **Material Editor Widget** is a control to add, remove, and modify materials
 Material list
 -------------
 
-The material list shows all the currently defined material; it will always contain the default material if no others have been defined.
-Two buttons at the top of the window allow you to create, or delete material.
+The material list displays all currently defined materials; it will always contain the default material if no other materials are defined.
+The two buttons at the top of the window allow you to create or delete materials.
 
 Settings editor
 ---------------
 
-Below the list of material are some controls that allow you to set some of the general properties of the selected material.
-The ambient colour, diffuse colour, emitted colour and specular colour. Also can adjust the alpha and shininess of the material.
+Below the material list are controls that allow you to set some general properties of the selected material.
+Ambient Color, Diffuse Color, Emission Color, and Specular Color. 
+You can also adjust the alpha and shininess of the material by entering a number between 0 and 1 or dragging the sliders.
 
 Preview panel
 -------------
 
-This panel shows a sphere, coloured using the selected material.
+This panel displays a sphere, shaded with the selected material.
 
 API
 ---
