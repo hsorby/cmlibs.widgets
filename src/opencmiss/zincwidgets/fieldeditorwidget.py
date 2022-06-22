@@ -328,7 +328,10 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def _create_field_clicked(self):
         defined_field = self._field_interface.define_new_field(self._fieldmodule, self.ui.name_lineedit.text())
-        self.fieldCreated.emit(defined_field, self._field_interface.get_field_type())
+        if defined_field and defined_field.isValid():
+            self.fieldCreated.emit(defined_field, self._field_interface.get_field_type())
+        else:
+            ArgonLogger.getLogger().error("Failed to create field due to invalid field definition.")
         # self.fieldCreated.emit(defined_field, self._field_interface.get_field_type())
         # if self._createMode and self._fieldmodule:
         #     if self._fieldType:
@@ -944,6 +947,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         Set when fieldmodule changes to initialised widgets dependent on fieldmodule
         """
         self._fieldmodule = fieldmodule
+        self._field_interface.set_region(self._fieldmodule.getRegion())
         for i in range(0, len(self._sourceFieldChoosers)):
             self._sourceFieldChoosers[i][1].setRegion(self._fieldmodule.getRegion())
 
@@ -961,6 +965,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         Set the field to be edited
         """
         self._field_interface = FieldInterface(field, field_type)
+        self._field_interface.set_region(self._fieldmodule.getRegion())
         self._update_widgets()
         self._update_ui()
 
@@ -1058,6 +1063,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def define_new_field(self, field_type):
         field_interface = FieldInterface(None, field_type)
+        field_interface.set_region(self._fieldmodule.getRegion())
         field_interface.set_managed(True)
         self.ui.name_lineedit.setText(self._get_temp_field_name())
         self._field_interface = field_interface

@@ -14,7 +14,7 @@ def parse_to_vector(text):
     return values
 
 
-def display_vector(values, number_format=STRING_FLOAT_FORMAT):
+def display_as_vector(values, number_format=STRING_FLOAT_FORMAT):
     """
     Display real vector values in a widget. Also handle scalar
     """
@@ -25,3 +25,39 @@ def display_vector(values, number_format=STRING_FLOAT_FORMAT):
 
     return new_text
 
+
+def display_as_integer_vector(values):
+    """
+    Display real vector values in a widget. Also handle scalar
+    """
+    if isinstance(values, Number):
+        new_text = int(values)
+    else:
+        new_text = ", ".join(str(value) for value in values)
+
+    return new_text
+
+
+def parse_to_integer_vector(text):
+    """
+    Return integer vector from comma separated text.
+    """
+    try:
+        values = [int(value) for value in text.split(',')]
+    except ValueError:
+        values = []
+
+    return values
+
+
+def parse_to_integer(text):
+    try:
+        value = int(text)
+    except ValueError:
+        value = None
+
+    return value
+
+
+def display_as_integer(value):
+    return f"{value}"

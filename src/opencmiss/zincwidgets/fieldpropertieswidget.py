@@ -9,6 +9,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         super(FieldPropertiesWidget, self).__init__(parent)
         self._field = None
         self._vertical_layout = QtWidgets.QVBoxLayout(self)
+        self._vertical_layout.setContentsMargins(0, 0, 0, 0)
 
     def set_field(self, field):
         self._clear_ui()
@@ -33,9 +34,8 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         self._setup_title()
         self._setup_properties()
         # Setup field specific widgets.
-        for index, req in enumerate(self._field.requirements()):
-            self._setup_requirement(req)
-            self._field.populate_requirement(index, req)
+        for prop in self._field.properties():
+            self._setup_property(prop)
         self.show()
 
     def _setup_title(self):
@@ -80,11 +80,22 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
     def _type_coordinate_clicked(self, state):
         self._field.set_type_coordinate(state == QtCore.Qt.Checked)
 
-    def _setup_requirement(self, req):
+    def _setup_property(self, prop):
+        if len(prop["requirements"]) > 0:
+            groupbox = QtWidgets.QGroupBox(self)
+            groupbox.setTitle(prop["group"])
+            layout = QtWidgets.QVBoxLayout(groupbox)
+            for index, req in enumerate(prop["requirements"]):
+                self._setup_requirement(layout, req)
+                self._field.populate_requirement(index, req)
+
+            self._vertical_layout.addWidget(groupbox)
+
+    def _setup_requirement(self, layout, req):
         req.set_callback(self._requirement_changed)
         widget = req.widget()
         if widget is not None:
-            self._vertical_layout.addWidget(widget)
+            layout.addWidget(widget)
 
     def _requirement_changed(self):
         self.requirementChanged.emit()
