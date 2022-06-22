@@ -26,6 +26,7 @@ from opencmiss.zinc.status import OK as ZINC_OK
 
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
+from opencmiss.zincwidgets.fields import FieldInterface
 from opencmiss.zincwidgets.ui.ui_fieldeditorwidget import Ui_FieldEditorWidget
 
 STRING_FLOAT_FORMAT = '{:.5g}'
@@ -73,9 +74,10 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._bindFieldButton = None
         self._sourceFieldChoosers = []
         self._fieldType = None
+        self._field_interface = FieldInterface(None, None)
         self._createMode = False
         self._timekeeper = None
-        self._updateWidgets()
+        self._update_widgets()
         self._makeConnections()
 
     def _makeConnections(self):
@@ -88,8 +90,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self.ui.derived_chooser_1.currentIndexChanged.connect(self.derivedChooser1Changed)
         self.ui.derived_chooser_3.currentIndexChanged.connect(self.derivedChooser3Changed)
         self.ui.field_type_chooser.currentIndexChanged.connect(self.fieldTypeChanged)
-        self.ui.create_button.clicked.connect(self.createFieldPressed)
+        self.ui.create_button.clicked.connect(self._create_field_clicked)
         self.ui.derived_values_lineedit.editingFinished.connect(self.derivedValuesEntered)
+
+        self.ui.field_properties_widget.requirementChanged.connect(self._update_ui)
+        self.ui.name_lineedit.textChanged.connect(self._update_ui)
 
     def derivedValuesEntered(self):
         """
@@ -220,7 +225,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             if sourceFields[0] and sourceFields[0].isValid() and \
                     sourceFields[1] and sourceFields[1].isValid():
                 value = int(self.ui.derived_values_lineedit.text())
-                returnedField = self._fieldmodule.createFieldMatrixMultiply( \
+                returnedField = self._fieldmodule.createFieldMatrixMultiply(
                     value, sourceFields[0], sourceFields[1])
             else:
                 errorMessage = " Missing source field(s)."
@@ -279,7 +284,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 meshName = self.getDerivedChooser2Value()
                 mesh = self._fieldmodule.findMeshByName(meshName)
                 if mesh and mesh.isValid():
-                    returnedField = self._fieldmodule.createFieldFindMeshLocation( \
+                    returnedField = self._fieldmodule.createFieldFindMeshLocation(
                         sourceFields[0], sourceFields[1], mesh)
                     if returnedField and returnedField.isValid():
                         searchMode = self.getDerivedChooser1Value()
@@ -321,27 +326,32 @@ class FieldEditorWidget(QtWidgets.QWidget):
             ArgonLogger.getLogger().error("Can't create " + self._fieldType + "." + errorMessage)
         return returnedField
 
-    def createFieldPressed(self):
-        if self._createMode and self._fieldmodule:
-            if self._fieldType:
-                self._fieldmodule.beginChange()
-                returnedField = self.createField()
-                if returnedField and returnedField.isValid():
-                    # if 0:
-                    #     text, ok = QtWidgets.QInputDialog.getText(self, 'Field Name Dialog', 'Enter field name:')
-                    #     if ok:
-                    #         returnedField.setName(text)
-                    #         self.fieldCreated.emit(returnedField, self._fieldType)
-                    #     else:
-                    #         returnedField.setManaged(False)
-                    #         returnedField = None
-                    # else:
-                    if returnedField.getName() != self.ui.name_lineedit.text():
-                        returnedField.setName(self.ui.name_lineedit.text())
-                    self.fieldCreated.emit(returnedField, self._fieldType)
-                self._fieldmodule.endChange()
-            else:
-                ArgonLogger.getLogger().error("Must select a field type.")
+    def _create_field_clicked(self):
+        defined_field = self._field_interface.define_new_field(self._fieldmodule, self.ui.name_lineedit.text())
+        self.fieldCreated.emit(defined_field, self._field_interface.get_field_type())
+        # self.fieldCreated.emit(defined_field, self._field_interface.get_field_type())
+        # if self._createMode and self._fieldmodule:
+        #     if self._fieldType:
+        #         self._fieldmodule.beginChange()
+        #         returnedField = self.createField()
+        #         if returnedField and returnedField.isValid():
+        #             # if 0:
+        #             #     text, ok = QtWidgets.QInputDialog.getText(self, 'Field Name Dialog', 'Enter field name:')
+        #             #     if ok:
+        #             #         returnedField.setName(text)
+        #             #         self.fieldCreated.emit(returnedField, self._fieldType)
+        #             #     else:
+        #             #         returnedField.setManaged(False)
+        #             #         returnedField = None
+        #             # else:
+        #             if returnedField.getName() != self.ui.name_lineedit.text():
+        #                 returnedField.setName(self.ui.name_lineedit.text())
+        #             self.fieldCreated.emit(returnedField, self._fieldType)
+        #             print('create field.')
+        #             self.ui.field_properties_widget.set_field(returnedField)
+        #         self._fieldmodule.endChange()
+        #     else:
+        #         ArgonLogger.getLogger().error("Must select a field type.")
 
     def getDerivedChooser1Value(self):
         index = self.ui.derived_chooser_1.currentIndex()
@@ -671,7 +681,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 index = 0
                 while field.isValid():
                     if field.castArgumentReal().isValid() and evaluateField.dependsOnField(field):
-                    # this is an argument field which must be bound to a source field
+                        # this is an argument field which must be bound to a source field
                         self.displayArgumentFieldsChoosers(index, field)
                         index += 2
                     field = fieldIterator.next()
@@ -716,8 +726,8 @@ class FieldEditorWidget(QtWidgets.QWidget):
         applyField = self._field.castApply()
         if applyField.isValid():
             for fieldPair in self._argumentFieldPairs:
-                applyField.setBindArgumentSourceField(fieldPair[0].getField(),fieldPair[1].getField())
-        self._updateWidgets()
+                applyField.setBindArgumentSourceField(fieldPair[0].getField(), fieldPair[1].getField())
+        self._update_widgets()
 
     def displaySourceFieldsChoosers(self, numberOfSourceFields):
         self.ui.region_of_apply_fields_label.hide()
@@ -786,10 +796,10 @@ class FieldEditorWidget(QtWidgets.QWidget):
     def displayArgumentFieldsChoosers(self, index, argument_field):
         argumentFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
         argumentFieldLabel.setObjectName("argumentfield_label" + str(index))
-        argumentFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Argument Field " + str(int(index/2 + 1)), None))
+        argumentFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Argument Field " + str(int(index / 2 + 1)), None))
         self.ui.gridLayout_11.addWidget(argumentFieldLabel, index, 0, 1, 1)
         argumentFieldChooser = FieldChooserWidget(self.ui.applyargumentfields_groupbox)
-        argumentFieldChooser.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+        argumentFieldChooser.setSizeAdjustFPolicy(QtWidgets.QComboBox.AdjustToContents)
         argumentFieldChooser.setObjectName("argumentfield_chooser" + str(index))
         argumentFieldChooser.setRegion(argument_field.getFieldmodule().getRegion())
         argumentFieldChooser.setConditional(None)
@@ -800,7 +810,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
         sourceFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
         sourceFieldLabel.setObjectName("applysourcefield_label" + str(index))
-        sourceFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Source Field " + str(int(index/2 + 1)), None))
+        sourceFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Source Field " + str(int(index / 2 + 1)), None))
         self.ui.gridLayout_11.addWidget(sourceFieldLabel, index + 1, 0, 1, 1)
         sourceFieldChooser = FieldChooserWidget(self.ui.applyargumentfields_groupbox)
         sourceFieldChooser.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
@@ -847,10 +857,39 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 field = iterator.next()
         return numberOfFields
 
-    def _updateWidgets(self):
+    def _update_ui(self):
+        if self._field_interface.defining_field():
+            self.ui.create_groupbox.show()
+            enable_create_button = len(self.ui.name_lineedit.text()) > 0 and self._field_interface.field_is_defineable()
+            self.ui.create_button.setEnabled(enable_create_button)
+        else:
+            self.ui.create_groupbox.hide()
+
+    def _update_widgets(self):
+        self.ui.field_properties_widget.set_field(self._field_interface)
+
+        # Hide these until removed.
+        self.ui.field_groupbox.hide()
+        self.ui.general_groupbox.hide()
+        self.ui.coordinate_system_groupbox.hide()
+        self.ui.derived_groupbox.hide()
+        self.ui.applyargumentfields_groupbox.hide()
+        self.ui.sourcefields_groupbox.hide()
+        self.ui.create_groupbox.hide()
+
+    def _old_update_widgets(self):
         # base graphics attributes
+        if self._field_interface.defining_field():
+            self.ui.create_groupbox.show()
+            print(self.ui.create_button.isEnabled())
+            print(self._field_interface.field_is_defineable())
+            self.ui.create_button.setEnabled(self._field_interface.field_is_defineable())
+        else:
+            self.ui.create_groupbox.hide()
+
         isManaged = False
         isTypeCoordinate = False
+        self.ui.field_properties_widget.set_field(self._field_interface)
         # self.ui.managed_checkbox.hide()
         # self.ui.type_coordinate_checkbox.hide()
         if self._field:
@@ -892,7 +931,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 self.ui.field_groupbox.hide()
             self.ui.create_groupbox.hide()
 
-        self.ui.create_groupbox.setEnabled(bool(self._fieldType or self._field))
+        # self.ui.create_groupbox.setEnabled(bool(self._fieldType or self._field))
 
     def setTimekeeper(self, timekeeper):
         """
@@ -909,7 +948,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._sourceFieldChoosers[i][1].setRegion(self._fieldmodule.getRegion())
 
         self._initialise()
-        self._updateWidgets()
+        self._update_widgets()
 
     def getField(self):
         """
@@ -917,18 +956,13 @@ class FieldEditorWidget(QtWidgets.QWidget):
         """
         return self._field
 
-    def setField(self, field, fieldType):
+    def setField(self, field, field_type):
         """
         Set the field to be edited
         """
-        if field and field.isValid():
-            self._field = field
-            self._fieldType = fieldType
-            self._createMode = False
-        else:
-            self._initialise_create_mode()
-
-        self._updateWidgets()
+        self._field_interface = FieldInterface(field, field_type)
+        self._update_widgets()
+        self._update_ui()
 
     def _displayVectorInteger(self, widget, values):
         """
@@ -1006,7 +1040,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def fieldTypeChanged(self):
         self._fieldType = self.ui.field_type_chooser.getFieldType()
-        self._updateWidgets()
+        self._update_widgets()
 
     def numberOfSourceFieldsEntered(self):
         numberOfSourceFieldsText = self.ui.number_of_source_fields_lineedit.text()
@@ -1022,12 +1056,17 @@ class FieldEditorWidget(QtWidgets.QWidget):
             for i in range(0, numberOfSourceFields):
                 self._sourceFieldChoosers[i][1].setConditional(FieldIsRealValued)
 
+    def define_new_field(self, field_type):
+        field_interface = FieldInterface(None, field_type)
+        field_interface.set_managed(True)
+        self.ui.name_lineedit.setText(self._get_temp_field_name())
+        self._field_interface = field_interface
+        self._update_widgets()
+        self._update_ui()
+
     def enterCreateMode(self):
-        """
-        Set coordinate system focus text in widget
-        """
         self._initialise_create_mode()
-        self._updateWidgets()
+        self._update_widgets()
 
     def _initialise_create_mode(self):
         self._field = None
@@ -1038,3 +1077,16 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._field = None
         self._fieldType = None
         self._createMode = False
+
+    def _get_temp_field_name(self):
+        index = 1
+        prospective_name = f"field{index}"
+        if self._fieldmodule and self._fieldmodule.isValid():
+            field = self._fieldmodule.findFieldByName(prospective_name)
+            while field and field.isValid():
+                index += 1
+                prospective_name = f"field{index}"
+                field = self._fieldmodule.findFieldByName(prospective_name)
+
+        return prospective_name
+

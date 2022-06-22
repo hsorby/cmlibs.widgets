@@ -15,47 +15,30 @@
 """
 from PySide2 import QtWidgets
 
-FieldTypes = ['FieldAbs', 'FieldAcos', 'FieldAdd', 'FieldAlias', 'FieldAnd', 'FieldApply', 'FieldArgumentReal', 'FieldAsin', \
-              'FieldAtan', 'FieldAtan2', 'FieldComponent', 'FieldConcatenate', 'FieldConstant', \
-              'FieldCoordinateTransformation', 'FieldCos', 'FieldCrossProduct', 'FieldCurl', \
-              'FieldDerivative', 'FieldDeterminant', 'FieldDivergence', 'FieldDivide', \
-              'FieldDotProduct', 'FieldEdgeDiscontinuity', 'FieldEigenvalues', \
-              'FieldEigenvectors', 'FieldEmbedded', 'FieldEqualTo', 'FieldExp', \
-              'FieldFibreAxes', 'FieldFindMeshLocation', 'FieldFiniteElement', 'FieldGradient', \
-              'FieldGreaterThan', 'FieldIdentity', 'FieldIf', 'FieldIsDefined', 'FieldIsExterior', \
-              'FieldIsOnFace', 'FieldLessThan', 'FieldLog', 'FieldMagnitude', 'FieldMatrixInvert', \
-              'FieldMatrixMultiply', 'FieldMultiply', 'FieldNodeValue', 'FieldNormalise', 'FieldNot', \
-              'FieldOr', 'FieldPower', 'FieldProjection', 'FieldSin', 'FieldSqrt', \
-              'FieldStoredMeshLocation', 'FieldStoredString', 'FieldStringConstant', 'FieldSubtract', \
-              'FieldSumComponents', 'FieldTan', 'FieldTimeLookup', 'FieldTimeValue', 'FieldTranspose', \
-              'FieldVectorCoordinateTransformation', 'FieldXor']
+from opencmiss.zincwidgets.fields import FIELD_TYPES
 
 
 class FieldTypeChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
-        """
-        Call the super class init functions
-        """
         QtWidgets.QComboBox.__init__(self, parent)
-        self._nullObjectName = "-"
+        self._null_object_name = "-"
         self._currentFieldType = None
-        self._buildFieldTypeList()
+        self._build_field_type_list()
 
-    def _buildFieldTypeList(self):
+    def _build_field_type_list(self):
         """
-        Rebuilds the list of items in the ComboBox from the material module
+        Rebuilds the list of items in the ComboBox from the field module
         """
         self.blockSignals(True)
         self.clear()
-        if self._nullObjectName:
-            self.addItem(self._nullObjectName)
-        for type in FieldTypes:
-            self.addItem(type)
-        self.blockSignals(False)
-      #  self._displayFieldType()
+        if self._null_object_name:
+            self.addItem(self._null_object_name)
 
-    def _displayFieldType(self):
+        self.addItems(FIELD_TYPES)
+        self.blockSignals(False)
+
+    def _display_field_type(self):
         """
         Display the currently chosen field type in the ComboBox
         """
@@ -67,29 +50,29 @@ class FieldTypeChooserWidget(QtWidgets.QComboBox):
         self.setCurrentIndex(index)
         self.blockSignals(False)
 
-    def setNullObjectName(self, nullObjectName):
+    def setNullObjectName(self, null_object_name):
         """
         Enable a null object option with the supplied name e.g. '-' or '<select>'
         Default is None
         """
-        self._nullObjectName = nullObjectName
+        self._null_object_name = null_object_name
+        self._build_field_type_list()
 
     def getFieldType(self):
         """
         Must call this from currentIndexChanged() slot to get/update current material
         """
-        fieldTypeName = self.currentText()
-        if self._nullObjectName and (fieldTypeName == self._nullObjectName):
-            fieldTypeName = None
-        return fieldTypeName
-    
-    def setFieldType(self, fieldType):
+        field_type_name = self.currentText()
+        if self._null_object_name and (field_type_name == self._null_object_name):
+            field_type_name = None
+        return field_type_name
+
+    def setFieldType(self, field_type):
         """
         Set the currently selected field; call after setConditional
         """
-        if not fieldType:
+        if not field_type:
             self._currentFieldType = None
         else:
-            self._currentFieldType = fieldType
-        self._displayFieldType()
-    
+            self._currentFieldType = field_type
+        self._display_field_type()

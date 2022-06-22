@@ -12,9 +12,10 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
 from opencmiss.zincwidgets.fieldtypechooserwidget import FieldTypeChooserWidget
-from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
+from opencmiss.zincwidgets.fieldpropertieswidget import FieldPropertiesWidget
 
 
 class Ui_FieldEditorWidget(object):
@@ -29,37 +30,8 @@ class Ui_FieldEditorWidget(object):
         sizePolicy.setHeightForWidth(FieldEditorWidget.sizePolicy().hasHeightForWidth())
         FieldEditorWidget.setSizePolicy(sizePolicy)
         FieldEditorWidget.setMinimumSize(QSize(180, 0))
-        self.gridLayout_2 = QGridLayout(FieldEditorWidget)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.sourcefields_groupbox = QGroupBox(FieldEditorWidget)
-        self.sourcefields_groupbox.setObjectName(u"sourcefields_groupbox")
-        self.gridLayout_4 = QGridLayout(self.sourcefields_groupbox)
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.gridLayout_4.setContentsMargins(7, 7, 7, 7)
-        self.number_of_source_fields_label = QLabel(self.sourcefields_groupbox)
-        self.number_of_source_fields_label.setObjectName(u"number_of_source_fields_label")
-
-        self.gridLayout_4.addWidget(self.number_of_source_fields_label, 0, 0, 1, 1)
-
-        self.number_of_source_fields_lineedit = QLineEdit(self.sourcefields_groupbox)
-        self.number_of_source_fields_lineedit.setObjectName(u"number_of_source_fields_lineedit")
-        self.number_of_source_fields_lineedit.setEnabled(False)
-
-        self.gridLayout_4.addWidget(self.number_of_source_fields_lineedit, 0, 1, 1, 1)
-
-        self.region_of_apply_fields_label = QLabel(self.sourcefields_groupbox)
-        self.region_of_apply_fields_label.setObjectName(u"region_of_apply_fields_label")
-
-        self.gridLayout_4.addWidget(self.region_of_apply_fields_label, 1, 0, 1, 1)
-
-        self.region_of_apply_fields_chooser = RegionChooserWidget(self.sourcefields_groupbox)
-        self.region_of_apply_fields_chooser.setObjectName(u"region_of_apply_fields_chooser")
-
-        self.gridLayout_4.addWidget(self.region_of_apply_fields_chooser, 1, 1, 1, 1)
-
-
-        self.gridLayout_2.addWidget(self.sourcefields_groupbox, 3, 0, 1, 2)
-
+        self.verticalLayout = QVBoxLayout(FieldEditorWidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.field_groupbox = QGroupBox(FieldEditorWidget)
         self.field_groupbox.setObjectName(u"field_groupbox")
         self.horizontalLayout = QHBoxLayout(self.field_groupbox)
@@ -87,7 +59,27 @@ class Ui_FieldEditorWidget(object):
         self.horizontalLayout.addWidget(self.field_type_chooser)
 
 
-        self.gridLayout_2.addWidget(self.field_groupbox, 0, 0, 1, 1)
+        self.verticalLayout.addWidget(self.field_groupbox)
+
+        self.general_groupbox = QGroupBox(FieldEditorWidget)
+        self.general_groupbox.setObjectName(u"general_groupbox")
+        self.general_groupbox.setEnabled(True)
+        self.general_groupbox.setMaximumSize(QSize(16777215, 16777215))
+        self.general_groupbox.setCheckable(False)
+        self.gridLayout_3 = QGridLayout(self.general_groupbox)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.type_coordinate_checkbox = QCheckBox(self.general_groupbox)
+        self.type_coordinate_checkbox.setObjectName(u"type_coordinate_checkbox")
+
+        self.gridLayout_3.addWidget(self.type_coordinate_checkbox, 1, 0, 1, 1)
+
+        self.managed_checkbox = QCheckBox(self.general_groupbox)
+        self.managed_checkbox.setObjectName(u"managed_checkbox")
+
+        self.gridLayout_3.addWidget(self.managed_checkbox, 0, 0, 1, 1)
+
+
+        self.verticalLayout.addWidget(self.general_groupbox)
 
         self.coordinate_system_groupbox = QGroupBox(FieldEditorWidget)
         self.coordinate_system_groupbox.setObjectName(u"coordinate_system_groupbox")
@@ -124,7 +116,36 @@ class Ui_FieldEditorWidget(object):
         self.gridLayout.addWidget(self.coordinate_system_focus_lineedit, 1, 1, 1, 1)
 
 
-        self.gridLayout_2.addWidget(self.coordinate_system_groupbox, 2, 0, 1, 2)
+        self.verticalLayout.addWidget(self.coordinate_system_groupbox)
+
+        self.sourcefields_groupbox = QGroupBox(FieldEditorWidget)
+        self.sourcefields_groupbox.setObjectName(u"sourcefields_groupbox")
+        self.gridLayout_4 = QGridLayout(self.sourcefields_groupbox)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_4.setContentsMargins(7, 7, 7, 7)
+        self.number_of_source_fields_label = QLabel(self.sourcefields_groupbox)
+        self.number_of_source_fields_label.setObjectName(u"number_of_source_fields_label")
+
+        self.gridLayout_4.addWidget(self.number_of_source_fields_label, 0, 0, 1, 1)
+
+        self.number_of_source_fields_lineedit = QLineEdit(self.sourcefields_groupbox)
+        self.number_of_source_fields_lineedit.setObjectName(u"number_of_source_fields_lineedit")
+        self.number_of_source_fields_lineedit.setEnabled(False)
+
+        self.gridLayout_4.addWidget(self.number_of_source_fields_lineedit, 0, 1, 1, 1)
+
+        self.region_of_apply_fields_label = QLabel(self.sourcefields_groupbox)
+        self.region_of_apply_fields_label.setObjectName(u"region_of_apply_fields_label")
+
+        self.gridLayout_4.addWidget(self.region_of_apply_fields_label, 1, 0, 1, 1)
+
+        self.region_of_apply_fields_chooser = RegionChooserWidget(self.sourcefields_groupbox)
+        self.region_of_apply_fields_chooser.setObjectName(u"region_of_apply_fields_chooser")
+
+        self.gridLayout_4.addWidget(self.region_of_apply_fields_chooser, 1, 1, 1, 1)
+
+
+        self.verticalLayout.addWidget(self.sourcefields_groupbox)
 
         self.derived_groupbox = QGroupBox(FieldEditorWidget)
         self.derived_groupbox.setObjectName(u"derived_groupbox")
@@ -135,20 +156,20 @@ class Ui_FieldEditorWidget(object):
 
         self.gridLayout_9.addWidget(self.derived_chooser_1, 1, 2, 1, 1)
 
-        self.derived_combo_label_1 = QLabel(self.derived_groupbox)
-        self.derived_combo_label_1.setObjectName(u"derived_combo_label_1")
-
-        self.gridLayout_9.addWidget(self.derived_combo_label_1, 1, 0, 1, 1)
-
-        self.derived_chooser_2 = QComboBox(self.derived_groupbox)
-        self.derived_chooser_2.setObjectName(u"derived_chooser_2")
-
-        self.gridLayout_9.addWidget(self.derived_chooser_2, 2, 2, 1, 1)
-
         self.derived_values_label = QLabel(self.derived_groupbox)
         self.derived_values_label.setObjectName(u"derived_values_label")
 
         self.gridLayout_9.addWidget(self.derived_values_label, 0, 0, 1, 1)
+
+        self.derived_chooser_3 = QComboBox(self.derived_groupbox)
+        self.derived_chooser_3.setObjectName(u"derived_chooser_3")
+
+        self.gridLayout_9.addWidget(self.derived_chooser_3, 3, 2, 1, 1)
+
+        self.derived_combo_label_1 = QLabel(self.derived_groupbox)
+        self.derived_combo_label_1.setObjectName(u"derived_combo_label_1")
+
+        self.gridLayout_9.addWidget(self.derived_combo_label_1, 1, 0, 1, 1)
 
         self.derived_combo_label_2 = QLabel(self.derived_groupbox)
         self.derived_combo_label_2.setObjectName(u"derived_combo_label_2")
@@ -166,44 +187,25 @@ class Ui_FieldEditorWidget(object):
 
         self.gridLayout_9.addWidget(self.derived_combo_label_3, 3, 0, 1, 1)
 
-        self.derived_chooser_3 = QComboBox(self.derived_groupbox)
-        self.derived_chooser_3.setObjectName(u"derived_chooser_3")
+        self.derived_chooser_2 = QComboBox(self.derived_groupbox)
+        self.derived_chooser_2.setObjectName(u"derived_chooser_2")
 
-        self.gridLayout_9.addWidget(self.derived_chooser_3, 3, 2, 1, 1)
+        self.gridLayout_9.addWidget(self.derived_chooser_2, 2, 2, 1, 1)
 
 
-        self.gridLayout_2.addWidget(self.derived_groupbox, 4, 0, 1, 2)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer, 7, 0, 1, 1)
+        self.verticalLayout.addWidget(self.derived_groupbox)
 
         self.applyargumentfields_groupbox = QGroupBox(FieldEditorWidget)
         self.applyargumentfields_groupbox.setObjectName(u"applyargumentfields_groupbox")
         self.gridLayout_11 = QGridLayout(self.applyargumentfields_groupbox)
         self.gridLayout_11.setObjectName(u"gridLayout_11")
 
-        self.gridLayout_2.addWidget(self.applyargumentfields_groupbox, 5, 0, 1, 2)
+        self.verticalLayout.addWidget(self.applyargumentfields_groupbox)
 
-        self.general_groupbox = QGroupBox(FieldEditorWidget)
-        self.general_groupbox.setObjectName(u"general_groupbox")
-        self.general_groupbox.setEnabled(True)
-        self.general_groupbox.setMaximumSize(QSize(16777215, 16777215))
-        self.general_groupbox.setCheckable(False)
-        self.gridLayout_3 = QGridLayout(self.general_groupbox)
-        self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.type_coordinate_checkbox = QCheckBox(self.general_groupbox)
-        self.type_coordinate_checkbox.setObjectName(u"type_coordinate_checkbox")
+        self.field_properties_widget = FieldPropertiesWidget(FieldEditorWidget)
+        self.field_properties_widget.setObjectName(u"field_properties_widget")
 
-        self.gridLayout_3.addWidget(self.type_coordinate_checkbox, 1, 0, 1, 1)
-
-        self.managed_checkbox = QCheckBox(self.general_groupbox)
-        self.managed_checkbox.setObjectName(u"managed_checkbox")
-
-        self.gridLayout_3.addWidget(self.managed_checkbox, 0, 0, 1, 1)
-
-
-        self.gridLayout_2.addWidget(self.general_groupbox, 1, 0, 1, 2)
+        self.verticalLayout.addWidget(self.field_properties_widget)
 
         self.create_groupbox = QGroupBox(FieldEditorWidget)
         self.create_groupbox.setObjectName(u"create_groupbox")
@@ -239,7 +241,11 @@ class Ui_FieldEditorWidget(object):
         self.formLayout.setLayout(1, QFormLayout.SpanningRole, self.horizontalLayout_2)
 
 
-        self.gridLayout_2.addWidget(self.create_groupbox, 6, 0, 1, 2)
+        self.verticalLayout.addWidget(self.create_groupbox)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
 
 
         self.retranslateUi(FieldEditorWidget)
@@ -249,11 +255,11 @@ class Ui_FieldEditorWidget(object):
 
     def retranslateUi(self, FieldEditorWidget):
         FieldEditorWidget.setWindowTitle(QCoreApplication.translate("FieldEditorWidget", u"Field Editor", None))
-        self.sourcefields_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Source fields:", None))
-        self.number_of_source_fields_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Number of source fields:", None))
-        self.region_of_apply_fields_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Region of evaluate field:", None))
         self.field_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Field:", None))
         self.field_type_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Type:", None))
+        self.general_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Properties:", None))
+        self.type_coordinate_checkbox.setText(QCoreApplication.translate("FieldEditorWidget", u"Is Coordinate", None))
+        self.managed_checkbox.setText(QCoreApplication.translate("FieldEditorWidget", u"Managed", None))
         self.coordinate_system_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Coordinate system:", None))
         self.coordinate_system_type_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Type:", None))
         self.coordinate_system_type_chooser.setItemText(0, QCoreApplication.translate("FieldEditorWidget", u"Rectangular Cartesian", None))
@@ -264,15 +270,15 @@ class Ui_FieldEditorWidget(object):
         self.coordinate_system_type_chooser.setItemText(5, QCoreApplication.translate("FieldEditorWidget", u"Fibre", None))
 
         self.coordinate_system_focus_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Focus:", None))
+        self.sourcefields_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Source fields:", None))
+        self.number_of_source_fields_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Number of source fields:", None))
+        self.region_of_apply_fields_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Region of evaluate field:", None))
         self.derived_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Derived parameters:", None))
-        self.derived_combo_label_1.setText(QCoreApplication.translate("FieldEditorWidget", u"Derived combo1", None))
         self.derived_values_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Constant Values:", None))
+        self.derived_combo_label_1.setText(QCoreApplication.translate("FieldEditorWidget", u"Derived combo1", None))
         self.derived_combo_label_2.setText(QCoreApplication.translate("FieldEditorWidget", u"Derived combo2", None))
         self.derived_combo_label_3.setText(QCoreApplication.translate("FieldEditorWidget", u"Derived combo3", None))
         self.applyargumentfields_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Apply argument fields:", None))
-        self.general_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Properties:", None))
-        self.type_coordinate_checkbox.setText(QCoreApplication.translate("FieldEditorWidget", u"Is Coordinate", None))
-        self.managed_checkbox.setText(QCoreApplication.translate("FieldEditorWidget", u"Managed", None))
         self.create_groupbox.setTitle(QCoreApplication.translate("FieldEditorWidget", u"Create:", None))
         self.name_label.setText(QCoreApplication.translate("FieldEditorWidget", u"Name:", None))
         self.create_button.setText(QCoreApplication.translate("FieldEditorWidget", u"Create", None))
