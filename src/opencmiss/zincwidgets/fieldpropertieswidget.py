@@ -82,7 +82,9 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
 
     def _setup_requirement(self, req):
         req.set_callback(self._requirement_changed)
-        self._vertical_layout.addWidget(req.widget())
+        widget = req.widget()
+        if widget is not None:
+            self._vertical_layout.addWidget(widget)
 
     def _requirement_changed(self):
         self.requirementChanged.emit()

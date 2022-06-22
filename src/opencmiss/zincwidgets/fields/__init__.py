@@ -20,12 +20,14 @@ FIELD_TYPES = ['FieldAbs', 'FieldAcos', 'FieldAdd', 'FieldAlias', 'FieldAnd', 'F
 
 FIELDS_REQUIRING_REAL_LIST_VALUES = ['FieldConstant']
 FIELDS_REQUIRING_STRING_VALUE = ['FieldStringConstant']
+FIELDS_REQUIRING_NO_ARGUMENTS = ['FieldStoredString', 'FieldIsExterior']
 
 
 class FieldRequirementBase(object):
 
     def __init__(self):
         super().__init__()
+        self._widget = None
         self._callback = None
 
     @staticmethod
@@ -35,9 +37,19 @@ class FieldRequirementBase(object):
     def set_callback(self, callback):
         self._callback = callback
 
+    def widget(self):
+        return self._widget
+
 
 class FieldRequirementNeverMet(FieldRequirementBase):
     pass
+
+
+class FieldRequirementAlwaysMet(FieldRequirementBase):
+
+    @staticmethod
+    def fulfilled():
+        return True
 
 
 class FieldRequirementLineEditBase(FieldRequirementBase):
@@ -179,6 +191,8 @@ class FieldTypeBase(object):
             self._requirements.append(FieldRequirementRealListValues())
         elif self._field_type in FIELDS_REQUIRING_STRING_VALUE:
             self._requirements.append(FieldRequirementStringValue())
+        elif self._field_type in FIELDS_REQUIRING_NO_ARGUMENTS:
+            self._requirements.append(FieldRequirementAlwaysMet())
         else:
             self._requirements.append(FieldRequirementNeverMet())
 
@@ -192,6 +206,9 @@ class FieldTypeBase(object):
         elif self._field_type == "FieldStringConstant":
             args = self._requirements[0].value()
             new_field = field_module.createFieldStringConstant(args)
+        elif self._field_type in FIELDS_REQUIRING_NO_ARGUMENTS:
+            methodToCall = getattr(field_module, "create" + self._field_type)
+            new_field = methodToCall()
 
         new_field.setName(field_name)
         new_field.setManaged(self._managed)
