@@ -32,10 +32,11 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
     def _setup_ui(self):
         # Every field has a title and global properties.
         self._setup_title()
-        self._setup_properties()
+        self._setup_general_properties()
         # Setup field specific widgets.
+        requirement_offset = 0
         for prop in self._field.properties():
-            self._setup_property(prop)
+            requirement_offset += self._setup_property(prop, requirement_offset)
         self.show()
 
     def _setup_title(self):
@@ -46,7 +47,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         self._title_layout.addWidget(self._title_label)
         self._vertical_layout.addWidget(self._title_groupbox)
 
-    def _setup_properties(self):
+    def _setup_general_properties(self):
         is_managed = self._field.is_managed()
         is_type_coordinate = self._field.is_type_coordinate()
 
@@ -80,16 +81,18 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
     def _type_coordinate_clicked(self, state):
         self._field.set_type_coordinate(state == QtCore.Qt.Checked)
 
-    def _setup_property(self, prop):
+    def _setup_property(self, prop, offset):
         if len(prop["requirements"]) > 0:
             groupbox = QtWidgets.QGroupBox(self)
             groupbox.setTitle(prop["group"])
             layout = QtWidgets.QVBoxLayout(groupbox)
             for index, req in enumerate(prop["requirements"]):
                 self._setup_requirement(layout, req)
-                self._field.populate_requirement(index, req)
+                self._field.populate_requirement(index + offset, req)
 
             self._vertical_layout.addWidget(groupbox)
+
+        return len(prop["requirements"])
 
     def _setup_requirement(self, layout, req):
         req.set_callback(self._requirement_changed)

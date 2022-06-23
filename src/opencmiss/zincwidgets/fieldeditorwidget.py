@@ -262,7 +262,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 versionNumber = int(self.ui.derived_values_lineedit.text())
                 if versionNumber > 0:
                     valueLabel = self.getDerivedChooser1Value()
-                    returnedField = self._fieldmodule.createFieldNodeValue(sourceFields[0], \
+                    returnedField = self._fieldmodule.createFieldNodeValue(sourceFields[0],
                                                                            valueLabel, versionNumber)
                 else:
                     errorMessage = " version number must be starting from 1."
