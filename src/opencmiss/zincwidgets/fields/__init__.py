@@ -3,8 +3,8 @@ from opencmiss.zincwidgets.fields.lists import NONE_FIELD_TYPE_NAME, FIELD_TYPES
     FIELDS_REQUIRING_ONE_SOURCE_FIELD, FIELDS_REQUIRING_NO_ARGUMENTS, FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD, FIELDS_REQUIRING_TWO_SOURCE_FIELDS, \
     FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_THREE_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD, FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD
 from opencmiss.zincwidgets.fields.requirements import FieldRequirementRealListValues, FieldRequirementStringValue, FieldRequirementSourceField, FieldRequirementNumberOfRows, \
-    FieldRequirementComponentIndexes, FieldRequirementMeshName, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, FieldRequirementSearchMode, \
-    FieldRequirementSearchMesh
+    FieldRequirementComponentIndexes, FieldRequirementMeshName, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
+    FieldRequirementSearchMode, FieldRequirementSearchMesh
 
 
 class FieldBase(object):
@@ -154,46 +154,46 @@ class FieldTypeBase(object):
         if self._properties is not None:
             return self._properties
 
-        requirements = []
+        field_requirements = []
         if self._field_type in FIELDS_REQUIRING_REAL_LIST_VALUES:
-            requirements.append(FieldRequirementRealListValues())
+            field_requirements.append(FieldRequirementRealListValues())
         elif self._field_type in FIELDS_REQUIRING_STRING_VALUE:
-            requirements.append(FieldRequirementStringValue())
+            field_requirements.append(FieldRequirementStringValue())
         elif self._field_type in FIELDS_REQUIRING_ONE_SOURCE_FIELD:
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field:"))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:"))
         elif self._field_type in FIELDS_REQUIRING_NO_ARGUMENTS:
             pass
         elif self._field_type == "FieldTranspose":
-            requirements.append(FieldRequirementNumberOfRows())
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementNumberOfRows())
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
         elif self._field_type == "FieldComponent":
-            requirements.append(FieldRequirementComponentIndexes())
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementComponentIndexes())
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
         elif self._field_type in FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD or \
                 self._field_type == "FieldEdgeDiscontinuity":
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
         elif self._field_type in FIELDS_REQUIRING_TWO_SOURCE_FIELDS:
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:"))
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:"))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:"))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:"))
         elif self._field_type in FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS:
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:", FieldIsRealValued))
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:", FieldIsRealValued))
         elif self._field_type in FIELDS_REQUIRING_THREE_SOURCE_FIELDS:
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:", FieldIsRealValued))
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:", FieldIsRealValued))
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field 3:"))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 3:"))
         elif self._field_type in FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD:
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsDeterminantEligible))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsDeterminantEligible))
         elif self._field_type in FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD:
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsSquareMatrix))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsSquareMatrix))
         elif self._field_type == "FieldFindMeshLocation":
-            requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
-            requirements.append(FieldRequirementSourceField(self._region, "Mesh Field:", FieldIsRealValued))
-            requirements.append(FieldRequirementMeshName())
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Mesh Field:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementMeshName())
         else:
-            requirements.append(FieldRequirementNeverMet())
+            field_requirements.append(FieldRequirementNeverMet())
 
-        self._properties = [{"group": "Parameters", "requirements": requirements}]
+        self._properties = [{"group": "Parameters", "requirements": field_requirements}]
 
         additional_requirements = []
         if self._field_type == "FieldEdgeDiscontinuity":
@@ -211,22 +211,30 @@ class FieldTypeBase(object):
 
         return self._properties
 
+    def _define_additional_properties(self, new_field):
+        additional_requirements = self._requirements("Additional Properties")
+        if self._field_type == "FieldEdgeDiscontinuity":
+            new_field.setMeasure(additional_requirements[0].value())
+            conditional_field = additional_requirements[1].value()
+            if conditional_field and conditional_field.isValid():
+                new_field.setConditionalField(conditional_field)
+        elif self._field_type == "FieldFindMeshLocation":
+            field_module = new_field.getFieldmodule()
+            new_field.setSearchMode(additional_requirements[0].value())
+            search_mesh = field_module.findMeshByName(additional_requirements[1].value())
+            new_field.setSearchMesh(search_mesh)
+
     def define_new_field(self, field_module, field_name):
-        requirements = self._requirements("Parameters")
+        field_requirements = self._requirements("Parameters")
 
         args = []
-        for req in requirements:
+        for req in field_requirements:
             args.append(req.value())
 
         methodToCall = getattr(field_module, "create" + self._field_type)
         new_field = methodToCall(*args)
 
-        if self._field_type == "FieldEdgeDiscontinuity":
-            additional_requirements = self._requirements("Additional Properties")
-            new_field.setMeasure(additional_requirements[0].value())
-            conditional_field = additional_requirements[1].value()
-            if conditional_field and conditional_field.isValid():
-                new_field.setConditionalField(conditional_field)
+        self._define_additional_properties(new_field)
 
         new_field.setName(field_name)
         new_field.setManaged(self._managed)
