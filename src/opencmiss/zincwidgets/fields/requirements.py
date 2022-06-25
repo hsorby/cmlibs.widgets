@@ -6,7 +6,7 @@ from opencmiss.zinc.field import FieldFindMeshLocation, FieldEdgeDiscontinuity
 from opencmiss.zinc.node import Node
 
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
-from opencmiss.zincwidgets.fields.lists import MESH_NAMES, SEARCH_MODES, MEASURE_TYPES, FACE_TYPES, VALUE_TYPES
+from opencmiss.zincwidgets.fields.lists import MESH_NAMES, SEARCH_MODES, MEASURE_TYPES, FACE_TYPES, VALUE_TYPES, QUADRATURE_RULES
 from opencmiss.zincwidgets.fields.parsers import display_as_vector, parse_to_vector, display_as_integer_vector, parse_to_integer_vector
 from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 
@@ -151,6 +151,20 @@ class FieldRequirementFaceType(FieldRequirementComboBoxBase):
     def set_value(self, value):
         self._combobox.blockSignals(True)
         self._combobox.setCurrentIndex(value - Element.FACE_TYPE_ALL)
+        self._combobox.blockSignals(False)
+
+
+class FieldRequirementQuadratureRule(FieldRequirementComboBoxBase):
+
+    def __init__(self):
+        super().__init__("Quadrature rule:", QUADRATURE_RULES)
+
+    def value(self):
+        return self._combobox.currentIndex() + Element.QUADRATURE_RULE_GAUSSIAN
+
+    def set_value(self, value):
+        self._combobox.blockSignals(True)
+        self._combobox.setCurrentIndex(value - Element.QUADRATURE_RULE_GAUSSIAN)
         self._combobox.blockSignals(False)
 
 
@@ -383,10 +397,10 @@ class FieldRequirementNumberOfRows(FieldRequirementNaturalNumberValue):
         super(FieldRequirementNumberOfRows, self).__init__("# of Rows:")
 
 
-class FieldRequirementComponentIndexes(FieldRequirementLineEditBase):
+class FieldRequirementNaturalNumberVector(FieldRequirementLineEditBase):
 
-    def __init__(self):
-        super().__init__("Component Indices:")
+    def __init__(self, label):
+        super().__init__(label)
 
     def value(self):
         return parse_to_integer_vector(self._line_edit.text())

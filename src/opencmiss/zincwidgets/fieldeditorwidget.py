@@ -864,7 +864,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
     def _update_ui(self):
         if self._field_interface.defining_field():
             self.ui.create_groupbox.show()
-            enable_create_button = len(self.ui.name_lineedit.text()) > 0 and self._field_interface.field_is_defineable()
+            enable_create_button = len(self.ui.name_lineedit.text()) > 0 and self._field_interface.can_define_field()
             self.ui.create_button.setEnabled(enable_create_button)
         else:
             self.ui.create_groupbox.hide()
@@ -885,7 +885,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         # base graphics attributes
         if self._field_interface.defining_field():
             self.ui.create_groupbox.show()
-            self.ui.create_button.setEnabled(self._field_interface.field_is_defineable())
+            self.ui.create_button.setEnabled(self._field_interface.can_define_field())
         else:
             self.ui.create_groupbox.hide()
 

@@ -3,6 +3,7 @@ MESH_NAMES = ["mesh3d", "mesh2d", "mesh1d"]
 SEARCH_MODES = ["Exact", "Nearest"]
 FACE_TYPES = ["all", "any face", "no face", "xi1 = 0", "xi1 = 1", "xi2 = 0", "xi2 = 1", "xi3 = 0", "xi3 = 0"]
 VALUE_TYPES = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2_ds2ds3", "d3_ds1ds2ds3"]
+QUADRATURE_RULES = ["Gaussian", "Mid-point"]
 
 NONE_FIELD_TYPE_NAME = "<unknown>"
 FIELD_TYPES = [
@@ -15,7 +16,7 @@ FIELD_TYPES = [
     'FieldFibreAxes', 'FieldFindMeshLocation', 'FieldFiniteElement', 'FieldGradient',
     'FieldGreaterThan', 'FieldIdentity', 'FieldIf', 'FieldIsDefined', 'FieldIsExterior',
     'FieldIsOnFace', 'FieldLessThan', 'FieldLog', 'FieldMagnitude', 'FieldMatrixInvert',
-    'FieldMatrixMultiply', 'FieldMultiply', 'FieldNodeValue', 'FieldNormalise', 'FieldNot',
+    'FieldMatrixMultiply', 'FieldMeshIntegral', 'FieldMultiply', 'FieldNodeValue', 'FieldNormalise', 'FieldNot',
     'FieldOr', 'FieldPower', 'FieldProjection', 'FieldSin', 'FieldSqrt',
     'FieldStoredMeshLocation', 'FieldStoredString', 'FieldStringConstant', 'FieldSubtract',
     'FieldSumComponents', 'FieldTan', 'FieldTimeLookup', 'FieldTimeValue', 'FieldTranspose',
