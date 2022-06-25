@@ -730,6 +730,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         if applyField.isValid():
             for fieldPair in self._argumentFieldPairs:
                 applyField.setBindArgumentSourceField(fieldPair[0].getField(), fieldPair[1].getField())
+        print('bind field')
         self._update_widgets()
 
     def displaySourceFieldsChoosers(self, numberOfSourceFields):
@@ -884,14 +885,13 @@ class FieldEditorWidget(QtWidgets.QWidget):
         # base graphics attributes
         if self._field_interface.defining_field():
             self.ui.create_groupbox.show()
-            print(self.ui.create_button.isEnabled())
-            print(self._field_interface.field_is_defineable())
             self.ui.create_button.setEnabled(self._field_interface.field_is_defineable())
         else:
             self.ui.create_groupbox.hide()
 
         isManaged = False
         isTypeCoordinate = False
+        print('old')
         self.ui.field_properties_widget.set_field(self._field_interface)
         # self.ui.managed_checkbox.hide()
         # self.ui.type_coordinate_checkbox.hide()
@@ -947,12 +947,14 @@ class FieldEditorWidget(QtWidgets.QWidget):
         Set when fieldmodule changes to initialised widgets dependent on fieldmodule
         """
         self._fieldmodule = fieldmodule
+        self._field_interface = FieldInterface(None, None)
         self._field_interface.set_region(self._fieldmodule.getRegion())
-        for i in range(0, len(self._sourceFieldChoosers)):
-            self._sourceFieldChoosers[i][1].setRegion(self._fieldmodule.getRegion())
-
-        self._initialise()
+        self._field_interface.set_timekeeper(self._timekeeper)
         self._update_widgets()
+        # for i in range(0, len(self._sourceFieldChoosers)):
+        #     self._sourceFieldChoosers[i][1].setRegion(self._fieldmodule.getRegion())
+
+        # self._initialise()
 
     def getField(self):
         """
@@ -966,6 +968,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         """
         self._field_interface = FieldInterface(field, field_type)
         self._field_interface.set_region(self._fieldmodule.getRegion())
+        self._field_interface.set_timekeeper(self._timekeeper)
         self._update_widgets()
         self._update_ui()
 
@@ -1045,6 +1048,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def fieldTypeChanged(self):
         self._fieldType = self.ui.field_type_chooser.getFieldType()
+        print('field tupe changed')
         self._update_widgets()
 
     def numberOfSourceFieldsEntered(self):
@@ -1064,6 +1068,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
     def define_new_field(self, field_type):
         field_interface = FieldInterface(None, field_type)
         field_interface.set_region(self._fieldmodule.getRegion())
+        field_interface.set_timekeeper(self._timekeeper)
         field_interface.set_managed(True)
         self.ui.name_lineedit.setText(self._get_temp_field_name())
         self._field_interface = field_interface
@@ -1072,6 +1077,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def enterCreateMode(self):
         self._initialise_create_mode()
+        print('enter create mode')
         self._update_widgets()
 
     def _initialise_create_mode(self):

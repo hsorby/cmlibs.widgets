@@ -1,6 +1,8 @@
 MEASURE_TYPES = ["C1", "G1", "Surface Normal"]
 MESH_NAMES = ["mesh3d", "mesh2d", "mesh1d"]
 SEARCH_MODES = ["Exact", "Nearest"]
+FACE_TYPES = ["all", "any face", "no face", "xi1 = 0", "xi1 = 1", "xi2 = 0", "xi2 = 1", "xi3 = 0", "xi3 = 0"]
+VALUE_TYPES = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2_ds2ds3", "d3_ds1ds2ds3"]
 
 NONE_FIELD_TYPE_NAME = "<unknown>"
 FIELD_TYPES = [
@@ -22,27 +24,31 @@ FIELD_TYPES = [
 
 FIELDS_REQUIRING_REAL_LIST_VALUES = ['FieldConstant']
 FIELDS_REQUIRING_STRING_VALUE = ['FieldStringConstant']
+FIELDS_REQUIRING_NUMBER_OF_COMPONENTS = ['FieldFiniteElement', 'FieldArgumentReal']
 FIELDS_REQUIRING_NO_ARGUMENTS = ['FieldStoredString', 'FieldIsExterior']
 FIELDS_REQUIRING_ONE_SOURCE_FIELD = ['FieldAlias']
 FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD = [
     'FieldAbs', 'FieldLog', 'FieldSqrt', 'FieldExp', 'FieldIdentity',
-    'FieldConcatenate', 'FieldCrossProduct', 'FieldNot', 'FieldSin',
-    'FieldCos', 'FieldTan', 'FieldAsin', 'FieldAcos', 'FieldAtan',
-    'FieldMagnitude', 'FieldNormalise', 'FieldSumComponents',
+    'FieldNot', 'FieldSin', 'FieldCos', 'FieldTan', 'FieldAsin', 'FieldAcos',
+    'FieldAtan', 'FieldMagnitude', 'FieldNormalise', 'FieldSumComponents',
     'FieldCoordinateTransformation',
 ]
 FIELDS_REQUIRING_TWO_SOURCE_FIELDS = [
     'FieldVectorCoordinateTransformation', 'FieldCurl',
-    'FieldDivergence', 'FieldEmbedded', 'FieldGradient',
-    'FieldFibreAxes', 'FieldProjection', 'FieldTimeLookup',
-    'FieldEqualTo',
+    'FieldDivergence', 'FieldEmbedded', 'FieldEqualTo',
 ]
 FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS = [
     'FieldAdd', 'FieldPower', 'FieldMultiply', 'FieldDivide',
     'FieldSubtract', 'FieldAnd', 'FieldGreaterThan',
     'FieldLessThan', 'FieldOr', 'FieldXor', 'FieldAtan2',
-    'FieldDotProduct',
+    'FieldDotProduct', 'FieldProjection'
 ]
+FIELDS_REQUIRING_ONE_REAL_FIELD_ONE_COORDINATE_FIELD = ['FieldGradient']
+FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD = ['FieldTimeLookup']
+FIELDS_REQUIRING_TWO_COORDINATE_FIELDS = ['FieldFibreAxes']
 FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD = ['FieldDeterminant']
 FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD = ['FieldEigenvalues', 'FieldMatrixInvert']
+FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD = ['FieldEigenvectors']
 FIELDS_REQUIRING_THREE_SOURCE_FIELDS = ['FieldIf']
+FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS = ['FieldConcatenate', 'FieldCrossProduct']
+FIELDS_REQUIRING_MESH = ['FieldStoredMeshLocation']

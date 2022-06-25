@@ -232,7 +232,10 @@ class FieldListEditorWidget(QtWidgets.QWidget):
             self._field = None
         else:
             self._field = field
+
+        self._ui.field_listview.selectionModel().blockSignals(True)
         self._display_field()
+        self._ui.field_listview.selectionModel().blockSignals(False)
 
     def _add_field(self, current_text):
         if current_text != FIELD_CHOOSER_ADD_TEXT:

@@ -1,10 +1,15 @@
-from opencmiss.zincwidgets.fieldconditions import FieldIsRealValued, FieldIsDeterminantEligible, FieldIsSquareMatrix, FieldIsScalar
+from opencmiss.zincwidgets.fieldconditions import FieldIsRealValued, FieldIsDeterminantEligible, FieldIsSquareMatrix, FieldIsScalar, FieldIsFiniteElement, FieldIsCoordinateCapable, \
+    FieldIsEigenvalues, FieldIsArgumentReal
 from opencmiss.zincwidgets.fields.lists import NONE_FIELD_TYPE_NAME, FIELD_TYPES, FIELDS_REQUIRING_REAL_LIST_VALUES, FIELDS_REQUIRING_STRING_VALUE, \
     FIELDS_REQUIRING_ONE_SOURCE_FIELD, FIELDS_REQUIRING_NO_ARGUMENTS, FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD, FIELDS_REQUIRING_TWO_SOURCE_FIELDS, \
-    FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_THREE_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD, FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD
+    FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_THREE_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD, FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD, \
+    FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_REAL_FIELD_ONE_COORDINATE_FIELD, FIELDS_REQUIRING_TWO_COORDINATE_FIELDS, \
+    FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD, FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD, FIELDS_REQUIRING_NUMBER_OF_COMPONENTS
 from opencmiss.zincwidgets.fields.requirements import FieldRequirementRealListValues, FieldRequirementStringValue, FieldRequirementSourceField, FieldRequirementNumberOfRows, \
-    FieldRequirementComponentIndexes, FieldRequirementMeshName, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
-    FieldRequirementSearchMode, FieldRequirementSearchMesh
+    FieldRequirementComponentIndexes, FieldRequirementMesh, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
+    FieldRequirementSearchMode, FieldRequirementSearchMesh, FieldRequirementNaturalNumberValue, FieldRequirementFaceType, FieldRequirementValueType, \
+    FieldRequirementNumberOfComponents, FieldRequirementSourceFieldRegionDependent, FieldRequirementRegion, FieldRequirementSourceFieldRegionDependentFieldDependent, \
+    FieldRequirementTimekeeper
 
 
 class FieldBase(object):
@@ -58,6 +63,9 @@ class FieldBase(object):
                     requirement.set_value(values)
                 elif index == 1:
                     requirement.set_value(self._field.getSourceField(1))
+            elif field_type in FIELDS_REQUIRING_NUMBER_OF_COMPONENTS:
+                number_of_components = self._field.getNumberOfComponents()
+                requirement.set_value(number_of_components)
             elif field_type == "FieldStringConstant":
                 if index != 0:
                     return
@@ -74,16 +82,20 @@ class FieldBase(object):
                     field_type in FIELDS_REQUIRING_ONE_SOURCE_FIELD or \
                     field_type in FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS or \
                     field_type in FIELDS_REQUIRING_TWO_SOURCE_FIELDS or \
-                    field_type in FIELDS_REQUIRING_THREE_SOURCE_FIELDS:
+                    field_type in FIELDS_REQUIRING_THREE_SOURCE_FIELDS or \
+                    field_type in FIELDS_REQUIRING_ONE_REAL_FIELD_ONE_COORDINATE_FIELD or \
+                    field_type in FIELDS_REQUIRING_TWO_COORDINATE_FIELDS or \
+                    field_type in FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD or \
+                    field_type in FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD:
                 requirement.set_value(self._field.getSourceField(index + 1))
             elif field_type == "FieldEdgeDiscontinuity":
                 if index == 0:
                     requirement.set_value(self._field.getSourceField(1))
                 elif index == 1:
-                    index = self._field.castEdgeDiscontinuity().getMeasure()
+                    index = self._field.getMeasure()
                     requirement.set_value(index)
                 elif index == 2:
-                    field = self._field.castEdgeDiscontinuity().getConditionalField()
+                    field = self._field.getConditionalField()
                     if field and field.isValid():
                         requirement.set_value(field)
             elif field_type == "FieldFindMeshLocation":
@@ -92,14 +104,37 @@ class FieldBase(object):
                 elif index == 1:
                     requirement.set_value(self._field.getSourceField(2))
                 elif index == 2:
-                    mesh_name = self._field.castFindMeshLocation().getMesh().getName()
-                    requirement.set_value(mesh_name)
+                    mesh = self._field.getMesh()
+                    requirement.set_value(mesh)
                 elif index == 3:
-                    index = self._field.castFindMeshLocation().getSearchMode()
+                    index = self._field.getSearchMode()
                     requirement.set_value(index)
                 elif index == 4:
-                    search_mesh_name = self._field.castFindMeshLocation().getSearchMesh().getName()
-                    requirement.set_value(search_mesh_name)
+                    search_mesh = self._field.getSearchMesh()
+                    requirement.set_value(search_mesh)
+            elif field_type == "FieldStoredMeshLocation":
+                mesh = self._field.getMesh()
+                requirement.set_value(mesh)
+            elif field_type == "FieldIsOnFace":
+                print("No API to get the face type from field.")
+            elif field_type == "FieldNodeValue":
+                if index == 0:
+                    requirement.set_value(self._field.getSourceField(1))
+                elif index == 1:
+                    print("No API to get the value type from field.")
+                elif index == 2:
+                    print("No API to get the version from field.")
+            elif field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
+                number_of_source_fields = self._field.getNumberOfSourceFields()
+                if index < number_of_source_fields:
+                    field = self._field.getSourceField(index + 1)
+                    requirement.set_value(field)
+                elif index == number_of_source_fields:
+                    requirement.set_value(number_of_source_fields)
+            elif field_type == "FieldApply":
+                if index == 0:
+                    field = self._field.getSourceField(1)
+                    requirement.set_value(field)
 
 
 class FieldTypeBase(object):
@@ -111,6 +146,7 @@ class FieldTypeBase(object):
         self._managed = False
         self._type_coordinate = False
         self._region = None
+        self._timekeeper = None
 
     def _pre_set_managed(self, state):
         self._managed = state
@@ -136,6 +172,9 @@ class FieldTypeBase(object):
     def set_region(self, region):
         self._region = region
 
+    def set_timekeeper(self, timekeeper):
+        self._timekeeper = timekeeper
+
     def set_field_type(self, field_type):
         self._field_type = NONE_FIELD_TYPE_NAME
         if field_type in FIELD_TYPES:
@@ -150,10 +189,27 @@ class FieldTypeBase(object):
 
         return all([r.fulfilled() for r in self._requirements()])
 
+    def has_additional_requirements_met(self):
+        return all([r.fulfilled() for r in self._requirements("Additional Properties")])
+
+    def set_required_source_fields(self):
+        additional_properties = self._requirements("Additional Properties")
+        field_requirements = []
+        for index in range(additional_properties[0].value()):
+            field_requirements.append(FieldRequirementSourceField(self._region, f"Source Field {index + 1}:", FieldIsRealValued))
+        parameters_index = -1
+        for index, prop in enumerate(self._properties):
+            if prop["group"] == "Parameters":
+                parameters_index = index
+                break
+
+        self._properties[parameters_index] = {"group": "Parameters", "requirements": field_requirements}
+
     def properties(self):
         if self._properties is not None:
             return self._properties
 
+        watch_regions = []
         field_requirements = []
         if self._field_type in FIELDS_REQUIRING_REAL_LIST_VALUES:
             field_requirements.append(FieldRequirementRealListValues())
@@ -174,7 +230,8 @@ class FieldTypeBase(object):
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
         elif self._field_type in FIELDS_REQUIRING_TWO_SOURCE_FIELDS:
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:"))
-            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:"))
+            field_label = "Embedded Location:" if self._field_type == "FieldEmbedded" else "Source Field 2:"
+            field_requirements.append(FieldRequirementSourceField(self._region, field_label))
         elif self._field_type in FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS:
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:", FieldIsRealValued))
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:", FieldIsRealValued))
@@ -186,10 +243,43 @@ class FieldTypeBase(object):
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsDeterminantEligible))
         elif self._field_type in FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD:
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsSquareMatrix))
+        elif self._field_type in FIELDS_REQUIRING_NUMBER_OF_COMPONENTS:
+            field_requirements.append(FieldRequirementNumberOfComponents())
         elif self._field_type == "FieldFindMeshLocation":
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
             field_requirements.append(FieldRequirementSourceField(self._region, "Mesh Field:", FieldIsRealValued))
-            field_requirements.append(FieldRequirementMeshName())
+            field_requirements.append(FieldRequirementMesh(self._region))
+        elif self._field_type == "FieldStoredMeshLocation":
+            field_requirements.append(FieldRequirementMesh(self._region))
+        elif self._field_type == "FieldGradient":
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
+        elif self._field_type == "FieldFibreAxes":
+            field_requirements.append(FieldRequirementSourceField(self._region, "Fibre Field:", FieldIsCoordinateCapable))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
+        elif self._field_type in FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD:
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:"))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Time Field:", FieldIsScalar))
+        elif self._field_type == "FieldEigenvectors":
+            field_requirements.append(FieldRequirementSourceField(self._region, "Eigenvalues Field:", FieldIsEigenvalues))
+        elif self._field_type == "FieldIsOnFace":
+            field_requirements.append(FieldRequirementFaceType())
+        elif self._field_type == "FieldNodeValue":
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsFiniteElement))
+            field_requirements.append(FieldRequirementValueType())
+            field_requirements.append(FieldRequirementNaturalNumberValue("Version number:"))
+        elif self._field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
+            if self._is_defined():
+                number_of_source_fields = self._field.getNumberOfSourceFields()
+                for i in range(number_of_source_fields):
+                    field_requirements.append(FieldRequirementSourceField(self._region, f"Source Field {i + 1}", FieldIsRealValued))
+            else:
+                field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:", FieldIsRealValued))
+        elif self._field_type == "FieldApply":
+            watch_regions.append(FieldRequirementSourceFieldRegionDependent(self._region.getRoot(), "Source Field:", None))
+            field_requirements.append(watch_regions[0])
+        elif self._field_type == "FieldTimeValue":
+            field_requirements.append(FieldRequirementTimekeeper(self._timekeeper))
         else:
             field_requirements.append(FieldRequirementNeverMet())
 
@@ -202,6 +292,23 @@ class FieldTypeBase(object):
         elif self._field_type == "FieldFindMeshLocation":
             additional_requirements.append(FieldRequirementSearchMode())
             additional_requirements.append(FieldRequirementSearchMesh(self._region))
+        elif self._field_type == "FieldApply":
+            controlling_region = FieldRequirementRegion(self._region.getRoot(), "Evaluate Field Region:")
+            region_chooser = controlling_region.region_chooser()
+            additional_requirements.append(controlling_region)
+            watch_regions.append(FieldRequirementSourceFieldRegionDependentFieldDependent(self._region.getRoot(), watch_regions[0], "Bind Argument Field:", FieldIsArgumentReal))
+            additional_requirements.append(watch_regions[1])
+            watch_regions.append(FieldRequirementSourceFieldRegionDependent(self._region.getRoot(), "Bind Source Field:", None))
+            additional_requirements.append(watch_regions[2])
+
+            def _apply_region_chooser():
+                new_region = region_chooser.getRegion()
+                for watch_region in watch_regions:
+                    watch_region.set_region(new_region)
+
+            region_chooser.activated.connect(_apply_region_chooser)
+        elif self._field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
+            additional_requirements.append(FieldRequirementNaturalNumberValue("Number of Fields:"))
 
         self._properties.append({"group": "Additional Properties", "requirements": additional_requirements})
 
@@ -219,10 +326,10 @@ class FieldTypeBase(object):
             if conditional_field and conditional_field.isValid():
                 new_field.setConditionalField(conditional_field)
         elif self._field_type == "FieldFindMeshLocation":
-            field_module = new_field.getFieldmodule()
             new_field.setSearchMode(additional_requirements[0].value())
-            search_mesh = field_module.findMeshByName(additional_requirements[1].value())
-            new_field.setSearchMesh(search_mesh)
+            new_field.setSearchMesh(additional_requirements[1].value())
+        elif self._field_type == "FieldApply":
+            new_field.setBindArgumentSourceField(additional_requirements[1].value(), additional_requirements[2].value())
 
     def define_new_field(self, field_module, field_name):
         field_requirements = self._requirements("Parameters")
@@ -232,7 +339,10 @@ class FieldTypeBase(object):
             args.append(req.value())
 
         methodToCall = getattr(field_module, "create" + self._field_type)
-        new_field = methodToCall(*args)
+        if self._field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
+            new_field = methodToCall(args)
+        else:
+            new_field = methodToCall(*args)
 
         self._define_additional_properties(new_field)
 

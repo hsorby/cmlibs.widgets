@@ -1,5 +1,7 @@
 from PySide2 import QtWidgets, QtCore
 
+from opencmiss.zincwidgets.fields import FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS
+
 
 class FieldPropertiesWidget(QtWidgets.QWidget):
 
@@ -37,7 +39,6 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         requirement_offset = 0
         for prop in self._field.properties():
             requirement_offset += self._setup_property(prop, requirement_offset)
-        self.show()
 
     def _setup_title(self):
         self._title_groupbox = QtWidgets.QGroupBox(self)
@@ -85,6 +86,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         if len(prop["requirements"]) > 0:
             groupbox = QtWidgets.QGroupBox(self)
             groupbox.setTitle(prop["group"])
+            groupbox.setObjectName(f'{prop["group"].lower()}_group_box')
             layout = QtWidgets.QVBoxLayout(groupbox)
             for index, req in enumerate(prop["requirements"]):
                 self._setup_requirement(layout, req)
@@ -100,5 +102,36 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         if widget is not None:
             layout.addWidget(widget)
 
-    def _requirement_changed(self):
+    def _reload(self):
+        self._field.set_required_source_fields()
+
+        widget_index = -1
+        for i in range(self._vertical_layout.count()):
+            item = self._vertical_layout.itemAt(i)
+            if item.widget().objectName() == "parameters_group_box":
+                widget_index = i
+
+        for prop in self._field.properties():
+            if prop["group"] == "Parameters":
+                groupbox = QtWidgets.QGroupBox(self)
+                groupbox.setObjectName("parameters_group_box")
+                groupbox.setTitle(prop["group"])
+                layout = QtWidgets.QVBoxLayout(groupbox)
+                for index, req in enumerate(prop["requirements"]):
+                    self._setup_requirement(layout, req)
+
+                if widget_index == -1:
+                    last = self._vertical_layout.count()
+                    self._vertical_layout.insertWidget(last - 1, groupbox)
+                else:
+                    widget_to_remove = self._vertical_layout.takeAt(widget_index).widget()
+                    widget_to_remove.setParent(None)
+                    self._vertical_layout.insertWidget(widget_index, groupbox)
+
+    def _requirement_changed(self, event=None):
+        if self._field.get_field_type() in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
+            if self._field.has_additional_requirements_met():
+                if event == "textChanged":
+                    self._reload()
+
         self.requirementChanged.emit()
