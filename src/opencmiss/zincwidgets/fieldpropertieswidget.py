@@ -1,6 +1,6 @@
 from PySide2 import QtWidgets, QtCore
 
-from opencmiss.zincwidgets.fields import FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS
+from opencmiss.zincwidgets.fields.lists import FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS
 
 
 class FieldPropertiesWidget(QtWidgets.QWidget):
@@ -16,7 +16,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
     def set_field(self, field):
         self._clear_ui()
         self._field = field
-        if self._field.field_is_valid():
+        if self._field.field_is_known():
             self._setup_ui()
 
     def _clear_ui(self):
@@ -44,7 +44,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         self._title_groupbox = QtWidgets.QGroupBox(self)
         self._title_groupbox.setTitle(u"Field type")
         self._title_layout = QtWidgets.QVBoxLayout(self._title_groupbox)
-        self._title_label = QtWidgets.QLabel(self._field.get_field_type())
+        self._title_label = QtWidgets.QLabel(self._field.field_display_label())
         self._title_layout.addWidget(self._title_label)
         self._vertical_layout.addWidget(self._title_groupbox)
 
@@ -54,21 +54,15 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
 
         self._properties_groupbox = QtWidgets.QGroupBox(self)
         self._properties_groupbox.setTitle(u"Properties")
-        # self._properties_groupbox.setObjectName(u"_properties_groupbox")
-        # self._properties_groupbox.setEnabled(self._field.properties_enabled())
-        # self._properties_groupbox.setCheckable(False)
         self._properties_layout = QtWidgets.QVBoxLayout(self._properties_groupbox)
-        # self._properties_layout.setObjectName(u"_properties_layout")
         self._type_coordinate_checkbox = QtWidgets.QCheckBox(self._properties_groupbox)
         self._type_coordinate_checkbox.setCheckState(QtCore.Qt.Checked if is_type_coordinate else QtCore.Qt.Unchecked)
         self._type_coordinate_checkbox.stateChanged.connect(self._type_coordinate_clicked)
-        # self._type_coordinate_checkbox.setObjectName(u"_type_coordinate_checkbox")
         self._type_coordinate_checkbox.setText(u"Is Coordinate")
         self._managed_checkbox = QtWidgets.QCheckBox(self._properties_groupbox)
         self._managed_checkbox.setEnabled(not self._field.defining_field())
         self._managed_checkbox.setCheckState(QtCore.Qt.Checked if is_managed else QtCore.Qt.Unchecked)
         self._managed_checkbox.stateChanged.connect(self._managed_clicked)
-        # self._managed_checkbox.setObjectName(u"_managed_checkbox")
         self._managed_checkbox.setText(u"Managed")
 
         self._properties_layout.addWidget(self._managed_checkbox)

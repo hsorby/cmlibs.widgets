@@ -5,7 +5,7 @@ from opencmiss.zincwidgets.fields.lists import NONE_FIELD_TYPE_NAME, FIELD_TYPES
     FIELDS_REQUIRING_ONE_SOURCE_FIELD, FIELDS_REQUIRING_NO_ARGUMENTS, FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD, FIELDS_REQUIRING_TWO_SOURCE_FIELDS, \
     FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_THREE_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD, FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD, \
     FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_REAL_FIELD_ONE_COORDINATE_FIELD, FIELDS_REQUIRING_TWO_COORDINATE_FIELDS, \
-    FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD, FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD, FIELDS_REQUIRING_NUMBER_OF_COMPONENTS
+    FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD, FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD, FIELDS_REQUIRING_NUMBER_OF_COMPONENTS, INTERNAL_FIELD_NAMES
 from opencmiss.zincwidgets.fields.requirements import FieldRequirementRealListValues, FieldRequirementStringValue, FieldRequirementSourceField, FieldRequirementNumberOfRows, \
     FieldRequirementNaturalNumberVector, FieldRequirementMesh, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
     FieldRequirementSearchMode, FieldRequirementSearchMesh, FieldRequirementNaturalNumberValue, FieldRequirementFaceType, FieldRequirementValueType, \
@@ -26,6 +26,12 @@ class FieldBase(object):
 
     def get_field(self):
         return self._field
+
+    def get_field_name(self):
+        if self._field is not None:
+            return self._field.getName()
+
+        return NONE_FIELD_TYPE_NAME
 
     def _is_defined(self):
         return bool(self._field and self._field.isValid())
@@ -220,6 +226,11 @@ class FieldTypeBase(object):
         return all([r.fulfilled() for r in self._requirements("Additional Properties")])
 
     def set_required_source_fields(self):
+        """
+        For fields that have a variable number of source fields this method
+        updates the source field parameters when the number of source fields
+        property changes.
+        """
         additional_properties = self._requirements("Additional Properties")
         field_requirements = []
         for index in range(additional_properties[0].value()):
@@ -311,10 +322,6 @@ class FieldTypeBase(object):
             field_requirements.append(watch_regions[0])
         elif self._field_type == "FieldTimeValue":
             field_requirements.append(FieldRequirementTimekeeper(self._timekeeper))
-        else:
-            field_requirements.append(FieldRequirementNeverMet())
-
-        self._properties = [{"group": "Parameters", "requirements": field_requirements}]
 
         additional_requirements = []
         if self._field_type == "FieldEdgeDiscontinuity":
@@ -344,6 +351,7 @@ class FieldTypeBase(object):
         elif self._field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
             additional_requirements.append(FieldRequirementNaturalNumberValue("Number of Fields:"))
 
+        self._properties = [{"group": "Parameters", "requirements": field_requirements}]
         self._properties.append({"group": "Additional Properties", "requirements": additional_requirements})
 
         if self._is_defined():
@@ -401,11 +409,24 @@ class FieldInterface(FieldBase, FieldTypeBase):
     def defining_field(self):
         return self.get_field() is None and self.get_field_type() != NONE_FIELD_TYPE_NAME
 
-    def field_is_valid(self):
+    def field_is_known(self):
         return self.get_field() is not None or self.get_field_type() != NONE_FIELD_TYPE_NAME
 
     def can_define_field(self):
         return self.defining_field() and self.has_requirements_met()
+
+    def field_display_label(self):
+        if self.defining_field():
+            return self.get_field_type()
+
+        if self.get_field_type() != NONE_FIELD_TYPE_NAME:
+            return self.get_field_type()
+
+        field_name = self.get_field_name()
+        if field_name in INTERNAL_FIELD_NAMES:
+            return "<internal>"
+
+        return NONE_FIELD_TYPE_NAME
 
     def properties_enabled(self):
         return self.get_field() is not None
