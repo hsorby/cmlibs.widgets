@@ -182,6 +182,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def setScene(self, scene):
         """
         Set when scene changes to initialised widgets dependent on scene
+
+        :param scene: zinc.scene
         """
         self._ui.material_chooser.setMaterialmodule(scene.getMaterialmodule())
         self._ui.glyph_chooser.setGlyphmodule(scene.getGlyphmodule())
@@ -206,6 +208,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def setGraphics(self, graphics):
         """
         Set the graphics to be edited
+
+        :param graphics: zinc.graphics.
         """
         if graphics and graphics.isValid():
             self._graphics = graphics
@@ -264,6 +268,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def subgroupFieldChanged(self, index):
         """
         An item was selected at index in subgroup field chooser widget
+
+        :param index: index of new item.
         """
         if self._graphics:
             subgroupField = self._ui.subgroup_field_chooser.getField()
@@ -275,6 +281,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def coordinateFieldChanged(self, index):
         """
         An item was selected at index in coordinate field chooser widget
+
+        :param index: index of new item.
         """
         if self._graphics:
             coordinateField = self._ui.coordinate_field_chooser.getField()
@@ -300,6 +308,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def dataFieldChanged(self, index):
         """
         An item was selected at index in data field chooser widget
+
+        :param index: index of new item.
         """
         if self._graphics:
             dataField = self._ui.data_field_chooser.getField()
@@ -328,6 +338,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def tessellationChanged(self, index):
         """
         An item was selected at index in tessellation chooser widget
+
+        :param index: index of new item.
         """
         if self._graphics:
             tessellation = self._ui.tessellation_chooser.getTessellation()
@@ -343,6 +355,11 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.boundarymode_chooser.setEnum(boundarymode)
 
     def boundarymodeChanged(self, index):
+        """
+        Change the current state of the boundarymode enumeration chooser
+
+        :param index: The index of boundarymode enumeration after change.
+        """
         if self._graphics:
             boundarymode = self._ui.boundarymode_chooser.getEnum()
             self._graphics.setBoundaryMode(boundarymode)
@@ -359,6 +376,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def faceChanged(self, index):
         """
         Element face combo box changed
+
+        :param index: index of new item.
         """
         if self._graphics:
             faceType = self._ui.face_enumeration_chooser.getEnum()
@@ -367,6 +386,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def wireframeClicked(self, isChecked):
         """
         The wireframe surface render radiobutton was clicked
+
+        :param isChecked: boolean
         """
         if self._graphics:
             self._graphics.setRenderPolygonMode(Graphics.RENDER_POLYGON_MODE_WIREFRAME if isChecked else Graphics.RENDER_POLYGON_MODE_SHADED)
@@ -374,6 +395,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def glyphChanged(self, index):
         """
         An item was selected at index in glyph chooser widget
+
+        :param index: index of new item.
         """
         if self._graphics:
             pointattributes = self._graphics.getGraphicspointattributes()
@@ -387,6 +410,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def materialChanged(self, index):
         """
         An item was selected at index in material chooser widget
+
+        :param index: index of new item.
         """
         if self._graphics:
             material = self._ui.material_chooser.getMaterial()
@@ -480,6 +505,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def streamlinesTrackDirectionChanged(self, index):
         """
         Element streamlines track direction combo box changed
+
+        :param index: index of new item.
         """
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
@@ -500,6 +527,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def streamlinesColourDataTypeChanged(self, index):
         """
         Element streamlines colour data type combo box changed
+
+        :param index: index of new item.
         """
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
@@ -528,6 +557,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
     def lineShapeChanged(self, index):
         """
         Element lineShape combo box changed
+
+        :param index: index of new item.
         """
         if self._graphics:
             lineattributes = self._graphics.getGraphicslineattributes()
