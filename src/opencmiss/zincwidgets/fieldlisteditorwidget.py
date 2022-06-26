@@ -75,11 +75,11 @@ class FieldListEditorWidget(QtWidgets.QWidget):
     @QtCore.Slot(Field, str)
     def _editor_create_field(self, field, field_type):
         self._argonRegion.addFieldTypeToDict(field, field_type)
-        self.setField(field)
+        self._set_field(field)
 
     def _make_connections(self):
         self._ui.region_chooser.currentIndexChanged.connect(self._region_changed)
-        # self._ui.field_listview.clicked.connect(self._field_list_item_clicked)
+        self._ui.field_listview.clicked.connect(self._field_list_item_clicked)
         self._ui.add_field_type_chooser.currentTextChanged.connect(self._add_field)
         self._ui.delete_field_button.clicked.connect(self._delete_field_clicked)
         self._ui.field_editor.fieldCreated.connect(self._editor_create_field)
@@ -171,9 +171,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
                 self._fieldItems.appendRow(item)
                 field = fieldIterator.next()
         self._ui.field_listview.setModel(self._fieldItems)
-        selection_model = self._ui.field_listview.selectionModel()
-        selection_model.selectionChanged.connect(self._field_list_selection_changed, QtCore.Qt.UniqueConnection)
-        self._fieldItems.itemChanged.connect(self._list_item_edited)
+        self._fieldItems.itemChanged.connect(self._list_item_edited, QtCore.Qt.UniqueConnection)
         self._ui.field_listview.show()
 
     def _display_field(self):
@@ -206,36 +204,23 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         argonRegion = findArgonRegionFromZincRegion(self._rootArgonRegion, zincRegion)
         self._setArgonRegion(argonRegion)
 
-    def _field_list_item_clicked(self, model_index):
-        model = model_index.model()
-        item = model.item(model_index.row())
-        field = item.data()
-        self._field = field
-        self._display_field()
+    def _field_list_item_clicked(self, current):
+        if current.isValid():
+            model = current.model()
+            item = model.item(current.row())
+            self._field = item.data()
+            self._display_field()
 
-    def _field_list_selection_changed(self, selection):
-        if not selection.isEmpty():
-            indexes = selection.first().indexes()
-            if len(indexes) == 1:
-                model = selection.first().model()
-                index = indexes[0]
-                item = model.item(index.row())
-                field = item.data()
-                self._field = field
-                self._display_field()
-
-    def setField(self, field):
+    def _set_field(self, field):
         """
         Set the current selected field
         """
-        if not field or not field.isValid():
-            self._field = None
-        else:
+        if field and field.isValid():
             self._field = field
+        else:
+            self._field = None
 
-        self._ui.field_listview.selectionModel().blockSignals(True)
         self._display_field()
-        self._ui.field_listview.selectionModel().blockSignals(False)
 
     def _add_field(self, current_text):
         if current_text != FIELD_CHOOSER_ADD_TEXT:

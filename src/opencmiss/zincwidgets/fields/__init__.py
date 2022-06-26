@@ -1,3 +1,4 @@
+from opencmiss.utils.zinc.general import ChangeManager
 from opencmiss.zincwidgets.fieldconditions import FieldIsRealValued, FieldIsDeterminantEligible, FieldIsSquareMatrix, FieldIsScalar, FieldIsFiniteElement, \
     FieldIsCoordinateCapable, FieldIsEigenvalues, FieldIsArgumentReal
 from opencmiss.zincwidgets.fields.lists import NONE_FIELD_TYPE_NAME, FIELD_TYPES, FIELDS_REQUIRING_REAL_LIST_VALUES, FIELDS_REQUIRING_STRING_VALUE, \
@@ -104,16 +105,16 @@ class FieldBase(object):
                 elif index == 1:
                     requirement.set_value(self._field.getSourceField(2))
                 elif index == 2:
-                    mesh = self._field.getMesh()
+                    mesh = self._field.castFindMeshLocation().getMesh()
                     requirement.set_value(mesh)
                 elif index == 3:
                     index = self._field.getSearchMode()
                     requirement.set_value(index)
                 elif index == 4:
-                    search_mesh = self._field.getSearchMesh()
+                    search_mesh = self._field.castFindMeshLocation().getSearchMesh()
                     requirement.set_value(search_mesh)
             elif field_type == "FieldStoredMeshLocation":
-                mesh = self._field.getMesh()
+                mesh = self._field.castStoredMeshLocation().getMesh()
                 requirement.set_value(mesh)
             elif field_type == "FieldMeshIntegral":
                 if index == 0:
@@ -121,13 +122,15 @@ class FieldBase(object):
                 elif index == 1:
                     requirement.set_value(self._field.getSourceField(2))
                 elif index == 2:
-                    mesh = self._field.getMesh()
-                    requirement.set_value(mesh)
+                    print('No API to get mesh from field.')
+                    # mesh = self._field.castMeshIntegral().getMesh()
+                    # requirement.set_value(mesh)
                 elif index == 3:
-                    result, numbers_of_points = self._field.getNumbersOfPoints()
+                    number_of_components = self._field.getNumberOfComponents()
+                    result, numbers_of_points = self._field.castMeshIntegral().getNumbersOfPoints(number_of_components)
                     requirement.set_value(numbers_of_points)
                 elif index == 4:
-                    quadrature_rule = self._field.getElementQuadratureRule()
+                    quadrature_rule = self._field.castMeshIntegral().getElementQuadratureRule()
                     requirement.set_value(quadrature_rule)
             elif field_type == "FieldIsOnFace":
                 print("No API to get the face type from field.")
@@ -372,17 +375,18 @@ class FieldTypeBase(object):
         for req in field_requirements:
             args.append(req.value())
 
-        methodToCall = getattr(field_module, "create" + self._field_type)
-        if self._field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
-            new_field = methodToCall(args)
-        else:
-            new_field = methodToCall(*args)
+        with ChangeManager(field_module):
+            methodToCall = getattr(field_module, "create" + self._field_type)
+            if self._field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
+                new_field = methodToCall(args)
+            else:
+                new_field = methodToCall(*args)
 
-        self._define_additional_properties(new_field)
+            self._define_additional_properties(new_field)
 
-        new_field.setName(field_name)
-        new_field.setManaged(self._managed)
-        new_field.setTypeCoordinate(self._type_coordinate)
+            new_field.setName(field_name)
+            new_field.setManaged(self._managed)
+            new_field.setTypeCoordinate(self._type_coordinate)
 
         return new_field
 

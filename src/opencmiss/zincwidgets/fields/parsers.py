@@ -31,7 +31,7 @@ def display_as_integer_vector(values):
     Display real vector values in a widget. Also handle scalar
     """
     if isinstance(values, Number):
-        new_text = int(values)
+        new_text = f"{values}"
     else:
         new_text = ", ".join(str(value) for value in values)
 

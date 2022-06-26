@@ -432,7 +432,6 @@ class FieldEditorWidget(QtWidgets.QWidget):
         chooser.blockSignals(False)
 
     def display_derived(self):
-        # print self._fieldType
         # self.ui.derived_groupbox.setTitle(QtWidgets.QApplication.translate("FieldEditorWidget", self._fieldType + ":", None))
         """ hide everything at the beginning """
         self.ui.derived_chooser_1.hide()
@@ -1048,7 +1047,6 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def fieldTypeChanged(self):
         self._fieldType = self.ui.field_type_chooser.getFieldType()
-        print('field tupe changed')
         self._update_widgets()
 
     def numberOfSourceFieldsEntered(self):
@@ -1077,7 +1075,6 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def enterCreateMode(self):
         self._initialise_create_mode()
-        print('enter create mode')
         self._update_widgets()
 
     def _initialise_create_mode(self):

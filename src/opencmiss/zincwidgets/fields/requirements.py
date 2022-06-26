@@ -70,7 +70,6 @@ class FieldRequirementComboBoxBase(FieldRequirementBase):
 
     def __init__(self, label, items):
         super().__init__()
-        self._widget = QtWidgets.QFrame()
         layout = QtWidgets.QHBoxLayout(self._widget)
         layout.setContentsMargins(0, 0, 0, 0)
         label = QtWidgets.QLabel(label)
@@ -200,7 +199,6 @@ class FieldRequirementRegion(FieldRequirementBase):
 
     def __init__(self, region, label):
         super().__init__()
-        self._widget = QtWidgets.QFrame()
         layout = QtWidgets.QHBoxLayout(self._widget)
         layout.setContentsMargins(0, 0, 0, 0)
         label_widget = QtWidgets.QLabel(label)
@@ -235,7 +233,6 @@ class FieldRequirementSourceFieldBase(FieldRequirementBase):
 
     def __init__(self, region, label, conditional_constraint):
         super().__init__()
-        self._widget = QtWidgets.QFrame()
         layout = QtWidgets.QHBoxLayout(self._widget)
         layout.setContentsMargins(0, 0, 0, 0)
         label_widget = QtWidgets.QLabel(label)
@@ -313,11 +310,10 @@ class FieldRequirementLineEditBase(FieldRequirementBase):
 
     def __init__(self, label):
         super().__init__()
-        self._widget = QtWidgets.QFrame()
         layout = QtWidgets.QHBoxLayout(self._widget)
         layout.setContentsMargins(0, 0, 0, 0)
         label = QtWidgets.QLabel(label)
-        self._line_edit = QtWidgets.QLineEdit()
+        self._line_edit = QtWidgets.QLineEdit(self._widget)
         layout.addWidget(label)
         layout.addWidget(self._line_edit)
         self._line_edit.textEdited.connect(self._text_changed)
@@ -350,7 +346,6 @@ class FieldRequirementSpinBoxBase(FieldRequirementBase):
 
     def __init__(self, label, minimum):
         super().__init__()
-        self._widget = QtWidgets.QFrame()
         layout = QtWidgets.QHBoxLayout(self._widget)
         layout.setContentsMargins(0, 0, 0, 0)
         label = QtWidgets.QLabel(label)
