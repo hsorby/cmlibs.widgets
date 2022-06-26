@@ -178,6 +178,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         """
         Sets the Argon materials object which supplies the zinc context and has utilities for
         managing materials.
+        
         :param materials: ArgonMaterials object
         """
         self._materials = materials

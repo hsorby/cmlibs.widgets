@@ -140,6 +140,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._displayVector(self.ui.derived_values_lineedit, values)
 
     def createField(self):
+        """
+        Create new field
+        """
         returnedField = None
         errorMessage = ""
         sourceFields = []
@@ -322,6 +325,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
         return returnedField
 
     def createFieldPressed(self):
+        """
+        The event of create field pressed
+        """
         if self._createMode and self._fieldmodule:
             if self._fieldType:
                 self._fieldmodule.beginChange()
@@ -344,6 +350,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 ArgonLogger.getLogger().error("Must select a field type.")
 
     def getDerivedChooser1Value(self):
+        """
+        Get the value of the first derived chooser.
+        """
         index = self.ui.derived_chooser_1.currentIndex()
         if self._fieldType == "FieldEdgeDiscontinuity":
             return index + FieldEdgeDiscontinuity.MEASURE_C1
@@ -358,17 +367,28 @@ class FieldEditorWidget(QtWidgets.QWidget):
         return 1
 
     def getDerivedChooser2Value(self):
+        """
+        Get the value of the second derived chooser.
+        """
         if self._fieldType == "FieldFindMeshLocation":
             return self.ui.derived_chooser_2.currentText()
         return None
 
     def getDerivedChooser3Value(self):
+        """
+        Get the value of the third derived chooser.
+        """
         index = self.ui.derived_chooser_3.currentIndex()
         if self._fieldType == "FieldFindMeshLocation":
             return self.ui.derived_chooser_3.currentText()
         return None
 
     def derivedChooser1Changed(self, index):
+        """
+        The handle of the first derived chooser.
+
+        :param index: New index after changed.
+        """
         if self._field and self._field.isValid():
             if self._fieldType == "FieldEdgeDiscontinuity":
                 derivedField = self._field.castEdgetDiscontinuity()
@@ -378,6 +398,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 derivedField.setSearchMode(index + FieldFindMeshLocation.SEARCH_MODE_EXACT)
 
     def derivedChooser3Changed(self, index):
+        """
+        The handle of the first derived chooser.
+
+        :param index: New index after changed.
+        """
         if self._field and self._field.isValid():
             if self._fieldType == "FieldFindMeshLocation":
                 derivedField = self._field.castFindMeshLocation()
@@ -390,6 +415,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
                     self._setChooserText(self.ui.derived_chooser_3, searchMeshName)
 
     def sourceField2Changed(self, index):
+        """
+        The handle of the second source field chooser.
+
+        :param index: New index after changed.
+        """
         if self._field and self._field.isValid():
             if self._fieldType == "FieldEdgeDiscontinuity":
                 derivedField = self._field.castEdgetDiscontinuity()
@@ -419,6 +449,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
         chooser.blockSignals(False)
 
     def display_derived(self):
+        """
+        Update all the UI of derived.
+        """
         # print self._fieldType
         # self.ui.derived_groupbox.setTitle(QtWidgets.QApplication.translate("FieldEditorWidget", self._fieldType + ":", None))
         """ hide everything at the beginning """
@@ -713,6 +746,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
                     self._sourceFieldChoosers[0][1].setConditional(FieldIsSquareMatrix)
 
     def bindField(self):
+        """
+        The handle of the first derived chooser.
+
+        :param index: New index after changed.
+        """
         applyField = self._field.castApply()
         if applyField.isValid():
             for fieldPair in self._argumentFieldPairs:
@@ -720,6 +758,11 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._updateWidgets()
 
     def displaySourceFieldsChoosers(self, numberOfSourceFields):
+        """
+        The handle of the first derived chooser.
+
+        :param index: New index after changed.
+        """
         self.ui.region_of_apply_fields_label.hide()
         self.ui.region_of_apply_fields_chooser.hide()
         numberOfExistingWidgets = len(self._sourceFieldChoosers)
@@ -781,9 +824,19 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self.ui.number_of_source_fields_lineedit.setText(str(numberOfSourceFields))
 
     def applyFieldRegionChanged(self, index):
+        """
+        The handle of the apply field region chooser.
+
+        :param index: New index after changed.
+        """
         self._sourceFieldChoosers[0][1].setRegion(self.ui.region_of_apply_fields_chooser.getRegion())
 
     def displayArgumentFieldsChoosers(self, index, argument_field):
+        """
+        The handle of the first derived chooser.
+
+        :param index: New index after changed.
+        """
         argumentFieldLabel = QtWidgets.QLabel(self.ui.applyargumentfields_groupbox)
         argumentFieldLabel.setObjectName("argumentfield_label" + str(index))
         argumentFieldLabel.setText(QtWidgets.QApplication.translate("FieldEditorWidget", "Bind Argument Field " + str(int(index/2 + 1)), None))
@@ -813,6 +866,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._argumentFieldPairs.append([argumentFieldChooser, sourceFieldChooser])
 
     def displaySourceFields(self):
+        """
+        Display source fields.
+        """
         numberOfSourceFields = 0
         if self._field and self._field.isValid():
             numberOfSourceFields = self._field.getNumberOfSourceFields()
@@ -1005,6 +1061,9 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._coordinateSystemDisplay()
 
     def fieldTypeChanged(self):
+        """
+        Set field type changed
+        """
         self._fieldType = self.ui.field_type_chooser.getFieldType()
         self._updateWidgets()
 
