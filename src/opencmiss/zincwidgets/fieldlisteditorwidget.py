@@ -108,7 +108,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         else:
             self._timekeeper = timekeeper
         if self._timekeeper:
-            self._ui.field_editor.setTimekeeper(self._timekeeper)
+            self._ui.field_editor.set_timekeeper(self._timekeeper)
 
     def _setFieldmodule(self, fieldmodule):
         """
@@ -119,7 +119,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         else:
             self._fieldmodule = fieldmodule
         if self._fieldmodule:
-            self._ui.field_editor.setFieldmodule(self._fieldmodule)
+            self._ui.field_editor.set_field_module(self._fieldmodule)
         self._build_fields_list()
         if self._fieldmodule:
             self._fieldmodulenotifier = self._fieldmodule.createFieldmodulenotifier()

@@ -60,15 +60,17 @@ class FieldEditorWidget(QtWidgets.QWidget):
     def _update_field_properties(self):
         self._ui.field_properties_widget.set_field(self._field_interface)
 
-    def setTimekeeper(self, timekeeper):
+    def set_timekeeper(self, timekeeper):
         """
-        Set when timekeeper changes
+        Set when timekeeper changes.
+        :param timekeeper: The timekeeper to set.
         """
         self._timekeeper = timekeeper
 
-    def setFieldmodule(self, field_module):
+    def set_field_module(self, field_module):
         """
-        Set when fieldmodule changes to initialised widgets dependent on fieldmodule
+        Set the current field module. Resets all field widgets.
+        :param field_module: The field module to set.
         """
         self._field_module = field_module
         self._set_field_interface(None, None)
@@ -76,13 +78,19 @@ class FieldEditorWidget(QtWidgets.QWidget):
 
     def set_field_and_type(self, field, field_type):
         """
-        Set the field to be edited
+        Set the field and field type of the field to be edited.
+        :param field: The field to be edited.
+        :param field_type: The type of field to be edited.
         """
         self._set_field_interface(field, field_type)
         self._update_field_properties()
         self._update_ui()
 
     def define_new_field(self, field_type):
+        """
+        Set up the editor to define a new field of type field_type.
+        :param field_type: The type of field to define.
+        """
         self._set_field_interface(None, field_type, set_managed=True)
         self._ui.name_lineedit.setText(self._get_temp_field_name())
         self._update_field_properties()
