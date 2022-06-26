@@ -192,12 +192,12 @@ class FieldListEditorWidget(QtWidgets.QWidget):
             fieldTypeDict = self._argonRegion.getFieldTypeDict()
             if name in fieldTypeDict:
                 fieldType = fieldTypeDict[name]
-                self._ui.field_editor.setField(self._field, fieldType)
+                self._ui.field_editor.set_field_and_type(self._field, fieldType)
             else:
-                self._ui.field_editor.setField(self._field, None)
+                self._ui.field_editor.set_field_and_type(self._field, None)
         else:
             self.field_listview.clearSelection()
-            self._ui.field_editor.setField(None, None)
+            self._ui.field_editor.set_field_and_type(None, None)
 
     def _region_changed(self, index):
         zincRegion = self._ui.region_chooser.getRegion()
@@ -238,7 +238,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
             if self._field.isManaged():
                 name = self._field.getName()
                 # remove references to field in field editor, list items and field member
-                self._ui.field_editor.setField(None, None)
+                self._ui.field_editor.set_field_and_type(None, None)
                 model = self._ui.field_listview.model()
                 item = model.findItems(name)[0]
                 item.setData(None)
@@ -255,4 +255,4 @@ class FieldListEditorWidget(QtWidgets.QWidget):
                     fieldTypeDict = self._argonRegion.getFieldTypeDict()
                     if name in fieldTypeDict:
                         fieldType = fieldTypeDict[name]
-                    self._ui.field_editor.setField(self._field, fieldType)
+                    self._ui.field_editor.set_field_and_type(self._field, fieldType)

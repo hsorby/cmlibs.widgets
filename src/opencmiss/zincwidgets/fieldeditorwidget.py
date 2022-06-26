@@ -74,13 +74,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._set_field_interface(None, None)
         self._update_field_properties()
 
-    def getField(self):
-        """
-        Get the field currently in the editor
-        """
-        return self._field
-
-    def setField(self, field, field_type):
+    def set_field_and_type(self, field, field_type):
         """
         Set the field to be edited
         """
