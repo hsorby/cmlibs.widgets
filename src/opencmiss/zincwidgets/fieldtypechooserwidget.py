@@ -13,9 +13,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import re
+
 from PySide2 import QtWidgets
 
 from opencmiss.zincwidgets.fields import FIELD_TYPES
+
+
+def convert_field_name_to_display_name(name):
+    return re.sub(r"([A-Z])", r" \1", name[5:])
+
+
+def convert_display_name_to_field_name(name):
+    return f"Field{name.replace(' ', '')}"
 
 
 class FieldTypeChooserWidget(QtWidgets.QComboBox):
@@ -35,7 +45,7 @@ class FieldTypeChooserWidget(QtWidgets.QComboBox):
         if self._null_object_name:
             self.addItem(self._null_object_name)
 
-        self.addItems(FIELD_TYPES)
+        self.addItems([convert_field_name_to_display_name(f) for f in FIELD_TYPES])
         self.blockSignals(False)
 
     def _display_field_type(self):
@@ -65,7 +75,7 @@ class FieldTypeChooserWidget(QtWidgets.QComboBox):
         field_type_name = self.currentText()
         if self._null_object_name and (field_type_name == self._null_object_name):
             field_type_name = None
-        return field_type_name
+        return convert_display_name_to_field_name(field_type_name)
 
     def setFieldType(self, field_type):
         """
@@ -74,5 +84,5 @@ class FieldTypeChooserWidget(QtWidgets.QComboBox):
         if not field_type:
             self._currentFieldType = None
         else:
-            self._currentFieldType = field_type
+            self._currentFieldType = convert_field_name_to_display_name(field_type)
         self._display_field_type()

@@ -18,6 +18,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from opencmiss.argon.argonlogger import ArgonLogger
 from opencmiss.zinc.status import OK as ZINC_OK
 from opencmiss.zinc.field import Field
+from opencmiss.zincwidgets.fieldtypechooserwidget import convert_display_name_to_field_name
 
 from opencmiss.zincwidgets.ui.ui_fieldlisteditorwidget import Ui_FieldListEditorWidget
 
@@ -224,7 +225,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
 
     def _add_field(self, current_text):
         if current_text != FIELD_CHOOSER_ADD_TEXT:
-            self._ui.field_editor.define_new_field(current_text)
+            self._ui.field_editor.define_new_field(convert_display_name_to_field_name(current_text))
             self._ui.add_field_type_chooser.blockSignals(True)
             self._ui.add_field_type_chooser.setCurrentIndex(0)
             self._ui.add_field_type_chooser.blockSignals(False)

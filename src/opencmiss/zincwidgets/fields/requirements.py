@@ -181,7 +181,7 @@ class FieldRequirementValueType(FieldRequirementComboBoxBase):
         self._combobox.blockSignals(False)
 
 
-class FieldRequirementSearchMesh(FieldRequirementMesh):
+class FieldRequirementMeshLike(FieldRequirementMesh):
 
     def __init__(self, region):
         search_mesh_names = copy(MESH_NAMES)

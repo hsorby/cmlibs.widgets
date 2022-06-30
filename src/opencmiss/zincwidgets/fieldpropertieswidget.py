@@ -1,6 +1,7 @@
 from PySide2 import QtWidgets, QtCore
 
 from opencmiss.zincwidgets.fields.lists import FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS
+from opencmiss.zincwidgets.fieldtypechooserwidget import convert_field_name_to_display_name
 
 
 class FieldPropertiesWidget(QtWidgets.QWidget):
@@ -44,7 +45,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         self._title_groupbox = QtWidgets.QGroupBox(self)
         self._title_groupbox.setTitle(u"Field type")
         self._title_layout = QtWidgets.QVBoxLayout(self._title_groupbox)
-        self._title_label = QtWidgets.QLabel(self._field.field_display_label())
+        self._title_label = QtWidgets.QLabel(convert_field_name_to_display_name(self._field.field_display_label()))
         self._title_layout.addWidget(self._title_label)
         self._vertical_layout.addWidget(self._title_groupbox)
 

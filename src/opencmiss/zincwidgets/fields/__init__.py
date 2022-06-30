@@ -8,7 +8,7 @@ from opencmiss.zincwidgets.fields.lists import NONE_FIELD_TYPE_NAME, FIELD_TYPES
     FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD, FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD, FIELDS_REQUIRING_NUMBER_OF_COMPONENTS, INTERNAL_FIELD_NAMES
 from opencmiss.zincwidgets.fields.requirements import FieldRequirementRealListValues, FieldRequirementStringValue, FieldRequirementSourceField, FieldRequirementNumberOfRows, \
     FieldRequirementNaturalNumberVector, FieldRequirementMesh, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
-    FieldRequirementSearchMode, FieldRequirementSearchMesh, FieldRequirementNaturalNumberValue, FieldRequirementFaceType, FieldRequirementValueType, \
+    FieldRequirementSearchMode, FieldRequirementMeshLike, FieldRequirementNaturalNumberValue, FieldRequirementFaceType, FieldRequirementValueType, \
     FieldRequirementNumberOfComponents, FieldRequirementSourceFieldRegionDependent, FieldRequirementRegion, FieldRequirementSourceFieldRegionDependentFieldDependent, \
     FieldRequirementTimekeeper, FieldRequirementQuadratureRule
 
@@ -292,6 +292,9 @@ class FieldTypeBase(object):
         elif self._field_type == "FieldGradient":
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
             field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
+        elif self._field_type == "FieldDerivative":
+            field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
+            field_requirements.append(FieldRequirementNaturalNumberValue("xi index:"))
         elif self._field_type == "FieldFibreAxes":
             field_requirements.append(FieldRequirementSourceField(self._region, "Fibre Field:", FieldIsCoordinateCapable))
             field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
@@ -309,7 +312,7 @@ class FieldTypeBase(object):
         elif self._field_type == "FieldMeshIntegral":
             field_requirements.append(FieldRequirementSourceField(self._region, "Integrand Field:"))
             field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
-            field_requirements.append(FieldRequirementMesh(self._region))
+            field_requirements.append(FieldRequirementMeshLike(self._region))
         elif self._field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
             if self._is_defined():
                 number_of_source_fields = self._field.getNumberOfSourceFields()
@@ -329,7 +332,7 @@ class FieldTypeBase(object):
             additional_requirements.append(FieldRequirementOptionalSourceField(self._region, "Conditional Field:", FieldIsScalar))
         elif self._field_type == "FieldFindMeshLocation":
             additional_requirements.append(FieldRequirementSearchMode())
-            additional_requirements.append(FieldRequirementSearchMesh(self._region))
+            additional_requirements.append(FieldRequirementMeshLike(self._region))
         elif self._field_type == "FieldMeshIntegral":
             additional_requirements.append(FieldRequirementNaturalNumberVector("Numbers of Points:"))
             additional_requirements.append(FieldRequirementQuadratureRule())
