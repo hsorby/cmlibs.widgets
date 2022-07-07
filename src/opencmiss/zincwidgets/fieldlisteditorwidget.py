@@ -77,7 +77,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         self._ui.field_listview.clicked.connect(self.fieldListItemClicked)
         self._ui.add_field_button.clicked.connect(self.addFieldClicked)
         self._ui.delete_field_button.clicked.connect(self.deleteFieldClicked)
-        self._ui.field_editor._fieldCreated.connect(self.editorCreateField)
+        self._ui.field_editor.fieldCreated.connect(self.editorCreateField)
 
     def getFieldmodule(self):
         """

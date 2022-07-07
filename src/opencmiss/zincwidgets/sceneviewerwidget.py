@@ -20,7 +20,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide2 import QtCore, QtWidgets
+from PySide2 import QtCore, QtGui, QtWidgets
 
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
@@ -36,7 +36,9 @@ from opencmiss.zincwidgets.definitions import ProjectionMode, SelectionMode, \
 
 
 class SceneviewerWidget(QtWidgets.QOpenGLWidget):
+
     graphicsInitialized = QtCore.Signal()
+    becameActive = QtCore.Signal()
 
     # init start
     def __init__(self, parent=None):
@@ -52,6 +54,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         self._sceneviewer = None
         self._scenepicker = None
         self._use_zinc_mouse_event_handling = False
+        self._is_active = False
 
         # Selection attributes
         self._selectionKeyHandling = True  # set to False if parent widget is to handle selection key presses
@@ -66,6 +69,24 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self._selection_position_start = None
         # init end
+
+    def paintEvent(self, event):
+        super(SceneviewerWidget, self).paintEvent(event)
+
+        if self._is_active:
+            painter = QtGui.QPainter(self)
+            painter.setPen(QtGui.QPen(QtGui.QBrush(QtCore.Qt.magenta), 2))
+            painter.drawRect(QtCore.QRect(1, 1, self.width() - 2, self.height() - 2))
+
+    def focusInEvent(self, event) -> None:
+        super(SceneviewerWidget, self).focusInEvent(event)
+        if not self._is_active:
+            self._is_active = True
+            self.becameActive.emit()
+
+    def setActiveState(self, state):
+        self._is_active = state
+        self.update()
 
     def setContext(self, context):
         """

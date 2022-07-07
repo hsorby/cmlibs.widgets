@@ -35,7 +35,7 @@ MeshName = ["mesh1d", "mesh2d", "mesh3d"]
 FaceType = ["all", "any face", "no face", "xi1 = 0", "xi1 = 1", "xi2 = 0", "xi2 = 1", "xi3 = 0", "xi3 = 0"]
 ValueType = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2_ds2ds3", "d3_ds1ds2ds3"]
 
-FieldTypeToNumberofSourcesList = {
+FieldTypeToNumberOfSourcesList = {
     'FieldAlias': 1, 'FieldLog': 1, 'FieldExp': 1, 'FieldAbs': 1, 'FieldIdentity': 1, 'FieldApply': 1, 'FieldArgumentReal': 0,
     'FieldCoordinateTransformation': 1, 'FieldIsDefined': 1, 'FieldNot': 1,
     'FieldDeterminant': 1, 'FieldEigenvalues': 1, 'FieldEigenvectors': 1,
@@ -55,7 +55,7 @@ FieldTypeToNumberofSourcesList = {
 
 
 class FieldEditorWidget(QtWidgets.QWidget):
-    _fieldCreated = QtCore.Signal(Field, str)
+    fieldCreated = QtCore.Signal(Field, str)
 
     def __init__(self, parent=None):
         """
@@ -73,7 +73,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._bindFieldButton = None
         self._sourceFieldChoosers = []
         self._fieldType = None
-        self._createMode = True
+        self._createMode = False
         self._timekeeper = None
         self._updateWidgets()
         self._makeConnections()
@@ -113,7 +113,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
                 or self._fieldType == "FieldDerivative" or self._fieldType == "FieldArgumentReal":
             try:
                 value = int(self.ui.derived_values_lineedit.text())
-            except:
+            except ValueError:
                 value = 0
             if 1 > value:
                 self.ui.derived_values_lineedit.setText("")
@@ -146,7 +146,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         if self._fieldType == "FieldConcatenate" or self._fieldType == "FieldCrossProduct":
             numberOfSourceFields = int(self.ui.number_of_source_fields_lineedit.text())
         else:
-            numberOfSourceFields = FieldTypeToNumberofSourcesList[self._fieldType]
+            numberOfSourceFields = FieldTypeToNumberOfSourcesList[self._fieldType]
         for i in range(0, numberOfSourceFields):
             sourceFields.append(self._sourceFieldChoosers[i][1].getField())
         if self._fieldType == "FieldLog" or self._fieldType == "FieldSqrt" or self._fieldType == "FieldExp" or \
@@ -237,9 +237,12 @@ class FieldEditorWidget(QtWidgets.QWidget):
             else:
                 errorMessage = " Missing source field(s)."
         elif self._fieldType == "FieldFiniteElement" or self._fieldType == "FieldArgumentReal":
-            value = int(self.ui.derived_values_lineedit.text())
-            methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
-            returnedField = methodToCall(value)
+            try:
+                value = int(self.ui.derived_values_lineedit.text())
+                methodToCall = getattr(self._fieldmodule, "create" + self._fieldType)
+                returnedField = methodToCall(value)
+            except ValueError:
+                errorMessage = " Invalid derived values argument."
         elif self._fieldType == "FieldEdgeDiscontinuity":
             if sourceFields[0] and sourceFields[0].isValid():
                 returnedField = self._fieldmodule.createFieldEdgeDiscontinuity(sourceFields[0])
@@ -328,14 +331,14 @@ class FieldEditorWidget(QtWidgets.QWidget):
                     #     text, ok = QtWidgets.QInputDialog.getText(self, 'Field Name Dialog', 'Enter field name:')
                     #     if ok:
                     #         returnedField.setName(text)
-                    #         self._fieldCreated.emit(returnedField, self._fieldType)
+                    #         self.fieldCreated.emit(returnedField, self._fieldType)
                     #     else:
                     #         returnedField.setManaged(False)
                     #         returnedField = None
                     # else:
                     if returnedField.getName() != self.ui.name_lineedit.text():
                         returnedField.setName(self.ui.name_lineedit.text())
-                    self._fieldCreated.emit(returnedField, self._fieldType)
+                    self.fieldCreated.emit(returnedField, self._fieldType)
                 self._fieldmodule.endChange()
             else:
                 ArgonLogger.getLogger().error("Must select a field type.")
@@ -814,23 +817,21 @@ class FieldEditorWidget(QtWidgets.QWidget):
         if self._field and self._field.isValid():
             numberOfSourceFields = self._field.getNumberOfSourceFields()
         elif self._fieldType and self._createMode:
-            numberOfSourceFields = FieldTypeToNumberofSourcesList[self._fieldType]
+            numberOfSourceFields = FieldTypeToNumberOfSourcesList[self._fieldType]
         self.displaySourceFieldsChoosers(numberOfSourceFields)
 
     def _coordinateSystemDisplay(self):
-        type = Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN
-        foucs = 0
         if self._field and self._field.isValid():
-            type = self._field.getCoordinateSystemType()
-            foucs = self._field.getCoordinateSystemFocus()
-            newText = STRING_FLOAT_FORMAT.format(foucs)
+            coordinate_type = self._field.getCoordinateSystemType()
+            focus = self._field.getCoordinateSystemFocus()
+            newText = STRING_FLOAT_FORMAT.format(focus)
             self.ui.coordinate_system_focus_lineedit.setText(newText)
-            if type == Field.COORDINATE_SYSTEM_TYPE_PROLATE_SPHEROIDAL or type == Field.COORDINATE_SYSTEM_TYPE_OBLATE_SPHEROIDAL:
+            if coordinate_type == Field.COORDINATE_SYSTEM_TYPE_PROLATE_SPHEROIDAL or coordinate_type == Field.COORDINATE_SYSTEM_TYPE_OBLATE_SPHEROIDAL:
                 self.ui.coordinate_system_focus_lineedit.setEnabled(True)
             else:
                 self.ui.coordinate_system_focus_lineedit.setEnabled(False)
             self.ui.coordinate_system_type_chooser.blockSignals(True)
-            self.ui.coordinate_system_type_chooser.setCurrentIndex(type - Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN)
+            self.ui.coordinate_system_type_chooser.setCurrentIndex(coordinate_type - Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN)
             self.ui.coordinate_system_type_chooser.blockSignals(False)
             self.ui.coordinate_system_groupbox.show()
         else:
@@ -850,11 +851,12 @@ class FieldEditorWidget(QtWidgets.QWidget):
         # base graphics attributes
         isManaged = False
         isTypeCoordinate = False
-        self.ui.managed_checkbox.hide()
-        self.ui.type_coordinate_checkbox.hide()
+        # self.ui.managed_checkbox.hide()
+        # self.ui.type_coordinate_checkbox.hide()
         if self._field:
             isManaged = self._field.isManaged()
             isTypeCoordinate = self._field.isTypeCoordinate()
+
         if self._fieldType or self._field:
             self.ui.managed_checkbox.blockSignals(True)
             self.ui.managed_checkbox.setCheckState(QtCore.Qt.Checked if isManaged else QtCore.Qt.Unchecked)
@@ -874,20 +876,23 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self.ui.derived_groupbox.hide()
             self.ui.applyargumentfields_groupbox.hide()
             self.ui.sourcefields_groupbox.hide()
+
         self.ui.field_type_chooser.setFieldType(self._fieldType)
-        if self._createMode == True:
-            self.ui.create_button.show()
-            self.ui.field_type_chooser.setEnabled(True)
-            self.ui.name_label.show()
-            self.ui.name_lineedit.show()
+        if self._createMode:
+            self.ui.field_groupbox.show()
+            self.ui.field_groupbox.setEnabled(True)
+            self.ui.create_groupbox.show()
             numberOfFields = self._getNumberOfFields()
-            tempname = "temp" + str(numberOfFields + 1)
-            self.ui.name_lineedit.setText(tempname)
+            temp_name = "temp" + str(numberOfFields + 1)
+            self.ui.name_lineedit.setText(temp_name)
         else:
-            self.ui.field_type_chooser.setEnabled(False)
-            self.ui.create_button.hide()
-            self.ui.name_label.hide()
-            self.ui.name_lineedit.hide()
+            if self._field:
+                self.ui.field_groupbox.setEnabled(False)
+            else:
+                self.ui.field_groupbox.hide()
+            self.ui.create_groupbox.hide()
+
+        self.ui.create_groupbox.setEnabled(bool(self._fieldType or self._field))
 
     def setTimekeeper(self, timekeeper):
         """
@@ -902,6 +907,8 @@ class FieldEditorWidget(QtWidgets.QWidget):
         self._fieldmodule = fieldmodule
         for i in range(0, len(self._sourceFieldChoosers)):
             self._sourceFieldChoosers[i][1].setRegion(self._fieldmodule.getRegion())
+
+        self._initialise()
         self._updateWidgets()
 
     def getField(self):
@@ -919,9 +926,8 @@ class FieldEditorWidget(QtWidgets.QWidget):
             self._fieldType = fieldType
             self._createMode = False
         else:
-            self._field = None
-            self._fieldType = None
-            self._createMode = True
+            self._initialise_create_mode()
+
         self._updateWidgets()
 
     def _displayVectorInteger(self, widget, values):
@@ -1006,7 +1012,7 @@ class FieldEditorWidget(QtWidgets.QWidget):
         numberOfSourceFieldsText = self.ui.number_of_source_fields_lineedit.text()
         try:
             numberOfSourceFields = int(numberOfSourceFieldsText)
-        except:
+        except ValueError:
             print("Invalid number of source fields", numberOfSourceFieldsText)
         if self._fieldType == "FieldCrossProduct" and numberOfSourceFields > 3:
             numberOfSourceFields = 3
@@ -1020,7 +1026,15 @@ class FieldEditorWidget(QtWidgets.QWidget):
         """
         Set coordinate system focus text in widget
         """
-        self._createMode = True
+        self._initialise_create_mode()
+        self._updateWidgets()
+
+    def _initialise_create_mode(self):
         self._field = None
         self._fieldType = None
-        self._updateWidgets()
+        self._createMode = True
+
+    def _initialise(self):
+        self._field = None
+        self._fieldType = None
+        self._createMode = False

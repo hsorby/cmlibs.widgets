@@ -310,13 +310,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.97317196"
-     inkscape:cx="181.87947"
+     inkscape:cx="146.42839"
      inkscape:cy="516.35273"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer4"
      showgrid="false"
-     inkscape:window-width="1792"
-     inkscape:window-height="1075"
+     inkscape:window-width="2560"
+     inkscape:window-height="1395"
      inkscape:window-x="0"
      inkscape:window-y="23"
      inkscape:window-maximized="1"
@@ -350,8 +350,147 @@
   </g>
   <g
      inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Multi2x2SceneLayout"
+     style="display:none">
+    <rect
+       style="display:inline;fill:#808080;stroke:#000000;stroke-width:4.7811;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect846-6"
+       width="383.11761"
+       height="265.34995"
+       x="188.4505"
+       y="136.17891" />
+    <rect
+       style="display:inline;fill:#800080;stroke:none;stroke-width:3.93317;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0-0"
+       width="188.67401"
+       height="126.7767"
+       x="-380.54565"
+       y="-268.12216"
+       transform="scale(-1)" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:3.81517;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0"
+       width="184.10883"
+       height="122.23986"
+       x="194.15427"
+       y="143.61391" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:3.79189;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0-4"
+       width="181.86906"
+       height="122.23987"
+       x="194.14023"
+       y="271.85385" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:3.79189;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0-6"
+       width="181.86906"
+       height="122.23987"
+       x="384.00931"
+       y="271.85385" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:3.79189;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0-8"
+       width="181.86906"
+       height="122.23987"
+       x="384.00931"
+       y="143.614" />
+    <rect
+       style="display:inline;fill:#808080;stroke:#000000;stroke-width:4.7811;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect846-6-3"
+       width="383.11761"
+       height="265.34995"
+       x="184.72166"
+       y="459.57285"
+       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:3.81517;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0-3"
+       width="184.10883"
+       height="122.23986"
+       x="190.42543"
+       y="467.00784"
+       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:3.79189;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0-4-4"
+       width="181.86906"
+       height="122.23987"
+       x="190.41141"
+       y="595.2478"
+       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:3.79189;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0-6-1"
+       width="181.86906"
+       height="122.23987"
+       x="380.28049"
+       y="595.2478"
+       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:3.79189;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-0-8-4"
+       width="181.86906"
+       height="122.23987"
+       x="380.28049"
+       y="467.00797"
+       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="SingleSceneLayout">
+    <rect
+       style="display:inline;fill:#800080;stroke:#000000;stroke-width:4.7811;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect846"
+       width="383.11761"
+       height="265.34995"
+       x="157.67337"
+       y="154.91319" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:7.58377;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018"
+       width="363.73813"
+       height="244.47974"
+       x="167.36311"
+       y="165.34827" />
+    <rect
+       style="display:inline;fill:#808080;stroke:#000000;stroke-width:4.7811;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect846-4"
+       width="383.11761"
+       height="265.34995"
+       x="201.11285"
+       y="570.31201"
+       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-single-scene.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="display:inline;fill:#ffffff;stroke:none;stroke-width:7.58377;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.553701;stroke-opacity:1"
+       id="rect1018-8"
+       width="363.73813"
+       height="244.47974"
+       x="210.80258"
+       y="580.74713"
+       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-single-scene.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="add">
+     inkscape:label="add"
+     style="display:none">
     <image
        width="128"
        height="128"

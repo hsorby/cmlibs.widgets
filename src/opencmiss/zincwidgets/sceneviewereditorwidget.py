@@ -30,8 +30,21 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         # Using composition to include the visual element of the GUI.
         self._ui = Ui_SceneviewerEditorWidget()
         self._ui.setupUi(self)
+        self._ui.widget_container.setEnabled(False)
         # Future once enum string conversions added for this type:
-        #self._ui.transparency_mode_chooser.setEnumsList(Sceneviewer.TransparencyModeEnumToString, Element.TransparencyModeEnumFromString)
+        # self._ui.transparency_mode_chooser.setEnumsList(Sceneviewer.TransparencyModeEnumToString, Element.TransparencyModeEnumFromString)
+        self._make_connections()
+
+    def _make_connections(self):
+        self._ui.region_chooser.currentIndexChanged.connect(self._region_changed)
+
+    def _region_changed(self):
+        region = self._ui.region_chooser.getRegion()
+        self._sceneviewer.setScene(region.getScene())
+
+    def setZincRootRegion(self, root_region):
+        self._ui.region_chooser.setRootRegion(root_region)
+        # self.setScene(root_region.getScene())
 
     def getSceneviewer(self):
         """
@@ -48,12 +61,19 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
                 self._sceneviewernotifier.clearCallback()
                 self._sceneviewernotifier = None
             self._sceneviewer = None
+            self._ui.widget_container.setEnabled(False)
             return
+        self._ui.widget_container.setEnabled(True)
         self._sceneviewer = sceneviewer
         self._maximumClippingDistance = sceneviewer.getFarClippingPlane()
         self._sceneviewernotifier = sceneviewer.createSceneviewernotifier()
         self.setEnableUpdates(self._enableUpdates)
+        scene_region = self._sceneviewer.getScene().getRegion()
+        self._ui.region_chooser.setRegion(scene_region)
         self._displayAllSettings()
+
+    def setScene(self, scene):
+        self._sceneviewer.setScene(scene)
 
     def setEnableUpdates(self, enableUpdates):
         self._enableUpdates = enableUpdates
@@ -124,6 +144,7 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
         """
         Change sceneviewer to see all of scene.
         """
+
         self._sceneviewer.viewAll()
         self._maximumClippingDistance = self._sceneviewer.getFarClippingPlane()
         self._displayViewSettings()
