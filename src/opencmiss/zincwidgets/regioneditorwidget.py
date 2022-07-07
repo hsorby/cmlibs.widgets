@@ -193,6 +193,11 @@ class RegionEditorWidget(QtWidgets.QWidget):
         self._makeConnections()
 
     def getCurrentRegion(self):
+        """
+        Return current region.
+
+        :return: zinc.region
+        """
         currentIndex = self._ui.treeViewRegion.currentIndex()
         region = self._regionItems.getRegionAtIndex(currentIndex)
         return region
