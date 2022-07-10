@@ -49,6 +49,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
         self._ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
         self._ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
+        DomainTypeEnum = [Field.DOMAIN_TYPE_POINT,Field.DOMAIN_TYPE_NODES,Field.DOMAIN_TYPE_DATAPOINTS,Field.DOMAIN_TYPE_MESH1D,Field.DOMAIN_TYPE_MESH2D,Field.DOMAIN_TYPE_MESH3D,Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]
+        self._ui.domain_enum_chooser.setEnumsList(Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString,DomainTypeEnum)
 
         self._ui.subgroup_field_chooser.setNullObjectName('-')
         self._ui.subgroup_field_chooser.setConditional(FieldIsScalar)
@@ -90,6 +92,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         contours = None
         streamlines = None
         if self._graphics:
+            # domainEnum = self._graphics.getFieldDomainType()
             subgroupField = self._graphics.getSubgroupField()
             coordinateField = self._graphics.getCoordinateField()
             material = self._graphics.getMaterial()
@@ -105,6 +108,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             self._ui.general_groupbox.show()
         else:
             self._ui.general_groupbox.hide()
+        # self._ui.domain_enum_chooser.setEnum(domainEnum)
         self._ui.subgroup_field_chooser.setField(subgroupField)
         self._ui.coordinate_field_chooser.setField(coordinateField)
         self._scenecoordinatesystemDisplay()
@@ -114,6 +118,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.tessellation_chooser.setTessellation(tessellation)
         self._boundarymodeDisplay()
         self._faceDisplay()
+        self._domainTypeDisplay()
         self._ui.wireframe_checkbox.setCheckState(QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
         # contours
         isoscalarField = None
@@ -382,6 +387,26 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             faceType = self._ui.face_enumeration_chooser.getEnum()
             self._graphics.setElementFaceType(faceType)
+
+    def _domainTypeDisplay(self):
+        """
+        Show the current state of the domain combo box
+        """
+        domainType = Field.DOMAIN_TYPE_INVALID
+        if self._graphics:
+            domainType = self._graphics.getFieldDomainType()
+        self._ui.domain_enum_chooser.setEnum(domainType)
+
+    def domainChanged(self, index):
+        """
+        Element domain combo box changed
+
+        :param index: index of new item.
+        """
+        if self._graphics:
+            domainType = self._ui.domain_enum_chooser.getEnum()
+            self._graphics.setFieldDomainType(domainType)
+            self._updateWidgets()
 
     def wireframeClicked(self, isChecked):
         """
