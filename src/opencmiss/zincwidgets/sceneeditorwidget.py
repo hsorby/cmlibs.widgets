@@ -41,9 +41,7 @@ class SceneEditorWidget(QtWidgets.QWidget):
         self._scene = None
         # Using composition to include the visual element of the GUI.
         self._ui = Ui_SceneEditorWidget()
-        self._graphicsItems = None
         self._ui.setupUi(self)
-
         self._make_connections()
 
     def _make_connections(self):
@@ -119,48 +117,59 @@ class SceneEditorWidget(QtWidgets.QWidget):
         """
         Fill the graphics list view with the list of graphics for current region/scene
         """
-        if self._graphicsItems is not None:
-            self._graphicsItems.clear()  # Must clear or holds on to graphics references
-        self._graphicsItems = QtGui.QStandardItemModel(self._ui.graphics_listview)
-        selectedIndex = None
+        if self._ui.graphics_listWidget is not None:
+            self._ui.graphics_listWidget.clear()  # Must clear or holds on to graphics references
         if self._scene:
             selectedGraphics = self._ui.graphics_editor.getGraphics()
             graphics = self._scene.getFirstGraphics()
+            index = 0
             while graphics and graphics.isValid():
                 name = self._getGraphicsDisplayName(graphics)
-                item = QtGui.QStandardItem(name)
-                item.setData(graphics)
-                item.setCheckable(True)
-                item.setEditable(False)
+                item = QtWidgets.QListWidgetItem(name)
+                item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                 visible = graphics.getVisibilityFlag()
                 item.setCheckState(QtCore.Qt.Checked if visible else QtCore.Qt.Unchecked)
-                self._graphicsItems.appendRow(item)
+                self._ui.graphics_listWidget.addItem(item)
                 if graphics == selectedGraphics:
-                    selectedIndex = self._graphicsItems.indexFromItem(item)
+                    self._ui.graphics_listWidget.setCurrentItem(item)
                 graphics = self._scene.getNextGraphics(graphics)
-        self._ui.graphics_listview.setModel(self._graphicsItems)
-        # self._ui.graphics_listview.setMovement(QtGui.QListView.Snap)
-        # self._ui.graphics_listview.setDragDropMode(QtGui.QListView.InternalMove)
-        # self._ui.graphics_listview.setDragDropOverwriteMode(False)
-        # self._ui.graphics_listview.setDropIndicatorShown(True)
-        if selectedIndex:
-            self._ui.graphics_listview.setCurrentIndex(selectedIndex)
-        self._ui.graphics_listview.show()
+                index += 1
+        self._ui.graphics_listWidget.registerDropCallback(self._onGraphicsListItemChanged)
+        self._ui.graphics_listWidget.show()
 
-    def graphicsListItemClicked(self, modelIndex):
+    def _onGraphicsListItemChanged(self, prevRow, newRow):
+        """
+        For the drag and drop event.
+        Update the order of graphics in scene.
+        """ 
+        if newRow != prevRow:
+            movingGraphics = self._scene.getFirstGraphics()
+            refGraphics = self._scene.getFirstGraphics()
+            while prevRow > 0 or newRow > 0 and movingGraphics.isValid():
+                if prevRow > 0:
+                    movingGraphics = self._scene.getNextGraphics(movingGraphics)
+                    prevRow -= 1
+                if newRow > 0:
+                    refGraphics = self._scene.getNextGraphics(refGraphics)
+                    newRow -= 1
+            self._scene.moveGraphicsBefore(movingGraphics, refGraphics)
+            self.graphicsListItemClicked(self._ui.graphics_listWidget.currentItem())
+
+    def graphicsListItemClicked(self, item):
         """
         Either changes visibility flag or selects current graphics
         """
-        model = modelIndex.model()
-        item = model.item(modelIndex.row())
-        graphics = item.data()
+        clickedIndex = self._ui.graphics_listWidget.row(item)
+        graphics = self._scene.getFirstGraphics()
+        tempIndex = clickedIndex
+        while tempIndex > 0 and graphics.isValid():
+            graphics = self._scene.getNextGraphics(graphics)
+            tempIndex -= 1
         visibilityFlag = item.checkState() == QtCore.Qt.Checked
         graphics.setVisibilityFlag(visibilityFlag)
-        selectedModelIndex = self._ui.graphics_listview.currentIndex()
-        selectedItem = model.item(selectedModelIndex.row())
-        selectedGraphics = selectedItem.data()
-        if graphics == selectedGraphics:
-            self._ui.graphics_editor.setGraphics(selectedGraphics)
+        selectedModelIndex = self._ui.graphics_listWidget.currentIndex()
+        if clickedIndex == selectedModelIndex.row():
+            self._ui.graphics_editor.setGraphics(graphics)
 
     def addGraphicsEntered(self, name):
         """
