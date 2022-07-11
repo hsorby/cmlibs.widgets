@@ -91,14 +91,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QListView" name="graphics_listview">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
+        <widget class="DraggableListWidget" name="graphics_listWidget" native="true"/>
        </item>
        <item>
         <widget class="QFrame" name="frame">
@@ -229,12 +222,18 @@
    <header>opencmiss/zincwidgets/graphicseditorwidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>DraggableListWidget</class>
+   <extends>QWidget</extends>
+   <header>opencmiss/zincwidgets/draggablelistwidget.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
   <connection>
-   <sender>graphics_listview</sender>
-   <signal>clicked(QModelIndex)</signal>
+   <sender>graphics_listWidget</sender>
+   <signal>itemClicked(QListWidgetItem)</signal>
    <receiver>SceneEditorWidget</receiver>
    <slot>graphicsListItemClicked(QModelIndex)</slot>
    <hints>
