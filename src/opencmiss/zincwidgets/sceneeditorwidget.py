@@ -129,10 +129,10 @@ class SceneEditorWidget(QtWidgets.QWidget):
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                 visible = graphics.getVisibilityFlag()
                 item.setCheckState(QtCore.Qt.Checked if visible else QtCore.Qt.Unchecked)
+                self._ui.graphics_listWidget.addItem(item)
                 if graphics == selectedGraphics:
                     self._ui.graphics_listWidget.setCurrentItem(item)
                 graphics = self._scene.getNextGraphics(graphics)
-                self._ui.graphics_listWidget.addItem(item)
                 index += 1
         self._ui.graphics_listWidget.registerDropCallback(self._onGraphicsListItemChanged)
         self._ui.graphics_listWidget.show()

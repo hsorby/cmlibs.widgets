@@ -90,30 +90,8 @@
          </layout>
         </widget>
        </item>
-       <!-- <item>
-        <widget class="QListView" name="graphics_listview">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-            <property name="acceptDrops">
-             <bool>true</bool>
-            </property>
-            <property name="dragEnabled">
-             <bool>true</bool>
-            </property>
-            <property name="dragDropMode">
-             <enum>QAbstractItemView::InternalMove</enum>
-            </property>
-            <property name="defaultDropAction">
-             <enum>Qt::MoveAction</enum>
-            </property>
-        </widget>
-       </item> -->
        <item>
-        <widget class="DraggableListWidget" name="graphics_listWidget"/>
+        <widget class="DraggableListWidget" name="graphics_listWidget" native="true"/>
        </item>
        <item>
         <widget class="QFrame" name="frame">
@@ -244,7 +222,7 @@
    <header>opencmiss/zincwidgets/graphicseditorwidget.h</header>
    <container>1</container>
   </customwidget>
-    <customwidget>
+  <customwidget>
    <class>DraggableListWidget</class>
    <extends>QWidget</extends>
    <header>opencmiss/zincwidgets/draggablelistwidget.h</header>
