@@ -92,7 +92,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         contours = None
         streamlines = None
         if self._graphics:
-            # domainEnum = self._graphics.getFieldDomainType()
             subgroupField = self._graphics.getSubgroupField()
             coordinateField = self._graphics.getCoordinateField()
             material = self._graphics.getMaterial()
@@ -108,7 +107,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             self._ui.general_groupbox.show()
         else:
             self._ui.general_groupbox.hide()
-        # self._ui.domain_enum_chooser.setEnum(domainEnum)
         self._ui.subgroup_field_chooser.setField(subgroupField)
         self._ui.coordinate_field_chooser.setField(coordinateField)
         self._scenecoordinatesystemDisplay()
@@ -178,7 +176,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._pointScaleFactorsDisplay()
         self._ui.label_field_chooser.setField(labelField)
         # sampling attributes
-        if samplingattributes and samplingattributes.isValid():
+        if samplingattributes and samplingattributes.isValid() and self._graphics.getFieldDomainType() >=8:
             self._ui.sampling_groupbox.show()
         else:
             self._ui.sampling_groupbox.hide()
@@ -282,6 +280,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 self._graphics.setSubgroupField(subgroupField)
             else:
                 self._graphics.setSubgroupField(Field())
+            if self._refreshGraphicListCallback:
+                self._refreshGraphicListCallback()
 
     def coordinateFieldChanged(self, index):
         """
@@ -407,6 +407,11 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             domainType = self._ui.domain_enum_chooser.getEnum()
             self._graphics.setFieldDomainType(domainType)
             self._updateWidgets()
+            if self._refreshGraphicListCallback:
+                self._refreshGraphicListCallback()
+
+    def setRefreshGraphicListCallback(self, callback):
+        self._refreshGraphicListCallback = callback
 
     def wireframeClicked(self, isChecked):
         """

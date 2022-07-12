@@ -142,21 +142,6 @@
             </item>
             <item>
              <property name="text">
-              <string>node points</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>data points</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>element points</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
               <string>lines</string>
              </property>
             </item>

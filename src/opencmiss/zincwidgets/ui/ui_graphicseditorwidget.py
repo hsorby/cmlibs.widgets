@@ -25,7 +25,7 @@ class Ui_GraphicsEditorWidget(object):
         if not GraphicsEditorWidget.objectName():
             GraphicsEditorWidget.setObjectName(u"GraphicsEditorWidget")
         GraphicsEditorWidget.setEnabled(True)
-        GraphicsEditorWidget.resize(298, 964)
+        GraphicsEditorWidget.resize(298, 960)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -429,7 +429,7 @@ class Ui_GraphicsEditorWidget(object):
         self.wireframe_checkbox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Wireframe", None))
         self.tessellation_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Tessellation:", None))
         self.subgroup_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Subgroup:", None))
-        self.domain_enum_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Domain", None))
+        self.domain_enum_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Domain:", None))
         self.contours_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Contours:", None))
         self.isoscalar_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Scalar field:", None))
         self.isovalues_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Isovalues:", None))

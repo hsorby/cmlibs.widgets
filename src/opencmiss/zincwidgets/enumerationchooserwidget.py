@@ -109,7 +109,7 @@ class EnumerationChooserWidget(QtWidgets.QComboBox):
             if self._validEnums:
                 enumIndex = self._validEnums.index(enum) + 1  # throws exception if not found; can change if too severe
             if self._getStringFromEnum(enumIndex):
-                self._currentEnum = enum
+                self._currentEnum = enumIndex
             else:
                 self._currentEnum = None
         self._displayItem()
