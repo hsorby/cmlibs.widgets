@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>298</width>
-    <height>964</height>
+    <height>1218</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -62,29 +62,24 @@
       <bool>false</bool>
      </property>
      <layout class="QFormLayout" name="formLayout_3">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
-       <number>7</number>
-      </property>
-      <item row="3" column="0">
+      <item row="0" column="0">
+       <widget class="QLabel" name="subgroup_field_label">
+        <property name="text">
+         <string>Subgroup:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="FieldChooserWidget" name="subgroup_field_chooser"/>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="coordinate_field_label">
         <property name="text">
          <string>Coordinates:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="2" column="1">
        <widget class="FieldChooserWidget" name="coordinate_field_chooser">
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToContents</enum>
@@ -101,24 +96,31 @@
       <item row="4" column="1">
        <widget class="EnumerationChooserWidget" name="scenecoordinatesystem_chooser"/>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
+       <widget class="QLabel" name="domain_label">
+        <property name="text">
+         <string>Domain:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
        <widget class="QLabel" name="boundarymode_label">
         <property name="text">
          <string>Boundary Mode:</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="8" column="1">
        <widget class="EnumerationChooserWidget" name="boundarymode_chooser"/>
       </item>
-      <item row="6" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="face_label">
         <property name="text">
          <string>Face:</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="10" column="1">
        <widget class="EnumerationChooserWidget" name="face_enumeration_chooser">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -128,28 +130,35 @@
         </property>
        </widget>
       </item>
-      <item row="8" column="0">
+      <item row="12" column="0" colspan="2">
+       <widget class="QCheckBox" name="wireframe_checkbox">
+        <property name="text">
+         <string>Wireframe</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="0">
        <widget class="QLabel" name="material_label">
         <property name="text">
          <string>Material:</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
+      <item row="13" column="1">
        <widget class="MaterialChooserWidget" name="material_chooser">
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToContents</enum>
         </property>
        </widget>
       </item>
-      <item row="11" column="0">
+      <item row="15" column="0">
        <widget class="QLabel" name="data_field_label">
         <property name="text">
          <string>Data field:</string>
         </property>
        </widget>
       </item>
-      <item row="11" column="1">
+      <item row="15" column="1">
        <widget class="FieldChooserWidget" name="data_field_chooser">
         <property name="editable">
          <bool>false</bool>
@@ -159,42 +168,28 @@
         </property>
        </widget>
       </item>
-      <item row="12" column="0">
+      <item row="17" column="0">
        <widget class="QLabel" name="spectrum_label">
         <property name="text">
          <string>Spectrum:</string>
         </property>
        </widget>
       </item>
-      <item row="12" column="1">
+      <item row="17" column="1">
        <widget class="SpectrumChooserWidget" name="spectrum_chooser"/>
       </item>
-      <item row="7" column="0">
-       <widget class="QCheckBox" name="wireframe_checkbox">
-        <property name="text">
-         <string>Wireframe</string>
-        </property>
-       </widget>
-      </item>
-      <item row="13" column="1">
-       <widget class="TessellationChooserWidget" name="tessellation_chooser"/>
-      </item>
-      <item row="13" column="0">
+      <item row="19" column="0">
        <widget class="QLabel" name="tessellation_label">
         <property name="text">
          <string>Tessellation:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="subgroup_field_label">
-        <property name="text">
-         <string>Subgroup:</string>
-        </property>
-       </widget>
+      <item row="19" column="1">
+       <widget class="TessellationChooserWidget" name="tessellation_chooser"/>
       </item>
-      <item row="2" column="1">
-       <widget class="FieldChooserWidget" name="subgroup_field_chooser"/>
+      <item row="6" column="1">
+       <widget class="EnumerationChooserWidget" name="domain_chooser"/>
       </item>
      </layout>
     </widget>
@@ -315,8 +310,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="EnumerationChooserWidget" name="streamlines_track_direction_chooser">
-       </widget>
+       <widget class="EnumerationChooserWidget" name="streamlines_track_direction_chooser"/>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="streamlines_colour_data_type_label">
@@ -326,8 +320,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="EnumerationChooserWidget" name="streamlines_colour_data_type_chooser">
-       </widget>
+       <widget class="EnumerationChooserWidget" name="streamlines_colour_data_type_chooser"/>
       </item>
      </layout>
     </widget>
@@ -361,8 +354,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="EnumerationChooserWidget" name="line_shape_chooser">
-       </widget>
+       <widget class="EnumerationChooserWidget" name="line_shape_chooser"/>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="line_base_size_label">
@@ -516,8 +508,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="EnumerationChooserWidget" name="sampling_mode_chooser">
-       </widget>
+       <widget class="EnumerationChooserWidget" name="sampling_mode_chooser"/>
       </item>
      </layout>
     </widget>
@@ -816,6 +807,16 @@
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>samplingModeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>streamlines_track_length_lineedit</sender>
@@ -826,22 +827,6 @@
     <hint type="sourcelabel">
      <x>162</x>
      <y>669</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>123</x>
-     <y>394</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>streamlines_track_direction_combobox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>GraphicsEditorWidget</receiver>
-   <slot>streamlinesTrackDirectionChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>162</x>
-     <y>698</y>
     </hint>
     <hint type="destinationlabel">
      <x>123</x>
@@ -866,22 +851,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>sampling_mode_combobox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>GraphicsEditorWidget</receiver>
-   <slot>samplingModeChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>179</x>
-     <y>415</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>123</x>
-     <y>394</y>
-    </hint>
-   </hints>
-  </connection>
-    <connection>
    <sender>streamlines_track_direction_chooser</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
@@ -1006,6 +975,22 @@
     <hint type="destinationlabel">
      <x>123</x>
      <y>439</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>domain_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>dataFieldChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>167</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>148</x>
+     <y>560</y>
     </hint>
    </hints>
   </connection>

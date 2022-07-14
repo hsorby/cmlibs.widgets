@@ -5,7 +5,8 @@ from opencmiss.zincwidgets.fields.lists import NONE_FIELD_TYPE_NAME, FIELD_TYPES
     FIELDS_REQUIRING_ONE_SOURCE_FIELD, FIELDS_REQUIRING_NO_ARGUMENTS, FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD, FIELDS_REQUIRING_TWO_SOURCE_FIELDS, \
     FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_THREE_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD, FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD, \
     FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_REAL_FIELD_ONE_COORDINATE_FIELD, FIELDS_REQUIRING_TWO_COORDINATE_FIELDS, \
-    FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD, FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD, FIELDS_REQUIRING_NUMBER_OF_COMPONENTS, INTERNAL_FIELD_NAMES
+    FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD, FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD, FIELDS_REQUIRING_NUMBER_OF_COMPONENTS, INTERNAL_FIELD_NAMES, \
+    INTERNAL_FIELD_TYPE_NAME
 from opencmiss.zincwidgets.fields.requirements import FieldRequirementRealListValues, FieldRequirementStringValue, FieldRequirementSourceField, FieldRequirementNumberOfRows, \
     FieldRequirementNaturalNumberVector, FieldRequirementMesh, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
     FieldRequirementSearchMode, FieldRequirementMeshLike, FieldRequirementNaturalNumberValue, FieldRequirementFaceType, FieldRequirementValueType, \
@@ -122,15 +123,19 @@ class FieldBase(object):
             elif field_type == "FieldStoredMeshLocation":
                 mesh = self._field.castStoredMeshLocation().getMesh()
                 requirement.set_value(mesh)
+            elif field_type == "FieldDerivative":
+                if index == 0:
+                    requirement.set_value(self._field.getSourceField(1))
+                elif index == 1:
+                    requirement.set_value(self._field.castDerivative().getXiIndex())
             elif field_type == "FieldMeshIntegral":
                 if index == 0:
                     requirement.set_value(self._field.getSourceField(1))
                 elif index == 1:
                     requirement.set_value(self._field.getSourceField(2))
                 elif index == 2:
-                    print('No API to get mesh from field.')
-                    # mesh = self._field.castMeshIntegral().getMesh()
-                    # requirement.set_value(mesh)
+                    mesh = self._field.castMeshIntegral().getMesh()
+                    requirement.set_value(mesh)
                 elif index == 3:
                     number_of_components = self._field.getNumberOfComponents()
                     result, numbers_of_points = self._field.castMeshIntegral().getNumbersOfPoints(number_of_components)
@@ -139,14 +144,14 @@ class FieldBase(object):
                     quadrature_rule = self._field.castMeshIntegral().getElementQuadratureRule()
                     requirement.set_value(quadrature_rule)
             elif field_type == "FieldIsOnFace":
-                print("No API to get the face type from field.")
+                requirement.set_value(self._field.castIsOnFace().getElementFaceType())
             elif field_type == "FieldNodeValue":
                 if index == 0:
                     requirement.set_value(self._field.getSourceField(1))
                 elif index == 1:
-                    print("No API to get the value type from field.")
+                    requirement.set_value(self._field.castNodeValue().getNodeValueLabel())
                 elif index == 2:
-                    print("No API to get the version from field.")
+                    requirement.set_value(self._field.castNodeValue().getVersionNumber())
             elif field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
                 number_of_source_fields = self._field.getNumberOfSourceFields()
                 if index < number_of_source_fields:
@@ -427,7 +432,7 @@ class FieldInterface(FieldBase, FieldTypeBase):
 
         field_name = self.get_field_name()
         if field_name in INTERNAL_FIELD_NAMES:
-            return "<internal>"
+            return INTERNAL_FIELD_TYPE_NAME
 
         return NONE_FIELD_TYPE_NAME
 

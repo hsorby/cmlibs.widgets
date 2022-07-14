@@ -17,10 +17,13 @@ import re
 
 from PySide2 import QtWidgets
 
-from opencmiss.zincwidgets.fields import FIELD_TYPES
+from opencmiss.zincwidgets.fields.lists import FIELD_TYPES, INTERNAL_FIELD_NAMES, INTERNAL_FIELD_TYPE_NAME, NONE_FIELD_TYPE_NAME
 
 
-def convert_field_name_to_display_name(name):
+def convert_field_type_to_display_name(name):
+    if name == INTERNAL_FIELD_TYPE_NAME or name == NONE_FIELD_TYPE_NAME:
+        return name
+
     return re.sub(r"([A-Z])", r" \1", name[5:])
 
 
@@ -45,7 +48,7 @@ class FieldTypeChooserWidget(QtWidgets.QComboBox):
         if self._null_object_name:
             self.addItem(self._null_object_name)
 
-        self.addItems([convert_field_name_to_display_name(f) for f in FIELD_TYPES])
+        self.addItems([convert_field_type_to_display_name(f) for f in FIELD_TYPES])
         self.blockSignals(False)
 
     def _display_field_type(self):
@@ -84,5 +87,5 @@ class FieldTypeChooserWidget(QtWidgets.QComboBox):
         if not field_type:
             self._currentFieldType = None
         else:
-            self._currentFieldType = convert_field_name_to_display_name(field_type)
+            self._currentFieldType = convert_field_type_to_display_name(field_type)
         self._display_field_type()

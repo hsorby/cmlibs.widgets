@@ -4,9 +4,11 @@ SEARCH_MODES = ["Exact", "Nearest"]
 FACE_TYPES = ["all", "any face", "no face", "xi1 = 0", "xi1 = 1", "xi2 = 0", "xi2 = 1", "xi3 = 0", "xi3 = 0"]
 VALUE_TYPES = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2_ds2ds3", "d3_ds1ds2ds3"]
 QUADRATURE_RULES = ["Gaussian", "Mid-point"]
-INTERNAL_FIELD_NAMES = ["xi", "cmiss_number"]
+INTERNAL_FIELD_NAMES = ["xi", "cmiss_number", "cmiss_selection"]
 
+INTERNAL_FIELD_TYPE_NAME = "<internal>"
 NONE_FIELD_TYPE_NAME = "<unknown>"
+
 FIELD_TYPES = [
     'FieldAbs', 'FieldAcos', 'FieldAdd', 'FieldAlias', 'FieldAnd', 'FieldApply', 'FieldArgumentReal', 'FieldAsin',
     'FieldAtan', 'FieldAtan2', 'FieldComponent', 'FieldConcatenate', 'FieldConstant',

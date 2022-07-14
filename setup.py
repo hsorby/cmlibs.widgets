@@ -56,7 +56,7 @@ requires = [
     'opencmiss.maths',
     'opencmiss.utils >= 0.4.0',
     'PySide2',
-    'opencmiss.zinc >= 3.7.0',
+    'opencmiss.zinc >= 3.8.0',
     'opencmiss.argon >= 0.2.3',
 ]
 
