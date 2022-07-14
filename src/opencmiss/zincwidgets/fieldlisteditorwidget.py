@@ -206,6 +206,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         self._setArgonRegion(argonRegion)
 
     def _field_list_item_clicked(self, current):
+        self._ui.delete_field_button.setEnabled(current.isValid())
         if current.isValid():
             model = current.model()
             item = model.item(current.row())
@@ -246,6 +247,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
                 self._field.setManaged(False)
                 self._field = None
                 field = self._fieldmodule.findFieldByName(name)
+                self._ui.delete_field_button.setEnabled(field and field.isValid())
                 if field and field.isValid():
                     ArgonLogger.getLogger().info("Can't delete field '" + name + "' while it is in use")
                     # restore field in editor
