@@ -181,6 +181,7 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
                 if item.getRegionName() is not None and not item.isLoaded():
                     return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled
                 elif item.getRegionName() is not None and item.isLoaded():
+                    # Use the ItemIsUserTristate to indicate that the item is loaded and disabled.
                     return QtCore.Qt.ItemIsUserTristate
 
         return QtCore.Qt.NoItemFlags
