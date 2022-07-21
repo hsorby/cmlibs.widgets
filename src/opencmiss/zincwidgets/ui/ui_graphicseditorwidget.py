@@ -25,7 +25,7 @@ class Ui_GraphicsEditorWidget(object):
         if not GraphicsEditorWidget.objectName():
             GraphicsEditorWidget.setObjectName(u"GraphicsEditorWidget")
         GraphicsEditorWidget.setEnabled(True)
-        GraphicsEditorWidget.resize(298, 964)
+        GraphicsEditorWidget.resize(298, 1218)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -43,18 +43,26 @@ class Ui_GraphicsEditorWidget(object):
         self.general_groupbox.setCheckable(False)
         self.formLayout_3 = QFormLayout(self.general_groupbox)
         self.formLayout_3.setObjectName(u"formLayout_3")
-        self.formLayout_3.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
-        self.formLayout_3.setContentsMargins(7, 7, 7, 7)
+        self.subgroup_field_label = QLabel(self.general_groupbox)
+        self.subgroup_field_label.setObjectName(u"subgroup_field_label")
+
+        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.subgroup_field_label)
+
+        self.subgroup_field_chooser = FieldChooserWidget(self.general_groupbox)
+        self.subgroup_field_chooser.setObjectName(u"subgroup_field_chooser")
+
+        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.subgroup_field_chooser)
+
         self.coordinate_field_label = QLabel(self.general_groupbox)
         self.coordinate_field_label.setObjectName(u"coordinate_field_label")
 
-        self.formLayout_3.setWidget(3, QFormLayout.LabelRole, self.coordinate_field_label)
+        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.coordinate_field_label)
 
         self.coordinate_field_chooser = FieldChooserWidget(self.general_groupbox)
         self.coordinate_field_chooser.setObjectName(u"coordinate_field_chooser")
         self.coordinate_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
-        self.formLayout_3.setWidget(3, QFormLayout.FieldRole, self.coordinate_field_chooser)
+        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.coordinate_field_chooser)
 
         self.scenecoordinatesystem_label = QLabel(self.general_groupbox)
         self.scenecoordinatesystem_label.setObjectName(u"scenecoordinatesystem_label")
@@ -66,20 +74,25 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.scenecoordinatesystem_chooser)
 
+        self.domain_label = QLabel(self.general_groupbox)
+        self.domain_label.setObjectName(u"domain_label")
+
+        self.formLayout_3.setWidget(6, QFormLayout.LabelRole, self.domain_label)
+
         self.boundarymode_label = QLabel(self.general_groupbox)
         self.boundarymode_label.setObjectName(u"boundarymode_label")
 
-        self.formLayout_3.setWidget(5, QFormLayout.LabelRole, self.boundarymode_label)
+        self.formLayout_3.setWidget(8, QFormLayout.LabelRole, self.boundarymode_label)
 
         self.boundarymode_chooser = EnumerationChooserWidget(self.general_groupbox)
         self.boundarymode_chooser.setObjectName(u"boundarymode_chooser")
 
-        self.formLayout_3.setWidget(5, QFormLayout.FieldRole, self.boundarymode_chooser)
+        self.formLayout_3.setWidget(8, QFormLayout.FieldRole, self.boundarymode_chooser)
 
         self.face_label = QLabel(self.general_groupbox)
         self.face_label.setObjectName(u"face_label")
 
-        self.formLayout_3.setWidget(6, QFormLayout.LabelRole, self.face_label)
+        self.formLayout_3.setWidget(10, QFormLayout.LabelRole, self.face_label)
 
         self.face_enumeration_chooser = EnumerationChooserWidget(self.general_groupbox)
         self.face_enumeration_chooser.setObjectName(u"face_enumeration_chooser")
@@ -89,65 +102,60 @@ class Ui_GraphicsEditorWidget(object):
         sizePolicy1.setHeightForWidth(self.face_enumeration_chooser.sizePolicy().hasHeightForWidth())
         self.face_enumeration_chooser.setSizePolicy(sizePolicy1)
 
-        self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.face_enumeration_chooser)
+        self.formLayout_3.setWidget(10, QFormLayout.FieldRole, self.face_enumeration_chooser)
+
+        self.wireframe_checkbox = QCheckBox(self.general_groupbox)
+        self.wireframe_checkbox.setObjectName(u"wireframe_checkbox")
+
+        self.formLayout_3.setWidget(12, QFormLayout.SpanningRole, self.wireframe_checkbox)
 
         self.material_label = QLabel(self.general_groupbox)
         self.material_label.setObjectName(u"material_label")
 
-        self.formLayout_3.setWidget(8, QFormLayout.LabelRole, self.material_label)
+        self.formLayout_3.setWidget(13, QFormLayout.LabelRole, self.material_label)
 
         self.material_chooser = MaterialChooserWidget(self.general_groupbox)
         self.material_chooser.setObjectName(u"material_chooser")
         self.material_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
-        self.formLayout_3.setWidget(8, QFormLayout.FieldRole, self.material_chooser)
+        self.formLayout_3.setWidget(13, QFormLayout.FieldRole, self.material_chooser)
 
         self.data_field_label = QLabel(self.general_groupbox)
         self.data_field_label.setObjectName(u"data_field_label")
 
-        self.formLayout_3.setWidget(11, QFormLayout.LabelRole, self.data_field_label)
+        self.formLayout_3.setWidget(15, QFormLayout.LabelRole, self.data_field_label)
 
         self.data_field_chooser = FieldChooserWidget(self.general_groupbox)
         self.data_field_chooser.setObjectName(u"data_field_chooser")
         self.data_field_chooser.setEditable(False)
         self.data_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
-        self.formLayout_3.setWidget(11, QFormLayout.FieldRole, self.data_field_chooser)
+        self.formLayout_3.setWidget(15, QFormLayout.FieldRole, self.data_field_chooser)
 
         self.spectrum_label = QLabel(self.general_groupbox)
         self.spectrum_label.setObjectName(u"spectrum_label")
 
-        self.formLayout_3.setWidget(12, QFormLayout.LabelRole, self.spectrum_label)
+        self.formLayout_3.setWidget(17, QFormLayout.LabelRole, self.spectrum_label)
 
         self.spectrum_chooser = SpectrumChooserWidget(self.general_groupbox)
         self.spectrum_chooser.setObjectName(u"spectrum_chooser")
 
-        self.formLayout_3.setWidget(12, QFormLayout.FieldRole, self.spectrum_chooser)
-
-        self.wireframe_checkbox = QCheckBox(self.general_groupbox)
-        self.wireframe_checkbox.setObjectName(u"wireframe_checkbox")
-
-        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.wireframe_checkbox)
-
-        self.tessellation_chooser = TessellationChooserWidget(self.general_groupbox)
-        self.tessellation_chooser.setObjectName(u"tessellation_chooser")
-
-        self.formLayout_3.setWidget(13, QFormLayout.FieldRole, self.tessellation_chooser)
+        self.formLayout_3.setWidget(17, QFormLayout.FieldRole, self.spectrum_chooser)
 
         self.tessellation_label = QLabel(self.general_groupbox)
         self.tessellation_label.setObjectName(u"tessellation_label")
 
-        self.formLayout_3.setWidget(13, QFormLayout.LabelRole, self.tessellation_label)
+        self.formLayout_3.setWidget(19, QFormLayout.LabelRole, self.tessellation_label)
 
-        self.subgroup_field_label = QLabel(self.general_groupbox)
-        self.subgroup_field_label.setObjectName(u"subgroup_field_label")
+        self.tessellation_chooser = TessellationChooserWidget(self.general_groupbox)
+        self.tessellation_chooser.setObjectName(u"tessellation_chooser")
 
-        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.subgroup_field_label)
+        self.formLayout_3.setWidget(19, QFormLayout.FieldRole, self.tessellation_chooser)
 
-        self.subgroup_field_chooser = FieldChooserWidget(self.general_groupbox)
-        self.subgroup_field_chooser.setObjectName(u"subgroup_field_chooser")
+        self.domain_chooser = EnumerationChooserWidget(self.general_groupbox)
+        self.domain_chooser.setObjectName(u"domain_chooser")
 
-        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.subgroup_field_chooser)
+        self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.domain_chooser)
 
 
         self.verticalLayout.addWidget(self.general_groupbox)
@@ -401,6 +409,7 @@ class Ui_GraphicsEditorWidget(object):
         self.face_enumeration_chooser.currentIndexChanged.connect(GraphicsEditorWidget.faceChanged)
         self.scenecoordinatesystem_chooser.currentIndexChanged.connect(GraphicsEditorWidget.scenecoordinatesystemChanged)
         self.boundarymode_chooser.currentIndexChanged.connect(GraphicsEditorWidget.boundarymodeChanged)
+        self.domain_chooser.currentIndexChanged.connect(GraphicsEditorWidget.dataFieldChanged)
 
         QMetaObject.connectSlotsByName(GraphicsEditorWidget)
     # setupUi
@@ -408,16 +417,17 @@ class Ui_GraphicsEditorWidget(object):
     def retranslateUi(self, GraphicsEditorWidget):
         GraphicsEditorWidget.setWindowTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Graphics Editor", None))
         self.general_groupbox.setTitle("")
+        self.subgroup_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Subgroup:", None))
         self.coordinate_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Coordinates:", None))
         self.scenecoordinatesystem_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Coord System:", None))
+        self.domain_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Domain:", None))
         self.boundarymode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Boundary Mode:", None))
         self.face_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Face:", None))
+        self.wireframe_checkbox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Wireframe", None))
         self.material_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Material:", None))
         self.data_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Data field:", None))
         self.spectrum_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Spectrum:", None))
-        self.wireframe_checkbox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Wireframe", None))
         self.tessellation_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Tessellation:", None))
-        self.subgroup_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Subgroup:", None))
         self.contours_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Contours:", None))
         self.isoscalar_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Scalar field:", None))
         self.isovalues_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Isovalues:", None))

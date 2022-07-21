@@ -16,11 +16,13 @@
 from math import sqrt, floor
 from opencmiss.zinc.field import Field
 
+
 def FieldIsRealArgument(field):
     """
     Conditional function returning true if the field is real argument
     """
     return field.castArgumentReal().isValid()
+
 
 def FieldIsRealValued(field):
     """
@@ -60,6 +62,7 @@ def FieldIsOrientationScaleCapable(field):
     return (field.getValueType() == Field.VALUE_TYPE_REAL) and \
            (field.getNumberOfComponents() in [1, 2, 3, 4, 6, 9])
 
+
 def FieldIsStreamVectorCapable(field):
     """
     Conditional function returning true if the field can be used as a
@@ -70,28 +73,38 @@ def FieldIsStreamVectorCapable(field):
     """
     return (field.getValueType() == Field.VALUE_TYPE_REAL) and \
            (field.getNumberOfComponents() in [2, 3, 6, 9])
-           
+
+
 def FieldIsRCAndThreeComponents(field):
-        return (field.getCoordinateSystemType() == Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN) and \
-            (field.getNumberOfComponents == 3)
-           
+    return (field.getCoordinateSystemType() == Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN) and \
+           (field.getNumberOfComponents == 3)
+
+
 def FieldIsRCAndCoordinateCapable(field):
-        return (field.getCoordinateSystemType() == Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN) and \
-            (FieldIsCoordinateCapable(field))
-            
+    return (field.getCoordinateSystemType() == Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN) and \
+           (FieldIsCoordinateCapable(field))
+
+
+def FieldIsArgumentReal(field):
+    return field.castArgumentReal().isValid()
+
+
 def FieldIsMeshLocation(field):
     """
     Conditional function returning true if the field is mesh location
     """
     return field.getValueType() == Field.VALUE_TYPE_MESH_LOCATION
 
+
 def FieldIsEigenvalues(field):
     eigenvaluesField = field.castEigenvalues()
     return eigenvaluesField.isValid()
 
+
 def FieldIsFiniteElement(field):
     finiteElementField = field.castFiniteElement()
     return finiteElementField.isValid()
+
 
 def FieldIsSquareMatrix(field):
     numberOfComponents = field.getNumberOfComponents()
@@ -100,10 +113,12 @@ def FieldIsSquareMatrix(field):
         if 0 == floor(sqrt1) - sqrt1:
             return field.getValueType() == Field.VALUE_TYPE_REAL
     return False
-    
+
+
 def FieldIsDeterminantEligible(field):
     return (field.getValueType() == Field.VALUE_TYPE_REAL) and \
-        (field.getNumberOfComponents() in [4, 9])
+           (field.getNumberOfComponents() in [4, 9])
+
 
 def is_field_image(self, field_in: Field):
     """

@@ -56,6 +56,9 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         self._use_zinc_mouse_event_handling = False
         self._is_active = False
 
+        # Retina displays require a scaling factor most other devices have a scale factor of 1.
+        self._pixel_scale = self.window().devicePixelRatio()
+
         # Selection attributes
         self._selectionKeyHandling = True  # set to False if parent widget is to handle selection key presses
         self._nodeSelectMode = True
@@ -110,8 +113,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         sceneviewermodule = self._context.getSceneviewermodule()
         self._sceneviewer = sceneviewermodule.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE, Sceneviewer.STEREO_MODE_DEFAULT)
         self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
-        pixel_scale = self.window().devicePixelRatio()
-        self._sceneviewer.setViewportSize(self.width() * pixel_scale, self.height() * pixel_scale)
+        self._sceneviewer.setViewportSize(self.width() * self._pixel_scale, self.height() * self._pixel_scale)
 
         # Get the default scene filter, which filters by visibility flags
         scenefiltermodule = self._context.getScenefiltermodule()
@@ -422,8 +424,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         Respond to widget resize events.
         """
         if self._sceneviewer:
-            pixel_scale = self.window().devicePixelRatio()
-            self._sceneviewer.setViewportSize(width * pixel_scale, height * pixel_scale)
+            self._sceneviewer.setViewportSize(width * self._pixel_scale, height * self._pixel_scale)
         # resizeGL end
 
     def keyPressEvent(self, event):
@@ -453,7 +454,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         if event.button() not in BUTTON_MAP:
             return
 
-        self._selection_position_start = (event.x(), event.y())
+        self._selection_position_start = (event.x() * self._pixel_scale, event.y() * self._pixel_scale)
 
         if BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT \
                 and self._selectionKeyPressed and (self._nodeSelectMode or self._elemSelectMode):
@@ -462,7 +463,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
                 self._selection_mode = SelectionMode.ADDITIVE
         else:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x(), event.y())
+            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
             scene_input.setModifierFlags(modifier_map(event.modifiers()))
@@ -487,8 +488,8 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
             scenepicker = self.getScenepicker()
             if scenepicker:
-                x = event.x()
-                y = event.y()
+                x = event.x() * self._pixel_scale
+                y = event.y() * self._pixel_scale
                 # Construct a small frustum to look for nodes in.
                 scene = self._sceneviewer.getScene()
                 region = scene.getRegion()
@@ -577,7 +578,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
         elif self._use_zinc_mouse_event_handling:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x(), event.y())
+            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
             # self.makeCurrent()
@@ -598,8 +599,8 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         event.accept()
 
         if self._selection_mode != SelectionMode.NONE:
-            x = event.x()
-            y = event.y()
+            x = event.x() * self._pixel_scale
+            y = event.y() * self._pixel_scale
             xdiff = float(x - self._selection_position_start[0])
             ydiff = float(y - self._selection_position_start[1])
             if abs(xdiff) < 0.0001:
@@ -612,7 +613,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
         elif self._use_zinc_mouse_event_handling:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x(), event.y())
+            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_MOTION_NOTIFY)
             if event.type() == QtCore.QEvent.Leave:
                 scene_input.setPosition(-1, -1)
