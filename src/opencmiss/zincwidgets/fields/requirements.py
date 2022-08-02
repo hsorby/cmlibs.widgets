@@ -216,7 +216,7 @@ class FieldRequirementRegion(FieldRequirementBase):
 
     def set_value(self, value):
         self._region_chooser.blockSignals(True)
-        self._region_chooser.setField(value)
+        self._region_chooser.setRegion(value)
         self._region_chooser.blockSignals(False)
 
     def fulfilled(self):

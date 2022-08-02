@@ -165,13 +165,13 @@ class FieldBase(object):
                     requirement.set_value(field)
                 elif index == 1:
                     field = self._field.getSourceField(1)
-                    requirement.set_value(field.getRegion())
+                    requirement.set_value(field.getFieldmodule().getRegion())
                 elif index == 2:
-                    field = self._field.getBindArgumentField(1)
+                    field = self._field.castApply().getBindArgumentField(1)
                     requirement.set_value(field)
                 elif index == 3:
-                    field = self._field.getBindArgumentField(1)
-                    source_field = self._field.getBindArgumentSourceField(field)
+                    field = self._field.castApply().getBindArgumentField(1)
+                    source_field = self._field.castApply().getBindArgumentSourceField(field)
                     requirement.set_value(source_field)
 
 
@@ -326,8 +326,9 @@ class FieldTypeBase(object):
             else:
                 field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:", FieldIsRealValued))
         elif self._field_type == "FieldApply":
-            watch_regions.append(FieldRequirementSourceFieldRegionDependent(self._region.getRoot(), "Source Field:", None))
-            field_requirements.append(watch_regions[0])
+            region_dependent_field = FieldRequirementSourceFieldRegionDependent(self._region.getRoot(), "Source Field:", None)
+            watch_regions.append(region_dependent_field)
+            field_requirements.append(region_dependent_field)
         elif self._field_type == "FieldTimeValue":
             field_requirements.append(FieldRequirementTimekeeper(self._timekeeper))
 
@@ -345,10 +346,10 @@ class FieldTypeBase(object):
             controlling_region = FieldRequirementRegion(self._region.getRoot(), "Evaluate Field Region:")
             region_chooser = controlling_region.region_chooser()
             additional_requirements.append(controlling_region)
-            watch_regions.append(FieldRequirementSourceFieldRegionDependentFieldDependent(self._region.getRoot(), watch_regions[0], "Bind Argument Field:", FieldIsArgumentReal))
-            additional_requirements.append(watch_regions[1])
-            watch_regions.append(FieldRequirementSourceFieldRegionDependent(self._region.getRoot(), "Bind Source Field:", None))
-            additional_requirements.append(watch_regions[2])
+            region_dependent_field = FieldRequirementSourceFieldRegionDependentFieldDependent(self._region.getRoot(), watch_regions[0], "Bind Argument Field:", FieldIsArgumentReal)
+            watch_regions.append(region_dependent_field)
+            additional_requirements.append(region_dependent_field)
+            additional_requirements.append(FieldRequirementSourceField(self._region, "Bind Source Field:", None))
 
             def _apply_region_chooser():
                 new_region = region_chooser.getRegion()
