@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>298</width>
-    <height>960</height>
+    <height>1010</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -111,14 +111,14 @@
       <item row="6" column="1">
        <widget class="EnumerationChooserWidget" name="boundarymode_chooser"/>
       </item>
-      <item row="7" column="0">
+      <item row="8" column="0">
        <widget class="QLabel" name="face_label">
         <property name="text">
          <string>Face:</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="8" column="1">
        <widget class="EnumerationChooserWidget" name="face_enumeration_chooser">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -128,28 +128,38 @@
         </property>
        </widget>
       </item>
-      <item row="9" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="material_label">
         <property name="text">
          <string>Material:</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
+      <item row="10" column="1">
        <widget class="MaterialChooserWidget" name="material_chooser">
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToContents</enum>
         </property>
        </widget>
       </item>
-      <item row="12" column="0">
+      <item row="11" column="0">
+       <widget class="QLabel" name="material_label">
+        <property name="text">
+         <string>Selected Material:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="MaterialChooserWidget" name="selected_material_chooser"/>
+      </item>
+      <item row="13" column="0">
        <widget class="QLabel" name="data_field_label">
         <property name="text">
          <string>Data field:</string>
         </property>
        </widget>
       </item>
-      <item row="12" column="1">
+      <item row="13" column="1">
        <widget class="FieldChooserWidget" name="data_field_chooser">
         <property name="editable">
          <bool>false</bool>
@@ -159,27 +169,27 @@
         </property>
        </widget>
       </item>
-      <item row="13" column="0">
+      <item row="14" column="0">
        <widget class="QLabel" name="spectrum_label">
         <property name="text">
          <string>Spectrum:</string>
         </property>
        </widget>
       </item>
-      <item row="13" column="1">
+      <item row="14" column="1">
        <widget class="SpectrumChooserWidget" name="spectrum_chooser"/>
       </item>
-      <item row="8" column="0">
+      <item row="9" column="0">
        <widget class="QCheckBox" name="wireframe_checkbox">
         <property name="text">
          <string>Wireframe</string>
         </property>
        </widget>
       </item>
-      <item row="14" column="1">
+      <item row="16" column="1">
        <widget class="TessellationChooserWidget" name="tessellation_chooser"/>
       </item>
-      <item row="14" column="0">
+      <item row="16" column="0">
        <widget class="QLabel" name="tessellation_label">
         <property name="text">
          <string>Tessellation:</string>
@@ -205,6 +215,36 @@
       </item>
       <item row="2" column="1">
        <widget class="EnumerationChooserWidget" name="domain_enum_chooser"/>
+      </item>
+      <item row="15" column="0">
+       <widget class="QLabel" name="tessellation_field_label">
+        <property name="text">
+         <string>Tessellation field:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="1">
+       <widget class="FieldChooserWidget" name="tessellation_field_chooser"/>
+      </item>
+      <item row="17" column="0">
+       <widget class="QLabel" name="texture_coordinates_label">
+        <property name="text">
+         <string>Texture coordinates:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="1">
+       <widget class="FieldChooserWidget" name="texture_coordinates_chooser"/>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="select_mode_label">
+        <property name="text">
+         <string>Select Mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="EnumerationChooserWidget" name="select_mode_enum_chooser"/>
       </item>
      </layout>
     </widget>
@@ -245,7 +285,7 @@
       <property name="bottomMargin">
        <number>7</number>
       </property>
-      <item row="1" column="1">
+      <item row="3" column="1">
        <widget class="QLineEdit" name="isovalues_lineedit"/>
       </item>
       <item row="0" column="0">
@@ -262,12 +302,22 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="isovalues_label">
         <property name="text">
          <string>Isovalues:</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="range_isovalues_checkBox">
+        <property name="text">
+         <string>Range Number:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="range_number_spinBox"/>
       </item>
      </layout>
     </widget>
@@ -525,6 +575,26 @@
       <item row="0" column="1">
        <widget class="EnumerationChooserWidget" name="sampling_mode_chooser"/>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="sample_location_label">
+        <property name="text">
+         <string>Sample Location:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="sample_location_lineedit"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="density_field_label">
+        <property name="text">
+         <string>Density field:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="FieldChooserWidget" name="density_field_chooser"/>
+      </item>
      </layout>
     </widget>
    </item>
@@ -598,6 +668,22 @@
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>materialChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selected_material_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>selectedMaterialChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>135</x>
@@ -722,6 +808,22 @@
    </hints>
   </connection>
   <connection>
+   <sender>range_isovalues_checkBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>rangeIsovaluesClicked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>55</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>114</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>isovalues_lineedit</sender>
    <signal>editingFinished()</signal>
    <receiver>GraphicsEditorWidget</receiver>
@@ -742,6 +844,22 @@
    <signal>editingFinished()</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>lineBaseSizeEntered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>109</x>
+     <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sample_location_lineedit</sender>
+   <signal>editingFinished()</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>sampleLocationEntered()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>145</x>
@@ -822,6 +940,22 @@
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>samplingModeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>density_field_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>densityFieldChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -950,6 +1084,22 @@
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>domainChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>select_mode_enum_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>selectModeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>

@@ -25,7 +25,7 @@ class Ui_GraphicsEditorWidget(object):
         if not GraphicsEditorWidget.objectName():
             GraphicsEditorWidget.setObjectName(u"GraphicsEditorWidget")
         GraphicsEditorWidget.setEnabled(True)
-        GraphicsEditorWidget.resize(298, 960)
+        GraphicsEditorWidget.resize(298, 1010)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -79,7 +79,7 @@ class Ui_GraphicsEditorWidget(object):
         self.face_label = QLabel(self.general_groupbox)
         self.face_label.setObjectName(u"face_label")
 
-        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.face_label)
+        self.formLayout_3.setWidget(8, QFormLayout.LabelRole, self.face_label)
 
         self.face_enumeration_chooser = EnumerationChooserWidget(self.general_groupbox)
         self.face_enumeration_chooser.setObjectName(u"face_enumeration_chooser")
@@ -89,55 +89,65 @@ class Ui_GraphicsEditorWidget(object):
         sizePolicy1.setHeightForWidth(self.face_enumeration_chooser.sizePolicy().hasHeightForWidth())
         self.face_enumeration_chooser.setSizePolicy(sizePolicy1)
 
-        self.formLayout_3.setWidget(7, QFormLayout.FieldRole, self.face_enumeration_chooser)
+        self.formLayout_3.setWidget(8, QFormLayout.FieldRole, self.face_enumeration_chooser)
 
         self.material_label = QLabel(self.general_groupbox)
         self.material_label.setObjectName(u"material_label")
 
-        self.formLayout_3.setWidget(9, QFormLayout.LabelRole, self.material_label)
+        self.formLayout_3.setWidget(10, QFormLayout.LabelRole, self.material_label)
 
         self.material_chooser = MaterialChooserWidget(self.general_groupbox)
         self.material_chooser.setObjectName(u"material_chooser")
         self.material_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
-        self.formLayout_3.setWidget(9, QFormLayout.FieldRole, self.material_chooser)
+        self.formLayout_3.setWidget(10, QFormLayout.FieldRole, self.material_chooser)
+
+        self.material_label1 = QLabel(self.general_groupbox)
+        self.material_label1.setObjectName(u"material_label1")
+
+        self.formLayout_3.setWidget(11, QFormLayout.LabelRole, self.material_label1)
+
+        self.selected_material_chooser = MaterialChooserWidget(self.general_groupbox)
+        self.selected_material_chooser.setObjectName(u"selected_material_chooser")
+
+        self.formLayout_3.setWidget(11, QFormLayout.FieldRole, self.selected_material_chooser)
 
         self.data_field_label = QLabel(self.general_groupbox)
         self.data_field_label.setObjectName(u"data_field_label")
 
-        self.formLayout_3.setWidget(12, QFormLayout.LabelRole, self.data_field_label)
+        self.formLayout_3.setWidget(13, QFormLayout.LabelRole, self.data_field_label)
 
         self.data_field_chooser = FieldChooserWidget(self.general_groupbox)
         self.data_field_chooser.setObjectName(u"data_field_chooser")
         self.data_field_chooser.setEditable(False)
         self.data_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
-        self.formLayout_3.setWidget(12, QFormLayout.FieldRole, self.data_field_chooser)
+        self.formLayout_3.setWidget(13, QFormLayout.FieldRole, self.data_field_chooser)
 
         self.spectrum_label = QLabel(self.general_groupbox)
         self.spectrum_label.setObjectName(u"spectrum_label")
 
-        self.formLayout_3.setWidget(13, QFormLayout.LabelRole, self.spectrum_label)
+        self.formLayout_3.setWidget(14, QFormLayout.LabelRole, self.spectrum_label)
 
         self.spectrum_chooser = SpectrumChooserWidget(self.general_groupbox)
         self.spectrum_chooser.setObjectName(u"spectrum_chooser")
 
-        self.formLayout_3.setWidget(13, QFormLayout.FieldRole, self.spectrum_chooser)
+        self.formLayout_3.setWidget(14, QFormLayout.FieldRole, self.spectrum_chooser)
 
         self.wireframe_checkbox = QCheckBox(self.general_groupbox)
         self.wireframe_checkbox.setObjectName(u"wireframe_checkbox")
 
-        self.formLayout_3.setWidget(8, QFormLayout.LabelRole, self.wireframe_checkbox)
+        self.formLayout_3.setWidget(9, QFormLayout.LabelRole, self.wireframe_checkbox)
 
         self.tessellation_chooser = TessellationChooserWidget(self.general_groupbox)
         self.tessellation_chooser.setObjectName(u"tessellation_chooser")
 
-        self.formLayout_3.setWidget(14, QFormLayout.FieldRole, self.tessellation_chooser)
+        self.formLayout_3.setWidget(16, QFormLayout.FieldRole, self.tessellation_chooser)
 
         self.tessellation_label = QLabel(self.general_groupbox)
         self.tessellation_label.setObjectName(u"tessellation_label")
 
-        self.formLayout_3.setWidget(14, QFormLayout.LabelRole, self.tessellation_label)
+        self.formLayout_3.setWidget(16, QFormLayout.LabelRole, self.tessellation_label)
 
         self.subgroup_field_label = QLabel(self.general_groupbox)
         self.subgroup_field_label.setObjectName(u"subgroup_field_label")
@@ -159,6 +169,36 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.domain_enum_chooser)
 
+        self.tessellation_field_label = QLabel(self.general_groupbox)
+        self.tessellation_field_label.setObjectName(u"tessellation_field_label")
+
+        self.formLayout_3.setWidget(15, QFormLayout.LabelRole, self.tessellation_field_label)
+
+        self.tessellation_field_chooser = FieldChooserWidget(self.general_groupbox)
+        self.tessellation_field_chooser.setObjectName(u"tessellation_field_chooser")
+
+        self.formLayout_3.setWidget(15, QFormLayout.FieldRole, self.tessellation_field_chooser)
+
+        self.texture_coordinates_label = QLabel(self.general_groupbox)
+        self.texture_coordinates_label.setObjectName(u"texture_coordinates_label")
+
+        self.formLayout_3.setWidget(17, QFormLayout.LabelRole, self.texture_coordinates_label)
+
+        self.texture_coordinates_chooser = FieldChooserWidget(self.general_groupbox)
+        self.texture_coordinates_chooser.setObjectName(u"texture_coordinates_chooser")
+
+        self.formLayout_3.setWidget(17, QFormLayout.FieldRole, self.texture_coordinates_chooser)
+
+        self.select_mode_label = QLabel(self.general_groupbox)
+        self.select_mode_label.setObjectName(u"select_mode_label")
+
+        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.select_mode_label)
+
+        self.select_mode_enum_chooser = EnumerationChooserWidget(self.general_groupbox)
+        self.select_mode_enum_chooser.setObjectName(u"select_mode_enum_chooser")
+
+        self.formLayout_3.setWidget(7, QFormLayout.FieldRole, self.select_mode_enum_chooser)
+
 
         self.verticalLayout.addWidget(self.general_groupbox)
 
@@ -175,7 +215,7 @@ class Ui_GraphicsEditorWidget(object):
         self.isovalues_lineedit = QLineEdit(self.contours_groupbox)
         self.isovalues_lineedit.setObjectName(u"isovalues_lineedit")
 
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.isovalues_lineedit)
+        self.formLayout_2.setWidget(3, QFormLayout.FieldRole, self.isovalues_lineedit)
 
         self.isoscalar_field_label = QLabel(self.contours_groupbox)
         self.isoscalar_field_label.setObjectName(u"isoscalar_field_label")
@@ -191,7 +231,17 @@ class Ui_GraphicsEditorWidget(object):
         self.isovalues_label = QLabel(self.contours_groupbox)
         self.isovalues_label.setObjectName(u"isovalues_label")
 
-        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.isovalues_label)
+        self.formLayout_2.setWidget(3, QFormLayout.LabelRole, self.isovalues_label)
+
+        self.range_isovalues_checkBox = QCheckBox(self.contours_groupbox)
+        self.range_isovalues_checkBox.setObjectName(u"range_isovalues_checkBox")
+
+        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.range_isovalues_checkBox)
+
+        self.range_number_spinBox = QSpinBox(self.contours_groupbox)
+        self.range_number_spinBox.setObjectName(u"range_number_spinBox")
+
+        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.range_number_spinBox)
 
 
         self.verticalLayout.addWidget(self.contours_groupbox)
@@ -376,6 +426,26 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_6.setWidget(0, QFormLayout.FieldRole, self.sampling_mode_chooser)
 
+        self.sample_location_label = QLabel(self.sampling_groupbox)
+        self.sample_location_label.setObjectName(u"sample_location_label")
+
+        self.formLayout_6.setWidget(1, QFormLayout.LabelRole, self.sample_location_label)
+
+        self.sample_location_lineedit = QLineEdit(self.sampling_groupbox)
+        self.sample_location_lineedit.setObjectName(u"sample_location_lineedit")
+
+        self.formLayout_6.setWidget(1, QFormLayout.FieldRole, self.sample_location_lineedit)
+
+        self.density_field_label = QLabel(self.sampling_groupbox)
+        self.density_field_label.setObjectName(u"density_field_label")
+
+        self.formLayout_6.setWidget(2, QFormLayout.LabelRole, self.density_field_label)
+
+        self.density_field_chooser = FieldChooserWidget(self.sampling_groupbox)
+        self.density_field_chooser.setObjectName(u"density_field_chooser")
+
+        self.formLayout_6.setWidget(2, QFormLayout.FieldRole, self.density_field_chooser)
+
 
         self.verticalLayout.addWidget(self.sampling_groupbox)
 
@@ -387,6 +457,7 @@ class Ui_GraphicsEditorWidget(object):
         self.retranslateUi(GraphicsEditorWidget)
         self.data_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.dataFieldChanged)
         self.material_chooser.currentIndexChanged.connect(GraphicsEditorWidget.materialChanged)
+        self.selected_material_chooser.currentIndexChanged.connect(GraphicsEditorWidget.selectedMaterialChanged)
         self.glyph_chooser.currentIndexChanged.connect(GraphicsEditorWidget.glyphChanged)
         self.point_base_size_lineedit.editingFinished.connect(GraphicsEditorWidget.pointBaseSizeEntered)
         self.point_scale_factors_lineedit.editingFinished.connect(GraphicsEditorWidget.pointScaleFactorsEntered)
@@ -394,13 +465,16 @@ class Ui_GraphicsEditorWidget(object):
         self.label_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.labelFieldChanged)
         self.isoscalar_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.isoscalarFieldChanged)
         self.wireframe_checkbox.clicked.connect(GraphicsEditorWidget.wireframeClicked)
+        self.range_isovalues_checkBox.clicked.connect(GraphicsEditorWidget.rangeIsovaluesClicked)
         self.isovalues_lineedit.editingFinished.connect(GraphicsEditorWidget.isovaluesEntered)
         self.line_base_size_lineedit.editingFinished.connect(GraphicsEditorWidget.lineBaseSizeEntered)
+        self.sample_location_lineedit.editingFinished.connect(GraphicsEditorWidget.sampleLocationEntered)
         self.line_orientation_scale_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.lineOrientationScaleFieldChanged)
         self.line_scale_factors_lineedit.editingFinished.connect(GraphicsEditorWidget.lineScaleFactorsEntered)
         self.line_shape_chooser.currentIndexChanged.connect(GraphicsEditorWidget.lineShapeChanged)
         self.stream_vector_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.streamVectorFieldChanged)
         self.sampling_mode_chooser.currentIndexChanged.connect(GraphicsEditorWidget.samplingModeChanged)
+        self.density_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.densityFieldChanged)
         self.streamlines_track_length_lineedit.editingFinished.connect(GraphicsEditorWidget.streamlinesTrackLengthEntered)
         self.coordinate_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.coordinateFieldChanged)
         self.streamlines_track_direction_chooser.currentIndexChanged.connect(GraphicsEditorWidget.streamlinesTrackDirectionChanged)
@@ -409,6 +483,7 @@ class Ui_GraphicsEditorWidget(object):
         self.tessellation_chooser.currentIndexChanged.connect(GraphicsEditorWidget.tessellationChanged)
         self.subgroup_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.subgroupFieldChanged)
         self.domain_enum_chooser.currentIndexChanged.connect(GraphicsEditorWidget.domainChanged)
+        self.select_mode_enum_chooser.currentIndexChanged.connect(GraphicsEditorWidget.selectModeChanged)
         self.face_enumeration_chooser.currentIndexChanged.connect(GraphicsEditorWidget.faceChanged)
         self.scenecoordinatesystem_chooser.currentIndexChanged.connect(GraphicsEditorWidget.scenecoordinatesystemChanged)
         self.boundarymode_chooser.currentIndexChanged.connect(GraphicsEditorWidget.boundarymodeChanged)
@@ -424,15 +499,20 @@ class Ui_GraphicsEditorWidget(object):
         self.boundarymode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Boundary Mode:", None))
         self.face_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Face:", None))
         self.material_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Material:", None))
+        self.material_label1.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Selected Material:", None))
         self.data_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Data field:", None))
         self.spectrum_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Spectrum:", None))
         self.wireframe_checkbox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Wireframe", None))
         self.tessellation_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Tessellation:", None))
         self.subgroup_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Subgroup:", None))
         self.domain_enum_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Domain:", None))
+        self.tessellation_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Tessellation field:", None))
+        self.texture_coordinates_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Texture coordinates:", None))
+        self.select_mode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Select Mode:", None))
         self.contours_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Contours:", None))
         self.isoscalar_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Scalar field:", None))
         self.isovalues_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Isovalues:", None))
+        self.range_isovalues_checkBox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Range Number:", None))
         self.streamlines_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Streamlines:", None))
         self.stream_vector_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Vector field:", None))
         self.streamlines_track_length_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Time length:", None))
@@ -451,5 +531,7 @@ class Ui_GraphicsEditorWidget(object):
         self.label_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Label field:", None))
         self.sampling_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Sampling:", None))
         self.sampling_mode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Mode:", None))
+        self.sample_location_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Sample Location:", None))
+        self.density_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Density field:", None))
     # retranslateUi
 

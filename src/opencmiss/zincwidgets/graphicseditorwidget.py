@@ -30,6 +30,8 @@ from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.ui.ui_graphicseditorwidget import Ui_GraphicsEditorWidget
 
+DOMAIN_TYPE_ENUM = [Field.DOMAIN_TYPE_POINT, Field.DOMAIN_TYPE_NODES, Field.DOMAIN_TYPE_DATAPOINTS, Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]
+POINT_SAMPLING_DOMAIN_TYPE_ENUM = [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]
 
 class GraphicsEditorWidget(QtWidgets.QWidget):
 
@@ -39,6 +41,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         """
         QtWidgets.QWidget.__init__(self, parent)
         self._graphics = None
+        self._isRangeIsovalues = False
         # Using composition to include the visual element of the GUI.
         self._ui = Ui_GraphicsEditorWidget()
         self._ui.setupUi(self)
@@ -49,8 +52,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
         self._ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
         self._ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
-        DomainTypeEnum = [Field.DOMAIN_TYPE_POINT,Field.DOMAIN_TYPE_NODES,Field.DOMAIN_TYPE_DATAPOINTS,Field.DOMAIN_TYPE_MESH1D,Field.DOMAIN_TYPE_MESH2D,Field.DOMAIN_TYPE_MESH3D,Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]
-        self._ui.domain_enum_chooser.setEnumsList(Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString,DomainTypeEnum)
+        self._ui.domain_enum_chooser.setEnumsList(Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString,DOMAIN_TYPE_ENUM)
+        self._ui.select_mode_enum_chooser.setEnumsList(Graphics.SelectModeEnumToString, Graphics.SelectModeEnumFromString)
 
         self._ui.subgroup_field_chooser.setNullObjectName('-')
         self._ui.subgroup_field_chooser.setConditional(FieldIsScalar)
@@ -59,9 +62,13 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.data_field_chooser.setNullObjectName('-')
         self._ui.data_field_chooser.setConditional(FieldIsRealValued)
         self._ui.spectrum_chooser.setNullObjectName('-')
+        self._ui.tessellation_field_chooser.setNullObjectName('-')
+        self._ui.texture_coordinates_chooser.setNullObjectName('-')
+        # self._ui.tessellation_field_chooser.setConditional(FieldIsRealValued)
         # contours
         self._ui.isoscalar_field_chooser.setNullObjectName('- choose -')
         self._ui.isoscalar_field_chooser.setConditional(FieldIsScalar)
+        self._ui.range_number_spinBox.valueChanged.connect(self.numberOfIsovalueRangeChanged)
         # streamlines
         self._ui.stream_vector_field_chooser.setNullObjectName('- choose -')
         self._ui.stream_vector_field_chooser.setConditional(FieldIsStreamVectorCapable)
@@ -74,6 +81,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.point_orientation_scale_field_chooser.setConditional(FieldIsOrientationScaleCapable)
         self._ui.label_field_chooser.setNullObjectName('-')
         self._ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
+        self._ui.density_field_chooser.setNullObjectName('-')
 
         
 
@@ -82,6 +90,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         subgroupField = None
         coordinateField = None
         material = None
+        selectedMaterial = None
         dataField = None
         spectrum = None
         tessellation = None
@@ -95,9 +104,12 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             subgroupField = self._graphics.getSubgroupField()
             coordinateField = self._graphics.getCoordinateField()
             material = self._graphics.getMaterial()
+            selectedMaterial = self._graphics.getSelectedMaterial()
             dataField = self._graphics.getDataField()
             spectrum = self._graphics.getSpectrum()
+            tessellationField = self._graphics.getTessellationField()
             tessellation = self._graphics.getTessellation()
+            textureCoordinatesField = self._graphics.getTextureCoordinateField()
             isWireframe = self._graphics.getRenderPolygonMode() == Graphics.RENDER_POLYGON_MODE_WIREFRAME
             contours = self._graphics.castContours()
             streamlines = self._graphics.castStreamlines()
@@ -111,9 +123,12 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.coordinate_field_chooser.setField(coordinateField)
         self._scenecoordinatesystemDisplay()
         self._ui.material_chooser.setMaterial(material)
+        self._ui.selected_material_chooser.setMaterial(selectedMaterial)
         self._ui.data_field_chooser.setField(dataField)
         self._ui.spectrum_chooser.setSpectrum(spectrum)
+        self._ui.tessellation_field_chooser.setField(tessellationField)
         self._ui.tessellation_chooser.setTessellation(tessellation)
+        self._ui.texture_coordinates_chooser.setField(textureCoordinatesField)
         self._boundarymodeDisplay()
         self._faceDisplay()
         self._domainTypeDisplay()
@@ -122,10 +137,13 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         isoscalarField = None
         if contours and contours.isValid():
             isoscalarField = contours.getIsoscalarField()
+            self._isRangeIsovalues = contours.getRangeNumberOfIsovalues()
+            self._ui.range_number_spinBox.setEnabled(self._isRangeIsovalues)
             self._ui.contours_groupbox.show()
         else:
             self._ui.contours_groupbox.hide()
         self._ui.isoscalar_field_chooser.setField(isoscalarField)
+        self._ui.range_isovalues_checkBox.setCheckState(QtCore.Qt.Checked if self._isRangeIsovalues else QtCore.Qt.Unchecked)
         self._isovaluesDisplay()
         # streamlines
         streamVectorField = None
@@ -176,11 +194,13 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._pointScaleFactorsDisplay()
         self._ui.label_field_chooser.setField(labelField)
         # sampling attributes
-        if samplingattributes and samplingattributes.isValid() and self._graphics.getFieldDomainType() >=8:
+        if samplingattributes and samplingattributes.isValid() and self._graphics.getFieldDomainType() in POINT_SAMPLING_DOMAIN_TYPE_ENUM:
             self._ui.sampling_groupbox.show()
         else:
             self._ui.sampling_groupbox.hide()
         self._samplingModeDisplay()
+        self._sampleLocationDisplay()
+        self._densityFieldDisplay()
 
     def setScene(self, scene):
         """
@@ -189,6 +209,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         :param scene: zinc.scene
         """
         self._ui.material_chooser.setMaterialmodule(scene.getMaterialmodule())
+        self._ui.selected_material_chooser.setMaterialmodule(scene.getMaterialmodule())
         self._ui.glyph_chooser.setGlyphmodule(scene.getGlyphmodule())
         self._ui.spectrum_chooser.setSpectrummodule(scene.getSpectrummodule())
         self._ui.tessellation_chooser.setTessellationmodule(scene.getTessellationmodule())
@@ -196,11 +217,14 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.subgroup_field_chooser.setRegion(region)
         self._ui.coordinate_field_chooser.setRegion(region)
         self._ui.data_field_chooser.setRegion(region)
+        self._ui.tessellation_field_chooser.setRegion(region)
+        self._ui.texture_coordinates_chooser.setRegion(region)
         self._ui.isoscalar_field_chooser.setRegion(region)
         self._ui.stream_vector_field_chooser.setRegion(region)
         self._ui.point_orientation_scale_field_chooser.setRegion(region)
         self._ui.label_field_chooser.setRegion(region)
         self._ui.line_orientation_scale_field_chooser.setRegion(region)
+        self._ui.density_field_chooser.setRegion(region)
 
     def getGraphics(self):
         """
@@ -340,6 +364,19 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             else:
                 self._graphics.setSpectrum(Spectrum())
 
+    def tessellationFieldChanged(self, index):
+        """
+        An item was selected at index in tessellation field chooser widget
+
+        :param index: index of new item.
+        """
+        if self._graphics:
+            tessellationField = self._ui.tessellation_field_chooser.getField()
+            if tessellationField:
+                self._graphics.setTessellationField(tessellationField)
+            else:
+                self._graphics.setTessellationField(Field())
+
     def tessellationChanged(self, index):
         """
         An item was selected at index in tessellation chooser widget
@@ -349,6 +386,19 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             tessellation = self._ui.tessellation_chooser.getTessellation()
             self._graphics.setTessellation(tessellation)
+
+    def textureCoordinateFieldChanged(self, index):
+        """
+        An item was selected at index in texture coordinate field chooser widget
+
+        :param index: index of new item.
+        """
+        if self._graphics:
+            textureCoordinateField = self._ui.texture_coordinates_chooser.getField()
+            if textureCoordinateField:
+                self._graphics.setTextureCoordinateField(textureCoordinateField)
+            else:
+                self._graphics.setTextureCoordinateField(Field())
 
     def _boundarymodeDisplay(self):
         """
@@ -447,6 +497,36 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             material = self._ui.material_chooser.getMaterial()
             self._graphics.setMaterial(material)
 
+    def selectedMaterialChanged(self, index):
+        """
+        An item was selected at index in selected material chooser widget
+
+        :param index: index of new item.
+        """
+        if self._graphics:
+            selectedMaterial = self._ui.selected_material_chooser.getMaterial()
+            self._graphics.setSelectedMaterial(selectedMaterial)
+
+    def _selectModeDisplay(self):
+        """
+        Show the current state of the select mode enum chooser widget
+        """
+        selectMode = Field.DOMAIN_TYPE_INVALID
+        if self._graphics:
+            selectMode = self._graphics.getSelectMode()
+        self._ui.select_mode_enum_chooser.setEnum(selectMode)
+
+    def selectModeChanged(self, index):
+        """
+        Element select mode enum chooser widget changed
+
+        :param index: index of new item.
+        """
+        if self._graphics:
+            selectMode = self._ui.select_mode_enum_chooser.getEnum()
+            self._graphics.setSelectMode(selectMode)
+            self._updateWidgets()
+
     def isoscalarFieldChanged(self, index):
         if self._graphics:
             contours = self._graphics.castContours()
@@ -456,6 +536,17 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     isoscalarField = Field()
                 contours.setIsoscalarField(isoscalarField)
 
+    def rangeIsovaluesClicked(self, isChecked):
+        """
+        The range isovalues checkbox was clicked
+
+        :param isChecked: boolean
+        """
+        if self._graphics:
+            self._isRangeIsovalues = not self._isRangeIsovalues        
+            self._ui.range_number_spinBox.setEnabled(self._isRangeIsovalues)
+            self._isovaluesDisplay()
+
     def _isovaluesDisplay(self):
         """
         Display the current iso values list
@@ -463,6 +554,13 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             contours = self._graphics.castContours()
             if contours.isValid():
+                if self._isRangeIsovalues:
+                    first = contours.getRangeFirstIsovalue()
+                    last = contours.getRangeLastIsovalue()
+                    rangeNum = contours.getRangeNumberOfIsovalues()
+                    self._displayVector(self._ui.isovalues_lineedit, [first, last])
+                    self._ui.range_number_spinBox.setValue(rangeNum)
+                    return
                 count, isovalues = contours.getListIsovalues(1)
                 if count > 1:
                     count, isovalues = contours.getListIsovalues(count)
@@ -470,6 +568,23 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     self._displayVector(self._ui.isovalues_lineedit, isovalues)
                     return
         self._ui.isovalues_lineedit.setText('')
+
+    def numberOfIsovalueRangeChanged(self, value):        
+        """
+        Set iso values list from text in widget
+        """
+        try:
+            contours = self._graphics.castContours()
+            if contours.isValid():
+                isovalues = self._parseVector(self._ui.isovalues_lineedit)
+                rangeNum = value
+                firstIsovalue = isovalues[0]
+                lastIsovalue = isovalues[1]
+                if contours.setRangeIsovalues(rangeNum,firstIsovalue, lastIsovalue) != ZINC_OK:
+                    raise
+        except:
+            ArgonLogger.getLogger().error("Invalid range number for isovalues")
+        self._isovaluesDisplay()
 
     def isovaluesEntered(self):
         """
@@ -479,7 +594,13 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             isovalues = self._parseVector(self._ui.isovalues_lineedit)
             contours = self._graphics.castContours()
             if contours.isValid():
-                if contours.setListIsovalues(isovalues) != ZINC_OK:
+                if self._isRangeIsovalues:
+                    rangeNum = self._ui.range_number_spinBox.value()
+                    firstIsovalue = isovalues[0]
+                    lastIsovalue = isovalues[1]
+                    if contours.setRangeIsovalues(rangeNum,firstIsovalue, lastIsovalue) != ZINC_OK :
+                        raise
+                elif contours.setListIsovalues(isovalues) != ZINC_OK:
                     raise
         except:
             ArgonLogger.getLogger().error("Invalid isovalues")
@@ -742,3 +863,53 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             if samplingattributes.isValid():
                 samplingMode = self._ui.sampling_mode_chooser.getEnum()
                 samplingattributes.setElementPointSamplingMode(samplingMode)
+                self._sampleLocationDisplay()
+
+    def _sampleLocationDisplay(self):
+        """
+        Show current sample location
+        """
+        self._ui.sample_location_lineedit.setEnabled(False)
+        if self._graphics:
+            samplingattributes = self._graphics.getGraphicssamplingattributes()
+            if samplingattributes.isValid() and samplingattributes.getElementPointSamplingMode() == Element.POINT_SAMPLING_MODE_SET_LOCATION:
+                self._ui.sample_location_lineedit.setEnabled(True)
+                _, scaleFactors = samplingattributes.getLocation(3)
+                self._displayVector(self._ui.sample_location_lineedit, scaleFactors)
+                return
+        self._ui.sample_location_lineedit.setText('')
+
+    def sampleLocationEntered(self):
+        """
+        Set sample location from text in widget
+        """
+        try:
+            sampleLocation = self._parseVector(self._ui.sample_location_lineedit)
+            samplingattributes = self._graphics.getGraphicssamplingattributes()
+            if samplingattributes.setLocation(sampleLocation) != ZINC_OK:
+                raise
+        except:
+            print("Invalid sample location")
+        self._sampleLocationDisplay()
+
+    def _densityFieldDisplay(self):
+        """
+        Show the current state of the density field combo box
+        """
+        if self._graphics:
+            samplingattributes = self._graphics.getGraphicssamplingattributes()
+            if samplingattributes.isValid():
+                densityField = samplingattributes.getDensityField()
+                self._ui.density_field_chooser.setField(densityField)
+                return
+
+    def densityFieldChanged(self):
+        """
+        Density field combo box changed
+        """
+        if self._graphics:
+            samplingattributes = self._graphics.getGraphicssamplingattributes()
+            if samplingattributes.isValid():
+                densityField = self._ui.density_field_chooser.getField()
+                samplingattributes.setDensityField(densityField)
+                self._densityFieldDisplay()
