@@ -214,7 +214,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="EnumerationChooserWidget" name="domain_enum_chooser"/>
+       <widget class="EnumerationChooserWidget" name="domain_chooser"/>
       </item>
       <item row="15" column="0">
        <widget class="QLabel" name="tessellation_field_label">
@@ -1080,7 +1080,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>domain_enum_chooser</sender>
+   <sender>domain_chooser</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>domainChanged(int)</slot>
@@ -1156,22 +1156,6 @@
     <hint type="destinationlabel">
      <x>123</x>
      <y>439</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>domain_chooser</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>GraphicsEditorWidget</receiver>
-   <slot>dataFieldChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>167</x>
-     <y>133</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>148</x>
-     <y>560</y>
     </hint>
    </hints>
   </connection>

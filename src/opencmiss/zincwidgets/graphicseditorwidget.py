@@ -49,11 +49,10 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
         self._ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
         self._ui.boundarymode_chooser.setEnumsList(Graphics.BoundaryModeEnumToString, Graphics.BoundaryModeEnumFromString)
-        self._ui.domain_chooser.setEnumsList(Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString)
         self._ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
         self._ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
         self._ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
-        self._ui.domain_enum_chooser.setEnumsList(Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString,DOMAIN_TYPE_ENUM)
+        self._ui.domain_chooser.setEnumsList(Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString,DOMAIN_TYPE_ENUM)
         self._ui.select_mode_enum_chooser.setEnumsList(Graphics.SelectModeEnumToString, Graphics.SelectModeEnumFromString)
 
         self._ui.subgroup_field_chooser.setNullObjectName('-')
@@ -449,7 +448,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         domainType = Field.DOMAIN_TYPE_INVALID
         if self._graphics:
             domainType = self._graphics.getFieldDomainType()
-        self._ui.domain_enum_chooser.setEnum(domainType)
+        self._ui.domain_chooser.setEnum(domainType)
 
     def domainChanged(self, index):
         """
@@ -458,7 +457,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         :param index: index of new item.
         """
         if self._graphics:
-            domainType = self._ui.domain_enum_chooser.getEnum()
+            domainType = self._ui.domain_chooser.getEnum()
             self._graphics.setFieldDomainType(domainType)
             self._updateWidgets()
             if self._refreshGraphicListCallback:

@@ -164,10 +164,10 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.domain_enum_label)
 
-        self.domain_enum_chooser = EnumerationChooserWidget(self.general_groupbox)
-        self.domain_enum_chooser.setObjectName(u"domain_enum_chooser")
+        self.domain_chooser = EnumerationChooserWidget(self.general_groupbox)
+        self.domain_chooser.setObjectName(u"domain_chooser")
 
-        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.domain_enum_chooser)
+        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.domain_chooser)
 
         self.tessellation_field_label = QLabel(self.general_groupbox)
         self.tessellation_field_label.setObjectName(u"tessellation_field_label")
@@ -482,7 +482,7 @@ class Ui_GraphicsEditorWidget(object):
         self.spectrum_chooser.currentIndexChanged.connect(GraphicsEditorWidget.spectrumChanged)
         self.tessellation_chooser.currentIndexChanged.connect(GraphicsEditorWidget.tessellationChanged)
         self.subgroup_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.subgroupFieldChanged)
-        self.domain_enum_chooser.currentIndexChanged.connect(GraphicsEditorWidget.domainChanged)
+        self.domain_chooser.currentIndexChanged.connect(GraphicsEditorWidget.domainChanged)
         self.select_mode_enum_chooser.currentIndexChanged.connect(GraphicsEditorWidget.selectModeChanged)
         self.face_enumeration_chooser.currentIndexChanged.connect(GraphicsEditorWidget.faceChanged)
         self.scenecoordinatesystem_chooser.currentIndexChanged.connect(GraphicsEditorWidget.scenecoordinatesystemChanged)
