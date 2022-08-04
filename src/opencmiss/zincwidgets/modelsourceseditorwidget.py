@@ -178,8 +178,11 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
                 if not item.isLoaded():
                     return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled
             elif index.column() == 4:
-                if item.getRegionName() is not None:
+                if item.getRegionName() is not None and not item.isLoaded():
                     return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled
+                elif item.getRegionName() is not None and item.isLoaded():
+                    # Use the ItemIsUserTristate to indicate that the item is loaded and disabled.
+                    return QtCore.Qt.ItemIsUserTristate
 
         return QtCore.Qt.NoItemFlags
 
@@ -236,6 +239,7 @@ class ApplyDelegate(QtWidgets.QItemDelegate):
         self._add_icon = QtGui.QIcon(":/zincwidgets/images/icons/list-add-icon.png")
         self._add_disabled_icon = QtGui.QIcon(":/zincwidgets/images/icons/list-add-disabled-icon.png")
         self._remove_icon = QtGui.QIcon(":/zincwidgets/images/icons/list-remove-icon.png")
+        self._remove_disabled_icon = QtGui.QIcon(":/zincwidgets/images/icons/list-remove-disabled-icon.png")
 
     def createEditor(self, parent, option, index):
         """
@@ -244,11 +248,10 @@ class ApplyDelegate(QtWidgets.QItemDelegate):
         return None
 
     def paint(self, painter, option, index):
-        """
-        Paint a checkbox without the label.
-        """
         if index.flags() == QtCore.Qt.NoItemFlags:
             self._add_disabled_icon.paint(painter, option.rect)
+        elif index.flags() == QtCore.Qt.ItemIsUserTristate:
+            self._remove_disabled_icon.paint(painter, option.rect)
         elif index.data():
             self._remove_icon.paint(painter, option.rect)
         else:

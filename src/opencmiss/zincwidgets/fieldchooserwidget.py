@@ -30,18 +30,24 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         self._conditional = None
         self._field = None
         self._allowUnmanagedField = False
+        self._fieldmodulenotifier = None
+        self._listen_for_field_notifications = True
 
-    def _fieldmoduleCallback(self, fieldmoduleevent):
+    def __del__(self):
+        if self._fieldmodulenotifier is not None:
+            self._fieldmodulenotifier.clearCallback()
+
+    def _fieldmodule_callback(self, fieldmoduleevent):
         """
         Callback for change in fields; may need to rebuild field list
         """
         changeSummary = fieldmoduleevent.getSummaryFieldChangeFlags()
-        # print "_fieldmoduleCallback changeSummary =", changeSummary
+        # print "_fieldmodule_callback changeSummary =", changeSummary
         if ((0 != (changeSummary & (Field.CHANGE_FLAG_IDENTIFIER | Field.CHANGE_FLAG_ADD | Field.CHANGE_FLAG_REMOVE))) or
                 ((self._conditional != None) and (0 != (changeSummary & Field.CHANGE_FLAG_DEFINITION)))):
-            self._buildFieldList()
+            self._build_field_list()
 
-    def _buildFieldList(self):
+    def _build_field_list(self):
         """
         Rebuilds the list of items in the ComboBox from the field module
         """
@@ -84,6 +90,19 @@ class FieldChooserWidget(QtWidgets.QComboBox):
     def getRegion(self):
         return self._region
 
+    def set_listen_for_field_notifications(self, state):
+        self._listen_for_field_notifications = state
+        if not state:
+            self.clear_callback()
+
+    def listen_for_field_notifications(self):
+        return self._listen_for_field_notifications
+
+    def clear_callback(self):
+        if self._fieldmodulenotifier is not None:
+            self._fieldmodulenotifier.clearCallback()
+            self._fieldmodulenotifier = None
+
     def setRegion(self, region):
         """
         Sets the region that this widget chooses fields from
@@ -93,10 +112,10 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         else:
             self._region = None
         self._field = None
-        self._buildFieldList()
-        if region:
+        self._build_field_list()
+        if region and self._listen_for_field_notifications:
             self._fieldmodulenotifier = region.getFieldmodule().createFieldmodulenotifier()
-            self._fieldmodulenotifier.setCallback(self._fieldmoduleCallback)
+            self._fieldmodulenotifier.setCallback(self._fieldmodule_callback)
         else:
             self._fieldmodulenotifier = None
 
@@ -106,7 +125,7 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         Call before setting the current field
         """
         self._conditional = conditional
-        self._buildFieldList()
+        self._build_field_list()
 
     def getField(self):
         """

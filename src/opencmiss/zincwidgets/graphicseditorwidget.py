@@ -49,6 +49,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
         self._ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
         self._ui.boundarymode_chooser.setEnumsList(Graphics.BoundaryModeEnumToString, Graphics.BoundaryModeEnumFromString)
+        self._ui.domain_chooser.setEnumsList(Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString)
         self._ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
         self._ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
         self._ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
@@ -82,8 +83,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.label_field_chooser.setNullObjectName('-')
         self._ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
         self._ui.density_field_chooser.setNullObjectName('-')
-
-        
 
     def _updateWidgets(self):
         # base graphics attributes
@@ -408,6 +407,11 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             boundarymode = self._graphics.getBoundaryMode()
         self._ui.boundarymode_chooser.setEnum(boundarymode)
+
+    def domainChanged(self, index):
+        if self._graphics:
+            domain = self._ui.boundarymode_chooser.getEnum()
+            self._graphics.setDomain(domain)
 
     def boundarymodeChanged(self, index):
         """
