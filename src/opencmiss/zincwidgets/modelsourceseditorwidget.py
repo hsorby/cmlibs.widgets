@@ -20,6 +20,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from opencmiss.argon.argonmodelsources import ArgonModelSourceFile
 from opencmiss.argon.argonlogger import ArgonLogger
 from opencmiss.argon.argonerror import ArgonError
+from opencmiss.argon.argonregion import REGION_PATH_SEPARATOR
 
 from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 from opencmiss.zincwidgets.ui.ui_modelsourceseditorwidget import Ui_ModelSourcesEditorWidget
@@ -88,7 +89,10 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
     def add_model_source_file(self, file_name):
         index = self.index(self._row_count, 0)
         self.beginInsertRows(index, self._row_count, self._row_count)
-        self._data[self._row_count] = ArgonModelSourceFile(file_name)
+        argon_source_file = ArgonModelSourceFile(file_name)
+        argon_source_file.setEdit(True)
+        self._document.getRootRegion().addModelSource(argon_source_file)
+        self._data[self._row_count] = argon_source_file
         self._row_count = len(self._data)
         self._update_common_path()
         self.endInsertRows()
@@ -115,6 +119,21 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
     def _get_item_from_index(self, index):
         return self._data[index.row()]
 
+    def _get_region_path(self, item, region=None):
+        if region is None:
+            region = self._document.getRootRegion()
+        model_sources = region.getModelSources()
+        if item in model_sources:
+            return region.getPath()
+        else:
+            for index in range(region.getChildCount()):
+                child_region = region.getChild(index)
+                result = self._get_region_path(item, child_region)
+                if result is not None:
+                    return result
+
+        return None
+
     def rowCount(self, parent):
         return self._row_count
 
@@ -133,7 +152,8 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
             elif index.column() == 1:
                 return item.getType()
             elif index.column() == 2:
-                return item.getRegionName()
+                # With a persistent item delegate we never come here.
+                return self._get_region_path(item)
             elif index.column() == 3:
                 return item.getTime()
             elif index.column() == 4:
@@ -150,21 +170,31 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
         if index.isValid():
             item = self._get_item_from_index(index)
             if role == QtCore.Qt.EditRole:
+                top_left_index = index
                 if index.column() == 2:
-                    item.setRegionName(value)
+                    current_region = self._get_region_path(item)
+                    if current_region != value:
+                        region_old = self._document.findRegion(current_region)
+                        region_old.removeModelSource(item)
+                        region_new = self._document.findRegion(value)
+                        region_new.addModelSource(item)
                 elif index.column() == 3:
                     item.setTime(value)
                 elif index.column() == 4:
-                    region = self._document.findRegion(item.getRegionName())
+                    region_path = self._get_region_path(item)
+                    region = self._document.findRegion(region_path)
                     if value:
                         try:
-                            region.addModelSource(item)
+                            region.applyModelSource(item)
+                            # Set the region chooser cell as out-of-date for this model source item.
+                            top_left_index = self.createIndex(index.row(), 2)
                         except ArgonError:
-                            item.unloaded()
+                            item.unload()
                             return False
                     else:
                         region.removeModelSource(item)
-                self.dataChanged.emit(index, index)
+
+                self.dataChanged.emit(top_left_index, index)
                 return True
 
         return False
@@ -178,11 +208,11 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
                 if not item.isLoaded():
                     return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled
             elif index.column() == 4:
-                if item.getRegionName() is not None and not item.isLoaded():
-                    return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled
-                elif item.getRegionName() is not None and item.isLoaded():
+                if item.isLoaded():
                     # Use the ItemIsUserTristate to indicate that the item is loaded and disabled.
                     return QtCore.Qt.ItemIsUserTristate
+                else:
+                    return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled
 
         return QtCore.Qt.NoItemFlags
 
@@ -192,34 +222,43 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
                 return self._headers[section]
 
 
-class RegionDelegate(QtWidgets.QItemDelegate):
+class RegionDelegate(QtWidgets.QStyledItemDelegate):
 
     def __init__(self, root_region, parent=None):
         super(RegionDelegate, self).__init__(parent)
-        self.items = []
         self._root_region = root_region
-
-    def setItems(self, items):
-        self.items = items
+        self._combo = None
+        self._combo_boxes = []
 
     def createEditor(self, parent, option, index):
+        len_existing = len(self._combo_boxes)
+        if len_existing <= index.row():
+            self._combo_boxes.extend([None] * (index.row() + 1 - len_existing))
+
         combo = RegionChooserWidget(parent)
         combo.setRootRegion(self._root_region)
         combo.currentIndexChanged.connect(self.currentIndexChanged)
+        self._combo_boxes[index.row()] = combo
         return combo
 
-    def setEditorData(self, editor, index):
-        editor.blockSignals(True)
-        text = index.model().data(index, QtCore.Qt.DisplayRole)
-        try:
-            i = self.items.index(text)
-        except ValueError:
-            i = 0
-        editor.setCurrentIndex(i)
+    def paint(self, painter, option, index):
+        if isinstance(option.widget, QtWidgets.QAbstractItemView) and not option.widget.isPersistentEditorOpen(index):
+            option.widget.openPersistentEditor(index)
+
+        if len(self._combo_boxes) > index.row() and self._combo_boxes[index.row()] is not None:
+            self._combo_boxes[index.row()].setEnabled(index.flags() != QtCore.Qt.NoItemFlags)
 
     def setModelData(self, editor, model, index):
-        # model.setData(index, editor.currentIndex(), Qt.EditRole)
         model.setData(index, editor.currentText())
+
+    def setEditorData(self, editor, index):
+        model = index.model()
+        value = model.data(index, QtCore.Qt.DisplayRole)
+        editor.blockSignals(True)
+        if len(value) > 1 and value.endswith(REGION_PATH_SEPARATOR):
+            value = value[:-1]
+        editor.setCurrentText(value)
+        editor.blockSignals(False)
 
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(option.rect)
@@ -230,7 +269,7 @@ class RegionDelegate(QtWidgets.QItemDelegate):
 
 class ApplyDelegate(QtWidgets.QItemDelegate):
     """
-    A delegate that places a fully functioning QCheckBox cell of the column to which 
+    A delegate that acts like a checkbox to the cell of the column to which
     it's applied.
     """
 
