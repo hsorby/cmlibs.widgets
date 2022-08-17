@@ -55,7 +55,11 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
                 used_sources.append(source_index)
                 self._data[index] = document_model_sources[source_index]
             except ValueError:
-                self._data[index] = ArgonModelSourceFile(ex_file)
+                model_source = ArgonModelSourceFile(ex_file)
+                model_source.setEdit(True)
+                root_region = self._document.getRootRegion()
+                root_region.addModelSource(model_source)
+                self._data[index] = model_source
 
         # Add in any model sources from the document that have not already been added.
         count = len(self._data)
@@ -152,7 +156,6 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
             elif index.column() == 1:
                 return item.getType()
             elif index.column() == 2:
-                # With a persistent item delegate we never come here.
                 return self._get_region_path(item)
             elif index.column() == 3:
                 return item.getTime()
@@ -181,18 +184,19 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
                 elif index.column() == 3:
                     item.setTime(value)
                 elif index.column() == 4:
-                    region_path = self._get_region_path(item)
-                    region = self._document.findRegion(region_path)
+                    region_index = self.createIndex(index.row(), 2)
+                    region_path = self.data(region_index, QtCore.Qt.DisplayRole)
                     if value:
                         try:
+                            region = self._document.findRegion(region_path)
                             region.applyModelSource(item)
                             # Set the region chooser cell as out-of-date for this model source item.
-                            top_left_index = self.createIndex(index.row(), 2)
+                            top_left_index = region_index
                         except ArgonError:
                             item.unload()
                             return False
-                    else:
-                        region.removeModelSource(item)
+                    # else:
+                    #     region.removeModelSource(item)
 
                 self.dataChanged.emit(top_left_index, index)
                 return True
@@ -254,9 +258,11 @@ class RegionDelegate(QtWidgets.QStyledItemDelegate):
     def setEditorData(self, editor, index):
         model = index.model()
         value = model.data(index, QtCore.Qt.DisplayRole)
-        editor.blockSignals(True)
+
         if len(value) > 1 and value.endswith(REGION_PATH_SEPARATOR):
             value = value[:-1]
+
+        editor.blockSignals(True)
         editor.setCurrentText(value)
         editor.blockSignals(False)
 
