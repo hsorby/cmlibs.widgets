@@ -101,6 +101,14 @@ class SceneEditorWidget(QtWidgets.QWidget):
         graphics_type_string = Graphics.TypeEnumToString(graphics_type).lower()
         domain_type_string = Field.DomainTypeEnumToString(fieldDomainType).lower()
         subgroup_string = subgroup_field.getName()
+        if graphics_type == Graphics.TYPE_POINTS:
+            if fieldDomainType == Field.DOMAIN_TYPE_POINT:
+                graphics_type_string = "point"
+            if fieldDomainType == Field.DOMAIN_TYPE_NODES:
+                graphics_type_string = "node points"
+            if fieldDomainType == Field.DOMAIN_TYPE_DATAPOINTS:
+                graphics_type_string = "data points"
+            graphics_type_string = "element points"
         return ' '.join(filter(None, [graphics_type_string, domain_type_string,subgroup_string]))
 
     def _buildGraphicsList(self):
@@ -174,6 +182,16 @@ class SceneEditorWidget(QtWidgets.QWidget):
         # name = str(combobox1.currentText())
         if name == "point":
             graphicsType = Graphics.TYPE_POINTS
+            fieldDomainType = Field.DOMAIN_TYPE_POINT
+        elif name == "node points":
+            graphicsType = Graphics.TYPE_POINTS
+            fieldDomainType = Field.DOMAIN_TYPE_NODES
+        elif name == "data points":
+            graphicsType = Graphics.TYPE_POINTS
+            fieldDomainType = Field.DOMAIN_TYPE_DATAPOINTS
+        elif name == "element points":
+            graphicsType = Graphics.TYPE_POINTS
+            fieldDomainType = Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION
         elif name == "lines":
             graphicsType = Graphics.TYPE_LINES
         elif name == "surfaces":
