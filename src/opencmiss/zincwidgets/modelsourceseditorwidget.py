@@ -42,43 +42,31 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
     def __init__(self, document, ex_files, parent=None, **kwargs):
         super(ModelSourcesModel, self).__init__(parent)
         self._headers = ['Value', 'Type', 'Region', 'Time', 'Add/Remove']
-        self._data = {}
         self._document = document
-        source_names, document_model_sources = self._get_document_model_sources()
+        root_region = self._document.getRootRegion()
+        root_region.connectRegionChange(self._applied_region_changed)
 
-        self.beginResetModel()
+        source_names, self._document_model_sources = self._get_document_model_sources()
 
-        used_sources = []
         for index, ex_file in enumerate(ex_files):
-            try:
-                source_index = source_names.index(ex_file)
-                used_sources.append(source_index)
-                self._data[index] = document_model_sources[source_index]
-            except ValueError:
-                model_source = ArgonModelSourceFile(ex_file)
-                model_source.setEdit(True)
-                root_region = self._document.getRootRegion()
-                root_region.addModelSource(model_source)
-                self._data[index] = model_source
+            if os.path.normpath(ex_file) not in source_names:
+                self._add_file(ex_file)
 
-        # Add in any model sources from the document that have not already been added.
-        count = len(self._data)
-        for index, model_source in enumerate(document_model_sources):
-            if index not in used_sources:
-                self._data[count] = model_source
-                count += 1
+        self._available_model_source_filenames = [m.getFileName() for m in self._document_model_sources]
 
-        self._row_count = len(self._data)
-
-        self.endResetModel()
-
+        self._row_count = len(self._document_model_sources)
         self._update_common_path()
+
+    def _add_file(self, file_name):
+        model_source = ArgonModelSourceFile(file_name)
+        model_source.setEdit(True)
+        self._document.getRootRegion().addModelSource(model_source)
+        self._document_model_sources.append(model_source)
 
     def _update_common_path(self):
         file_names = []
-        for entry in self._data:
-            source_file = self._data[entry]
-            file_names.append(os.path.normpath(source_file.getFileName()))
+        for model_source in self._document_model_sources:
+            file_names.append(os.path.normpath(model_source.getFileName()))
 
         try:
             if len(file_names) == 1:
@@ -93,11 +81,9 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
     def add_model_source_file(self, file_name):
         index = self.index(self._row_count, 0)
         self.beginInsertRows(index, self._row_count, self._row_count)
-        argon_source_file = ArgonModelSourceFile(file_name)
-        argon_source_file.setEdit(True)
-        self._document.getRootRegion().addModelSource(argon_source_file)
-        self._data[self._row_count] = argon_source_file
-        self._row_count = len(self._data)
+        self._add_file(file_name)
+        self._available_model_source_filenames.append(file_name)
+        self._row_count = len(self._document_model_sources)
         self._update_common_path()
         self.endInsertRows()
 
@@ -121,11 +107,12 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
         return self._get_document_child_model_sources(self._document.getRootRegion())
 
     def _get_item_from_index(self, index):
-        return self._data[index.row()]
+        return self._document_model_sources[index.row()]
 
     def _get_region_path(self, item, region=None):
         if region is None:
             region = self._document.getRootRegion()
+
         model_sources = region.getModelSources()
         if item in model_sources:
             return region.getPath()
@@ -168,6 +155,22 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
         #         return QtGui.QIcon(":/zincwidgets/images/icons/list-add-icon.png")
 
         return None
+
+    def _applied_region_changed(self, argon_region, modified):
+        # A region may have been deleted, if it has add an editable model source to the root region.
+        source_names, model_sources = self._get_document_model_sources()
+        if len(source_names) != len(self._available_model_source_filenames):
+            for index, file_name in enumerate(self._available_model_source_filenames):
+                if os.path.normpath(file_name) not in source_names:
+                    # Model source has been deleted, reset it to initial state.
+                    model_source = self._document_model_sources[index]
+                    model_source.setEdit(True)
+                    model_source.unload()
+                    self._document.getRootRegion().addModelSource(model_source)
+
+        top_left_index = self.createIndex(0, 2)
+        bottom_right_index = self.createIndex(self._row_count - 1, 2)
+        self.dataChanged.emit(top_left_index, bottom_right_index)
 
     def setData(self, index, value, role=QtCore.Qt.EditRole):
         if index.isValid():
