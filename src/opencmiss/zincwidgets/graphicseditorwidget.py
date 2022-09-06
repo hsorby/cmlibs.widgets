@@ -89,6 +89,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         coordinateField = None
         material = None
         selectedMaterial = None
+        tessellationField = None
+        textureCoordinatesField = None
         dataField = None
         spectrum = None
         tessellation = None
@@ -130,6 +132,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._boundarymodeDisplay()
         self._faceDisplay()
         self._domainTypeDisplay()
+        self._selectModeDisplay()
         self._ui.wireframe_checkbox.setCheckState(QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
         # contours
         isoscalarField = None
