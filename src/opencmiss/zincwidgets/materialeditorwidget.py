@@ -193,17 +193,6 @@ class MaterialEditorWidget(QtWidgets.QWidget):
 
         material_module = self._zincContext.getMaterialmodule()
         self._material_model.setMaterialModule(material_module)
-        # Sadly not possible.
-        # self._materialmodulenotifier = material_module.createMaterialmodulenotifier()
-        # self._materialmodulenotifier.setCallback(self._materialmoduleCallback)
-
-    def _materialmoduleCallback(self, materialModuleEvent):
-        """
-        Material module does not have a notifier.
-        """
-        changeSummary = materialModuleEvent.getSummarySpectrumChangeFlags()
-        if 0 != (changeSummary & (Material.CHANGE_FLAG_IDENTIFIER | Material.CHANGE_FLAG_ADD | Material.CHANGE_FLAG_REMOVE)):
-            self._material_model.reset()
 
     def _materialCreateClicked(self):
         """

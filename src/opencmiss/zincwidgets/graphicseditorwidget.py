@@ -80,6 +80,12 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.point_orientation_scale_field_chooser.setNullObjectName('-')
         self._ui.point_orientation_scale_field_chooser.setConditional(FieldIsOrientationScaleCapable)
         self._ui.label_field_chooser.setNullObjectName('-')
+        self._ui.glyph_repeat_mode_chooser.setEnumsList(Glyph.RepeatModeEnumToString, Glyph.RepeatModeEnumFromString)
+        self._ui.glyph_signed_scale_field_chooser.setNullObjectName('- choose -')
+        self._ui.glyph_signed_scale_field_chooser.setConditional(FieldIsScalar)
+        self._buildFontComboBox()
+        self._ui.glyph_font_comboBox.currentIndexChanged.connect(self._fontChanged)
+        # mesh point sampling
         self._ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
         self._ui.density_field_chooser.setNullObjectName('-')
 
@@ -182,10 +188,16 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         glyph = None
         pointOrientationScaleField = None
         labelField = None
+        glyphRepeatMode = None
+        glyphSignedScaleField = None
+        fontname = None
         if pointattributes and pointattributes.isValid():
             glyph = pointattributes.getGlyph()
             pointOrientationScaleField = pointattributes.getOrientationScaleField()
             labelField = pointattributes.getLabelField()
+            glyphRepeatMode = pointattributes.getGlyphRepeatMode()
+            glyphSignedScaleField = pointattributes.getSignedScaleField()
+            fontname = pointattributes.getFont().getName()
             self._ui.points_groupbox.show()
         else:
             self._ui.points_groupbox.hide()
@@ -194,6 +206,12 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.point_orientation_scale_field_chooser.setField(pointOrientationScaleField)
         self._pointScaleFactorsDisplay()
         self._ui.label_field_chooser.setField(labelField)
+        self._ui.glyph_repeat_mode_chooser.setEnum(glyphRepeatMode)
+        self._glyphOffsetDisplay()
+        self._ui.glyph_signed_scale_field_chooser.setField(glyphSignedScaleField)
+        self._labelTextDisplay()
+        self._labelTextOffsetDisplay()
+        self._ui.glyph_font_comboBox.setCurrentIndex(self._ui.glyph_font_comboBox.findText(fontname))
         # sampling attributes
         if samplingattributes and samplingattributes.isValid() and self._graphics.getFieldDomainType() in POINT_SAMPLING_DOMAIN_TYPE_ENUM:
             self._ui.sampling_groupbox.show()
@@ -224,6 +242,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.stream_vector_field_chooser.setRegion(region)
         self._ui.point_orientation_scale_field_chooser.setRegion(region)
         self._ui.label_field_chooser.setRegion(region)
+        self._ui.glyph_signed_scale_field_chooser.setRegion(region)
         self._ui.line_orientation_scale_field_chooser.setRegion(region)
         self._ui.density_field_chooser.setRegion(region)
 
@@ -410,11 +429,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             boundarymode = self._graphics.getBoundaryMode()
         self._ui.boundarymode_chooser.setEnum(boundarymode)
 
-    def domainChanged(self, index):
-        if self._graphics:
-            domain = self._ui.boundarymode_chooser.getEnum()
-            self._graphics.setDomain(domain)
-
     def boundarymodeChanged(self, index):
         """
         Change the current state of the boundarymode enumeration chooser
@@ -517,7 +531,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         """
         Show the current state of the select mode enum chooser widget
         """
-        selectMode = Field.DOMAIN_TYPE_INVALID
+        selectMode = Graphics.SELECT_MODE_INVALID
         if self._graphics:
             selectMode = self._graphics.getSelectMode()
         self._ui.select_mode_enum_chooser.setEnum(selectMode)
@@ -849,6 +863,127 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     labelField = Field()
                 pointattributes.setLabelField(labelField)
 
+    def glyphRepeatModeChanged(self, index):
+        """
+        Glyph repeat mode combo box changed
+
+        :param index: index of new item.
+        """
+        if self._graphics:
+            pointattributes = self._graphics.getGraphicspointattributes()
+            if pointattributes.isValid():
+                glyphRepeatMode = self._ui.glyph_repeat_mode_chooser.getEnum()
+                pointattributes.setGlyphRepeatMode (glyphRepeatMode)
+
+    def glyphSignedScaleFieldChanged(self, index):
+        if self._graphics:
+            pointattributes = self._graphics.getGraphicspointattributes()
+            if pointattributes.isValid():
+                glyphSignedScaleField = self._ui.glyph_signed_scale_field_chooser.getField()
+                if not glyphSignedScaleField:
+                    glyphSignedScaleField = Field()
+                pointattributes.setSignedScaleField(glyphSignedScaleField)
+
+    def _glyphOffsetDisplay(self):
+        """
+        Display the current glyph offset
+        """
+        if self._graphics:
+            pointattributes = self._graphics.getGraphicspointattributes()
+            if pointattributes.isValid():
+                _, glyphOffset = pointattributes.getGlyphOffset(3)
+                self._displayScale(self._ui.glyph_offset_lineedit, glyphOffset)
+                return
+        self._ui.glyph_offset_lineedit.setText('0')
+
+    def glyphOffsetEntered(self):
+        """
+        Set glyph offset from text in widget
+        """
+        try:
+            glyphOffset = self._parseScale(self._ui.glyph_offset_lineedit)
+            pointattributes = self._graphics.getGraphicspointattributes()
+            if pointattributes.setGlyphOffset(glyphOffset) != ZINC_OK:
+                raise
+        except:
+            print("Invalid glyph offset")
+        self._glyphOffsetDisplay()
+
+    def _labelTextDisplay(self):
+        """
+        Display the current label offset
+        """
+        if self._graphics:
+            pointattributes = self._graphics.getGraphicspointattributes()
+            if pointattributes.isValid():
+                labelTexts = []
+                for i in range(3):
+                    labelText = pointattributes.getLabelText(i + 1)
+                    if labelText:
+                        labelTexts.append(labelText)
+                self._ui.glyph_label_text_lineedit.setText(",".join(labelTexts))
+                return
+        self._ui.glyph_label_text_lineedit.setText('')
+
+    def labelTextEntered(self):
+        """
+        Set label text from text in widget
+        """
+        try:
+            labelTexts = self._ui.glyph_label_text_lineedit.text().split(',')
+            pointattributes = self._graphics.getGraphicspointattributes()
+            for i in range(3):
+                labelText = labelTexts[i] if i < len(labelTexts) else ''
+                if pointattributes.setLabelText(i + 1, labelText) != ZINC_OK:
+                    raise
+        except:
+            print("Invalid label text")
+        self._labelTextDisplay()
+
+    def _labelTextOffsetDisplay(self):
+        """
+        Display the current label text offset
+        """
+        if self._graphics:
+            pointattributes = self._graphics.getGraphicspointattributes()
+            if pointattributes.isValid():
+                _, labelOffset = pointattributes.getLabelOffset(3)
+                self._displayScale(self._ui.glyph_label_text_offset_lineedit, labelOffset)
+                return
+        self._ui.glyph_label_text_offset_lineedit.setText('0')
+
+    def labelTextOffsetEntered(self):
+        """
+        Set label text offset from text in widget
+        """
+        try:
+            labelOffset = self._parseScale(self._ui.glyph_label_text_offset_lineedit)
+            pointattributes = self._graphics.getGraphicspointattributes()
+            if pointattributes.setLabelOffset(labelOffset) != ZINC_OK:
+                raise
+        except:
+            print("Invalid label text offset")
+        self._labelTextOffsetDisplay()
+
+    def _buildFontComboBox(self):
+        self._ui.glyph_font_comboBox.clear()
+        self._ui.glyph_font_comboBox.addItems(["default"])
+
+    def _fontChanged(self, index):
+        """
+        Set label text font to selected font in widget
+        """
+        try:
+            pointattributes = self._graphics.getGraphicspointattributes()
+            # Font, fake it till we make it
+            # labelFont = findFontbyName(self._ui.glyph_font_comboBox.item(index).text())
+            labelFont = pointattributes.getFont()
+            if pointattributes.setFont(labelFont) != ZINC_OK:
+                raise
+        except:
+            print("Invalid label text font")
+
+    # Sampling Settings
     def _samplingModeDisplay(self):
         """
         Show the current state of the sampling mode combo box

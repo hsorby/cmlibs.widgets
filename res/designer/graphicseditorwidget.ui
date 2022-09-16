@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>298</width>
-    <height>1010</height>
+    <height>1185</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -94,7 +94,7 @@
       <item row="5" column="0">
        <widget class="QLabel" name="scenecoordinatesystem_label">
         <property name="text">
-         <string>Coord System:</string>
+         <string>Coord system:</string>
         </property>
        </widget>
       </item>
@@ -104,7 +104,7 @@
       <item row="6" column="0">
        <widget class="QLabel" name="boundarymode_label">
         <property name="text">
-         <string>Boundary Mode:</string>
+         <string>Boundary mode:</string>
         </property>
        </widget>
       </item>
@@ -143,9 +143,9 @@
        </widget>
       </item>
       <item row="11" column="0">
-       <widget class="QLabel" name="material_label">
+       <widget class="QLabel" name="selected_material_label">
         <property name="text">
-         <string>Selected Material:</string>
+         <string>Selected material:</string>
         </property>
        </widget>
       </item>
@@ -239,7 +239,7 @@
       <item row="7" column="0">
        <widget class="QLabel" name="select_mode_label">
         <property name="text">
-         <string>Select Mode:</string>
+         <string>Select mode:</string>
         </property>
        </widget>
       </item>
@@ -312,7 +312,7 @@
       <item row="1" column="0">
        <widget class="QCheckBox" name="range_isovalues_checkBox">
         <property name="text">
-         <string>Range Number:</string>
+         <string>Range number:</string>
         </property>
        </widget>
       </item>
@@ -553,6 +553,70 @@
       <item row="6" column="1">
        <widget class="QLineEdit" name="point_scale_factors_lineedit"/>
       </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="glyph_repeat_mode_label">
+        <property name="text">
+         <string>Repeat mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="EnumerationChooserWidget" name="glyph_repeat_mode_chooser"/>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="glyph_signed_scale_field_label">
+        <property name="text">
+         <string>Signed scale field:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="FieldChooserWidget" name="glyph_signed_scale_field_chooser">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="glyph_offset_label">
+        <property name="text">
+         <string>Glyph offset:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QLineEdit" name="glyph_offset_lineedit"/>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="glyph_label_text_label">
+        <property name="text">
+         <string>Label text:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="QLineEdit" name="glyph_label_text_lineedit"/>
+      </item>
+      <item row="12" column="0">
+       <widget class="QLabel" name="glyph_label_text_offset_label">
+        <property name="text">
+         <string>Label text offset:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
+       <widget class="QLineEdit" name="glyph_label_text_offset_lineedit"/>
+      </item>
+      <item row="13" column="0">
+       <widget class="QLabel" name="glyph_font_label">
+        <property name="text">
+         <string>Font:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="1">
+       <widget class="QComboBox" name="glyph_font_comboBox"/>
+      </item>
      </layout>
     </widget>
    </item>
@@ -578,7 +642,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="sample_location_label">
         <property name="text">
-         <string>Sample Location:</string>
+         <string>Sample location:</string>
         </property>
        </widget>
       </item>
@@ -1159,6 +1223,102 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>subgroup_field_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>subgroupFieldChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>148</x>
+     <y>481</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>glyph_repeat_mode_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>glyphRepeatModeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>glyph_signed_scale_field_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>glyphSignedScaleFieldChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>glyph_offset_lineedit</sender>
+   <signal>editingFinished()</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>glyphOffsetEntered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>glyph_label_text_lineedit</sender>
+   <signal>editingFinished()</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>labelTextEntered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>glyph_label_text_offset_lineedit</sender>
+   <signal>editingFinished()</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>labelTextOffsetEntered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>materialChanged(int)</slot>
@@ -1166,6 +1326,8 @@
   <slot>glyphChanged(int)</slot>
   <slot>pointOrientationScaleFieldChanged(int)</slot>
   <slot>labelFieldChanged(int)</slot>
+  <slot>glyphRepeatModeChanged(int)</slot>
+  <slot>glyphSignedScaleFieldChanged(int)</slot>
   <slot>pointBaseSizeEntered()</slot>
   <slot>pointScaleFactorsEntered()</slot>
   <slot>isoscalarFieldChanged(int)</slot>
