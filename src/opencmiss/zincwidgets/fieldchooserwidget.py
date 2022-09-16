@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtGui,QtCore
 
 from opencmiss.zinc.field import Field
 
@@ -56,6 +56,9 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         if self._region and self._region.isValid():
             if self._nullObjectName:
                 self.addItem(self._nullObjectName)
+                font_for_null = self.font()
+                font_for_null.setItalic(True)
+                self.setItemData(0, font_for_null, QtCore.Qt.FontRole)
             fielditer = self._region.getFieldmodule().createFielditerator()
             field = fielditer.next()
             while field.isValid():
@@ -79,6 +82,20 @@ class FieldChooserWidget(QtWidgets.QComboBox):
             index = 0
         self.setCurrentIndex(index)
         self.blockSignals(False)
+
+    def paintEvent(self, e):
+        fontData = self.currentData(QtCore.Qt.FontRole)
+        if fontData:
+            painter = QtGui.QPainter(self)
+            painter.save()
+            painter.setFont(fontData)
+            opt = QtWidgets.QStyleOptionComboBox()
+            self.initStyleOption(opt)
+            self.style().drawComplexControl(QtWidgets.QStyle.CC_ComboBox, opt, painter)
+            self.style().drawControl(QtWidgets.QStyle.CE_ComboBoxLabel, opt, painter)
+            painter.restore()
+        else:
+            QtWidgets.QComboBox.paintEvent(self, e)
 
     def setNullObjectName(self, nullObjectName):
         """
