@@ -33,33 +33,6 @@ class InteractiveConsoleInterpreter(CodeInteractiveConsole):
                 sys.stderr = old_stderr
         self.write(collector.getvalue())
         return more
-#
-#
-# class InteractiveConsoleUI(object):
-#
-#     def __init__(self, parent):
-#         if parent.layout() is None:
-#             parent.setLayout(QtWidgets.QHBoxLayout())
-#         layout = QtWidgets.QVBoxLayout()
-#         layout.setSpacing(0)
-#         #  Output console:  a fixed-pitch-font text area.
-#         self.output = QtWidgets.QPlainTextEdit(parent)
-#         self.output.setReadOnly(True)
-#         self.output.setUndoRedoEnabled(False)
-#         self.output.setMaximumBlockCount(5000)
-#         fmt = QtGui.QTextCharFormat()
-#         fmt.setFontFixedPitch(True)
-#         self.output.setCurrentCharFormat(fmt)
-#         layout.addWidget(self.output)
-#         parent.layout().addLayout(layout)
-#         #  Input console, a prompt displated next to a lineedit
-#         layout2 = QtWidgets.QHBoxLayout()
-#         self.prompt = QtWidgets.QLabel(parent)
-#         self.prompt.setText(">>> ")
-#         layout2.addWidget(self.prompt)
-#         self.input = QtWidgets.QLineEdit(parent)
-#         layout2.addWidget(self.input)
-#         layout.addLayout(layout2)
 
 
 class InteractiveConsole(QtWidgets.QWidget):
@@ -73,6 +46,12 @@ class InteractiveConsole(QtWidgets.QWidget):
         self._ui.inputLineEdit.returnPressed.connect(self._on_enter_line)
         self._history = []
         self._history_pos = 0
+
+    def set_context(self, context):
+        self._interpreter = InteractiveConsoleInterpreter(self._ui, {'context': context})
+        self._history = []
+        self._history_pos = 0
+        self._ui.outputPlainTextEdit.clear()
 
     def _on_enter_line(self):
         line = self._ui.inputLineEdit.text()
