@@ -2,7 +2,7 @@ import sys
 
 from code import InteractiveConsole as CodeInteractiveConsole
 from io import StringIO
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide2 import QtCore, QtWidgets
 
 from opencmiss.zincwidgets.ui.ui_interactiveconsolewidget import Ui_InteractiveConsoleWidget
 
@@ -65,27 +65,26 @@ class InteractiveConsoleInterpreter(CodeInteractiveConsole):
 class InteractiveConsole(QtWidgets.QWidget):
 
     def __init__(self, parent=None, local_vars=None):
-        self.locals = local_vars
         super(InteractiveConsole, self).__init__(parent)
         self._ui = Ui_InteractiveConsoleWidget()
         self._ui.setupUi(self)
-        self.interpreter = InteractiveConsoleInterpreter(self._ui, self.locals)
+        self._interpreter = InteractiveConsoleInterpreter(self._ui, local_vars)
         self._ui.inputLineEdit.installEventFilter(self)
         self._ui.inputLineEdit.returnPressed.connect(self._on_enter_line)
-        self.history = []
-        self.history_pos = 0
+        self._history = []
+        self._history_pos = 0
 
     def _on_enter_line(self):
         line = self._ui.inputLineEdit.text()
         self._ui.inputLineEdit.setText("")
-        self.interpreter.write(self._ui.promptLabel.text() + line)
-        more = self.interpreter.push(line)
+        self._interpreter.write(self._ui.promptLabel.text() + line)
+        more = self._interpreter.push(line)
         if line:
-            self.history.append(line)
-            self.history_pos = len(self.history)
-            while len(self.history) > 100:
-                self.history = self.history[1:]
-                self.history_pos -= 1
+            self._history.append(line)
+            self._history_pos = len(self._history)
+            while len(self._history) > 100:
+                self._history = self._history[1:]
+                self._history_pos -= 1
         if more:
             self._ui.promptLabel.setText("... ")
         else:
@@ -101,11 +100,11 @@ class InteractiveConsole(QtWidgets.QWidget):
 
     def go_history(self, offset):
         if offset < 0:
-            self.history_pos = max(0, self.history_pos + offset)
+            self._history_pos = max(0, self._history_pos + offset)
         elif offset > 0:
-            self.history_pos = min(len(self.history), self.history_pos + offset)
+            self._history_pos = min(len(self._history), self._history_pos + offset)
         try:
-            line = self.history[self.history_pos]
+            line = self._history[self._history_pos]
         except IndexError:
             line = ""
         self._ui.inputLineEdit.setText(line)

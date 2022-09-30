@@ -14,9 +14,6 @@
    <string>Interactive console</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <widget class="QTextBrowser" name="consoleText"/>
-   </item>
    <item row="0" column="0">
     <widget class="InteractiveConsole" name="interactiveConsoleWidget" native="true"/>
    </item>

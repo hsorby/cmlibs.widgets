@@ -22,11 +22,6 @@ class Ui_ConsoleEditorWidget(object):
         ConsoleEditorWidget.resize(452, 533)
         self.gridLayout = QGridLayout(ConsoleEditorWidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.consoleText = QTextBrowser(ConsoleEditorWidget)
-        self.consoleText.setObjectName(u"consoleText")
-
-        self.gridLayout.addWidget(self.consoleText, 1, 0, 1, 1)
-
         self.interactiveConsoleWidget = InteractiveConsole(ConsoleEditorWidget)
         self.interactiveConsoleWidget.setObjectName(u"interactiveConsoleWidget")
 
