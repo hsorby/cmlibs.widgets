@@ -12,7 +12,6 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-import icons_rc
 
 class Ui_LoggerEditorWidget(object):
     def setupUi(self, LoggerEditorWidget):

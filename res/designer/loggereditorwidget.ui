@@ -50,9 +50,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../icons.qrc"/>
- </resources>
  <connections>
   <connection>
    <sender>clearAllButton</sender>
