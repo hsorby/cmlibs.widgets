@@ -24,12 +24,6 @@ class ConsoleEditorWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
         self._ui = Ui_ConsoleEditorWidget()
         self._ui.setupUi(self)
-        self._context = None
-
-        self._make_connections()
-
-    def _make_connections(self):
-        pass
 
     def setZincContext(self, zinc_context):
         self._ui.interactiveConsoleWidget.set_context(zinc_context)
