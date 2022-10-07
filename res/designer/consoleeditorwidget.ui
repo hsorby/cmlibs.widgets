@@ -29,8 +29,4 @@
  </customwidgets>
  <resources/>
  <connections/>
- <slots>
-  <slot>clearAll()</slot>
-  <slot>copyToClipboard()</slot>
- </slots>
 </ui>
