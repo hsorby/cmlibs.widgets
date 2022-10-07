@@ -58,9 +58,15 @@ class InteractiveConsoleWidget(QtWidgets.QWidget):
         self._ui.inputLineEdit.returnPressed.connect(self._on_enter_line)
         self._history = []
         self._history_pos = 0
+        self._document = None
 
-    def set_context(self, context):
-        self._interpreter = InteractiveConsoleInterpreter(self._ui, {'context': context})
+    def set_document(self, document):
+        self._document = document
+        self._reset_interpreter()
+
+    def _reset_interpreter(self):
+        interpreter_variables = {'context': self._document.getZincContext(), 'document': self._document}
+        self._interpreter = InteractiveConsoleInterpreter(self._ui, interpreter_variables)
         self._history = []
         self._history_pos = 0
         self._ui.outputPlainTextEdit.clear()
