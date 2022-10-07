@@ -25,8 +25,5 @@ class ConsoleEditorWidget(QtWidgets.QWidget):
         self._ui = Ui_ConsoleEditorWidget()
         self._ui.setupUi(self)
 
-    def setZincContext(self, zinc_context):
-        self._ui.interactiveConsoleWidget.set_context(zinc_context)
-
     def setDocument(self, document):
         self._ui.interactiveConsoleWidget.set_document(document)
