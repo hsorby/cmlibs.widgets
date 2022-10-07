@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from opencmiss.zincwidgets.interactiveconsole import InteractiveConsole
+from opencmiss.zincwidgets.interactiveconsolewidget import InteractiveConsoleWidget
 
 
 class Ui_ConsoleEditorWidget(object):
@@ -22,7 +22,7 @@ class Ui_ConsoleEditorWidget(object):
         ConsoleEditorWidget.resize(452, 533)
         self.gridLayout = QGridLayout(ConsoleEditorWidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.interactiveConsoleWidget = InteractiveConsole(ConsoleEditorWidget)
+        self.interactiveConsoleWidget = InteractiveConsoleWidget(ConsoleEditorWidget)
         self.interactiveConsoleWidget.setObjectName(u"interactiveConsoleWidget")
 
         self.gridLayout.addWidget(self.interactiveConsoleWidget, 0, 0, 1, 1)

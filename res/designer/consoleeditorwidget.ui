@@ -15,15 +15,15 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="InteractiveConsole" name="interactiveConsoleWidget" native="true"/>
+    <widget class="InteractiveConsoleWidget" name="interactiveConsoleWidget" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>InteractiveConsole</class>
+   <class>InteractiveConsoleWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/zincwidgets/interactiveconsole.h</header>
+   <header>opencmiss/zincwidgets/interactiveconsolewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

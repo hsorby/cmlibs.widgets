@@ -47,10 +47,10 @@ class InteractiveConsoleInterpreter(CodeInteractiveConsole):
         return more
 
 
-class InteractiveConsole(QtWidgets.QWidget):
+class InteractiveConsoleWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None, local_vars=None):
-        super(InteractiveConsole, self).__init__(parent)
+        super(InteractiveConsoleWidget, self).__init__(parent)
         self._ui = Ui_InteractiveConsoleWidget()
         self._ui.setupUi(self)
         self._interpreter = InteractiveConsoleInterpreter(self._ui, local_vars)
