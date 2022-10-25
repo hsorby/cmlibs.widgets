@@ -43,6 +43,9 @@ class FieldBase(object):
     def _is_type_coordinate(self):
         return self._field.isTypeCoordinate()
 
+    def _is_possible_type_of_coordinate_field(self):
+        return self._field.castFiniteElement().isValid()
+
     def _set_managed(self, state):
         self._field.setManaged(state)
 
@@ -203,6 +206,9 @@ class FieldTypeBase(object):
 
     def _pre_is_type_coordinate(self):
         return self._type_coordinate
+
+    def _pre_is_possible_type_of_coordinate_field(self):
+        return self._field_type == "FieldFiniteElement"
 
     def _requirements(self, kind=None):
         def _filter(p):
@@ -455,20 +461,26 @@ class FieldInterface(FieldBase, FieldTypeBase):
         else:
             self._set_managed(state)
 
-    def set_type_coordinate(self, state):
-        if self.defining_field():
-            self._pre_set_type_coordinate(state)
-        else:
-            self._set_type_coordinate(state)
-
     def is_managed(self):
         if self.defining_field():
             return self._pre_is_managed()
 
         return self._is_managed()
 
+    def set_type_coordinate(self, state):
+        if self.defining_field():
+            self._pre_set_type_coordinate(state)
+        else:
+            self._set_type_coordinate(state)
+
     def is_type_coordinate(self):
         if self.defining_field():
             return self._pre_is_type_coordinate()
 
         return self._is_type_coordinate()
+
+    def is_possible_type_of_coordinate_field(self):
+        if self.defining_field():
+            return self._pre_is_possible_type_of_coordinate_field()
+
+        return self._is_possible_type_of_coordinate_field()
