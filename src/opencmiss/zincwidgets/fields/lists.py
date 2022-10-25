@@ -32,7 +32,7 @@ FIELDS_REQUIRING_NUMBER_OF_COMPONENTS = ['FieldFiniteElement', 'FieldArgumentRea
 FIELDS_REQUIRING_NO_ARGUMENTS = ['FieldStoredString', 'FieldIsExterior']
 FIELDS_REQUIRING_ONE_SOURCE_FIELD = ['FieldAlias']
 FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD = [
-    'FieldAbs', 'FieldLog', 'FieldSqrt', 'FieldExp', 'FieldIdentity',
+    'FieldAbs', 'FieldLog', 'FieldSqrt', 'FieldExp', 'FieldIdentity', 'FieldIsDefined',
     'FieldNot', 'FieldSin', 'FieldCos', 'FieldTan', 'FieldAsin', 'FieldAcos',
     'FieldAtan', 'FieldMagnitude', 'FieldNormalise', 'FieldSumComponents',
     'FieldCoordinateTransformation',
