@@ -6,7 +6,7 @@ from opencmiss.zinc.field import FieldFindMeshLocation, FieldEdgeDiscontinuity
 from opencmiss.zinc.node import Node
 
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
-from opencmiss.zincwidgets.fields.lists import MESH_NAMES, SEARCH_MODES, MEASURE_TYPES, FACE_TYPES, VALUE_TYPES, QUADRATURE_RULES
+from opencmiss.zincwidgets.fields.lists import MESH_NAMES, NODESET_NAMES, SEARCH_MODES, MEASURE_TYPES, FACE_TYPES, VALUE_TYPES, QUADRATURE_RULES
 from opencmiss.zincwidgets.fields.parsers import display_as_vector, parse_to_vector, display_as_integer_vector, parse_to_integer_vector
 from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 
@@ -125,6 +125,24 @@ class FieldRequirementMesh(FieldRequirementComboBoxBase):
         self._combobox.blockSignals(False)
 
 
+class FieldRequirementNodeset(FieldRequirementComboBoxBase):
+
+    def __init__(self, region):
+        super().__init__("Nodeset:", NODESET_NAMES)
+        self._region = region
+
+    def value(self):
+        mesh_name = self._combobox.currentText()
+        field_module = self._region.getFieldmodule()
+        return field_module.findNodesetByName(mesh_name)
+
+    def set_value(self, value):
+        nodeset_name = value.getName()
+        self._combobox.blockSignals(True)
+        self._combobox.setCurrentText(nodeset_name)
+        self._combobox.blockSignals(False)
+
+
 class FieldRequirementSearchMode(FieldRequirementComboBoxBase):
 
     def __init__(self):
@@ -183,7 +201,7 @@ class FieldRequirementValueType(FieldRequirementComboBoxBase):
 
 class FieldRequirementMeshLike(FieldRequirementMesh):
 
-    def __init__(self, region):
+    def __init__(self, region, label="Search Mesh:"):
         search_mesh_names = copy(MESH_NAMES)
         field_module = region.getFieldmodule()
         field_iterator = field_module.createFielditerator()
@@ -192,7 +210,7 @@ class FieldRequirementMeshLike(FieldRequirementMesh):
             if field.castElementGroup().isValid():
                 search_mesh_names.append(field.getName())
             field = field_iterator.next()
-        super().__init__(region, "Search mesh:", search_mesh_names)
+        super().__init__(region, label, search_mesh_names)
 
 
 class FieldRequirementRegion(FieldRequirementBase):
