@@ -291,7 +291,7 @@ class FieldTypeBase(object):
         elif self._field_type == "FieldFindMeshLocation":
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
             field_requirements.append(FieldRequirementSourceField(self._region, "Mesh Field:", FieldIsRealValued))
-            field_requirements.append(FieldRequirementMesh(self._region))
+            field_requirements.append(FieldRequirementMeshLike(self._region, "Mesh:"))
         elif self._field_type == "FieldStoredMeshLocation":
             field_requirements.append(FieldRequirementMesh(self._region))
         elif self._field_type == "FieldGradient":

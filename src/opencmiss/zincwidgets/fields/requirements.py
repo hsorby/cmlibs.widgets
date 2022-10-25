@@ -183,7 +183,7 @@ class FieldRequirementValueType(FieldRequirementComboBoxBase):
 
 class FieldRequirementMeshLike(FieldRequirementMesh):
 
-    def __init__(self, region):
+    def __init__(self, region, label="Search Mesh:"):
         search_mesh_names = copy(MESH_NAMES)
         field_module = region.getFieldmodule()
         field_iterator = field_module.createFielditerator()
@@ -192,7 +192,7 @@ class FieldRequirementMeshLike(FieldRequirementMesh):
             if field.castElementGroup().isValid():
                 search_mesh_names.append(field.getName())
             field = field_iterator.next()
-        super().__init__(region, "Search mesh:", search_mesh_names)
+        super().__init__(region, label, search_mesh_names)
 
 
 class FieldRequirementRegion(FieldRequirementBase):

@@ -30,9 +30,9 @@ FIELDS_REQUIRING_REAL_LIST_VALUES = ['FieldConstant']
 FIELDS_REQUIRING_STRING_VALUE = ['FieldStringConstant']
 FIELDS_REQUIRING_NUMBER_OF_COMPONENTS = ['FieldFiniteElement', 'FieldArgumentReal']
 FIELDS_REQUIRING_NO_ARGUMENTS = ['FieldStoredString', 'FieldIsExterior']
-FIELDS_REQUIRING_ONE_SOURCE_FIELD = ['FieldAlias']
+FIELDS_REQUIRING_ONE_SOURCE_FIELD = ['FieldAlias', 'FieldIsDefined']
 FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD = [
-    'FieldAbs', 'FieldLog', 'FieldSqrt', 'FieldExp', 'FieldIdentity', 'FieldIsDefined',
+    'FieldAbs', 'FieldLog', 'FieldSqrt', 'FieldExp', 'FieldIdentity',
     'FieldNot', 'FieldSin', 'FieldCos', 'FieldTan', 'FieldAsin', 'FieldAcos',
     'FieldAtan', 'FieldMagnitude', 'FieldNormalise', 'FieldSumComponents',
     'FieldCoordinateTransformation',
