@@ -65,6 +65,8 @@ class FieldBase(object):
                 requirement.set_value(returnedValues[1])
             elif field_type == "FieldComponent":
                 if index == 0:
+                    requirement.set_value(self._field.getSourceField(1))
+                elif index == 1:
                     number_of_components = self._field.getNumberOfComponents()
                     component_field = self._field.castComponent()
                     values = []
@@ -72,8 +74,6 @@ class FieldBase(object):
                         values.append(component_field.getSourceComponentIndex(i))
 
                     requirement.set_value(values)
-                elif index == 1:
-                    requirement.set_value(self._field.getSourceField(1))
             elif field_type in FIELDS_REQUIRING_NUMBER_OF_COMPONENTS:
                 number_of_components = self._field.getNumberOfComponents()
                 requirement.set_value(number_of_components)
@@ -278,8 +278,8 @@ class FieldTypeBase(object):
             field_requirements.append(FieldRequirementNumberOfRows())
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
         elif self._field_type == "FieldComponent":
-            field_requirements.append(FieldRequirementNaturalNumberVector("Component Indices:"))
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementNaturalNumberVector("Component Indices:"))
         elif self._field_type in FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD or \
                 self._field_type == "FieldEdgeDiscontinuity":
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
