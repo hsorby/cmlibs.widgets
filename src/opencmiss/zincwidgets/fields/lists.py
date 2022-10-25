@@ -5,6 +5,7 @@ FACE_TYPES = ["all", "any face", "no face", "xi1 = 0", "xi1 = 1", "xi2 = 0", "xi
 VALUE_TYPES = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2_ds2ds3", "d3_ds1ds2ds3"]
 QUADRATURE_RULES = ["Gaussian", "Mid-point"]
 INTERNAL_FIELD_NAMES = ["xi", "cmiss_number", "cmiss_selection"]
+NODESET_NAMES = ["datapoints", "nodes", "points"]
 
 INTERNAL_FIELD_TYPE_NAME = "<internal>"
 NONE_FIELD_TYPE_NAME = "<unknown>"
@@ -19,7 +20,9 @@ FIELD_TYPES = [
     'FieldFibreAxes', 'FieldFindMeshLocation', 'FieldFiniteElement', 'FieldGradient',
     'FieldGreaterThan', 'FieldIdentity', 'FieldIf', 'FieldIsDefined', 'FieldIsExterior',
     'FieldIsOnFace', 'FieldLessThan', 'FieldLog', 'FieldMagnitude', 'FieldMatrixInvert',
-    'FieldMatrixMultiply', 'FieldMeshIntegral', 'FieldMultiply', 'FieldNodeValue', 'FieldNormalise', 'FieldNot',
+    'FieldMatrixMultiply', 'FieldMeshIntegral', 'FieldMultiply',
+    'FieldNodesetSum', 'FieldNodesetMean', 'FieldNodesetMinimum', 'FieldNodesetMaximum', 'FieldNodesetMeanSquares',
+    'FieldNodeValue', 'FieldNormalise', 'FieldNot',
     'FieldOr', 'FieldPower', 'FieldProjection', 'FieldSin', 'FieldSqrt',
     'FieldStoredMeshLocation', 'FieldStoredString', 'FieldStringConstant', 'FieldSubtract',
     'FieldSumComponents', 'FieldTan', 'FieldTimeLookup', 'FieldTimeValue', 'FieldTranspose',
@@ -56,3 +59,4 @@ FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD = ['FieldEigenvectors']
 FIELDS_REQUIRING_THREE_SOURCE_FIELDS = ['FieldIf']
 FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS = ['FieldConcatenate', 'FieldCrossProduct']
 FIELDS_REQUIRING_MESH = ['FieldStoredMeshLocation']
+FIELDS_REQUIRING_ONE_SOURCE_FIELD_ONE_NODESET = ['FieldNodesetSum', 'FieldNodesetMean', 'FieldNodesetMinimum', 'FieldNodesetMaximum', 'FieldNodesetMeanSquares']

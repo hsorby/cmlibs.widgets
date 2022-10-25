@@ -6,12 +6,12 @@ from opencmiss.zincwidgets.fields.lists import NONE_FIELD_TYPE_NAME, FIELD_TYPES
     FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_THREE_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD, FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD, \
     FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_REAL_FIELD_ONE_COORDINATE_FIELD, FIELDS_REQUIRING_TWO_COORDINATE_FIELDS, \
     FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD, FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD, FIELDS_REQUIRING_NUMBER_OF_COMPONENTS, INTERNAL_FIELD_NAMES, \
-    INTERNAL_FIELD_TYPE_NAME
+    INTERNAL_FIELD_TYPE_NAME, FIELDS_REQUIRING_ONE_SOURCE_FIELD_ONE_NODESET
 from opencmiss.zincwidgets.fields.requirements import FieldRequirementRealListValues, FieldRequirementStringValue, FieldRequirementSourceField, FieldRequirementNumberOfRows, \
     FieldRequirementNaturalNumberVector, FieldRequirementMesh, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
     FieldRequirementSearchMode, FieldRequirementMeshLike, FieldRequirementNaturalNumberValue, FieldRequirementFaceType, FieldRequirementValueType, \
     FieldRequirementNumberOfComponents, FieldRequirementSourceFieldRegionDependent, FieldRequirementRegion, FieldRequirementSourceFieldRegionDependentFieldDependent, \
-    FieldRequirementTimekeeper, FieldRequirementQuadratureRule
+    FieldRequirementTimekeeper, FieldRequirementQuadratureRule, FieldRequirementNodeset
 
 
 class FieldBase(object):
@@ -96,6 +96,12 @@ class FieldBase(object):
                     field_type in FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD or \
                     field_type in FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD:
                 requirement.set_value(self._field.getSourceField(index + 1))
+            elif field_type in FIELDS_REQUIRING_ONE_SOURCE_FIELD_ONE_NODESET:
+                if index == 0:
+                    requirement.set_value(self._field.getSourceField(1))
+                elif index == 1:
+                    nodeset = self._field.castNodesetOperator().getNodeset()
+                    requirement.set_value(nodeset)
             elif field_type == "FieldEdgeDiscontinuity":
                 if index == 0:
                     requirement.set_value(self._field.getSourceField(1))
@@ -314,6 +320,9 @@ class FieldTypeBase(object):
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsFiniteElement))
             field_requirements.append(FieldRequirementValueType())
             field_requirements.append(FieldRequirementNaturalNumberValue("Version number:"))
+        elif self._field_type in FIELDS_REQUIRING_ONE_SOURCE_FIELD_ONE_NODESET:
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:"))
+            field_requirements.append(FieldRequirementNodeset(self._region))
         elif self._field_type == "FieldMeshIntegral":
             field_requirements.append(FieldRequirementSourceField(self._region, "Integrand Field:"))
             field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
