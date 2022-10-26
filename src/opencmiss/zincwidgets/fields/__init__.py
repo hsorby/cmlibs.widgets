@@ -6,12 +6,12 @@ from opencmiss.zincwidgets.fields.lists import NONE_FIELD_TYPE_NAME, FIELD_TYPES
     FIELDS_REQUIRING_TWO_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_THREE_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_DETERMINANT_SOURCE_FIELD, FIELDS_REQUIRING_ONE_SQUARE_MATRIX_SOURCE_FIELD, \
     FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS, FIELDS_REQUIRING_ONE_REAL_FIELD_ONE_COORDINATE_FIELD, FIELDS_REQUIRING_TWO_COORDINATE_FIELDS, \
     FIELDS_REQUIRING_ONE_EIGENVALUES_SOURCE_FIELD, FIELDS_REQUIRING_ONE_ANY_FIELD_ONE_SCALAR_FIELD, FIELDS_REQUIRING_NUMBER_OF_COMPONENTS, INTERNAL_FIELD_NAMES, \
-    INTERNAL_FIELD_TYPE_NAME, FIELDS_REQUIRING_ONE_SOURCE_FIELD_ONE_NODESET
+    INTERNAL_FIELD_TYPE_NAME, FIELDS_REQUIRING_ONE_SOURCE_FIELD_ONE_NODESET, FIELDS_THAT_CAN_SET_COORDINATE_SYSTEM_TYPE
 from opencmiss.zincwidgets.fields.requirements import FieldRequirementRealListValues, FieldRequirementStringValue, FieldRequirementSourceField, FieldRequirementNumberOfRows, \
     FieldRequirementNaturalNumberVector, FieldRequirementMesh, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
     FieldRequirementSearchMode, FieldRequirementMeshLike, FieldRequirementNaturalNumberValue, FieldRequirementFaceType, FieldRequirementValueType, \
     FieldRequirementNumberOfComponents, FieldRequirementSourceFieldRegionDependent, FieldRequirementRegion, FieldRequirementSourceFieldRegionDependentFieldDependent, \
-    FieldRequirementTimekeeper, FieldRequirementQuadratureRule, FieldRequirementNodeset
+    FieldRequirementTimekeeper, FieldRequirementQuadratureRule, FieldRequirementNodeset, FieldRequirementCoordinateSystemType
 
 
 class FieldBase(object):
@@ -82,6 +82,11 @@ class FieldBase(object):
                     return
                 text = self._field.evaluateString(field_cache)
                 requirement.set_value(text)
+            elif field_type in FIELDS_THAT_CAN_SET_COORDINATE_SYSTEM_TYPE:
+                if index == 0:
+                    requirement.set_value(self._field.getSourceField(1))
+                elif isinstance(requirement, FieldRequirementCoordinateSystemType):
+                    requirement.set_value(self._field.getCoordinateSystemType())
             elif field_type == "FieldTranspose":
                 if index == 0:
                     requirement.set_value("")
@@ -385,6 +390,8 @@ class FieldTypeBase(object):
             region_chooser.activated.connect(_apply_region_chooser)
         elif self._field_type in FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS:
             additional_requirements.append(FieldRequirementNaturalNumberValue("Number of Fields:"))
+        elif self._field_type in FIELDS_THAT_CAN_SET_COORDINATE_SYSTEM_TYPE:
+            additional_requirements.append(FieldRequirementCoordinateSystemType())
 
         self._properties = [{"group": "Parameters", "requirements": field_requirements}]
         self._properties.append({"group": "Additional Properties", "requirements": additional_requirements})
@@ -410,6 +417,10 @@ class FieldTypeBase(object):
         elif self._field_type == "FieldMeshIntegral":
             new_field.setNumbersOfPoints(additional_requirements[0].value())
             new_field.setElementQuadratureRule(additional_requirements[1].value())
+        elif self._field_type in FIELDS_THAT_CAN_SET_COORDINATE_SYSTEM_TYPE:
+            for additional_requirement in additional_requirements:
+                if isinstance(additional_requirement, FieldRequirementCoordinateSystemType):
+                    new_field.setCoordinateSystemType(additional_requirement.value())
 
     def define_new_field(self, field_module, field_name):
         field_requirements = self._requirements("Parameters")
