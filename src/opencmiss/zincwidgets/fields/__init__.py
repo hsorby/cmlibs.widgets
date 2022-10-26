@@ -416,7 +416,12 @@ class FieldTypeBase(object):
 
         args = []
         for req in field_requirements:
-            args.append(req.value())
+            # Temporary workaround until this issue is resolved:
+            # https://github.com/OpenCMISS-Bindings/opencmiss.zincwidgets/issues/46
+            if self._field_type == "FieldEigenvectors":
+                args.append(req.value().castEigenvalues())
+            else:
+                args.append(req.value())
 
         with ChangeManager(field_module):
             methodToCall = getattr(field_module, "create" + self._field_type)
