@@ -137,6 +137,13 @@ class FieldBase(object):
                     requirement.set_value(self._field.getSourceField(1))
                 elif index == 1:
                     requirement.set_value(self._field.castDerivative().getXiIndex())
+            elif field_type == "FieldMatrixMultiply":
+                if index == 0:
+                    requirement.set_value(99)
+                elif index == 1:
+                    requirement.set_value(self._field.getSourceField(1))
+                elif index == 2:
+                    requirement.set_value(self._field.getSourceField(2))
             elif field_type == "FieldMeshIntegral":
                 if index == 0:
                     requirement.set_value(self._field.getSourceField(1))
@@ -312,6 +319,10 @@ class FieldTypeBase(object):
         elif self._field_type == "FieldDerivative":
             field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
             field_requirements.append(FieldRequirementNaturalNumberValue("xi index:"))
+        elif self._field_type == "FieldMatrixMultiply":
+            field_requirements.append(FieldRequirementNaturalNumberValue("Number of Rows:"))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 1:", FieldIsRealValued))
+            field_requirements.append(FieldRequirementSourceField(self._region, "Source Field 2:", FieldIsRealValued))
         elif self._field_type == "FieldFibreAxes":
             field_requirements.append(FieldRequirementSourceField(self._region, "Fibre Field:", FieldIsCoordinateCapable))
             field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
