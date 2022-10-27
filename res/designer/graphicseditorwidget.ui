@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>298</width>
-    <height>1185</height>
+    <height>1197</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -111,14 +111,14 @@
       <item row="6" column="1">
        <widget class="EnumerationChooserWidget" name="boundarymode_chooser"/>
       </item>
-      <item row="8" column="0">
+      <item row="7" column="0">
        <widget class="QLabel" name="face_label">
         <property name="text">
          <string>Face:</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
+      <item row="7" column="1">
        <widget class="EnumerationChooserWidget" name="face_enumeration_chooser">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -186,10 +186,10 @@
         </property>
        </widget>
       </item>
-      <item row="16" column="1">
+      <item row="15" column="1">
        <widget class="TessellationChooserWidget" name="tessellation_chooser"/>
       </item>
-      <item row="16" column="0">
+      <item row="15" column="0">
        <widget class="QLabel" name="tessellation_label">
         <property name="text">
          <string>Tessellation:</string>
@@ -216,14 +216,14 @@
       <item row="2" column="1">
        <widget class="EnumerationChooserWidget" name="domain_chooser"/>
       </item>
-      <item row="15" column="0">
+      <item row="16" column="0">
        <widget class="QLabel" name="tessellation_field_label">
         <property name="text">
          <string>Tessellation field:</string>
         </property>
        </widget>
       </item>
-      <item row="15" column="1">
+      <item row="16" column="1">
        <widget class="FieldChooserWidget" name="tessellation_field_chooser"/>
       </item>
       <item row="17" column="0">
@@ -236,15 +236,35 @@
       <item row="17" column="1">
        <widget class="FieldChooserWidget" name="texture_coordinates_chooser"/>
       </item>
-      <item row="7" column="0">
+      <item row="8" column="0">
        <widget class="QLabel" name="select_mode_label">
         <property name="text">
          <string>Select mode:</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="8" column="1">
        <widget class="EnumerationChooserWidget" name="select_mode_enum_chooser"/>
+      </item>
+        <item row="18" column="0">
+       <widget class="QLabel" name="line_thickness_label">
+        <property name="text">
+         <string>Line thickness:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="18" column="1">
+       <widget class="QLineEdit" name="line_thickness_lineEdit"/>
+      </item>
+              <item row="19" column="0">
+       <widget class="QLabel" name="point_size_label">
+        <property name="text">
+         <string>Point size:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="19" column="1">
+       <widget class="QLineEdit" name="point_size_lineEdit"/>
       </item>
      </layout>
     </widget>
@@ -536,14 +556,14 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="label_field_label">
         <property name="text">
          <string>Label field:</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="9" column="1">
        <widget class="FieldChooserWidget" name="label_field_chooser">
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToContents</enum>
@@ -553,69 +573,69 @@
       <item row="6" column="1">
        <widget class="QLineEdit" name="point_scale_factors_lineedit"/>
       </item>
-      <item row="8" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="glyph_repeat_mode_label">
         <property name="text">
          <string>Repeat mode:</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
+      <item row="10" column="1">
        <widget class="EnumerationChooserWidget" name="glyph_repeat_mode_chooser"/>
       </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="glyph_signed_scale_field_label">
-        <property name="text">
-         <string>Signed scale field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="1">
-       <widget class="FieldChooserWidget" name="glyph_signed_scale_field_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="0">
+      <item row="12" column="0">
        <widget class="QLabel" name="glyph_offset_label">
         <property name="text">
          <string>Glyph offset:</string>
         </property>
        </widget>
       </item>
-      <item row="10" column="1">
+      <item row="12" column="1">
        <widget class="QLineEdit" name="glyph_offset_lineedit"/>
       </item>
-      <item row="11" column="0">
+      <item row="13" column="0">
        <widget class="QLabel" name="glyph_label_text_label">
         <property name="text">
          <string>Label text:</string>
         </property>
        </widget>
       </item>
-      <item row="11" column="1">
+      <item row="13" column="1">
        <widget class="QLineEdit" name="glyph_label_text_lineedit"/>
       </item>
-      <item row="12" column="0">
+      <item row="14" column="0">
        <widget class="QLabel" name="glyph_label_text_offset_label">
         <property name="text">
          <string>Label text offset:</string>
         </property>
        </widget>
       </item>
-      <item row="12" column="1">
+      <item row="14" column="1">
        <widget class="QLineEdit" name="glyph_label_text_offset_lineedit"/>
       </item>
-      <item row="13" column="0">
+      <item row="15" column="0">
        <widget class="QLabel" name="glyph_font_label">
         <property name="text">
          <string>Font:</string>
         </property>
        </widget>
       </item>
-      <item row="13" column="1">
+      <item row="15" column="1">
        <widget class="QComboBox" name="glyph_font_comboBox"/>
+      </item>
+      <item row="7" column="1">
+       <widget class="FieldChooserWidget" name="glyph_signed_scale_field_chooser">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="glyph_signed_scale_field_label">
+        <property name="text">
+         <string>Signed scale field:</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -1319,6 +1339,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tessellation_field_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>tessellationFieldChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>203</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>148</x>
+     <y>598</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>texture_coordinates_chooser</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>textureCoordinateFieldChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>203</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>148</x>
+     <y>598</y>
+    </hint>
+   </hints>
+  </connection>
+    <connection>
+   <sender>line_thickness_lineEdit</sender>
+   <signal>editingFinished()</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>renderLineWidthEntered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>162</x>
+     <y>669</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+    <connection>
+   <sender>point_size_lineEdit</sender>
+   <signal>editingFinished()</signal>
+   <receiver>GraphicsEditorWidget</receiver>
+   <slot>renderPointSizeEntered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>162</x>
+     <y>669</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>materialChanged(int)</slot>
@@ -1349,6 +1433,10 @@
   <slot>spectrumChanged(int)</slot>
   <slot>scenecoordinatesystemChanged(int)</slot>
   <slot>tessellationChanged(int)</slot>
+  <slot>tessellationFieldChanged(int)</slot>
+  <slot>textureCoordinateFieldChanged(int)</slot>
   <slot>subgroupFieldChanged(int)</slot>
+  <slot>renderLineWidthEntered()</slot>
+  <slot>renderPointSizeEntered()</slot>
  </slots>
 </ui>

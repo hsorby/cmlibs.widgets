@@ -64,7 +64,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.spectrum_chooser.setNullObjectName('-')
         self._ui.tessellation_field_chooser.setNullObjectName('-')
         self._ui.texture_coordinates_chooser.setNullObjectName('-')
-        # self._ui.tessellation_field_chooser.setConditional(FieldIsRealValued)
         # contours
         self._ui.isoscalar_field_chooser.setNullObjectName('- choose -')
         self._ui.isoscalar_field_chooser.setConditional(FieldIsScalar)
@@ -81,9 +80,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.point_orientation_scale_field_chooser.setConditional(FieldIsOrientationScaleCapable)
         self._ui.label_field_chooser.setNullObjectName('-')
         self._ui.glyph_repeat_mode_chooser.setEnumsList(Glyph.RepeatModeEnumToString, Glyph.RepeatModeEnumFromString)
-        self._ui.glyph_signed_scale_field_chooser.setNullObjectName('- choose -')
+        self._ui.glyph_signed_scale_field_chooser.setNullObjectName('-')
         self._ui.glyph_signed_scale_field_chooser.setConditional(FieldIsScalar)
-        self._buildFontComboBox()
         self._ui.glyph_font_comboBox.currentIndexChanged.connect(self._fontChanged)
         # mesh point sampling
         self._ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
@@ -135,6 +133,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.tessellation_field_chooser.setField(tessellationField)
         self._ui.tessellation_chooser.setTessellation(tessellation)
         self._ui.texture_coordinates_chooser.setField(textureCoordinatesField)
+        self._renderLineWidthDisplay()
+        self._renderPointSizeDisplay()
         self._boundarymodeDisplay()
         self._faceDisplay()
         self._domainTypeDisplay()
@@ -198,6 +198,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             glyphRepeatMode = pointattributes.getGlyphRepeatMode()
             glyphSignedScaleField = pointattributes.getSignedScaleField()
             fontname = pointattributes.getFont().getName()
+            self._buildFontComboBox()
+            self._ui.glyph_font_comboBox.setCurrentIndex(self._ui.glyph_font_comboBox.findText(fontname))
             self._ui.points_groupbox.show()
         else:
             self._ui.points_groupbox.hide()
@@ -211,7 +213,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.glyph_signed_scale_field_chooser.setField(glyphSignedScaleField)
         self._labelTextDisplay()
         self._labelTextOffsetDisplay()
-        self._ui.glyph_font_comboBox.setCurrentIndex(self._ui.glyph_font_comboBox.findText(fontname))
         # sampling attributes
         if samplingattributes and samplingattributes.isValid() and self._graphics.getFieldDomainType() in POINT_SAMPLING_DOMAIN_TYPE_ENUM:
             self._ui.sampling_groupbox.show()
@@ -232,6 +233,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui.glyph_chooser.setGlyphmodule(scene.getGlyphmodule())
         self._ui.spectrum_chooser.setSpectrummodule(scene.getSpectrummodule())
         self._ui.tessellation_chooser.setTessellationmodule(scene.getTessellationmodule())
+
         region = scene.getRegion()
         self._ui.subgroup_field_chooser.setRegion(region)
         self._ui.coordinate_field_chooser.setRegion(region)
@@ -384,6 +386,16 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             else:
                 self._graphics.setSpectrum(Spectrum())
 
+    def tessellationChanged(self, index):
+        """
+        An item was selected at index in tessellation chooser widget
+
+        :param index: index of new item.
+        """
+        if self._graphics:
+            tessellation = self._ui.tessellation_chooser.getTessellation()
+            self._graphics.setTessellation(tessellation)
+
     def tessellationFieldChanged(self, index):
         """
         An item was selected at index in tessellation field chooser widget
@@ -397,16 +409,6 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             else:
                 self._graphics.setTessellationField(Field())
 
-    def tessellationChanged(self, index):
-        """
-        An item was selected at index in tessellation chooser widget
-
-        :param index: index of new item.
-        """
-        if self._graphics:
-            tessellation = self._ui.tessellation_chooser.getTessellation()
-            self._graphics.setTessellation(tessellation)
-
     def textureCoordinateFieldChanged(self, index):
         """
         An item was selected at index in texture coordinate field chooser widget
@@ -419,6 +421,52 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 self._graphics.setTextureCoordinateField(textureCoordinateField)
             else:
                 self._graphics.setTextureCoordinateField(Field())
+
+    def _renderLineWidthDisplay(self):
+        """
+        Display the current render line width
+        """
+        if self._graphics:
+            renderLineWidth = self._graphics.getRenderLineWidth()
+            self._displayReal(self._ui.line_thickness_lineEdit, renderLineWidth)
+            return
+        self._ui.line_thickness_lineEdit.setText('')
+
+    def renderLineWidthEntered(self):
+        """
+        Set render line width from text in widget
+        """
+        renderLineWidth = self._ui.line_thickness_lineEdit.text()
+        try:
+            renderLineWidth = float(renderLineWidth)
+            if self._graphics.setRenderLineWidth(renderLineWidth) != ZINC_OK:
+                raise
+        except:
+            print("Invalid render line width", renderLineWidth)
+        self._renderLineWidthDisplay()
+
+    def _renderPointSizeDisplay(self):
+        """
+        Display the current render point size
+        """
+        if self._graphics:
+            renderPointSize = self._graphics.getRenderPointSize()
+            self._displayReal(self._ui.point_size_lineEdit, renderPointSize)
+            return
+        self._ui.point_size_lineEdit.setText('')
+
+    def renderPointSizeEntered(self):
+        """
+        Set render point size from text in widget
+        """
+        renderPointSize = self._ui.point_size_lineEdit.text()
+        try:
+            renderPointSize = float(renderPointSize)
+            if self._graphics.setRenderPointSize(renderPointSize) != ZINC_OK:
+                raise
+        except:
+            print("Invalid render point size", renderPointSize)
+        self._renderPointSizeDisplay()
 
     def _boundarymodeDisplay(self):
         """

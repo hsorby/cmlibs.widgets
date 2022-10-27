@@ -25,7 +25,7 @@ class Ui_GraphicsEditorWidget(object):
         if not GraphicsEditorWidget.objectName():
             GraphicsEditorWidget.setObjectName(u"GraphicsEditorWidget")
         GraphicsEditorWidget.setEnabled(True)
-        GraphicsEditorWidget.resize(298, 1185)
+        GraphicsEditorWidget.resize(298, 1197)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -79,7 +79,7 @@ class Ui_GraphicsEditorWidget(object):
         self.face_label = QLabel(self.general_groupbox)
         self.face_label.setObjectName(u"face_label")
 
-        self.formLayout_3.setWidget(8, QFormLayout.LabelRole, self.face_label)
+        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.face_label)
 
         self.face_enumeration_chooser = EnumerationChooserWidget(self.general_groupbox)
         self.face_enumeration_chooser.setObjectName(u"face_enumeration_chooser")
@@ -89,7 +89,7 @@ class Ui_GraphicsEditorWidget(object):
         sizePolicy1.setHeightForWidth(self.face_enumeration_chooser.sizePolicy().hasHeightForWidth())
         self.face_enumeration_chooser.setSizePolicy(sizePolicy1)
 
-        self.formLayout_3.setWidget(8, QFormLayout.FieldRole, self.face_enumeration_chooser)
+        self.formLayout_3.setWidget(7, QFormLayout.FieldRole, self.face_enumeration_chooser)
 
         self.material_label = QLabel(self.general_groupbox)
         self.material_label.setObjectName(u"material_label")
@@ -142,12 +142,12 @@ class Ui_GraphicsEditorWidget(object):
         self.tessellation_chooser = TessellationChooserWidget(self.general_groupbox)
         self.tessellation_chooser.setObjectName(u"tessellation_chooser")
 
-        self.formLayout_3.setWidget(16, QFormLayout.FieldRole, self.tessellation_chooser)
+        self.formLayout_3.setWidget(15, QFormLayout.FieldRole, self.tessellation_chooser)
 
         self.tessellation_label = QLabel(self.general_groupbox)
         self.tessellation_label.setObjectName(u"tessellation_label")
 
-        self.formLayout_3.setWidget(16, QFormLayout.LabelRole, self.tessellation_label)
+        self.formLayout_3.setWidget(15, QFormLayout.LabelRole, self.tessellation_label)
 
         self.subgroup_field_label = QLabel(self.general_groupbox)
         self.subgroup_field_label.setObjectName(u"subgroup_field_label")
@@ -172,12 +172,12 @@ class Ui_GraphicsEditorWidget(object):
         self.tessellation_field_label = QLabel(self.general_groupbox)
         self.tessellation_field_label.setObjectName(u"tessellation_field_label")
 
-        self.formLayout_3.setWidget(15, QFormLayout.LabelRole, self.tessellation_field_label)
+        self.formLayout_3.setWidget(16, QFormLayout.LabelRole, self.tessellation_field_label)
 
         self.tessellation_field_chooser = FieldChooserWidget(self.general_groupbox)
         self.tessellation_field_chooser.setObjectName(u"tessellation_field_chooser")
 
-        self.formLayout_3.setWidget(15, QFormLayout.FieldRole, self.tessellation_field_chooser)
+        self.formLayout_3.setWidget(16, QFormLayout.FieldRole, self.tessellation_field_chooser)
 
         self.texture_coordinates_label = QLabel(self.general_groupbox)
         self.texture_coordinates_label.setObjectName(u"texture_coordinates_label")
@@ -192,12 +192,32 @@ class Ui_GraphicsEditorWidget(object):
         self.select_mode_label = QLabel(self.general_groupbox)
         self.select_mode_label.setObjectName(u"select_mode_label")
 
-        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.select_mode_label)
+        self.formLayout_3.setWidget(8, QFormLayout.LabelRole, self.select_mode_label)
 
         self.select_mode_enum_chooser = EnumerationChooserWidget(self.general_groupbox)
         self.select_mode_enum_chooser.setObjectName(u"select_mode_enum_chooser")
 
-        self.formLayout_3.setWidget(7, QFormLayout.FieldRole, self.select_mode_enum_chooser)
+        self.formLayout_3.setWidget(8, QFormLayout.FieldRole, self.select_mode_enum_chooser)
+
+        self.line_thickness_label = QLabel(self.general_groupbox)
+        self.line_thickness_label.setObjectName(u"line_thickness_label")
+
+        self.formLayout_3.setWidget(18, QFormLayout.LabelRole, self.line_thickness_label)
+
+        self.line_thickness_lineEdit = QLineEdit(self.general_groupbox)
+        self.line_thickness_lineEdit.setObjectName(u"line_thickness_lineEdit")
+
+        self.formLayout_3.setWidget(18, QFormLayout.FieldRole, self.line_thickness_lineEdit)
+
+        self.point_size_label = QLabel(self.general_groupbox)
+        self.point_size_label.setObjectName(u"point_size_label")
+
+        self.formLayout_3.setWidget(19, QFormLayout.LabelRole, self.point_size_label)
+
+        self.point_size_lineEdit = QLineEdit(self.general_groupbox)
+        self.point_size_lineEdit.setObjectName(u"point_size_lineEdit")
+
+        self.formLayout_3.setWidget(19, QFormLayout.FieldRole, self.point_size_lineEdit)
 
 
         self.verticalLayout.addWidget(self.general_groupbox)
@@ -395,13 +415,13 @@ class Ui_GraphicsEditorWidget(object):
         self.label_field_label = QLabel(self.points_groupbox)
         self.label_field_label.setObjectName(u"label_field_label")
 
-        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.label_field_label)
+        self.formLayout.setWidget(9, QFormLayout.LabelRole, self.label_field_label)
 
         self.label_field_chooser = FieldChooserWidget(self.points_groupbox)
         self.label_field_chooser.setObjectName(u"label_field_chooser")
         self.label_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
-        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.label_field_chooser)
+        self.formLayout.setWidget(9, QFormLayout.FieldRole, self.label_field_chooser)
 
         self.point_scale_factors_lineedit = QLineEdit(self.points_groupbox)
         self.point_scale_factors_lineedit.setObjectName(u"point_scale_factors_lineedit")
@@ -411,63 +431,63 @@ class Ui_GraphicsEditorWidget(object):
         self.glyph_repeat_mode_label = QLabel(self.points_groupbox)
         self.glyph_repeat_mode_label.setObjectName(u"glyph_repeat_mode_label")
 
-        self.formLayout.setWidget(8, QFormLayout.LabelRole, self.glyph_repeat_mode_label)
+        self.formLayout.setWidget(10, QFormLayout.LabelRole, self.glyph_repeat_mode_label)
 
         self.glyph_repeat_mode_chooser = EnumerationChooserWidget(self.points_groupbox)
         self.glyph_repeat_mode_chooser.setObjectName(u"glyph_repeat_mode_chooser")
 
-        self.formLayout.setWidget(8, QFormLayout.FieldRole, self.glyph_repeat_mode_chooser)
+        self.formLayout.setWidget(10, QFormLayout.FieldRole, self.glyph_repeat_mode_chooser)
 
-        self.glyph_signed_scale_field_label = QLabel(self.points_groupbox)
-        self.glyph_signed_scale_field_label.setObjectName(u"glyph_signed_scale_field_label")
+        self.glyph_offset_label = QLabel(self.points_groupbox)
+        self.glyph_offset_label.setObjectName(u"glyph_offset_label")
 
-        self.formLayout.setWidget(9, QFormLayout.LabelRole, self.glyph_signed_scale_field_label)
+        self.formLayout.setWidget(12, QFormLayout.LabelRole, self.glyph_offset_label)
+
+        self.glyph_offset_lineedit = QLineEdit(self.points_groupbox)
+        self.glyph_offset_lineedit.setObjectName(u"glyph_offset_lineedit")
+
+        self.formLayout.setWidget(12, QFormLayout.FieldRole, self.glyph_offset_lineedit)
+
+        self.glyph_label_text_label = QLabel(self.points_groupbox)
+        self.glyph_label_text_label.setObjectName(u"glyph_label_text_label")
+
+        self.formLayout.setWidget(13, QFormLayout.LabelRole, self.glyph_label_text_label)
+
+        self.glyph_label_text_lineedit = QLineEdit(self.points_groupbox)
+        self.glyph_label_text_lineedit.setObjectName(u"glyph_label_text_lineedit")
+
+        self.formLayout.setWidget(13, QFormLayout.FieldRole, self.glyph_label_text_lineedit)
+
+        self.glyph_label_text_offset_label = QLabel(self.points_groupbox)
+        self.glyph_label_text_offset_label.setObjectName(u"glyph_label_text_offset_label")
+
+        self.formLayout.setWidget(14, QFormLayout.LabelRole, self.glyph_label_text_offset_label)
+
+        self.glyph_label_text_offset_lineedit = QLineEdit(self.points_groupbox)
+        self.glyph_label_text_offset_lineedit.setObjectName(u"glyph_label_text_offset_lineedit")
+
+        self.formLayout.setWidget(14, QFormLayout.FieldRole, self.glyph_label_text_offset_lineedit)
+
+        self.glyph_font_label = QLabel(self.points_groupbox)
+        self.glyph_font_label.setObjectName(u"glyph_font_label")
+
+        self.formLayout.setWidget(15, QFormLayout.LabelRole, self.glyph_font_label)
+
+        self.glyph_font_comboBox = QComboBox(self.points_groupbox)
+        self.glyph_font_comboBox.setObjectName(u"glyph_font_comboBox")
+
+        self.formLayout.setWidget(15, QFormLayout.FieldRole, self.glyph_font_comboBox)
 
         self.glyph_signed_scale_field_chooser = FieldChooserWidget(self.points_groupbox)
         self.glyph_signed_scale_field_chooser.setObjectName(u"glyph_signed_scale_field_chooser")
         self.glyph_signed_scale_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
-        self.formLayout.setWidget(9, QFormLayout.FieldRole, self.glyph_signed_scale_field_chooser)
+        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.glyph_signed_scale_field_chooser)
 
-        self.glyph_offset_label = QLabel(self.points_groupbox)
-        self.glyph_offset_label.setObjectName(u"glyph_offset_label")
+        self.glyph_signed_scale_field_label = QLabel(self.points_groupbox)
+        self.glyph_signed_scale_field_label.setObjectName(u"glyph_signed_scale_field_label")
 
-        self.formLayout.setWidget(10, QFormLayout.LabelRole, self.glyph_offset_label)
-
-        self.glyph_offset_lineedit = QLineEdit(self.points_groupbox)
-        self.glyph_offset_lineedit.setObjectName(u"glyph_offset_lineedit")
-
-        self.formLayout.setWidget(10, QFormLayout.FieldRole, self.glyph_offset_lineedit)
-
-        self.glyph_label_text_label = QLabel(self.points_groupbox)
-        self.glyph_label_text_label.setObjectName(u"glyph_label_text_label")
-
-        self.formLayout.setWidget(11, QFormLayout.LabelRole, self.glyph_label_text_label)
-
-        self.glyph_label_text_lineedit = QLineEdit(self.points_groupbox)
-        self.glyph_label_text_lineedit.setObjectName(u"glyph_label_text_lineedit")
-
-        self.formLayout.setWidget(11, QFormLayout.FieldRole, self.glyph_label_text_lineedit)
-
-        self.glyph_label_text_offset_label = QLabel(self.points_groupbox)
-        self.glyph_label_text_offset_label.setObjectName(u"glyph_label_text_offset_label")
-
-        self.formLayout.setWidget(12, QFormLayout.LabelRole, self.glyph_label_text_offset_label)
-
-        self.glyph_label_text_offset_lineedit = QLineEdit(self.points_groupbox)
-        self.glyph_label_text_offset_lineedit.setObjectName(u"glyph_label_text_offset_lineedit")
-
-        self.formLayout.setWidget(12, QFormLayout.FieldRole, self.glyph_label_text_offset_lineedit)
-
-        self.glyph_font_label = QLabel(self.points_groupbox)
-        self.glyph_font_label.setObjectName(u"glyph_font_label")
-
-        self.formLayout.setWidget(13, QFormLayout.LabelRole, self.glyph_font_label)
-
-        self.glyph_font_comboBox = QComboBox(self.points_groupbox)
-        self.glyph_font_comboBox.setObjectName(u"glyph_font_comboBox")
-
-        self.formLayout.setWidget(13, QFormLayout.FieldRole, self.glyph_font_comboBox)
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.glyph_signed_scale_field_label)
 
 
         self.verticalLayout.addWidget(self.points_groupbox)
@@ -554,6 +574,10 @@ class Ui_GraphicsEditorWidget(object):
         self.glyph_offset_lineedit.editingFinished.connect(GraphicsEditorWidget.glyphOffsetEntered)
         self.glyph_label_text_lineedit.editingFinished.connect(GraphicsEditorWidget.labelTextEntered)
         self.glyph_label_text_offset_lineedit.editingFinished.connect(GraphicsEditorWidget.labelTextOffsetEntered)
+        self.tessellation_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.tessellationFieldChanged)
+        self.texture_coordinates_chooser.currentIndexChanged.connect(GraphicsEditorWidget.textureCoordinateFieldChanged)
+        self.line_thickness_lineEdit.editingFinished.connect(GraphicsEditorWidget.renderLineWidthEntered)
+        self.point_size_lineEdit.editingFinished.connect(GraphicsEditorWidget.renderPointSizeEntered)
 
         QMetaObject.connectSlotsByName(GraphicsEditorWidget)
     # setupUi
@@ -576,6 +600,8 @@ class Ui_GraphicsEditorWidget(object):
         self.tessellation_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Tessellation field:", None))
         self.texture_coordinates_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Texture coordinates:", None))
         self.select_mode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Select mode:", None))
+        self.line_thickness_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Line thickness:", None))
+        self.point_size_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Point size:", None))
         self.contours_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Contours:", None))
         self.isoscalar_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Scalar field:", None))
         self.isovalues_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Isovalues:", None))
@@ -597,11 +623,11 @@ class Ui_GraphicsEditorWidget(object):
         self.point_scale_factors_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Scaling:", None))
         self.label_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Label field:", None))
         self.glyph_repeat_mode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Repeat mode:", None))
-        self.glyph_signed_scale_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Signed scale field:", None))
         self.glyph_offset_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Glyph offset:", None))
         self.glyph_label_text_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Label text:", None))
         self.glyph_label_text_offset_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Label text offset:", None))
         self.glyph_font_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Font:", None))
+        self.glyph_signed_scale_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Signed scale field:", None))
         self.sampling_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Sampling:", None))
         self.sampling_mode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Mode:", None))
         self.sample_location_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Sample location:", None))

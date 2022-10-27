@@ -104,11 +104,12 @@ class SceneEditorWidget(QtWidgets.QWidget):
         if graphics_type == Graphics.TYPE_POINTS:
             if fieldDomainType == Field.DOMAIN_TYPE_POINT:
                 graphics_type_string = "point"
-            if fieldDomainType == Field.DOMAIN_TYPE_NODES:
+            elif fieldDomainType == Field.DOMAIN_TYPE_NODES:
                 graphics_type_string = "node points"
-            if fieldDomainType == Field.DOMAIN_TYPE_DATAPOINTS:
+            elif fieldDomainType == Field.DOMAIN_TYPE_DATAPOINTS:
                 graphics_type_string = "data points"
-            graphics_type_string = "element points"
+            else:
+                graphics_type_string = "element points"
         return ' '.join(filter(None, [graphics_type_string, domain_type_string,subgroup_string]))
 
     def _buildGraphicsList(self):
