@@ -524,7 +524,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             domainType = self._ui.domain_chooser.getEnum()
             self._graphics.setFieldDomainType(domainType)
-            self._updateWidgets()
+            self._domainTypeDisplay()
             if self._refreshGraphicListCallback:
                 self._refreshGraphicListCallback()
 

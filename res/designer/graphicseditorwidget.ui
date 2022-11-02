@@ -2,698 +2,654 @@
 <ui version="4.0">
  <class>GraphicsEditorWidget</class>
  <widget class="QWidget" name="GraphicsEditorWidget">
-  <property name="enabled">
-   <bool>true</bool>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>298</width>
-    <height>1197</height>
+    <width>580</width>
+    <height>330</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>180</width>
+    <width>580</width>
     <height>0</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Graphics Editor</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>2</number>
-   </property>
+  <layout class="QVBoxLayout" name="main_verticalLayout">
    <property name="sizeConstraint">
     <enum>QLayout::SetDefaultConstraint</enum>
    </property>
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
    <item>
-    <widget class="QGroupBox" name="general_groupbox">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="title">
-      <string/>
+     <property name="widgetResizable">
+      <bool>true</bool>
      </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <layout class="QFormLayout" name="formLayout_3">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     <widget class="QWidget" name="scrollAreaGraphicWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>548</width>
+        <height>1295</height>
+       </rect>
       </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
-       <number>7</number>
-      </property>
-      <item row="4" column="0">
-       <widget class="QLabel" name="coordinate_field_label">
-        <property name="text">
-         <string>Coordinates:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="FieldChooserWidget" name="coordinate_field_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="scenecoordinatesystem_label">
-        <property name="text">
-         <string>Coord system:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="EnumerationChooserWidget" name="scenecoordinatesystem_chooser"/>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="boundarymode_label">
-        <property name="text">
-         <string>Boundary mode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="EnumerationChooserWidget" name="boundarymode_chooser"/>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="face_label">
-        <property name="text">
-         <string>Face:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1">
-       <widget class="EnumerationChooserWidget" name="face_enumeration_chooser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="0">
-       <widget class="QLabel" name="material_label">
-        <property name="text">
-         <string>Material:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="1">
-       <widget class="MaterialChooserWidget" name="material_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="0">
-       <widget class="QLabel" name="selected_material_label">
-        <property name="text">
-         <string>Selected material:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="1">
-       <widget class="MaterialChooserWidget" name="selected_material_chooser"/>
-      </item>
-      <item row="13" column="0">
-       <widget class="QLabel" name="data_field_label">
-        <property name="text">
-         <string>Data field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="13" column="1">
-       <widget class="FieldChooserWidget" name="data_field_chooser">
-        <property name="editable">
-         <bool>false</bool>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="14" column="0">
-       <widget class="QLabel" name="spectrum_label">
-        <property name="text">
-         <string>Spectrum:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="14" column="1">
-       <widget class="SpectrumChooserWidget" name="spectrum_chooser"/>
-      </item>
-      <item row="9" column="0">
-       <widget class="QCheckBox" name="wireframe_checkbox">
-        <property name="text">
-         <string>Wireframe</string>
-        </property>
-       </widget>
-      </item>
-      <item row="15" column="1">
-       <widget class="TessellationChooserWidget" name="tessellation_chooser"/>
-      </item>
-      <item row="15" column="0">
-       <widget class="QLabel" name="tessellation_label">
-        <property name="text">
-         <string>Tessellation:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="subgroup_field_label">
-        <property name="text">
-         <string>Subgroup:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="FieldChooserWidget" name="subgroup_field_chooser"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="domain_enum_label">
-        <property name="text">
-         <string>Domain:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="EnumerationChooserWidget" name="domain_chooser"/>
-      </item>
-      <item row="16" column="0">
-       <widget class="QLabel" name="tessellation_field_label">
-        <property name="text">
-         <string>Tessellation field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="16" column="1">
-       <widget class="FieldChooserWidget" name="tessellation_field_chooser"/>
-      </item>
-      <item row="17" column="0">
-       <widget class="QLabel" name="texture_coordinates_label">
-        <property name="text">
-         <string>Texture coordinates:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="17" column="1">
-       <widget class="FieldChooserWidget" name="texture_coordinates_chooser"/>
-      </item>
-      <item row="8" column="0">
-       <widget class="QLabel" name="select_mode_label">
-        <property name="text">
-         <string>Select mode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="1">
-       <widget class="EnumerationChooserWidget" name="select_mode_enum_chooser"/>
-      </item>
-        <item row="18" column="0">
-       <widget class="QLabel" name="line_thickness_label">
-        <property name="text">
-         <string>Line thickness:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="18" column="1">
-       <widget class="QLineEdit" name="line_thickness_lineEdit"/>
-      </item>
-              <item row="19" column="0">
-       <widget class="QLabel" name="point_size_label">
-        <property name="text">
-         <string>Point size:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="19" column="1">
-       <widget class="QLineEdit" name="point_size_lineEdit"/>
-      </item>
-     </layout>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>7</number>
+       </property>
+       <property name="bottomMargin">
+        <number>7</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="general_groupbox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QFormLayout" name="formLayout_3">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <property name="Margin" stdset="0">
+           <number>7</number>
+          </property>
+          <item row="4" column="0">
+           <widget class="QLabel" name="coordinate_field_label">
+            <property name="text">
+             <string>Coordinates:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="domain_enum_label">
+            <property name="text">
+             <string>Domain:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="EnumerationChooserWidget" name="domain_chooser"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="FieldChooserWidget" name="coordinate_field_chooser">
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="scenecoordinatesystem_label">
+            <property name="text">
+             <string>Coord system:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="EnumerationChooserWidget" name="scenecoordinatesystem_chooser"/>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="boundarymode_label">
+            <property name="text">
+             <string>Boundary mode:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="EnumerationChooserWidget" name="boundarymode_chooser"/>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="face_label">
+            <property name="text">
+             <string>Face:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="EnumerationChooserWidget" name="face_enumeration_chooser">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="material_label">
+            <property name="text">
+             <string>Material:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="MaterialChooserWidget" name="material_chooser">
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="selected_material_label">
+            <property name="text">
+             <string>Selected material:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <widget class="MaterialChooserWidget" name="selected_material_chooser"/>
+          </item>
+          <item row="13" column="0">
+           <widget class="QLabel" name="data_field_label">
+            <property name="text">
+             <string>Data field:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="FieldChooserWidget" name="data_field_chooser">
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="0">
+           <widget class="QLabel" name="spectrum_label">
+            <property name="text">
+             <string>Spectrum:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="1">
+           <widget class="SpectrumChooserWidget" name="spectrum_chooser"/>
+          </item>
+          <item row="9" column="0">
+           <widget class="QCheckBox" name="wireframe_checkbox">
+            <property name="text">
+             <string>Wireframe</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="1">
+           <widget class="TessellationChooserWidget" name="tessellation_chooser"/>
+          </item>
+          <item row="15" column="0">
+           <widget class="QLabel" name="tessellation_label">
+            <property name="text">
+             <string>Tessellation:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="subgroup_field_label">
+            <property name="text">
+             <string>Subgroup:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="FieldChooserWidget" name="subgroup_field_chooser"/>
+          </item>
+          <item row="16" column="0">
+           <widget class="QLabel" name="tessellation_field_label">
+            <property name="text">
+             <string>Tessellation field:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="16" column="1">
+           <widget class="FieldChooserWidget" name="tessellation_field_chooser"/>
+          </item>
+          <item row="17" column="0">
+           <widget class="QLabel" name="texture_coordinates_label">
+            <property name="text">
+             <string>Texture coordinates:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="17" column="1">
+           <widget class="FieldChooserWidget" name="texture_coordinates_chooser"/>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="select_mode_label">
+            <property name="text">
+             <string>Select mode:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="EnumerationChooserWidget" name="select_mode_enum_chooser"/>
+          </item>
+          <item row="18" column="0">
+           <widget class="QLabel" name="line_thickness_label">
+            <property name="text">
+             <string>Line thickness:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="18" column="1">
+           <widget class="QLineEdit" name="line_thickness_lineEdit"/>
+          </item>
+          <item row="19" column="0">
+           <widget class="QLabel" name="point_size_label">
+            <property name="text">
+             <string>Point size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="19" column="1">
+           <widget class="QLineEdit" name="point_size_lineEdit"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="contours_groupbox">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Contours:</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <layout class="QFormLayout" name="formLayout_2">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="isovalues_lineedit"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="isoscalar_field_label">
+            <property name="text">
+             <string>Scalar field:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="FieldChooserWidget" name="isoscalar_field_chooser">
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="isovalues_label">
+            <property name="text">
+             <string>Isovalues:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="range_isovalues_checkBox">
+            <property name="text">
+             <string>Range number:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="range_number_spinBox"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="streamlines_groupbox">
+         <property name="title">
+          <string>Streamlines:</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_5">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="stream_vector_field_label">
+            <property name="text">
+             <string>Vector field:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="FieldChooserWidget" name="stream_vector_field_chooser">
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="streamlines_track_length_label">
+            <property name="text">
+             <string>Time length:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="streamlines_track_length_lineedit"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="streamline_track_direction_label">
+            <property name="text">
+             <string>Direction:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="EnumerationChooserWidget" name="streamlines_track_direction_chooser"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="streamlines_colour_data_type_label">
+            <property name="text">
+             <string>Colour data:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="EnumerationChooserWidget" name="streamlines_colour_data_type_chooser"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="lines_groupbox">
+         <property name="title">
+          <string>Lines:</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_4">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="line_shape_label">
+            <property name="text">
+             <string>Shape:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="EnumerationChooserWidget" name="line_shape_chooser"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="line_base_size_label">
+            <property name="text">
+             <string>Base size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="line_base_size_lineedit"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="line_orientation_scale_field_label">
+            <property name="text">
+             <string>Scale field:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="FieldChooserWidget" name="line_orientation_scale_field_chooser">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="line_scale_factors_label">
+            <property name="text">
+             <string>Scaling:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="line_scale_factors_lineedit"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="points_groupbox">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Points:</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="glyph_label">
+            <property name="text">
+             <string>Glyph:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="GlyphChooserWidget" name="glyph_chooser">
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="point_base_size_label">
+            <property name="text">
+             <string>Base size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="point_base_size_lineedit"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="point_orientation_scale_field_label">
+            <property name="text">
+             <string>Scale field:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="FieldChooserWidget" name="point_orientation_scale_field_chooser">
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="point_scale_factors_label">
+            <property name="text">
+             <string>Scaling:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_field_label">
+            <property name="text">
+             <string>Label field:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="FieldChooserWidget" name="label_field_chooser">
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="point_scale_factors_lineedit"/>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="glyph_repeat_mode_label">
+            <property name="text">
+             <string>Repeat mode:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="EnumerationChooserWidget" name="glyph_repeat_mode_chooser"/>
+          </item>
+          <item row="12" column="0">
+           <widget class="QLabel" name="glyph_offset_label">
+            <property name="text">
+             <string>Glyph offset:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QLineEdit" name="glyph_offset_lineedit"/>
+          </item>
+          <item row="13" column="0">
+           <widget class="QLabel" name="glyph_label_text_label">
+            <property name="text">
+             <string>Label text:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QLineEdit" name="glyph_label_text_lineedit"/>
+          </item>
+          <item row="14" column="0">
+           <widget class="QLabel" name="glyph_label_text_offset_label">
+            <property name="text">
+             <string>Label text offset:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="1">
+           <widget class="QLineEdit" name="glyph_label_text_offset_lineedit"/>
+          </item>
+          <item row="15" column="0">
+           <widget class="QLabel" name="glyph_font_label">
+            <property name="text">
+             <string>Font:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="1">
+           <widget class="QComboBox" name="glyph_font_comboBox"/>
+          </item>
+          <item row="7" column="1">
+           <widget class="FieldChooserWidget" name="glyph_signed_scale_field_chooser">
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="glyph_signed_scale_field_label">
+            <property name="text">
+             <string>Signed scale field:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="sampling_groupbox">
+         <property name="title">
+          <string>Sampling:</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_6">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>9</number>
+          </property>
+          <property name="rightMargin">
+           <number>9</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="sampling_mode_label">
+            <property name="text">
+             <string>Mode:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="EnumerationChooserWidget" name="sampling_mode_chooser"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="sample_location_label">
+            <property name="text">
+             <string>Sample location:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="sample_location_lineedit"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="density_field_label">
+            <property name="text">
+             <string>Density field:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="FieldChooserWidget" name="density_field_chooser"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="contours_groupbox">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="title">
-      <string>Contours:</string>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <layout class="QFormLayout" name="formLayout_2">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="horizontalSpacing">
-       <number>7</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>7</number>
-      </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
-       <number>7</number>
-      </property>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="isovalues_lineedit"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="isoscalar_field_label">
-        <property name="text">
-         <string>Scalar field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="FieldChooserWidget" name="isoscalar_field_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="isovalues_label">
-        <property name="text">
-         <string>Isovalues:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="range_isovalues_checkBox">
-        <property name="text">
-         <string>Range number:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="range_number_spinBox"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="streamlines_groupbox">
-     <property name="title">
-      <string>Streamlines:</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout_5">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
-       <number>7</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="stream_vector_field_label">
-        <property name="text">
-         <string>Vector field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="FieldChooserWidget" name="stream_vector_field_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="streamlines_track_length_label">
-        <property name="text">
-         <string>Time length:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="streamlines_track_length_lineedit"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="streamline_track_direction_label">
-        <property name="text">
-         <string>Direction:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="EnumerationChooserWidget" name="streamlines_track_direction_chooser"/>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="streamlines_colour_data_type_label">
-        <property name="text">
-         <string>Colour data:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="EnumerationChooserWidget" name="streamlines_colour_data_type_chooser"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="lines_groupbox">
-     <property name="title">
-      <string>Lines:</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout_4">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
-       <number>7</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="line_shape_label">
-        <property name="text">
-         <string>Shape:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="EnumerationChooserWidget" name="line_shape_chooser"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="line_base_size_label">
-        <property name="text">
-         <string>Base size:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="line_base_size_lineedit"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="line_orientation_scale_field_label">
-        <property name="text">
-         <string>Scale field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="FieldChooserWidget" name="line_orientation_scale_field_chooser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="line_scale_factors_label">
-        <property name="text">
-         <string>Scaling:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="line_scale_factors_lineedit"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="points_groupbox">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="title">
-      <string>Points:</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="leftMargin">
-       <number>7</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>7</number>
-      </property>
-      <property name="bottomMargin">
-       <number>7</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="glyph_label">
-        <property name="text">
-         <string>Glyph:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="GlyphChooserWidget" name="glyph_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="point_base_size_label">
-        <property name="text">
-         <string>Base size:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="point_base_size_lineedit"/>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="point_orientation_scale_field_label">
-        <property name="text">
-         <string>Scale field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="FieldChooserWidget" name="point_orientation_scale_field_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="point_scale_factors_label">
-        <property name="text">
-         <string>Scaling:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="label_field_label">
-        <property name="text">
-         <string>Label field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="1">
-       <widget class="FieldChooserWidget" name="label_field_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLineEdit" name="point_scale_factors_lineedit"/>
-      </item>
-      <item row="10" column="0">
-       <widget class="QLabel" name="glyph_repeat_mode_label">
-        <property name="text">
-         <string>Repeat mode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="1">
-       <widget class="EnumerationChooserWidget" name="glyph_repeat_mode_chooser"/>
-      </item>
-      <item row="12" column="0">
-       <widget class="QLabel" name="glyph_offset_label">
-        <property name="text">
-         <string>Glyph offset:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="12" column="1">
-       <widget class="QLineEdit" name="glyph_offset_lineedit"/>
-      </item>
-      <item row="13" column="0">
-       <widget class="QLabel" name="glyph_label_text_label">
-        <property name="text">
-         <string>Label text:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="13" column="1">
-       <widget class="QLineEdit" name="glyph_label_text_lineedit"/>
-      </item>
-      <item row="14" column="0">
-       <widget class="QLabel" name="glyph_label_text_offset_label">
-        <property name="text">
-         <string>Label text offset:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="14" column="1">
-       <widget class="QLineEdit" name="glyph_label_text_offset_lineedit"/>
-      </item>
-      <item row="15" column="0">
-       <widget class="QLabel" name="glyph_font_label">
-        <property name="text">
-         <string>Font:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="15" column="1">
-       <widget class="QComboBox" name="glyph_font_comboBox"/>
-      </item>
-      <item row="7" column="1">
-       <widget class="FieldChooserWidget" name="glyph_signed_scale_field_chooser">
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="glyph_signed_scale_field_label">
-        <property name="text">
-         <string>Signed scale field:</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="sampling_groupbox">
-     <property name="title">
-      <string>Sampling:</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout_6">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="sampling_mode_label">
-        <property name="text">
-         <string>Mode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="EnumerationChooserWidget" name="sampling_mode_chooser"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="sample_location_label">
-        <property name="text">
-         <string>Sample location:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="sample_location_lineedit"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="density_field_label">
-        <property name="text">
-         <string>Density field:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="FieldChooserWidget" name="density_field_chooser"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
@@ -1371,7 +1327,7 @@
     </hint>
    </hints>
   </connection>
-    <connection>
+  <connection>
    <sender>line_thickness_lineEdit</sender>
    <signal>editingFinished()</signal>
    <receiver>GraphicsEditorWidget</receiver>
@@ -1387,7 +1343,7 @@
     </hint>
    </hints>
   </connection>
-    <connection>
+  <connection>
    <sender>point_size_lineEdit</sender>
    <signal>editingFinished()</signal>
    <receiver>GraphicsEditorWidget</receiver>

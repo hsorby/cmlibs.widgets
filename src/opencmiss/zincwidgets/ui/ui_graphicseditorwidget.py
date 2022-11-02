@@ -24,31 +24,48 @@ class Ui_GraphicsEditorWidget(object):
     def setupUi(self, GraphicsEditorWidget):
         if not GraphicsEditorWidget.objectName():
             GraphicsEditorWidget.setObjectName(u"GraphicsEditorWidget")
-        GraphicsEditorWidget.setEnabled(True)
-        GraphicsEditorWidget.resize(298, 1197)
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(GraphicsEditorWidget.sizePolicy().hasHeightForWidth())
-        GraphicsEditorWidget.setSizePolicy(sizePolicy)
-        GraphicsEditorWidget.setMinimumSize(QSize(180, 0))
-        self.verticalLayout = QVBoxLayout(GraphicsEditorWidget)
-        self.verticalLayout.setSpacing(2)
+        GraphicsEditorWidget.resize(580, 330)
+        GraphicsEditorWidget.setMinimumSize(QSize(580, 0))
+        self.main_verticalLayout = QVBoxLayout(GraphicsEditorWidget)
+        self.main_verticalLayout.setObjectName(u"main_verticalLayout")
+        self.main_verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.scrollArea = QScrollArea(GraphicsEditorWidget)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setFrameShape(QFrame.NoFrame)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaGraphicWidgetContents = QWidget()
+        self.scrollAreaGraphicWidgetContents.setObjectName(u"scrollAreaGraphicWidgetContents")
+        self.scrollAreaGraphicWidgetContents.setGeometry(QRect(0, 0, 548, 1295))
+        self.verticalLayout = QVBoxLayout(self.scrollAreaGraphicWidgetContents)
+        self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
-        self.verticalLayout.setContentsMargins(2, 0, 0, 0)
-        self.general_groupbox = QGroupBox(GraphicsEditorWidget)
+        self.verticalLayout.setContentsMargins(0, 0, 7, 7)
+        self.general_groupbox = QGroupBox(self.scrollAreaGraphicWidgetContents)
         self.general_groupbox.setObjectName(u"general_groupbox")
-        self.general_groupbox.setMaximumSize(QSize(16777215, 16777215))
-        self.general_groupbox.setCheckable(False)
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.general_groupbox.sizePolicy().hasHeightForWidth())
+        self.general_groupbox.setSizePolicy(sizePolicy)
         self.formLayout_3 = QFormLayout(self.general_groupbox)
         self.formLayout_3.setObjectName(u"formLayout_3")
         self.formLayout_3.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
-        self.formLayout_3.setContentsMargins(7, 7, 7, 7)
+        self.formLayout_3.setProperty("Margin", 7)
         self.coordinate_field_label = QLabel(self.general_groupbox)
         self.coordinate_field_label.setObjectName(u"coordinate_field_label")
 
         self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.coordinate_field_label)
+
+        self.domain_enum_label = QLabel(self.general_groupbox)
+        self.domain_enum_label.setObjectName(u"domain_enum_label")
+
+        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.domain_enum_label)
+
+        self.domain_chooser = EnumerationChooserWidget(self.general_groupbox)
+        self.domain_chooser.setObjectName(u"domain_chooser")
+
+        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.domain_chooser)
 
         self.coordinate_field_chooser = FieldChooserWidget(self.general_groupbox)
         self.coordinate_field_chooser.setObjectName(u"coordinate_field_chooser")
@@ -159,16 +176,6 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_3.setWidget(3, QFormLayout.FieldRole, self.subgroup_field_chooser)
 
-        self.domain_enum_label = QLabel(self.general_groupbox)
-        self.domain_enum_label.setObjectName(u"domain_enum_label")
-
-        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.domain_enum_label)
-
-        self.domain_chooser = EnumerationChooserWidget(self.general_groupbox)
-        self.domain_chooser.setObjectName(u"domain_chooser")
-
-        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.domain_chooser)
-
         self.tessellation_field_label = QLabel(self.general_groupbox)
         self.tessellation_field_label.setObjectName(u"tessellation_field_label")
 
@@ -222,16 +229,13 @@ class Ui_GraphicsEditorWidget(object):
 
         self.verticalLayout.addWidget(self.general_groupbox)
 
-        self.contours_groupbox = QGroupBox(GraphicsEditorWidget)
+        self.contours_groupbox = QGroupBox(self.scrollAreaGraphicWidgetContents)
         self.contours_groupbox.setObjectName(u"contours_groupbox")
         self.contours_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.contours_groupbox.setFlat(False)
         self.formLayout_2 = QFormLayout(self.contours_groupbox)
         self.formLayout_2.setObjectName(u"formLayout_2")
         self.formLayout_2.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
-        self.formLayout_2.setHorizontalSpacing(7)
-        self.formLayout_2.setVerticalSpacing(7)
-        self.formLayout_2.setContentsMargins(7, 7, 7, 7)
         self.isovalues_lineedit = QLineEdit(self.contours_groupbox)
         self.isovalues_lineedit.setObjectName(u"isovalues_lineedit")
 
@@ -266,12 +270,11 @@ class Ui_GraphicsEditorWidget(object):
 
         self.verticalLayout.addWidget(self.contours_groupbox)
 
-        self.streamlines_groupbox = QGroupBox(GraphicsEditorWidget)
+        self.streamlines_groupbox = QGroupBox(self.scrollAreaGraphicWidgetContents)
         self.streamlines_groupbox.setObjectName(u"streamlines_groupbox")
         self.formLayout_5 = QFormLayout(self.streamlines_groupbox)
         self.formLayout_5.setObjectName(u"formLayout_5")
         self.formLayout_5.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
-        self.formLayout_5.setContentsMargins(7, 7, 7, 7)
         self.stream_vector_field_label = QLabel(self.streamlines_groupbox)
         self.stream_vector_field_label.setObjectName(u"stream_vector_field_label")
 
@@ -316,12 +319,11 @@ class Ui_GraphicsEditorWidget(object):
 
         self.verticalLayout.addWidget(self.streamlines_groupbox)
 
-        self.lines_groupbox = QGroupBox(GraphicsEditorWidget)
+        self.lines_groupbox = QGroupBox(self.scrollAreaGraphicWidgetContents)
         self.lines_groupbox.setObjectName(u"lines_groupbox")
         self.formLayout_4 = QFormLayout(self.lines_groupbox)
         self.formLayout_4.setObjectName(u"formLayout_4")
         self.formLayout_4.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
-        self.formLayout_4.setContentsMargins(7, 7, 7, 7)
         self.line_shape_label = QLabel(self.lines_groupbox)
         self.line_shape_label.setObjectName(u"line_shape_label")
 
@@ -368,13 +370,12 @@ class Ui_GraphicsEditorWidget(object):
 
         self.verticalLayout.addWidget(self.lines_groupbox)
 
-        self.points_groupbox = QGroupBox(GraphicsEditorWidget)
+        self.points_groupbox = QGroupBox(self.scrollAreaGraphicWidgetContents)
         self.points_groupbox.setObjectName(u"points_groupbox")
         self.points_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.formLayout = QFormLayout(self.points_groupbox)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
-        self.formLayout.setContentsMargins(7, 7, 7, 7)
         self.glyph_label = QLabel(self.points_groupbox)
         self.glyph_label.setObjectName(u"glyph_label")
 
@@ -492,11 +493,12 @@ class Ui_GraphicsEditorWidget(object):
 
         self.verticalLayout.addWidget(self.points_groupbox)
 
-        self.sampling_groupbox = QGroupBox(GraphicsEditorWidget)
+        self.sampling_groupbox = QGroupBox(self.scrollAreaGraphicWidgetContents)
         self.sampling_groupbox.setObjectName(u"sampling_groupbox")
         self.formLayout_6 = QFormLayout(self.sampling_groupbox)
         self.formLayout_6.setObjectName(u"formLayout_6")
         self.formLayout_6.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_6.setContentsMargins(9, 9, 9, -1)
         self.sampling_mode_label = QLabel(self.sampling_groupbox)
         self.sampling_mode_label.setObjectName(u"sampling_mode_label")
 
@@ -533,6 +535,10 @@ class Ui_GraphicsEditorWidget(object):
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
+
+        self.scrollArea.setWidget(self.scrollAreaGraphicWidgetContents)
+
+        self.main_verticalLayout.addWidget(self.scrollArea)
 
 
         self.retranslateUi(GraphicsEditorWidget)
@@ -584,8 +590,8 @@ class Ui_GraphicsEditorWidget(object):
 
     def retranslateUi(self, GraphicsEditorWidget):
         GraphicsEditorWidget.setWindowTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Graphics Editor", None))
-        self.general_groupbox.setTitle("")
         self.coordinate_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Coordinates:", None))
+        self.domain_enum_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Domain:", None))
         self.scenecoordinatesystem_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Coord system:", None))
         self.boundarymode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Boundary mode:", None))
         self.face_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Face:", None))
@@ -596,7 +602,6 @@ class Ui_GraphicsEditorWidget(object):
         self.wireframe_checkbox.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Wireframe", None))
         self.tessellation_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Tessellation:", None))
         self.subgroup_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Subgroup:", None))
-        self.domain_enum_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Domain:", None))
         self.tessellation_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Tessellation field:", None))
         self.texture_coordinates_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Texture coordinates:", None))
         self.select_mode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Select mode:", None))
