@@ -206,15 +206,15 @@ class Ui_GraphicsEditorWidget(object):
 
         self.formLayout_3.setWidget(8, QFormLayout.FieldRole, self.select_mode_enum_chooser)
 
-        self.line_thickness_label = QLabel(self.general_groupbox)
-        self.line_thickness_label.setObjectName(u"line_thickness_label")
+        self.line_width_label = QLabel(self.general_groupbox)
+        self.line_width_label.setObjectName(u"line_width_label")
 
-        self.formLayout_3.setWidget(18, QFormLayout.LabelRole, self.line_thickness_label)
+        self.formLayout_3.setWidget(18, QFormLayout.LabelRole, self.line_width_label)
 
-        self.line_thickness_lineEdit = QLineEdit(self.general_groupbox)
-        self.line_thickness_lineEdit.setObjectName(u"line_thickness_lineEdit")
+        self.line_width_lineEdit = QLineEdit(self.general_groupbox)
+        self.line_width_lineEdit.setObjectName(u"line_width_lineEdit")
 
-        self.formLayout_3.setWidget(18, QFormLayout.FieldRole, self.line_thickness_lineEdit)
+        self.formLayout_3.setWidget(18, QFormLayout.FieldRole, self.line_width_lineEdit)
 
         self.point_size_label = QLabel(self.general_groupbox)
         self.point_size_label.setObjectName(u"point_size_label")
@@ -582,7 +582,7 @@ class Ui_GraphicsEditorWidget(object):
         self.glyph_label_text_offset_lineedit.editingFinished.connect(GraphicsEditorWidget.labelTextOffsetEntered)
         self.tessellation_field_chooser.currentIndexChanged.connect(GraphicsEditorWidget.tessellationFieldChanged)
         self.texture_coordinates_chooser.currentIndexChanged.connect(GraphicsEditorWidget.textureCoordinateFieldChanged)
-        self.line_thickness_lineEdit.editingFinished.connect(GraphicsEditorWidget.renderLineWidthEntered)
+        self.line_width_lineEdit.editingFinished.connect(GraphicsEditorWidget.renderLineWidthEntered)
         self.point_size_lineEdit.editingFinished.connect(GraphicsEditorWidget.renderPointSizeEntered)
 
         QMetaObject.connectSlotsByName(GraphicsEditorWidget)
@@ -605,7 +605,7 @@ class Ui_GraphicsEditorWidget(object):
         self.tessellation_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Tessellation field:", None))
         self.texture_coordinates_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Texture coordinates:", None))
         self.select_mode_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Select mode:", None))
-        self.line_thickness_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Line thickness:", None))
+        self.line_width_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Line width:", None))
         self.point_size_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Point size:", None))
         self.contours_groupbox.setTitle(QCoreApplication.translate("GraphicsEditorWidget", u"Contours:", None))
         self.isoscalar_field_label.setText(QCoreApplication.translate("GraphicsEditorWidget", u"Scalar field:", None))

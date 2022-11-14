@@ -244,14 +244,14 @@
            <widget class="EnumerationChooserWidget" name="select_mode_enum_chooser"/>
           </item>
           <item row="18" column="0">
-           <widget class="QLabel" name="line_thickness_label">
+           <widget class="QLabel" name="line_width_label">
             <property name="text">
-             <string>Line thickness:</string>
+             <string>Line width:</string>
             </property>
            </widget>
           </item>
           <item row="18" column="1">
-           <widget class="QLineEdit" name="line_thickness_lineEdit"/>
+           <widget class="QLineEdit" name="line_width_lineEdit"/>
           </item>
           <item row="19" column="0">
            <widget class="QLabel" name="point_size_label">
@@ -1328,7 +1328,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>line_thickness_lineEdit</sender>
+   <sender>line_width_lineEdit</sender>
    <signal>editingFinished()</signal>
    <receiver>GraphicsEditorWidget</receiver>
    <slot>renderLineWidthEntered()</slot>

@@ -30,8 +30,24 @@ from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.ui.ui_graphicseditorwidget import Ui_GraphicsEditorWidget
 
-DOMAIN_TYPE_ENUM = [Field.DOMAIN_TYPE_POINT, Field.DOMAIN_TYPE_NODES, Field.DOMAIN_TYPE_DATAPOINTS, Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]
-POINT_SAMPLING_DOMAIN_TYPE_ENUM = [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]
+DOMAIN_TYPE_ENUM = [Field.DOMAIN_TYPE_POINT, Field.DOMAIN_TYPE_NODES, Field.DOMAIN_TYPE_DATAPOINTS,
+                    Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]
+POINT_SAMPLING_DOMAIN_TYPE_ENUM = [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D,
+                                   Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]
+
+
+def faceTypeEnumFromString(enumString):
+    enumString = enumString.replace('_=_', '_')
+    return Element.FaceTypeEnumFromString(enumString)
+
+
+def faceTypeEnumToString(faceTypeEnum):
+    enumString = Element.FaceTypeEnumToString(faceTypeEnum)
+    if not enumString:
+        return None
+    enumString = enumString.replace('_', ' = ')
+    return enumString
+
 
 class GraphicsEditorWidget(QtWidgets.QWidget):
 
@@ -46,19 +62,28 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._ui = Ui_GraphicsEditorWidget()
         self._ui.setupUi(self)
         # base graphics attributes
-        self._ui.face_enumeration_chooser.setEnumsList(Element.FaceTypeEnumToString, Element.FaceTypeEnumFromString)
-        self._ui.scenecoordinatesystem_chooser.setEnumsList(ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
-        self._ui.boundarymode_chooser.setEnumsList(Graphics.BoundaryModeEnumToString, Graphics.BoundaryModeEnumFromString)
-        self._ui.streamlines_track_direction_chooser.setEnumsList(GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString) 
-        self._ui.streamlines_colour_data_type_chooser.setEnumsList(GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
-        self._ui.line_shape_chooser.setEnumsList(Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
-        self._ui.domain_chooser.setEnumsList(Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString,DOMAIN_TYPE_ENUM)
-        self._ui.select_mode_enum_chooser.setEnumsList(Graphics.SelectModeEnumToString, Graphics.SelectModeEnumFromString)
+        self._ui.face_enumeration_chooser.setEnumsList(
+            faceTypeEnumToString, faceTypeEnumFromString)
+        self._ui.scenecoordinatesystem_chooser.setEnumsList(
+            ScenecoordinatesystemEnumToString, ScenecoordinatesystemEnumFromString)
+        self._ui.boundarymode_chooser.setEnumsList(
+            Graphics.BoundaryModeEnumToString, Graphics.BoundaryModeEnumFromString)
+        self._ui.streamlines_track_direction_chooser.setEnumsList(
+            GraphicsStreamlines.TrackDirectionEnumToString, GraphicsStreamlines.TrackDirectionEnumFromString)
+        self._ui.streamlines_colour_data_type_chooser.setEnumsList(
+            GraphicsStreamlines.ColourDataTypeEnumToString, GraphicsStreamlines.ColourDataTypeEnumFromString)
+        self._ui.line_shape_chooser.setEnumsList(
+            Graphicslineattributes.ShapeTypeEnumToString, Graphicslineattributes.ShapeTypeEnumFromString)
+        self._ui.domain_chooser.setEnumsList(
+            Field.DomainTypeEnumToString, Field.DomainTypeEnumFromString, DOMAIN_TYPE_ENUM)
+        self._ui.select_mode_enum_chooser.setEnumsList(
+            Graphics.SelectModeEnumToString, Graphics.SelectModeEnumFromString)
 
         self._ui.subgroup_field_chooser.setNullObjectName('-')
         self._ui.subgroup_field_chooser.setConditional(FieldIsScalar)
         self._ui.coordinate_field_chooser.setNullObjectName('-')
-        self._ui.coordinate_field_chooser.setConditional(FieldIsCoordinateCapable)
+        self._ui.coordinate_field_chooser.setConditional(
+            FieldIsCoordinateCapable)
         self._ui.data_field_chooser.setNullObjectName('-')
         self._ui.data_field_chooser.setConditional(FieldIsRealValued)
         self._ui.spectrum_chooser.setNullObjectName('-')
@@ -67,24 +92,31 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         # contours
         self._ui.isoscalar_field_chooser.setNullObjectName('- choose -')
         self._ui.isoscalar_field_chooser.setConditional(FieldIsScalar)
-        self._ui.range_number_spinBox.valueChanged.connect(self.numberOfIsovalueRangeChanged)
+        self._ui.range_number_spinBox.valueChanged.connect(
+            self.numberOfIsovalueRangeChanged)
         # streamlines
         self._ui.stream_vector_field_chooser.setNullObjectName('- choose -')
-        self._ui.stream_vector_field_chooser.setConditional(FieldIsStreamVectorCapable)
+        self._ui.stream_vector_field_chooser.setConditional(
+            FieldIsStreamVectorCapable)
         # line attributes
         self._ui.line_orientation_scale_field_chooser.setNullObjectName('-')
-        self._ui.line_orientation_scale_field_chooser.setConditional(FieldIsScalar)
+        self._ui.line_orientation_scale_field_chooser.setConditional(
+            FieldIsScalar)
         # point attributes
         self._ui.glyph_chooser.setNullObjectName('-')
         self._ui.point_orientation_scale_field_chooser.setNullObjectName('-')
-        self._ui.point_orientation_scale_field_chooser.setConditional(FieldIsOrientationScaleCapable)
+        self._ui.point_orientation_scale_field_chooser.setConditional(
+            FieldIsOrientationScaleCapable)
         self._ui.label_field_chooser.setNullObjectName('-')
-        self._ui.glyph_repeat_mode_chooser.setEnumsList(Glyph.RepeatModeEnumToString, Glyph.RepeatModeEnumFromString)
+        self._ui.glyph_repeat_mode_chooser.setEnumsList(
+            Glyph.RepeatModeEnumToString, Glyph.RepeatModeEnumFromString)
         self._ui.glyph_signed_scale_field_chooser.setNullObjectName('-')
         self._ui.glyph_signed_scale_field_chooser.setConditional(FieldIsScalar)
-        self._ui.glyph_font_comboBox.currentIndexChanged.connect(self._fontChanged)
+        self._ui.glyph_font_comboBox.currentIndexChanged.connect(
+            self._fontChanged)
         # mesh point sampling
-        self._ui.sampling_mode_chooser.setEnumsList(Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
+        self._ui.sampling_mode_chooser.setEnumsList(
+            Element.PointSamplingModeEnumToString, Element.PointSamplingModeEnumFromString)
         self._ui.density_field_chooser.setNullObjectName('-')
 
     def _updateWidgets(self):
@@ -139,7 +171,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._faceDisplay()
         self._domainTypeDisplay()
         self._selectModeDisplay()
-        self._ui.wireframe_checkbox.setCheckState(QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
+        self._ui.wireframe_checkbox.setCheckState(
+            QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
         # contours
         isoscalarField = None
         if contours and contours.isValid():
@@ -150,7 +183,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         else:
             self._ui.contours_groupbox.hide()
         self._ui.isoscalar_field_chooser.setField(isoscalarField)
-        self._ui.range_isovalues_checkBox.setCheckState(QtCore.Qt.Checked if self._isRangeIsovalues else QtCore.Qt.Unchecked)
+        self._ui.range_isovalues_checkBox.setCheckState(
+            QtCore.Qt.Checked if self._isRangeIsovalues else QtCore.Qt.Unchecked)
         self._isovaluesDisplay()
         # streamlines
         streamVectorField = None
@@ -172,7 +206,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             self._ui.lines_groupbox.hide()
         self._lineShapeDisplay()
         self._lineBaseSizeDisplay()
-        self._ui.line_orientation_scale_field_chooser.setField(lineOrientationScaleField)
+        self._ui.line_orientation_scale_field_chooser.setField(
+            lineOrientationScaleField)
         self._lineScaleFactorsDisplay()
         isStreamline = (streamlines is not None) and streamlines.isValid()
         if not isStreamline:
@@ -180,8 +215,10 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         model = self._ui.line_shape_chooser.model()
         model.item(1, 0).setEnabled(isStreamline)
         model.item(3, 0).setEnabled(isStreamline)
-        self._ui.line_orientation_scale_field_label.setEnabled(not isStreamline)
-        self._ui.line_orientation_scale_field_chooser.setEnabled(not isStreamline)
+        self._ui.line_orientation_scale_field_label.setEnabled(
+            not isStreamline)
+        self._ui.line_orientation_scale_field_chooser.setEnabled(
+            not isStreamline)
         self._ui.line_scale_factors_label.setEnabled(not isStreamline)
         self._ui.line_scale_factors_lineedit.setEnabled(not isStreamline)
         # point attributes
@@ -199,18 +236,21 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             glyphSignedScaleField = pointattributes.getSignedScaleField()
             fontname = pointattributes.getFont().getName()
             self._buildFontComboBox()
-            self._ui.glyph_font_comboBox.setCurrentIndex(self._ui.glyph_font_comboBox.findText(fontname))
+            self._ui.glyph_font_comboBox.setCurrentIndex(
+                self._ui.glyph_font_comboBox.findText(fontname))
             self._ui.points_groupbox.show()
         else:
             self._ui.points_groupbox.hide()
         self._ui.glyph_chooser.setGlyph(glyph)
         self._pointBaseSizeDisplay()
-        self._ui.point_orientation_scale_field_chooser.setField(pointOrientationScaleField)
+        self._ui.point_orientation_scale_field_chooser.setField(
+            pointOrientationScaleField)
         self._pointScaleFactorsDisplay()
         self._ui.label_field_chooser.setField(labelField)
         self._ui.glyph_repeat_mode_chooser.setEnum(glyphRepeatMode)
         self._glyphOffsetDisplay()
-        self._ui.glyph_signed_scale_field_chooser.setField(glyphSignedScaleField)
+        self._ui.glyph_signed_scale_field_chooser.setField(
+            glyphSignedScaleField)
         self._labelTextDisplay()
         self._labelTextOffsetDisplay()
         # sampling attributes
@@ -428,15 +468,15 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         """
         if self._graphics:
             renderLineWidth = self._graphics.getRenderLineWidth()
-            self._displayReal(self._ui.line_thickness_lineEdit, renderLineWidth)
+            self._displayReal(self._ui.line_width_lineEdit, renderLineWidth)
             return
-        self._ui.line_thickness_lineEdit.setText('')
+        self._ui.line_width_lineEdit.setText('')
 
     def renderLineWidthEntered(self):
         """
         Set render line width from text in widget
         """
-        renderLineWidth = self._ui.line_thickness_lineEdit.text()
+        renderLineWidth = self._ui.line_width_lineEdit.text()
         try:
             renderLineWidth = float(renderLineWidth)
             if self._graphics.setRenderLineWidth(renderLineWidth) != ZINC_OK:
@@ -538,7 +578,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         :param isChecked: boolean
         """
         if self._graphics:
-            self._graphics.setRenderPolygonMode(Graphics.RENDER_POLYGON_MODE_WIREFRAME if isChecked else Graphics.RENDER_POLYGON_MODE_SHADED)
+            self._graphics.setRenderPolygonMode(
+                Graphics.RENDER_POLYGON_MODE_WIREFRAME if isChecked else Graphics.RENDER_POLYGON_MODE_SHADED)
 
     def glyphChanged(self, index):
         """
@@ -611,7 +652,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         :param isChecked: boolean
         """
         if self._graphics:
-            self._isRangeIsovalues = not self._isRangeIsovalues        
+            self._isRangeIsovalues = not self._isRangeIsovalues
             self._ui.range_number_spinBox.setEnabled(self._isRangeIsovalues)
             self._isovaluesDisplay()
 
@@ -637,7 +678,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     return
         self._ui.isovalues_lineedit.setText('')
 
-    def numberOfIsovalueRangeChanged(self, value):        
+    def numberOfIsovalueRangeChanged(self, value):
         """
         Set iso values list from text in widget
         """
@@ -648,7 +689,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                 rangeNum = value
                 firstIsovalue = isovalues[0]
                 lastIsovalue = isovalues[1]
-                if contours.setRangeIsovalues(rangeNum,firstIsovalue, lastIsovalue) != ZINC_OK:
+                if contours.setRangeIsovalues(rangeNum, firstIsovalue, lastIsovalue) != ZINC_OK:
                     raise
         except:
             ArgonLogger.getLogger().error("Invalid range number for isovalues")
@@ -666,7 +707,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     rangeNum = self._ui.range_number_spinBox.value()
                     firstIsovalue = isovalues[0]
                     lastIsovalue = isovalues[1]
-                    if contours.setRangeIsovalues(rangeNum,firstIsovalue, lastIsovalue) != ZINC_OK :
+                    if contours.setRangeIsovalues(rangeNum, firstIsovalue, lastIsovalue) != ZINC_OK:
                         raise
                 elif contours.setListIsovalues(isovalues) != ZINC_OK:
                     raise
@@ -691,7 +732,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 trackLength = streamlines.getTrackLength()
-                self._displayReal(self._ui.streamlines_track_length_lineedit, trackLength)
+                self._displayReal(
+                    self._ui.streamlines_track_length_lineedit, trackLength)
                 return
         self._ui.streamlines_track_length_lineedit.setText('')
 
@@ -730,7 +772,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
-                streamlines.setTrackDirection(index + GraphicsStreamlines.TRACK_DIRECTION_FORWARD)
+                streamlines.setTrackDirection(
+                    index + GraphicsStreamlines.TRACK_DIRECTION_FORWARD)
 
     def _streamlinesColourDataTypeDisplay(self):
         """
@@ -741,7 +784,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             streamlines = self._graphics.castStreamlines()
             if streamlines.isValid():
                 streamlinesColourDataType = streamlines.getColourDataType()
-        self._ui.streamlines_colour_data_type_chooser.setEnum(streamlinesColourDataType)
+        self._ui.streamlines_colour_data_type_chooser.setEnum(
+            streamlinesColourDataType)
 
     def streamlinesColourDataTypeChanged(self, index):
         """
@@ -759,7 +803,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     spectrummodule = scene.getSpectrummodule()
                     spectrum = spectrummodule.getDefaultSpectrum()
                     self._graphics.setSpectrum(spectrum)
-                streamlines.setColourDataType(index + GraphicsStreamlines.COLOUR_DATA_TYPE_FIELD)
+                streamlines.setColourDataType(
+                    index + GraphicsStreamlines.COLOUR_DATA_TYPE_FIELD)
                 scene.endChange()
 
     def _lineShapeDisplay(self):
@@ -782,7 +827,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         if self._graphics:
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
-                lineattributes.setShapeType(index + Graphicslineattributes.SHAPE_TYPE_LINE)
+                lineattributes.setShapeType(
+                    index + Graphicslineattributes.SHAPE_TYPE_LINE)
 
     def _lineBaseSizeDisplay(self):
         """
@@ -826,7 +872,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.isValid():
                 _, scaleFactors = lineattributes.getScaleFactors(2)
-                self._displayScale(self._ui.line_scale_factors_lineedit, scaleFactors)
+                self._displayScale(
+                    self._ui.line_scale_factors_lineedit, scaleFactors)
                 return
         self._ui.line_scale_factors_lineedit.setText('0')
 
@@ -835,7 +882,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         Set line scale factors from text in widget
         """
         try:
-            scaleFactors = self._parseScale(self._ui.line_scale_factors_lineedit)
+            scaleFactors = self._parseScale(
+                self._ui.line_scale_factors_lineedit)
             lineattributes = self._graphics.getGraphicslineattributes()
             if lineattributes.setScaleFactors(scaleFactors) != ZINC_OK:
                 raise
@@ -885,7 +933,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
                 _, scaleFactors = pointattributes.getScaleFactors(3)
-                self._displayScale(self._ui.point_scale_factors_lineedit, scaleFactors)
+                self._displayScale(
+                    self._ui.point_scale_factors_lineedit, scaleFactors)
                 return
         self._ui.point_scale_factors_lineedit.setText('0')
 
@@ -894,7 +943,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         Set point scale factors from text in widget
         """
         try:
-            scaleFactors = self._parseScale(self._ui.point_scale_factors_lineedit)
+            scaleFactors = self._parseScale(
+                self._ui.point_scale_factors_lineedit)
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.setScaleFactors(scaleFactors) != ZINC_OK:
                 raise
@@ -921,7 +971,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
                 glyphRepeatMode = self._ui.glyph_repeat_mode_chooser.getEnum()
-                pointattributes.setGlyphRepeatMode (glyphRepeatMode)
+                pointattributes.setGlyphRepeatMode(glyphRepeatMode)
 
     def glyphSignedScaleFieldChanged(self, index):
         if self._graphics:
@@ -940,7 +990,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
                 _, glyphOffset = pointattributes.getGlyphOffset(3)
-                self._displayScale(self._ui.glyph_offset_lineedit, glyphOffset)
+                self._displayVector(
+                    self._ui.glyph_offset_lineedit, glyphOffset)
                 return
         self._ui.glyph_offset_lineedit.setText('0')
 
@@ -949,7 +1000,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         Set glyph offset from text in widget
         """
         try:
-            glyphOffset = self._parseScale(self._ui.glyph_offset_lineedit)
+            glyphOffset = self._parseVector(self._ui.glyph_offset_lineedit)
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.setGlyphOffset(glyphOffset) != ZINC_OK:
                 raise
@@ -969,7 +1020,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
                     labelText = pointattributes.getLabelText(i + 1)
                     if labelText:
                         labelTexts.append(labelText)
-                self._ui.glyph_label_text_lineedit.setText(",".join(labelTexts))
+                self._ui.glyph_label_text_lineedit.setText(
+                    ",".join(labelTexts))
                 return
         self._ui.glyph_label_text_lineedit.setText('')
 
@@ -996,7 +1048,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.isValid():
                 _, labelOffset = pointattributes.getLabelOffset(3)
-                self._displayScale(self._ui.glyph_label_text_offset_lineedit, labelOffset)
+                self._displayVector(
+                    self._ui.glyph_label_text_offset_lineedit, labelOffset)
                 return
         self._ui.glyph_label_text_offset_lineedit.setText('0')
 
@@ -1005,7 +1058,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         Set label text offset from text in widget
         """
         try:
-            labelOffset = self._parseScale(self._ui.glyph_label_text_offset_lineedit)
+            labelOffset = self._parseVector(
+                self._ui.glyph_label_text_offset_lineedit)
             pointattributes = self._graphics.getGraphicspointattributes()
             if pointattributes.setLabelOffset(labelOffset) != ZINC_OK:
                 raise
@@ -1064,7 +1118,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             if samplingattributes.isValid() and samplingattributes.getElementPointSamplingMode() == Element.POINT_SAMPLING_MODE_SET_LOCATION:
                 self._ui.sample_location_lineedit.setEnabled(True)
                 _, scaleFactors = samplingattributes.getLocation(3)
-                self._displayVector(self._ui.sample_location_lineedit, scaleFactors)
+                self._displayVector(
+                    self._ui.sample_location_lineedit, scaleFactors)
                 return
         self._ui.sample_location_lineedit.setText('')
 
@@ -1073,7 +1128,8 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         Set sample location from text in widget
         """
         try:
-            sampleLocation = self._parseVector(self._ui.sample_location_lineedit)
+            sampleLocation = self._parseVector(
+                self._ui.sample_location_lineedit)
             samplingattributes = self._graphics.getGraphicssamplingattributes()
             if samplingattributes.setLocation(sampleLocation) != ZINC_OK:
                 raise
