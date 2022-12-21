@@ -46,6 +46,7 @@ class SceneEditorWidget(QtWidgets.QWidget):
 
     def _make_connections(self):
         self._ui.region_chooser.currentIndexChanged.connect(self._region_changed)
+        self._ui.graphics_editor.setRefreshGraphicListCallback(self._buildGraphicsList)
 
     def _region_changed(self, index):
         region = self._ui.region_chooser.getRegion()
@@ -96,22 +97,11 @@ class SceneEditorWidget(QtWidgets.QWidget):
         """
         graphics_type = graphics.getType()
         fieldDomainType = graphics.getFieldDomainType()
-        if graphics_type == Graphics.TYPE_POINTS:
-            if fieldDomainType == Field.DOMAIN_TYPE_POINT:
-                return "point"
-            if fieldDomainType == Field.DOMAIN_TYPE_NODES:
-                return "node points"
-            if fieldDomainType == Field.DOMAIN_TYPE_DATAPOINTS:
-                return "data points"
-            return "element points"
-        elif graphics_type == Graphics.TYPE_LINES:
-            return "lines"
-        elif graphics_type == Graphics.TYPE_SURFACES:
-            return "surfaces"
-        elif graphics_type == Graphics.TYPE_CONTOURS:
-            return "contours"
-        elif graphics_type == Graphics.TYPE_STREAMLINES:
-            return "streamlines"
+        subgroup_field = graphics.getSubgroupField()
+        graphics_type_string = Graphics.TypeEnumToString(graphics_type).lower()
+        domain_type_string = Field.DomainTypeEnumToString(fieldDomainType).lower()
+        subgroup_string = subgroup_field.getName()
+        return ' '.join(filter(None, [graphics_type_string, domain_type_string,subgroup_string]))
 
     def _buildGraphicsList(self):
         """

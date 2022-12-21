@@ -88,7 +88,8 @@ class MaterialModel(QtCore.QAbstractListModel):
             value = value.rstrip()
             if role == QtCore.Qt.EditRole and value:
                 current_name = self._material_names[index.row()]
-                material = self._material_module.findMaterialByName(current_name)
+                material = self._material_module.findMaterialByName(
+                    current_name)
                 result = material.setName(value)
                 if result == ZINC_OK:
                     self._material_names[index.row()] = value
@@ -153,32 +154,45 @@ class MaterialEditorWidget(QtWidgets.QWidget):
 
         self._material_model = MaterialModel()
         self._ui.materials_listView.setModel(self._material_model)
-        self._ui.materials_listView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self._ui.materials_listView.setSelectionMode(
+            QtWidgets.QAbstractItemView.SingleSelection)
 
         self._makeConnections()
 
     def _makeConnections(self):
         self._ui.create_button.clicked.connect(self._materialCreateClicked)
         self._ui.delete_button.clicked.connect(self._materialDeleteClicked)
-        self._ui.materials_listView.clicked.connect(self._materialListItemClicked)
-        self._ui.ambientSelectColour_button.clicked.connect(self._selectColourClicked)
-        self._ui.diffuseSelectColour_button.clicked.connect(self._selectColourClicked)
-        self._ui.emittedSelectColour_button.clicked.connect(self._selectColourClicked)
-        self._ui.specularSelectColour_button.clicked.connect(self._selectColourClicked)
+        self._ui.materials_listView.clicked.connect(
+            self._materialListItemClicked)
+        self._ui.ambientSelectColour_button.clicked.connect(
+            self._selectColourClicked)
+        self._ui.diffuseSelectColour_button.clicked.connect(
+            self._selectColourClicked)
+        self._ui.emittedSelectColour_button.clicked.connect(
+            self._selectColourClicked)
+        self._ui.specularSelectColour_button.clicked.connect(
+            self._selectColourClicked)
         self._ui.alpha_lineEdit.editingFinished.connect(self._alphaEntered)
-        self._ui.alpha_slider.valueChanged.connect(self._alphaSliderValueChanged)
-        self._ui.shininess_lineEdit.editingFinished.connect(self._shininessEntered)
-        self._ui.shininess_slider.valueChanged.connect(self._shininessSliderValueChanged)
-        self._ui.sceneviewerWidgetPreview.graphicsInitialized.connect(self._previewGraphicsInitialised)
-        self._ui.texture_comboBox.currentIndexChanged.connect(self._textureChanged)
-        self._ui.region_comboBox.currentIndexChanged.connect(self._regionChanged)
-        self._ui.imageField_comboBox.currentIndexChanged.connect(self._imageFieldChanged)
+        self._ui.alpha_slider.valueChanged.connect(
+            self._alphaSliderValueChanged)
+        self._ui.shininess_lineEdit.editingFinished.connect(
+            self._shininessEntered)
+        self._ui.shininess_slider.valueChanged.connect(
+            self._shininessSliderValueChanged)
+        self._ui.sceneviewerWidgetPreview.graphicsInitialized.connect(
+            self._previewGraphicsInitialised)
+        self._ui.texture_comboBox.currentIndexChanged.connect(
+            self._textureChanged)
+        self._ui.region_comboBox.currentIndexChanged.connect(
+            self._regionChanged)
+        self._ui.imageField_comboBox.currentIndexChanged.connect(
+            self._imageFieldChanged)
 
     def setMaterials(self, materials):
         """
         Sets the Argon materials object which supplies the zinc context and has utilities for
         managing materials.
-        
+
         :param materials: ArgonMaterials object
         """
         self._materials = materials
@@ -199,7 +213,7 @@ class MaterialEditorWidget(QtWidgets.QWidget):
 
     def _materialmoduleCallback(self, materialModuleEvent):
         """
-        Material module does not have a notifier.
+        Callback for change in materials; may need to rebuild material list
         """
         changeSummary = materialModuleEvent.getSummarySpectrumChangeFlags()
         if 0 != (changeSummary & (Material.CHANGE_FLAG_IDENTIFIER | Material.CHANGE_FLAG_ADD | Material.CHANGE_FLAG_REMOVE)):
@@ -209,11 +223,14 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         """
         Create a new material.
         """
-        index = self._material_model.createIndex(self._material_model.rowCount(None), 0)
+        index = self._material_model.createIndex(
+            self._material_model.rowCount(None), 0)
         self._material_model.addData()
         self._ui.materials_listView.clearSelection()
-        self._ui.materials_listView.selectionModel().setCurrentIndex(index, QtCore.QItemSelectionModel.SelectCurrent)
-        self._updateCurrentMaterial(self._material_model.getMaterialForIndex(index))
+        self._ui.materials_listView.selectionModel().setCurrentIndex(
+            index, QtCore.QItemSelectionModel.SelectCurrent)
+        self._updateCurrentMaterial(
+            self._material_model.getMaterialForIndex(index))
 
     def _materialDeleteClicked(self):
         """
@@ -227,12 +244,14 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             if len(selection):
                 # Re-instate current material after failed deletion.
                 self._materialListItemClicked(selection[0])
-            QtWidgets.QMessageBox.information(self, "Info", "This material is still in use and can't be deleted.")
+            QtWidgets.QMessageBox.information(
+                self, "Info", "This material is still in use and can't be deleted.")
 
     def _materialListItemClicked(self, modelIndex):
         if modelIndex.row() != self._currentMaterialIndex:
             self._currentMaterialIndex = modelIndex.row()
-            self._updateCurrentMaterial(self._material_model.getMaterialForIndex(modelIndex))
+            self._updateCurrentMaterial(
+                self._material_model.getMaterialForIndex(modelIndex))
 
     def _updateCurrentMaterial(self, material):
         self._currentMaterial = material
@@ -251,31 +270,43 @@ class MaterialEditorWidget(QtWidgets.QWidget):
 
     def _updateButtonColour(self):
         ambientColour, diffuseColour, emissionColour, specularColour = self._getCurrentMaterialColour()
-        self._ui.ambientSelectColour_button.setStyleSheet("background-color: {}".format(ambientColour.name()))
-        self._ui.diffuseSelectColour_button.setStyleSheet("background-color: {}".format(diffuseColour.name()))
-        self._ui.emittedSelectColour_button.setStyleSheet("background-color: {}".format(emissionColour.name()))
-        self._ui.specularSelectColour_button.setStyleSheet("background-color: {}".format(specularColour.name()))
+        self._ui.ambientSelectColour_button.setStyleSheet(
+            "background-color: {}".format(ambientColour.name()))
+        self._ui.diffuseSelectColour_button.setStyleSheet(
+            "background-color: {}".format(diffuseColour.name()))
+        self._ui.emittedSelectColour_button.setStyleSheet(
+            "background-color: {}".format(emissionColour.name()))
+        self._ui.specularSelectColour_button.setStyleSheet(
+            "background-color: {}".format(specularColour.name()))
 
     def _getCurrentMaterialColour(self):
-        result, ambientColour = self._currentMaterial.getAttributeReal3(Material.ATTRIBUTE_AMBIENT)
-        result, diffuseColour = self._currentMaterial.getAttributeReal3(Material.ATTRIBUTE_DIFFUSE)
-        result, emissionColour = self._currentMaterial.getAttributeReal3(Material.ATTRIBUTE_EMISSION)
-        result, specularColour = self._currentMaterial.getAttributeReal3(Material.ATTRIBUTE_SPECULAR)
-        intAmbientColour = QtGui.QColor(int(ambientColour[0]*255), int(ambientColour[1]*255), int(ambientColour[2]*255))
-        intDiffuseColour = QtGui.QColor(int(diffuseColour[0]*255), int(diffuseColour[1]*255), int(diffuseColour[2]*255))
-        intEmissionColour = QtGui.QColor(int(emissionColour[0]*255), int(emissionColour[1]*255), int(emissionColour[2]*255))
-        intSpecularColour = QtGui.QColor(int(specularColour[0]*255), int(specularColour[1]*255), int(specularColour[2]*255))
+        result, ambientColour = self._currentMaterial.getAttributeReal3(
+            Material.ATTRIBUTE_AMBIENT)
+        result, diffuseColour = self._currentMaterial.getAttributeReal3(
+            Material.ATTRIBUTE_DIFFUSE)
+        result, emissionColour = self._currentMaterial.getAttributeReal3(
+            Material.ATTRIBUTE_EMISSION)
+        result, specularColour = self._currentMaterial.getAttributeReal3(
+            Material.ATTRIBUTE_SPECULAR)
+        intAmbientColour = QtGui.QColor(
+            int(ambientColour[0]*255), int(ambientColour[1]*255), int(ambientColour[2]*255))
+        intDiffuseColour = QtGui.QColor(
+            int(diffuseColour[0]*255), int(diffuseColour[1]*255), int(diffuseColour[2]*255))
+        intEmissionColour = QtGui.QColor(int(
+            emissionColour[0]*255), int(emissionColour[1]*255), int(emissionColour[2]*255))
+        intSpecularColour = QtGui.QColor(int(
+            specularColour[0]*255), int(specularColour[1]*255), int(specularColour[2]*255))
         return intAmbientColour, intDiffuseColour, intEmissionColour, intSpecularColour
 
     def _selectColourClicked(self, event):
         sender = self.sender()
         colorDialog = QtWidgets.QColorDialog(sender)
         colorDialog.setCurrentColor(sender.palette().button().color())
-        color = colorDialog.getColor(initial = sender.palette().button().color())
+        color = colorDialog.getColor(initial=sender.palette().button().color())
         if color.isValid():
             self.sender().setStyleSheet("background-color: {}".format(color.name()))
             self._setMaterialColour(sender)
-    
+
     def _setMaterialColour(self, attributeButton):
         if attributeButton == self._ui.ambientSelectColour_button:
             materialAttribute = Material.ATTRIBUTE_AMBIENT
@@ -286,12 +317,14 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         elif attributeButton == self._ui.specularSelectColour_button:
             materialAttribute = Material.ATTRIBUTE_SPECULAR
         buttonColour = attributeButton.palette().button().color()
-        colourF = [buttonColour.redF(), buttonColour.greenF(), buttonColour.blueF()]
+        colourF = [buttonColour.redF(), buttonColour.greenF(),
+                   buttonColour.blueF()]
         self._currentMaterial.setAttributeReal3(materialAttribute, colourF)
 
     def _alphaEntered(self):
         value = self._ui.alpha_lineEdit.text()
-        self._currentMaterial.setAttributeReal(Material.ATTRIBUTE_ALPHA, float(value))
+        self._currentMaterial.setAttributeReal(
+            Material.ATTRIBUTE_ALPHA, float(value))
         self._updateAlpha()
 
     def _alphaSliderValueChanged(self):
@@ -300,33 +333,38 @@ class MaterialEditorWidget(QtWidgets.QWidget):
         self._updateAlpha()
 
     def _updateAlpha(self):
-        alpha = self._currentMaterial.getAttributeReal(Material.ATTRIBUTE_ALPHA)
+        alpha = self._currentMaterial.getAttributeReal(
+            Material.ATTRIBUTE_ALPHA)
         self._ui.alpha_slider.setValue(alpha*100)
         self._ui.alpha_lineEdit.setText(str(alpha))
 
     def _shininessEntered(self):
         value = self._ui.shininess_lineEdit.text()
-        self._currentMaterial.setAttributeReal(Material.ATTRIBUTE_SHININESS, float(value))
+        self._currentMaterial.setAttributeReal(
+            Material.ATTRIBUTE_SHININESS, float(value))
         self._updateShininess()
 
     def _shininessSliderValueChanged(self):
         value = self._ui.shininess_slider.value()/100
-        self._currentMaterial.setAttributeReal(Material.ATTRIBUTE_SHININESS, value)
+        self._currentMaterial.setAttributeReal(
+            Material.ATTRIBUTE_SHININESS, value)
         self._updateShininess()
 
     def _updateShininess(self):
-        shininess = self._currentMaterial.getAttributeReal(Material.ATTRIBUTE_SHININESS)
+        shininess = self._currentMaterial.getAttributeReal(
+            Material.ATTRIBUTE_SHININESS)
         self._ui.shininess_slider.setValue(shininess*100)
         self._ui.shininess_lineEdit.setText(str(shininess))
 
     def _buildTextureComboBox(self):
         self._ui.texture_comboBox.clear()
         for i in range(4):
-            self._ui.texture_comboBox.addItem("%d"%(i + 1))
+            self._ui.texture_comboBox.addItem("%d" % (i + 1))
 
     def _buildRegionComboBox(self):
-        self._ui.region_comboBox.setRootRegion(self._zincContext.getDefaultRegion())
-    
+        self._ui.region_comboBox.setRootRegion(
+            self._zincContext.getDefaultRegion())
+
     def _buildImageFieldComboBox(self, region):
         self._ui.imageField_comboBox.clear()
         self._ui.imageField_comboBox.setConditional(is_field_image)
@@ -337,17 +375,18 @@ class MaterialEditorWidget(QtWidgets.QWidget):
 
     def _regionChanged(self, index):
         self._buildImageFieldComboBox(self._ui.region_comboBox.getRegion())
-    
+
     def _imageFieldChanged(self, index):
         texture = self._ui.texture_comboBox.currentIndex() + 1
-        imageField = self._ui.region_comboBox.getRegion().getFieldmodule().findFieldByName(self._ui.imageField_comboBox.currentText())
+        imageField = self._ui.region_comboBox.getRegion().getFieldmodule(
+        ).findFieldByName(self._ui.imageField_comboBox.currentText())
         self._currentMaterial.setTextureField(texture, imageField)
 
     def _clearCurrentMaterial(self):
         self._currentMaterial = None
         self._currentMaterialIndex = None
         self._previewZincScene.removeAllGraphics()
-    
+
     def _previewMaterial(self):
         if self._previewZincScene is None:
             return
@@ -361,7 +400,8 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             pointsattr = points.getGraphicspointattributes()
             pointsattr.setBaseSize(1.0)
             tessellationModule = self._previewZincScene.getTessellationmodule()
-            tessellation = tessellationModule.findTessellationByName("material_preview")
+            tessellation = tessellationModule.findTessellationByName(
+                "material_preview")
             if not tessellation.isValid():
                 tessellation = tessellationModule.createTessellation()
                 tessellation.setName("material_preview")
@@ -380,7 +420,8 @@ class MaterialEditorWidget(QtWidgets.QWidget):
             sceneviewer.setZoomRate(0)
             sceneviewer.setTumbleRate(0)
             sceneviewer.setTranslationRate(0)
-            sceneviewer.setLookatParametersNonSkew([3.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])
+            sceneviewer.setLookatParametersNonSkew(
+                [3.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])
             sceneviewer.setViewAngle(0.679673818908244)
             sceneviewer.setNearClippingPlane(2.4)
             sceneviewer.setFarClippingPlane(3.0)

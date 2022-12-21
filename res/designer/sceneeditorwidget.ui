@@ -23,39 +23,28 @@
    <property name="spacing">
     <number>2</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <item>
-    <widget class="QScrollArea" name="scrollArea">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAsNeeded</enum>
+     <property name="childrenCollapsible">
+      <bool>false</bool>
      </property>
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>294</width>
-        <height>719</height>
-       </rect>
-      </property>
+     <widget class="QWidget" name="splitterAreaWidgetContents">
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="margin">
-        <number>0</number>
-       </property>
        <item>
         <widget class="QFrame" name="region_frame">
          <property name="frameShape">
@@ -65,16 +54,7 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QFormLayout" name="formLayout">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>2</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
+          <property name="Margin" stdset="0">
            <number>2</number>
           </property>
           <item row="0" column="0">
@@ -193,17 +173,15 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <widget class="GraphicsEditorWidget" name="graphics_editor" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
       </layout>
+     </widget>
+     <widget class="GraphicsEditorWidget" name="graphics_editor" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
      </widget>
     </widget>
    </item>

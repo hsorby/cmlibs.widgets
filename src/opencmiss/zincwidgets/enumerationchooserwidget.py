@@ -15,6 +15,7 @@ import copy
 from opencmiss.zinc.element import Element
 from opencmiss.zinc.status import OK as ZINC_OK
 
+
 class EnumerationChooserWidget(QtWidgets.QComboBox):
 
     def __init__(self, parent=None):
@@ -54,7 +55,8 @@ class EnumerationChooserWidget(QtWidgets.QComboBox):
         """
         if self._validEnums:
             if enumIndex <= len(self._validEnums):
-                enumString = self._enumToString(self._validEnums[enumIndex - 1])
+                enumString = self._enumToString(
+                    self._validEnums[enumIndex - 1])
             else:
                 enumString = None
         else:
@@ -63,18 +65,12 @@ class EnumerationChooserWidget(QtWidgets.QComboBox):
         if not enumString:
             return None
         enumString = enumString.lower()
-        if bool(re.search(r'_\d', enumString)):
-            enumString = enumString.replace('_', ' = ')
-        else:
-            enumString = enumString.replace('_', ' ')
+        enumString = enumString.replace('_', ' ')
         return enumString
 
     def _getEnumFromString(self, enumString):
         enumString = enumString.upper()
-        if bool(re.search(r' = ', enumString)):
-            enumString = enumString.replace(' = ', '_')
-        else:
-            enumString = enumString.replace(' ', '_')
+        enumString = enumString.replace(' ', '_')
         return self._stringToEnum(enumString)
 
     def _displayItem(self):
@@ -107,9 +103,10 @@ class EnumerationChooserWidget(QtWidgets.QComboBox):
         else:
             enumIndex = enum
             if self._validEnums:
-                enumIndex = self._validEnums.index(enum) + 1  # throws exception if not found; can change if too severe
+                # throws exception if not found; can change if too severe
+                enumIndex = self._validEnums.index(enum) + 1
             if self._getStringFromEnum(enumIndex):
-                self._currentEnum = enum
+                self._currentEnum = enumIndex
             else:
                 self._currentEnum = None
         self._displayItem()

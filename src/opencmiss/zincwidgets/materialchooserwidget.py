@@ -15,6 +15,7 @@
 """
 from PySide2 import QtWidgets
 
+from opencmiss.zinc.material import Material
 
 class MaterialChooserWidget(QtWidgets.QComboBox):
 
@@ -25,7 +26,16 @@ class MaterialChooserWidget(QtWidgets.QComboBox):
         QtWidgets.QComboBox.__init__(self, parent)
         self._nullObjectName = None
         self._materialmodule = None
+        self._materialmodulenotifier = None
         self._material = None
+
+    def _materialmoduleCallback(self, materialmoduleevent):
+        """
+        Callback for change in materials; may need to rebuild material list
+        """
+        changeSummary = materialmoduleevent.getSummaryMaterialChangeFlags()
+        if 0 != (changeSummary & (Material.CHANGE_FLAG_IDENTIFIER | Material.CHANGE_FLAG_ADD | Material.CHANGE_FLAG_REMOVE)):
+            self._buildMaterialList()
 
     def _buildMaterialList(self):
         """
@@ -71,6 +81,13 @@ class MaterialChooserWidget(QtWidgets.QComboBox):
         Sets the region that this widget chooses materials from
         """
         self._materialmodule = materialmodule
+        if materialmodule and materialmodule.isValid():
+            self._materialmodule = materialmodule
+            self._materialmodulenotifier = materialmodule.createMaterialmodulenotifier()
+            self._materialmodulenotifier.setCallback(self._materialmoduleCallback)
+        else:
+            self._materialmodule = None
+            self._materialmodulenotifier = None
         self._buildMaterialList()
 
     def getMaterial(self):
