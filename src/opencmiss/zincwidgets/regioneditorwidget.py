@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from opencmiss.argon.argonregion import ArgonRegion
 from opencmiss.zincwidgets.ui.ui_regioneditorwidget import Ui_RegionEditorWidget

@@ -15,7 +15,7 @@
 """
 import os.path
 
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from opencmiss.argon.argonmodelsources import ArgonModelSourceFile
 from opencmiss.argon.argonlogger import ArgonLogger

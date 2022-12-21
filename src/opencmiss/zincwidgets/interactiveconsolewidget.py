@@ -14,7 +14,7 @@ import sys
 
 from code import InteractiveConsole as CodeInteractiveConsole
 from io import StringIO
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from opencmiss.zincwidgets.ui.ui_interactiveconsolewidget import Ui_InteractiveConsoleWidget
 
