@@ -16,7 +16,7 @@
 from PySide2 import QtGui, QtWidgets
 
 from opencmiss.zincwidgets.ui.ui_loggereditorwidget import Ui_LoggerEditorWidget
-from opencmiss.argon.argonlogger import CustomStream
+from cmlibs.argon.argonlogger import CustomStream
 
 
 class LoggerEditorWidget(QtWidgets.QWidget):

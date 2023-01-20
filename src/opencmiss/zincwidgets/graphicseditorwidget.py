@@ -24,8 +24,8 @@ from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, Sc
 from opencmiss.zinc.spectrum import Spectrum
 from opencmiss.zinc.status import OK as ZINC_OK
 
-from opencmiss.argon.argonlogger import ArgonLogger
-from opencmiss.argon.settings.mainsettings import FLOAT_STRING_FORMAT
+from cmlibs.argon.argonlogger import ArgonLogger
+from cmlibs.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 
 from opencmiss.zincwidgets.fieldconditions import *
 from opencmiss.zincwidgets.ui.ui_graphicseditorwidget import Ui_GraphicsEditorWidget

@@ -15,7 +15,7 @@
 """
 from PySide2 import QtCore, QtWidgets
 
-from opencmiss.argon.argonlogger import ArgonLogger
+from cmlibs.argon.argonlogger import ArgonLogger
 from opencmiss.zinc.field import Field
 
 from opencmiss.zincwidgets.fields import FieldInterface

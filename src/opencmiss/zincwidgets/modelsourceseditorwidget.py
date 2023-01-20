@@ -17,10 +17,10 @@ import os.path
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from opencmiss.argon.argonmodelsources import ArgonModelSourceFile
-from opencmiss.argon.argonlogger import ArgonLogger
-from opencmiss.argon.argonerror import ArgonError
-from opencmiss.argon.argonregion import REGION_PATH_SEPARATOR
+from cmlibs.argon.argonmodelsources import ArgonModelSourceFile
+from cmlibs.argon.argonlogger import ArgonLogger
+from cmlibs.argon.argonerror import ArgonError
+from cmlibs.argon.argonregion import REGION_PATH_SEPARATOR
 
 from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 from opencmiss.zincwidgets.ui.ui_modelsourceseditorwidget import Ui_ModelSourcesEditorWidget

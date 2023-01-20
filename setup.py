@@ -57,7 +57,7 @@ requires = [
     'opencmiss.utils >= 0.4.0',
     'PySide2',
     'opencmiss.zinc >= 3.8.0',
-    'opencmiss.argon >= 0.3.4',
+    'cmlibs.argon >= 0.3.4',
 ]
 
 setup(
