@@ -3,17 +3,24 @@
 ################################################################################
 ## Form generated from reading UI file 'sceneviewereditorwidget.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.15.2
+## Created by: Qt User Interface Compiler version 6.4.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
+    QFrame, QGroupBox, QHBoxLayout, QLabel,
+    QLineEdit, QPushButton, QSizePolicy, QSlider,
+    QSpacerItem, QVBoxLayout, QWidget)
 
 from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
-
 
 class Ui_SceneviewerEditorWidget(object):
     def setupUi(self, SceneviewerEditorWidget):
@@ -240,7 +247,7 @@ class Ui_SceneviewerEditorWidget(object):
 
         self.retranslateUi(SceneviewerEditorWidget)
         self.view_all_button.clicked.connect(SceneviewerEditorWidget.viewAll)
-        self.perspective_checkbox.clicked.connect(SceneviewerEditorWidget.perspectiveStateChanged)
+        self.perspective_checkbox.clicked["bool"].connect(SceneviewerEditorWidget.perspectiveStateChanged)
         self.view_angle.editingFinished.connect(SceneviewerEditorWidget.viewAngleEntered)
         self.eye_position.editingFinished.connect(SceneviewerEditorWidget.eyePositionEntered)
         self.lookat_position.editingFinished.connect(SceneviewerEditorWidget.lookatPositionEntered)
@@ -249,8 +256,8 @@ class Ui_SceneviewerEditorWidget(object):
         self.far_clipping_slider.valueChanged.connect(SceneviewerEditorWidget.farClippingChanged)
         self.background_colour.editingFinished.connect(SceneviewerEditorWidget.backgroundColourEntered)
         self.antialias.editingFinished.connect(SceneviewerEditorWidget.antialiasEntered)
-        self.perturbline_checkbox.clicked.connect(SceneviewerEditorWidget.perturbLineStateChanged)
-        self.light_both_sides_checkbox.clicked.connect(SceneviewerEditorWidget.lightBothSidesStateChanged)
+        self.perturbline_checkbox.clicked["bool"].connect(SceneviewerEditorWidget.perturbLineStateChanged)
+        self.light_both_sides_checkbox.clicked["bool"].connect(SceneviewerEditorWidget.lightBothSidesStateChanged)
         self.transparency_mode_comboBox.currentIndexChanged.connect(SceneviewerEditorWidget.transparencyModeChanged)
 
         QMetaObject.connectSlotsByName(SceneviewerEditorWidget)
