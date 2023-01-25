@@ -20,7 +20,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtOpenGLWidgets
 
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
@@ -35,7 +35,7 @@ from opencmiss.zincwidgets.definitions import ProjectionMode, SelectionMode, \
     BUTTON_MAP, modifier_map, SELECTION_GROUP_NAME
 
 
-class SceneviewerWidget(QtWidgets.QOpenGLWidget):
+class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
 
     graphicsInitialized = QtCore.Signal()
     becameActive = QtCore.Signal()
@@ -113,7 +113,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         sceneviewermodule = self._context.getSceneviewermodule()
         self._sceneviewer = sceneviewermodule.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE, Sceneviewer.STEREO_MODE_DEFAULT)
         self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
-        self._sceneviewer.setViewportSize(self.width() * self._pixel_scale, self.height() * self._pixel_scale)
+        self._sceneviewer.setViewportSize(int(self.width() * self._pixel_scale), int(self.height() * self._pixel_scale))
 
         # Get the default scene filter, which filters by visibility flags
         scenefiltermodule = self._context.getScenefiltermodule()
@@ -424,7 +424,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         Respond to widget resize events.
         """
         if self._sceneviewer:
-            self._sceneviewer.setViewportSize(width * self._pixel_scale, height * self._pixel_scale)
+            self._sceneviewer.setViewportSize(int(width * self._pixel_scale), int(height * self._pixel_scale))
         # resizeGL end
 
     def keyPressEvent(self, event):
@@ -463,7 +463,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
                 self._selection_mode = SelectionMode.ADDITIVE
         else:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
+            scene_input.setPosition(int(event.x() * self._pixel_scale), int(event.y() * self._pixel_scale))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
             scene_input.setModifierFlags(modifier_map(event.modifiers()))
