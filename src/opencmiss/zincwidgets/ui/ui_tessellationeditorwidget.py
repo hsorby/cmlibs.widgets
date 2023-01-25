@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QGrid
     QGroupBox, QHeaderView, QPushButton, QSizePolicy,
     QSpacerItem, QTableWidget, QTableWidgetItem, QVBoxLayout,
     QWidget)
-import icons_rc
+
 
 class Ui_TessellationEditorWidget(object):
     def setupUi(self, TessellationEditorWidget):

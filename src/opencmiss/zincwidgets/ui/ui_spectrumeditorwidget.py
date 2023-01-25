@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComb
     QSpacerItem, QSpinBox, QVBoxLayout, QWidget)
 
 from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
-import icons_rc
+
 
 class Ui_SpectrumEditorWidget(object):
     def setupUi(self, SpectrumEditorWidget):

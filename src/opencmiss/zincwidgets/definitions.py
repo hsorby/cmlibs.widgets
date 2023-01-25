@@ -22,7 +22,7 @@ def modifier_map(qt_modifiers):
     """
     modifiers = Sceneviewerinput.MODIFIER_FLAG_NONE
 
-    if qt_modifiers & QtCore.Qt.SHIFT:
+    if qt_modifiers & QtCore.Qt.ShiftModifier:
         modifiers = modifiers | Sceneviewerinput.MODIFIER_FLAG_SHIFT
 
     return modifiers

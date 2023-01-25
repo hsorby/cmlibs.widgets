@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (QApplication, QDoubleSpinBox, QGridLayout, QGroup
     QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QSizePolicy, QSlider, QSpacerItem, QSpinBox,
     QWidget)
-import icons_rc
+
 
 class Ui_TimeEditorWidget(object):
     def setupUi(self, TimeEditorWidget):

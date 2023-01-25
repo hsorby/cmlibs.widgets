@@ -107,7 +107,6 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         # Following throws exception if you haven't called setContext() yet
         self.getContext()
         self._sceneviewernotifier = None
-
         # From the scene viewer module we can create a scene viewer, we set up the
         # scene viewer to have the same OpenGL properties as the QOpenGLWidget.
         sceneviewermodule = self._context.getSceneviewermodule()
@@ -402,7 +401,8 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         will clear the background so any OpenGL drawing of your own needs to go after this
         API call.
         """
-        self._sceneviewer.renderScene()
+        if self._sceneviewer:
+            self._sceneviewer.renderScene()
         # paintGL end
 
     def _zincSceneviewerEvent(self, event):
@@ -578,7 +578,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
 
         elif self._use_zinc_mouse_event_handling:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
+            scene_input.setPosition(int(event.x() * self._pixel_scale), int(event.y() * self._pixel_scale))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
             # self.makeCurrent()
@@ -613,7 +613,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
 
         elif self._use_zinc_mouse_event_handling:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
+            scene_input.setPosition(int(event.x() * self._pixel_scale), int(event.y() * self._pixel_scale))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_MOTION_NOTIFY)
             if event.type() == QtCore.QEvent.Leave:
                 scene_input.setPosition(-1, -1)

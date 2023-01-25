@@ -18,7 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialog, QDialogButtonBox,
     QGridLayout, QGroupBox, QRadioButton, QSizePolicy,
     QVBoxLayout, QWidget)
-import icons_rc
+
 
 class Ui_SceneLayoutChooserDialog(object):
     def setupUi(self, SceneLayoutChooserDialog):

@@ -317,7 +317,7 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
         """
         Respond to widget resize events.
         """
-        self._sceneviewer.setViewportSize(width * self._pixel_scale, height * self._pixel_scale)
+        self._sceneviewer.setViewportSize(int(width * self._pixel_scale), int(height * self._pixel_scale))
 
     def keyPressEvent(self, event):
         self.key_press_event(event)
