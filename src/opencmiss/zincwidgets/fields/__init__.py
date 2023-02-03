@@ -144,7 +144,7 @@ class FieldBase(object):
                     requirement.set_value(self._field.castDerivative().getXiIndex())
             elif field_type == "FieldMatrixMultiply":
                 if index == 0:
-                    requirement.set_value(99)
+                    requirement.set_value(self._field.castMatrixMultiply().getNumberOfRows())
                 elif index == 1:
                     requirement.set_value(self._field.getSourceField(1))
                 elif index == 2:
@@ -427,12 +427,7 @@ class FieldTypeBase(object):
 
         args = []
         for req in field_requirements:
-            # Temporary workaround until this issue is resolved:
-            # https://github.com/OpenCMISS-Bindings/opencmiss.zincwidgets/issues/46
-            if self._field_type == "FieldEigenvectors":
-                args.append(req.value().castEigenvalues())
-            else:
-                args.append(req.value())
+            args.append(req.value())
 
         with ChangeManager(field_module):
             methodToCall = getattr(field_module, "create" + self._field_type)
