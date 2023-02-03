@@ -52,6 +52,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
     def _setup_general_properties(self):
         is_managed = self._field.is_managed()
         is_type_coordinate = self._field.is_type_coordinate()
+        is_type_coordinate_capable = self._field.is_possible_type_of_coordinate_field()
 
         self._properties_groupbox = QtWidgets.QGroupBox(self)
         self._properties_groupbox.setTitle(u"Properties")
@@ -60,6 +61,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         self._type_coordinate_checkbox.setCheckState(QtCore.Qt.Checked if is_type_coordinate else QtCore.Qt.Unchecked)
         self._type_coordinate_checkbox.stateChanged.connect(self._type_coordinate_clicked)
         self._type_coordinate_checkbox.setText(u"Is Coordinate")
+        self._type_coordinate_checkbox.setVisible(is_type_coordinate_capable)
         self._managed_checkbox = QtWidgets.QCheckBox(self._properties_groupbox)
         self._managed_checkbox.setEnabled(not self._field.defining_field())
         self._managed_checkbox.setCheckState(QtCore.Qt.Checked if is_managed else QtCore.Qt.Unchecked)
