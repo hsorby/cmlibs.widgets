@@ -89,7 +89,7 @@ class FieldBase(object):
                     requirement.set_value(self._field.getCoordinateSystemType())
             elif field_type == "FieldTranspose":
                 if index == 0:
-                    requirement.set_value("")
+                    requirement.set_value(self._field.castTranspose().getSourceNumberOfRows())
                 elif index == 1:
                     requirement.set_value(self._field.getSourceField(1))
             elif field_type in FIELDS_REQUIRING_ONE_REAL_SOURCE_FIELD or \
