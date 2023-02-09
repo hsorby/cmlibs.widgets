@@ -2,11 +2,11 @@ from copy import copy
 
 from PySide2 import QtWidgets
 from opencmiss.zinc.element import Element
-from opencmiss.zinc.field import FieldFindMeshLocation, FieldEdgeDiscontinuity
+from opencmiss.zinc.field import FieldFindMeshLocation, FieldEdgeDiscontinuity, Field
 from opencmiss.zinc.node import Node
 
 from opencmiss.zincwidgets.fieldchooserwidget import FieldChooserWidget
-from opencmiss.zincwidgets.fields.lists import MESH_NAMES, NODESET_NAMES, SEARCH_MODES, MEASURE_TYPES, FACE_TYPES, VALUE_TYPES, QUADRATURE_RULES
+from opencmiss.zincwidgets.fields.lists import MESH_NAMES, NODESET_NAMES, SEARCH_MODES, MEASURE_TYPES, FACE_TYPES, VALUE_TYPES, QUADRATURE_RULES, COORDINATE_SYSTEM_TYPE
 from opencmiss.zincwidgets.fields.parsers import display_as_vector, parse_to_vector, display_as_integer_vector, parse_to_integer_vector
 from opencmiss.zincwidgets.regionchooserwidget import RegionChooserWidget
 
@@ -196,6 +196,20 @@ class FieldRequirementValueType(FieldRequirementComboBoxBase):
     def set_value(self, value):
         self._combobox.blockSignals(True)
         self._combobox.setCurrentIndex(value - Node.VALUE_LABEL_VALUE)
+        self._combobox.blockSignals(False)
+
+
+class FieldRequirementCoordinateSystemType(FieldRequirementComboBoxBase):
+
+    def __init__(self):
+        super().__init__("Coordinate system type:", COORDINATE_SYSTEM_TYPE)
+
+    def value(self):
+        return self._combobox.currentIndex() + Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN
+
+    def set_value(self, value):
+        self._combobox.blockSignals(True)
+        self._combobox.setCurrentIndex(value - Field.COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN)
         self._combobox.blockSignals(False)
 
 

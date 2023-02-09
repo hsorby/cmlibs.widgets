@@ -6,6 +6,7 @@ VALUE_TYPES = ["value", "d_ds1", "d_ds2", "d2_ds1ds2", "d_ds3", "d2_ds1ds3", "d2
 QUADRATURE_RULES = ["Gaussian", "Mid-point"]
 INTERNAL_FIELD_NAMES = ["xi", "cmiss_number", "cmiss_selection"]
 NODESET_NAMES = ["datapoints", "nodes", "points"]
+COORDINATE_SYSTEM_TYPE = ["rectangular cartesian", "cylindrical polar", "spherical polar", "prolate spheroidal", "oblate spheroidal", "fibre"]
 
 INTERNAL_FIELD_TYPE_NAME = "<internal>"
 NONE_FIELD_TYPE_NAME = "<unknown>"
@@ -60,3 +61,4 @@ FIELDS_REQUIRING_THREE_SOURCE_FIELDS = ['FieldIf']
 FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS = ['FieldConcatenate', 'FieldCrossProduct']
 FIELDS_REQUIRING_MESH = ['FieldStoredMeshLocation']
 FIELDS_REQUIRING_ONE_SOURCE_FIELD_ONE_NODESET = ['FieldNodesetSum', 'FieldNodesetMean', 'FieldNodesetMinimum', 'FieldNodesetMaximum', 'FieldNodesetMeanSquares']
+FIELDS_THAT_CAN_SET_COORDINATE_SYSTEM_TYPE = ['FieldCoordinateTransformation', 'FieldVectorCoordinateTransformation']
