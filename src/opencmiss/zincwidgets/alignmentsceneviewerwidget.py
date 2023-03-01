@@ -29,14 +29,14 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
             self._alignKeyPressed = True
             event.setAccepted(True)
         else:
-           super(AlignmentSceneviewerWidget, self).keyPressEvent(event)
+            super(AlignmentSceneviewerWidget, self).keyPressEvent(event)
 
     def keyReleaseEvent(self, event):
         if (event.key() == QtCore.Qt.Key_A) and event.isAutoRepeat() is False:
             self._alignKeyPressed = False
             event.setAccepted(True)
         else:
-           super(AlignmentSceneviewerWidget, self).keyReleaseEvent(event)
+            super(AlignmentSceneviewerWidget, self).keyReleaseEvent(event)
 
     def mousePressEvent(self, event):
         if self._active_button != QtCore.Qt.NoButton:
@@ -44,6 +44,7 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
         if self._model.isStateAlign() and self._alignKeyPressed:
             self._use_zinc_mouse_event_handling = False  # needed as not calling super mousePressEvent
             self._active_button = event.button()
+            self._model.interactionStart()
             # shift-Left button becomes middle button, to support Mac
             if (self._active_button == QtCore.Qt.LeftButton) and (event.modifiers() & QtCore.Qt.SHIFT):
                 self._active_button = QtCore.Qt.MiddleButton
@@ -89,7 +90,7 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
 
     def mouseReleaseEvent(self, event):
         if self._lastMousePos is not None:
-            pass
+            self._model.interactionEnd()
         else:
             super(AlignmentSceneviewerWidget, self).mouseReleaseEvent(event)
         self._active_button = QtCore.Qt.NoButton
