@@ -65,10 +65,11 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
             right = vectorops.cross(up, front)
             if self._active_button == QtCore.Qt.LeftButton:
                 mag = vectorops.magnitude(delta)
-                prop = vectorops.div(delta, mag)
-                axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
-                angle = mag*0.002
-                self._model.rotateModel(axis, angle)
+                if mag > 1e-12:
+                    prop = vectorops.div(delta, mag)
+                    axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
+                    angle = mag*0.002
+                    self._model.rotateModel(axis, angle)
             elif self._active_button == QtCore.Qt.MiddleButton:
                 result, l, r, b, t, near, far = self._sceneviewer.getViewingVolume()
                 viewportWidth = self.width()
