@@ -13,7 +13,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # This python module is intended to facilitate users creating their own applications that use OpenCMISS-Zinc
 # See the examples at https://svn.physiomeproject.org/svn/cmiss/zinc/bindings/trunk/python/ for further
 # information.
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets, QtOpenGLWidgets
 
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
@@ -26,7 +26,7 @@ from opencmiss.zinc.result import RESULT_OK
 from opencmiss.zincwidgets.handlers.interactionmanager import InteractionManager
 
 
-class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
+class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
     # Create a signal to notify when the OpenGL scene is ready.
     graphics_initialized = QtCore.Signal()
 
@@ -74,7 +74,7 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
                                                                   Sceneviewer.STEREO_MODE_DEFAULT)
         self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
         pixel_scale = self.window().devicePixelRatio()
-        self._sceneviewer.setViewportSize(self.width() * pixel_scale, self.height() * pixel_scale)
+        self._sceneviewer.setViewportSize(int(self.width() * pixel_scale), int(self.height() * pixel_scale))
 
         # Get the default scene filter, which filters by visibility flags
         scene_filter_module = self._context.getScenefiltermodule()
@@ -83,7 +83,7 @@ class BaseSceneviewerWidget(QtWidgets.QOpenGLWidget, InteractionManager):
 
         region = self._context.getDefaultRegion()
         scene = region.getScene()
-        self._sceneviewer.setScene(scene)
+        self.set_scene(scene)
 
         self._sceneviewer_notifier = self._sceneviewer.createSceneviewernotifier()
         self._sceneviewer_notifier.setCallback(self._zinc_sceneviewer_event)
