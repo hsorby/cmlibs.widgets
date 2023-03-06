@@ -1,5 +1,6 @@
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
-from opencmiss.zinchandlers.abstracthandler import AbstractHandler, BUTTON_MAP, modifier_map
+from opencmiss.zincwidgets.definitions import modifier_map
+from opencmiss.zincwidgets.handlers.abstracthandler import AbstractHandler, BUTTON_MAP
 
 
 class ZoomOnly(AbstractHandler):

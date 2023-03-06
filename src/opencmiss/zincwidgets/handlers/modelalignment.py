@@ -30,7 +30,7 @@ class ModelAlignment(KeyActivatedHandler):
 
     def mouse_press_event(self, event):
         self._active_button = event.button()
-        if self._active_button == QtCore.Qt.LeftButton and event.modifiers() & QtCore.Qt.SHIFT:
+        if self._active_button == QtCore.Qt.LeftButton and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
             self._active_button = QtCore.Qt.MiddleButton
         pixel_scale = self._scene_viewer.get_pixel_scale()
         self._lastMousePos = [event.x() * pixel_scale, event.y() * pixel_scale]
