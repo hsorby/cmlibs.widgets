@@ -71,5 +71,8 @@ class AbstractHandler(object):
 
         event.accept()
 
+    def focus_out_event(self, event):
+        pass
+
     def _graphics_ready(self):
         self._zinc_sceneviewer = self._scene_viewer.get_zinc_sceneviewer()

@@ -36,25 +36,27 @@ class InteractionManager(object):
     def set_fallback_handler(self, fallback_handler):
         self._fallback_handler = fallback_handler
 
-    def activate_handler(self, handler):
+    def _activate_handler(self, handler):
         self._active_handler.leave()
         self._active_handler = handler
         self._active_handler.enter()
 
     def key_press_event(self, event):
-        if event.modifiers() in self._key_code_handler_map and not event.isAutoRepeat():
+        if event.key() in self._key_code_handler_map and not event.isAutoRepeat():
             event.accept()
-            self.activate_handler(self._key_code_handler_map[event.modifiers()])
+            self._activate_handler(self._key_code_handler_map[event.key()])
         else:
             event.ignore()
 
     def key_release_event(self, event):
-        if event.modifiers() in self._key_code_handler_map and not event.isAutoRepeat():
-            event.accept()
-            self.activate_handler(self._key_code_handler_map[event.modifiers()])
+        if event.key() in self._key_code_handler_map and not event.isAutoRepeat():
+            if self._key_code_handler_map[event.key()] == self._active_handler:
+                event.accept()
+                self._activate_handler(self._fallback_handler)
+            else:
+                event.ignore()
         else:
-            event.accept()
-            self.activate_handler(self._fallback_handler)
+            event.ignore()
 
     def mouse_enter_event(self, event):
         if self._active_handler is not None:
@@ -75,3 +77,6 @@ class InteractionManager(object):
     def mouse_move_event(self, event):
         if self._active_handler is not None:
             self._active_handler.mouse_move_event(event)
+
+    def focus_out_event(self, event):
+        self._activate_handler(self._fallback_handler)
