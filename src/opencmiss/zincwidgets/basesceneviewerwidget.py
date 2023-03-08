@@ -339,3 +339,6 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
 
     def mouseReleaseEvent(self, event):
         self.mouse_release_event(event)
+
+    def focusOutEvent(self, event):
+        self.focus_out_event(event)
