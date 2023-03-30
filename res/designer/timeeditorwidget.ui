@@ -93,7 +93,7 @@
           </property>
           <property name="icon">
            <iconset resource="../icons.qrc">
-            <normaloff>:/zincwidgets/images/icons/playback-start-reverse-icon.png</normaloff>:/zincwidgets/images/icons/playback-start-reverse-icon.png</iconset>
+            <normaloff>:/widgets/images/icons/playback-start-reverse-icon.png</normaloff>:/widgets/images/icons/playback-start-reverse-icon.png</iconset>
           </property>
          </widget>
         </item>
@@ -104,7 +104,7 @@
           </property>
           <property name="icon">
            <iconset resource="../icons.qrc">
-            <normaloff>:/zincwidgets/images/icons/playback-stop-icon.png</normaloff>:/zincwidgets/images/icons/playback-stop-icon.png</iconset>
+            <normaloff>:/widgets/images/icons/playback-stop-icon.png</normaloff>:/widgets/images/icons/playback-stop-icon.png</iconset>
           </property>
          </widget>
         </item>
@@ -115,7 +115,7 @@
           </property>
           <property name="icon">
            <iconset resource="../icons.qrc">
-            <normaloff>:/zincwidgets/images/icons/playback-start-icon.png</normaloff>:/zincwidgets/images/icons/playback-start-icon.png</iconset>
+            <normaloff>:/widgets/images/icons/playback-start-icon.png</normaloff>:/widgets/images/icons/playback-start-icon.png</iconset>
           </property>
          </widget>
         </item>

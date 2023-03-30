@@ -27,7 +27,7 @@
         </property>
         <property name="icon">
          <iconset resource="../icons.qrc">
-          <normaloff>:/zincwidgets/images/icons/layout-single-scene.png</normaloff>:/zincwidgets/images/icons/layout-single-scene.png</iconset>
+          <normaloff>:/widgets/images/icons/layout-single-scene.png</normaloff>:/widgets/images/icons/layout-single-scene.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -47,7 +47,7 @@
         </property>
         <property name="icon">
          <iconset resource="../icons.qrc">
-          <normaloff>:/zincwidgets/images/icons/layout-four-scenes.png</normaloff>:/zincwidgets/images/icons/layout-four-scenes.png</iconset>
+          <normaloff>:/widgets/images/icons/layout-four-scenes.png</normaloff>:/widgets/images/icons/layout-four-scenes.png</iconset>
         </property>
         <property name="iconSize">
          <size>
