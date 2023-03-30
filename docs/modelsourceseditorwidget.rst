@@ -3,7 +3,7 @@ Model Sources Editor Widget
 
 The **Model Sources Editor Widget** is a control to add and remove source files.
 
-.. _fig-opencmiss-zincwidgets-model-sources-editor-widget:
+.. _fig-cmlibs-widgets-model-sources-editor-widget:
 
 .. figure:: _images/model-sources-editor-widget.png
    :alt: Model sources editor widget.
@@ -31,8 +31,8 @@ But this operation is fraught with error and it is best not to use this function
 API
 ---
 
-.. autoclass:: opencmiss.zincwidgets.modelsourceseditorwidget.ModelSourcesEditorWidget
+.. autoclass:: cmlibs.zincwidgets.modelsourceseditorwidget.ModelSourcesEditorWidget
    :members:
 
-.. autoclass:: opencmiss.zincwidgets.modelsourceseditorwidget.ModelSourcesModel
+.. autoclass:: cmlibs.zincwidgets.modelsourceseditorwidget.ModelSourcesModel
    :members:

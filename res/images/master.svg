@@ -435,7 +435,7 @@
        height="265.34995"
        x="184.72166"
        y="459.57285"
-       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-filename="icons/layout-four-scenes.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <rect
@@ -445,7 +445,7 @@
        height="122.23986"
        x="190.42543"
        y="467.00784"
-       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-filename="icons/layout-four-scenes.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <rect
@@ -455,7 +455,7 @@
        height="122.23987"
        x="190.41141"
        y="595.2478"
-       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-filename="icons/layout-four-scenes.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <rect
@@ -465,7 +465,7 @@
        height="122.23987"
        x="380.28049"
        y="595.2478"
-       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-filename="icons/layout-four-scenes.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <rect
@@ -475,7 +475,7 @@
        height="122.23987"
        x="380.28049"
        y="467.00797"
-       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-four-scenes.png"
+       inkscape:export-filename="icons/layout-four-scenes.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
   </g>
@@ -505,7 +505,7 @@
        height="265.34995"
        x="201.11285"
        y="570.31201"
-       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-single-scene.png"
+       inkscape:export-filename="icons/layout-single-scene.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <rect
@@ -515,7 +515,7 @@
        height="244.47974"
        x="210.80258"
        y="580.74713"
-       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.neon/res/images/icons/layout-single-scene.png"
+       inkscape:export-filename="icons/layout-single-scene.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
   </g>
@@ -541,7 +541,7 @@
        x="295.64865"
        y="444.64597"
        style="filter:url(#filter522)"
-       inkscape:export-filename="/Users/hsor001/Projects/opencmiss/bindings/opencmiss.zincwidgets/res/images/list-add-disabled-icon.png"
+       inkscape:export-filename="list-add-disabled-icon.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
   </g>

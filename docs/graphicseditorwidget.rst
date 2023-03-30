@@ -3,7 +3,7 @@ Graphics Editor Widget
 
 The **Graphics Editor Widget** is a control to add, remove, and modify the graphics of a scene.
 
-.. _fig-opencmiss-zincwidgets-graphics-editor-widget:
+.. _fig-cmlibs-widgets-graphics-editor-widget:
 
 .. figure:: _images/graphics-editor-widget.png
    :alt: Graphics editor widget.
@@ -46,5 +46,5 @@ If the graphic is a point:
 API
 ---
 
-.. autoclass:: opencmiss.zincwidgets.graphicseditorwidget.GraphicsEditorWidget
+.. autoclass:: cmlibs.zincwidgets.graphicseditorwidget.GraphicsEditorWidget
    :members:

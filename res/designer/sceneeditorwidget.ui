@@ -191,19 +191,19 @@
   <customwidget>
    <class>RegionChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/regionchooserwidget.h</header>
+   <header>cmlibs/widgets/regionchooserwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>GraphicsEditorWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/zincwidgets/graphicseditorwidget.h</header>
+   <header>cmlibs/widgets/graphicseditorwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>DraggableListWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/zincwidgets/draggablelistwidget.h</header>
+   <header>cmlibs/widgets/draggablelistwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

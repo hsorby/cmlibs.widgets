@@ -6,5 +6,5 @@ The **View Widget** is a container for laying out scene views.
 API
 ---
 
-.. autoclass:: opencmiss.zincwidgets.viewwidget.ViewWidget
+.. autoclass:: cmlibs.zincwidgets.viewwidget.ViewWidget
    :members:

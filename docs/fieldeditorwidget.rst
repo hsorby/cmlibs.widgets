@@ -3,7 +3,7 @@ Field Editor Widget
 
 The **Field Editor Widget** is a control to add, remove, and modify fields in a region.
 
-.. _fig-opencmiss-zincwidgets-field-editor-widget:
+.. _fig-cmlibs-widgets-field-editor-widget:
 
 .. figure:: _images/field-editor-widget.png
    :alt: Field editor widget.
@@ -36,5 +36,5 @@ It contains a number of controls.
 API
 ---
 
-.. autoclass:: opencmiss.zincwidgets.fieldeditorwidget.FieldEditorWidget
+.. autoclass:: cmlibs.zincwidgets.fieldeditorwidget.FieldEditorWidget
    :members:

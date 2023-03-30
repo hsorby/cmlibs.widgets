@@ -2,7 +2,7 @@
 
 # -- Project information
 
-project = 'OpenCMISS ZincWidgets'
+project = 'CMLibs Widgets'
 copyright = '2022, University of Auckland'
 author = 'University of Auckland'
 

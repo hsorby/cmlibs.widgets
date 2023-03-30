@@ -170,18 +170,18 @@
   <customwidget>
    <class>FieldEditorWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/zincwidgets/fieldeditorwidget.h</header>
+   <header>cmlibs/widgets/fieldeditorwidget.h</header>
   </customwidget>
   <customwidget>
    <class>RegionChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/regionchooserwidget.h</header>
+   <header>cmlibs/widgets/regionchooserwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>FieldTypeChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/fieldtypechooserwidget.h</header>
+   <header>cmlibs/widgets/fieldtypechooserwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

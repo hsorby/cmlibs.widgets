@@ -23,7 +23,7 @@
   <customwidget>
    <class>InteractiveConsoleWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/zincwidgets/interactiveconsolewidget.h</header>
+   <header>cmlibs/widgets/interactiveconsolewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

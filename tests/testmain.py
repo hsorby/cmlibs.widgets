@@ -1,7 +1,7 @@
 import os
 from PySide6 import QtWidgets
-from opencmiss.zincwidgets.materialeditorwidget import MaterialEditorWidget
-from opencmiss.argon.argondocument import ArgonDocument
+from cmlibs.zincwidgets.materialeditorwidget import MaterialEditorWidget
+from cmlibs.argon.argondocument import ArgonDocument
 
 if __name__ == '__main__':
     import sys

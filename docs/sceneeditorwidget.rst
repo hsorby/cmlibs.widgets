@@ -3,7 +3,7 @@ Scene Editor Widget
 
 The **Scene Editor Widget** is a control to add, remove, and modify the graphics of a scene.
 
-.. _fig-opencmiss-zincwidgets-scene-editor-widget:
+.. _fig-cmlibs-widgets-scene-editor-widget:
 
 .. figure:: _images/scene-editor-widget.png
    :alt: Scene editor widget.
@@ -22,5 +22,5 @@ There is also a button that allows you to delete the selected graph.
 API
 ---
 
-.. autoclass:: opencmiss.zincwidgets.sceneeditorwidget.SceneEditorWidget
+.. autoclass:: cmlibs.zincwidgets.sceneeditorwidget.SceneEditorWidget
    :members:

@@ -1,7 +1,7 @@
-OpenCMISS ZincWidgets
-=====================
+CMLibs Widgets
+==============
 
-The **OpenCMISS ZincWidgets** is a collection of PySide6 widgets to interface between a user interface and the OpenCMISS Zinc library.
+The **CMLibs Widgets** is a collection of PySide6 widgets to interface between a user interface and the Zinc library.
 
 Widgets
 -------
