@@ -1,5 +1,5 @@
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from opencmiss.zincwidgets.ui.ui_addviewwidget import Ui_AddView
 

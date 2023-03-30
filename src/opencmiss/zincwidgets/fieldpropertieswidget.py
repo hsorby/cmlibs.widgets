@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore
 
 from opencmiss.zincwidgets.fields.lists import FIELDS_REQUIRING_X_REAL_SOURCE_FIELDS
 from opencmiss.zincwidgets.fieldtypechooserwidget import convert_field_type_to_display_name

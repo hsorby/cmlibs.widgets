@@ -1,4 +1,4 @@
-from PySide2 import QtCore
+from PySide6 import QtCore
 
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
 
@@ -9,7 +9,7 @@ SELECTION_RUBBERBAND_NAME = 'selection_rubberband'
 # Create a button map of Qt mouse buttons to Zinc input buttons
 BUTTON_MAP = {
     QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
-    QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
+    QtCore.Qt.MiddleButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
     QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT,
     QtCore.Qt.NoButton: None}
 
@@ -22,7 +22,7 @@ def modifier_map(qt_modifiers):
     """
     modifiers = Sceneviewerinput.MODIFIER_FLAG_NONE
 
-    if qt_modifiers & QtCore.Qt.SHIFT:
+    if qt_modifiers & QtCore.Qt.ShiftModifier:
         modifiers = modifiers | Sceneviewerinput.MODIFIER_FLAG_SHIFT
 
     return modifiers

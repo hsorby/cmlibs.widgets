@@ -1,6 +1,6 @@
 from copy import copy
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from opencmiss.zinc.element import Element
 from opencmiss.zinc.field import FieldFindMeshLocation, FieldEdgeDiscontinuity, Field
 from opencmiss.zinc.node import Node
