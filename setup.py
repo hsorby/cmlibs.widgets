@@ -57,7 +57,7 @@ requires = [
     'cmlibs.utils >= 0.4.0',
     'PySide6',
     'cmlibs.zinc >= 3.10.0',
-    'cmlibs.argon >= 0.3.4',
+    'cmlibs.argon >= 0.4.0',
 ]
 
 setup(
