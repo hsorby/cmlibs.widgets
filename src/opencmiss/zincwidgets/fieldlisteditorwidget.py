@@ -237,25 +237,25 @@ class FieldListEditorWidget(QtWidgets.QWidget):
         If it is in use, restore its previous managed state.
         """
         if self._field and self._field.isValid():
-            if self._field.isManaged():
-                name = self._field.getName()
-                # remove references to field in field editor, list items and field member
-                self._ui.field_editor.set_field_and_type(None, None)
-                model = self._ui.field_listview.model()
-                item = model.findItems(name)[0]
-                item.setData(None)
-                self._field.setManaged(False)
-                self._field = None
-                field = self._fieldmodule.findFieldByName(name)
-                self._ui.delete_field_button.setEnabled(field and field.isValid())
-                if field and field.isValid():
-                    ArgonLogger.getLogger().info("Can't delete field '" + name + "' while it is in use")
-                    # restore field in editor
-                    self._field = field
-                    self._field.setManaged(True)
-                    item.setData(field)
-                    fieldType = None
-                    fieldTypeDict = self._argonRegion.getFieldTypeDict()
-                    if name in fieldTypeDict:
-                        fieldType = fieldTypeDict[name]
-                    self._ui.field_editor.set_field_and_type(self._field, fieldType)
+            wasManaged = self._field.isManaged()
+            name = self._field.getName()
+            # remove references to field in field editor, list items and field member
+            self._ui.field_editor.set_field_and_type(None, None)
+            model = self._ui.field_listview.model()
+            item = model.findItems(name)[0]
+            item.setData(None)
+            self._field.setManaged(False)
+            self._field = None
+            field = self._fieldmodule.findFieldByName(name)
+            self._ui.delete_field_button.setEnabled(field and field.isValid())
+            if field and field.isValid():
+                ArgonLogger.getLogger().info("Can't delete field '" + name + "' while it is in use")
+                # restore field in editor
+                self._field = field
+                self._field.setManaged(wasManaged)
+                item.setData(field)
+                fieldType = None
+                fieldTypeDict = self._argonRegion.getFieldTypeDict()
+                if name in fieldTypeDict:
+                    fieldType = fieldTypeDict[name]
+                self._ui.field_editor.set_field_and_type(self._field, fieldType)

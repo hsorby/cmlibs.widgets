@@ -1,9 +1,6 @@
 from PySide6 import QtCore
 
-from math import cos, sin, sqrt, acos, pi
-
 from opencmiss.maths import vectorops
-from opencmiss.maths.vectorops import normalize, sub, cross, mult, add
 from opencmiss.zincwidgets.errors import HandlerError
 from opencmiss.zincwidgets.handlers.keyactivatedhandler import KeyActivatedHandler
 
