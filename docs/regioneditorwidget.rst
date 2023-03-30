@@ -21,8 +21,8 @@ You can remove a region by right-clicking on the region and select remove region
 API
 ---
 
-.. autoclass:: cmlibs.zincwidgets.regioneditorwidget.RegionEditorWidget
+.. autoclass:: cmlibs.widgets.regioneditorwidget.RegionEditorWidget
    :members:
 
-.. autoclass:: cmlibs.zincwidgets.regioneditorwidget.RegionTreeModel
+.. autoclass:: cmlibs.widgets.regioneditorwidget.RegionTreeModel
    :members:

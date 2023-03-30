@@ -46,5 +46,5 @@ If the graphic is a point:
 API
 ---
 
-.. autoclass:: cmlibs.zincwidgets.graphicseditorwidget.GraphicsEditorWidget
+.. autoclass:: cmlibs.widgets.graphicseditorwidget.GraphicsEditorWidget
    :members:

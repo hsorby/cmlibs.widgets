@@ -36,5 +36,5 @@ It contains a number of controls.
 API
 ---
 
-.. autoclass:: cmlibs.zincwidgets.fieldeditorwidget.FieldEditorWidget
+.. autoclass:: cmlibs.widgets.fieldeditorwidget.FieldEditorWidget
    :members:

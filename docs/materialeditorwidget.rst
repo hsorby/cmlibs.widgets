@@ -31,8 +31,8 @@ This panel displays a sphere, shaded with the selected material.
 API
 ---
 
-.. autoclass:: cmlibs.zincwidgets.materialeditorwidget.MaterialEditorWidget
+.. autoclass:: cmlibs.widgets.materialeditorwidget.MaterialEditorWidget
    :members:
 
-.. autoclass:: cmlibs.zincwidgets.materialeditorwidget.MaterialModel
+.. autoclass:: cmlibs.widgets.materialeditorwidget.MaterialModel
    :members:

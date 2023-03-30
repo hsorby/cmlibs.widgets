@@ -31,8 +31,8 @@ But this operation is fraught with error and it is best not to use this function
 API
 ---
 
-.. autoclass:: cmlibs.zincwidgets.modelsourceseditorwidget.ModelSourcesEditorWidget
+.. autoclass:: cmlibs.widgets.modelsourceseditorwidget.ModelSourcesEditorWidget
    :members:
 
-.. autoclass:: cmlibs.zincwidgets.modelsourceseditorwidget.ModelSourcesModel
+.. autoclass:: cmlibs.widgets.modelsourceseditorwidget.ModelSourcesModel
    :members:

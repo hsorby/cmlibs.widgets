@@ -39,5 +39,5 @@ The maximum time cannot be less than the minimum time.
 API
 ---
 
-.. autoclass:: cmlibs.zincwidgets.timeeditorwidget.TimeEditorWidget
+.. autoclass:: cmlibs.widgets.timeeditorwidget.TimeEditorWidget
    :members:

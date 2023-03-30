@@ -22,5 +22,5 @@ There is also a button that allows you to delete the selected graph.
 API
 ---
 
-.. autoclass:: cmlibs.zincwidgets.sceneeditorwidget.SceneEditorWidget
+.. autoclass:: cmlibs.widgets.sceneeditorwidget.SceneEditorWidget
    :members:
