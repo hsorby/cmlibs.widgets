@@ -1,9 +1,6 @@
-from PySide2 import QtCore
-
-from math import cos, sin, sqrt, acos, pi
+from PySide6 import QtCore
 
 from opencmiss.maths import vectorops
-from opencmiss.maths.vectorops import normalize, sub, cross, mult, add
 from opencmiss.zincwidgets.errors import HandlerError
 from opencmiss.zincwidgets.handlers.keyactivatedhandler import KeyActivatedHandler
 
@@ -30,7 +27,7 @@ class ModelAlignment(KeyActivatedHandler):
 
     def mouse_press_event(self, event):
         self._active_button = event.button()
-        if self._active_button == QtCore.Qt.LeftButton and event.modifiers() & QtCore.Qt.SHIFT:
+        if self._active_button == QtCore.Qt.LeftButton and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
             self._active_button = QtCore.Qt.MiddleButton
         pixel_scale = self._scene_viewer.get_pixel_scale()
         self._lastMousePos = [event.x() * pixel_scale, event.y() * pixel_scale]

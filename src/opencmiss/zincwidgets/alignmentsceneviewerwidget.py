@@ -3,7 +3,7 @@ Created on July 15, 2015
 
 @author: Richard Christie
 """
-from PySide2 import QtCore
+from PySide6 import QtCore
 
 from opencmiss.maths import vectorops
 from opencmiss.zincwidgets.sceneviewerwidget import SceneviewerWidget
@@ -29,14 +29,14 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
             self._alignKeyPressed = True
             event.setAccepted(True)
         else:
-           super(AlignmentSceneviewerWidget, self).keyPressEvent(event)
+            super(AlignmentSceneviewerWidget, self).keyPressEvent(event)
 
     def keyReleaseEvent(self, event):
         if (event.key() == QtCore.Qt.Key_A) and event.isAutoRepeat() is False:
             self._alignKeyPressed = False
             event.setAccepted(True)
         else:
-           super(AlignmentSceneviewerWidget, self).keyReleaseEvent(event)
+            super(AlignmentSceneviewerWidget, self).keyReleaseEvent(event)
 
     def mousePressEvent(self, event):
         if self._active_button != QtCore.Qt.NoButton:
@@ -44,6 +44,7 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
         if self._model.isStateAlign() and self._alignKeyPressed:
             self._use_zinc_mouse_event_handling = False  # needed as not calling super mousePressEvent
             self._active_button = event.button()
+            self._model.interactionStart()
             # shift-Left button becomes middle button, to support Mac
             if (self._active_button == QtCore.Qt.LeftButton) and (event.modifiers() & QtCore.Qt.SHIFT):
                 self._active_button = QtCore.Qt.MiddleButton
@@ -64,10 +65,11 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
             right = vectorops.cross(up, front)
             if self._active_button == QtCore.Qt.LeftButton:
                 mag = vectorops.magnitude(delta)
-                prop = vectorops.div(delta, mag)
-                axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
-                angle = mag*0.002
-                self._model.rotateModel(axis, angle)
+                if mag > 1e-12:
+                    prop = vectorops.div(delta, mag)
+                    axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
+                    angle = mag*0.002
+                    self._model.rotateModel(axis, angle)
             elif self._active_button == QtCore.Qt.MiddleButton:
                 result, l, r, b, t, near, far = self._sceneviewer.getViewingVolume()
                 viewportWidth = self.width()
@@ -89,7 +91,7 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
 
     def mouseReleaseEvent(self, event):
         if self._lastMousePos is not None:
-            pass
+            self._model.interactionEnd()
         else:
             super(AlignmentSceneviewerWidget, self).mouseReleaseEvent(event)
         self._active_button = QtCore.Qt.NoButton

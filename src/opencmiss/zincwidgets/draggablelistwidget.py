@@ -1,9 +1,10 @@
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
+
 
 class DraggableListWidget(QtWidgets.QListWidget):
     def __init__(self,parent = None):
         super(DraggableListWidget,self).__init__(parent)
-        self.setDragDropMode(self.InternalMove)
+        self.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
         self.onItemDropped = None
 
     def dropEvent(self,event):

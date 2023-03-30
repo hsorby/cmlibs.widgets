@@ -55,9 +55,9 @@ doc_lines = __doc__.split("\n")
 requires = [
     'opencmiss.maths',
     'opencmiss.utils >= 0.4.0',
-    'PySide2',
-    'opencmiss.zinc >= 3.8.0',
-    'cmlibs.argon >= 0.3.4',
+    'PySide6',
+    'opencmiss.zinc >= 3.10.0',
+    'cmlibs.argon >= 0.4.0',
 ]
 
 setup(

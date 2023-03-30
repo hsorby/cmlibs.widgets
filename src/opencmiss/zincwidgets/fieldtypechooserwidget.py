@@ -15,7 +15,7 @@
 """
 import re
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from opencmiss.zincwidgets.fields.lists import FIELD_TYPES, INTERNAL_FIELD_NAMES, INTERNAL_FIELD_TYPE_NAME, NONE_FIELD_TYPE_NAME
 

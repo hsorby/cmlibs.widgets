@@ -1,5 +1,5 @@
 import sys
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 
 class EditableTabBar(QtWidgets.QTabBar):

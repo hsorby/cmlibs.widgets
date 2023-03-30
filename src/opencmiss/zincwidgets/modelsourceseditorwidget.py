@@ -15,7 +15,7 @@
 """
 import os.path
 
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from cmlibs.argon.argonmodelsources import ArgonModelSourceFile
 from cmlibs.argon.argonlogger import ArgonLogger
@@ -308,10 +308,10 @@ class ApplyDelegate(QtWidgets.QItemDelegate):
     def editorEvent(self, event, model, option, index):
         """
         Change the data in the model and the state of the checkbox
-        if the user presses the left mousebutton and this cell is editable. Otherwise 
+        if the user presses the left mouse button and this cell is editable. Otherwise
         do nothing.
         """
-        if not int(index.flags() and QtCore.Qt.ItemIsEditable) > 0:
+        if not index.flags() & QtCore.Qt.ItemIsEditable:
             return False
 
         if event.type() == QtCore.QEvent.MouseButtonRelease and event.button() == QtCore.Qt.LeftButton:

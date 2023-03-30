@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from cmlibs.argon.argonregion import ArgonRegion
 from opencmiss.zincwidgets.ui.ui_regioneditorwidget import Ui_RegionEditorWidget
@@ -184,11 +184,11 @@ class RegionEditorWidget(QtWidgets.QWidget):
         self._ui = Ui_RegionEditorWidget()
         self._ui.setupUi(self)
         self._ui.contextMenu = QtWidgets.QMenu(self)
-        self._ui.action_AddChildRegion = QtWidgets.QAction('Add child region', self._ui.contextMenu)
+        self._ui.action_AddChildRegion = QtGui.QAction('Add child region', self._ui.contextMenu)
         self._ui.contextMenu.addAction(self._ui.action_AddChildRegion)
-        self._ui.action_ClearRegion = QtWidgets.QAction('Clear region', self._ui.contextMenu)
+        self._ui.action_ClearRegion = QtGui.QAction('Clear region', self._ui.contextMenu)
         self._ui.contextMenu.addAction(self._ui.action_ClearRegion)
-        self._ui.action_RemoveRegion = QtWidgets.QAction('Remove region', self._ui.contextMenu)
+        self._ui.action_RemoveRegion = QtGui.QAction('Remove region', self._ui.contextMenu)
         self._ui.contextMenu.addAction(self._ui.action_RemoveRegion)
         self._makeConnections()
 

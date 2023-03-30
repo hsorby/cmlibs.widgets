@@ -16,7 +16,7 @@
 import json
 import os.path
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from opencmiss.zincwidgets.ui.ui_snapshotdialog import Ui_SnapshotDialog
 

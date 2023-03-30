@@ -1,5 +1,5 @@
 import os
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from opencmiss.zincwidgets.materialeditorwidget import MaterialEditorWidget
 from opencmiss.argon.argondocument import ArgonDocument
 

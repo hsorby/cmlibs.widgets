@@ -1,7 +1,7 @@
 """
    Zinc Sceneviewer Widget
 
-   Implements a Zinc Sceneviewer Widget on Python using PySide2,
+   Implements a Zinc Sceneviewer Widget on Python using PySide6,
    which renders the Zinc Scene with OpenGL and allows interactive
    transformation of the view.
    Widget is derived from QtWidgets.QOpenGLWidget
@@ -20,7 +20,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtOpenGLWidgets
 
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
@@ -35,7 +35,7 @@ from opencmiss.zincwidgets.definitions import ProjectionMode, SelectionMode, \
     BUTTON_MAP, modifier_map, SELECTION_GROUP_NAME
 
 
-class SceneviewerWidget(QtWidgets.QOpenGLWidget):
+class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
 
     graphicsInitialized = QtCore.Signal()
     becameActive = QtCore.Signal()
@@ -107,13 +107,12 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         # Following throws exception if you haven't called setContext() yet
         self.getContext()
         self._sceneviewernotifier = None
-
         # From the scene viewer module we can create a scene viewer, we set up the
         # scene viewer to have the same OpenGL properties as the QOpenGLWidget.
         sceneviewermodule = self._context.getSceneviewermodule()
         self._sceneviewer = sceneviewermodule.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE, Sceneviewer.STEREO_MODE_DEFAULT)
         self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
-        self._sceneviewer.setViewportSize(self.width() * self._pixel_scale, self.height() * self._pixel_scale)
+        self._sceneviewer.setViewportSize(int(self.width() * self._pixel_scale), int(self.height() * self._pixel_scale))
 
         # Get the default scene filter, which filters by visibility flags
         scenefiltermodule = self._context.getScenefiltermodule()
@@ -402,7 +401,8 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         will clear the background so any OpenGL drawing of your own needs to go after this
         API call.
         """
-        self._sceneviewer.renderScene()
+        if self._sceneviewer:
+            self._sceneviewer.renderScene()
         # paintGL end
 
     def _zincSceneviewerEvent(self, event):
@@ -424,7 +424,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
         Respond to widget resize events.
         """
         if self._sceneviewer:
-            self._sceneviewer.setViewportSize(width * self._pixel_scale, height * self._pixel_scale)
+            self._sceneviewer.setViewportSize(int(width * self._pixel_scale), int(height * self._pixel_scale))
         # resizeGL end
 
     def keyPressEvent(self, event):
@@ -463,7 +463,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
                 self._selection_mode = SelectionMode.ADDITIVE
         else:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
+            scene_input.setPosition(int(event.x() * self._pixel_scale), int(event.y() * self._pixel_scale))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
             scene_input.setModifierFlags(modifier_map(event.modifiers()))
@@ -578,7 +578,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
         elif self._use_zinc_mouse_event_handling:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
+            scene_input.setPosition(int(event.x() * self._pixel_scale), int(event.y() * self._pixel_scale))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
             # self.makeCurrent()
@@ -613,7 +613,7 @@ class SceneviewerWidget(QtWidgets.QOpenGLWidget):
 
         elif self._use_zinc_mouse_event_handling:
             scene_input = self._sceneviewer.createSceneviewerinput()
-            scene_input.setPosition(event.x() * self._pixel_scale, event.y() * self._pixel_scale)
+            scene_input.setPosition(int(event.x() * self._pixel_scale), int(event.y() * self._pixel_scale))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_MOTION_NOTIFY)
             if event.type() == QtCore.QEvent.Leave:
                 scene_input.setPosition(-1, -1)
