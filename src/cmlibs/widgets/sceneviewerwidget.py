@@ -402,6 +402,13 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         API call.
         """
         if self._sceneviewer:
+            # handle change of device pixel ratio when window moved between screens:
+            pixel_scale = self.devicePixelRatio()
+            if pixel_scale != self._pixel_scale:
+                self._pixel_scale = pixel_scale
+                width = self.width()
+                height = self.height()
+                self._sceneviewer.setViewportSize(int(width * self._pixel_scale), int(height * self._pixel_scale))
             self._sceneviewer.renderScene()
         # paintGL end
 
@@ -424,11 +431,12 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         Respond to widget resize events.
         """
         if self._sceneviewer:
+            self._pixel_scale = self.devicePixelRatio()
             self._sceneviewer.setViewportSize(int(width * self._pixel_scale), int(height * self._pixel_scale))
         # resizeGL end
 
     def keyPressEvent(self, event):
-        if self._selectionKeyHandling and (event.key() == QtCore.Qt.Key_S) and (event.isAutoRepeat() == False):
+        if self._selectionKeyHandling and (event.key() == QtCore.Qt.Key_S) and not event.isAutoRepeat():
             self._selectionKeyPressed = True
             event.setAccepted(True)
         else:
@@ -459,7 +467,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         if BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT \
                 and self._selectionKeyPressed and (self._nodeSelectMode or self._elemSelectMode):
             self._selection_mode = SelectionMode.EXCLUSIVE
-            if event.modifiers() & QtCore.Qt.SHIFT:
+            if event.modifiers() & QtCore.Qt.ShiftModifier:
                 self._selection_mode = SelectionMode.ADDITIVE
         else:
             scene_input = self._sceneviewer.createSceneviewerinput()
