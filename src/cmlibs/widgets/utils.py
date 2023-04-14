@@ -15,7 +15,7 @@
 """
 from functools import wraps
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 
 def set_wait_cursor(f):
