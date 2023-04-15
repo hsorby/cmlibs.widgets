@@ -53,10 +53,10 @@ Topic :: Software Development :: Libraries :: Python Modules
 doc_lines = __doc__.split("\n")
 
 requires = [
-    'cmlibs.maths',
-    'cmlibs.utils >= 0.4.0',
+    'cmlibs.maths >= 0.3',
+    'cmlibs.utils >= 0.4',
     'PySide6',
-    'cmlibs.zinc >= 3.10.0',
+    'cmlibs.zinc >= 3.99',
     'cmlibs.argon >= 0.4.0',
 ]
 
