@@ -9,7 +9,6 @@ import re
 
 from setuptools import setup, find_packages
 
-
 here = os.path.abspath(os.path.dirname(__file__))
 
 with open(os.path.join(here, 'src', 'cmlibs', 'widgets', '__init__.py')) as fd:
@@ -35,20 +34,20 @@ readme.append('')
 
 software_licence = readfile("LICENSE")
 
-classifiers = """\
-Development Status :: 5 - Production/Stable
-Intended Audience :: Developers
-Intended Audience :: Education
-Intended Audience :: Science/Research
-License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)
-Programming Language :: Python
-Operating System :: Microsoft :: Windows
-Operating System :: Unix
-Operating System :: MacOS :: MacOS X
-Topic :: Scientific/Engineering :: Medical Science Apps.
-Topic :: Scientific/Engineering :: Visualization
-Topic :: Software Development :: Libraries :: Python Modules
-"""
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Operating System :: MacOS :: MacOS X",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 
 doc_lines = __doc__.split("\n")
 
@@ -74,6 +73,6 @@ setup(
     packages=find_packages("src"),
     package_dir={"": "src"},
     description=doc_lines[0],
-    classifiers=filter(None, classifiers.split("\n")),
+    classifiers=classifiers,
     install_requires=requires,
 )
