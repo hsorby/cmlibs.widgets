@@ -657,32 +657,32 @@
   <customwidget>
    <class>FieldChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/fieldchooserwidget.h</header>
+   <header>cmlibs/widgets/fieldchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>MaterialChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/materialchooserwidget.h</header>
+   <header>cmlibs/widgets/materialchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>EnumerationChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/enumerationchooserwidget.h</header>
+   <header>cmlibs/widgets/enumerationchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>GlyphChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/glyphchooserwidget.h</header>
+   <header>cmlibs/widgets/glyphchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>SpectrumChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/spectrumchooserwidget.h</header>
+   <header>cmlibs/widgets/spectrumchooserwidget.h</header>
   </customwidget>
   <customwidget>
    <class>TessellationChooserWidget</class>
    <extends>QComboBox</extends>
-   <header>opencmiss/zincwidgets/tessellationchooserwidget.h</header>
+   <header>cmlibs/widgets/tessellationchooserwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

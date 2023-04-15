@@ -1,7 +1,7 @@
 """
-OpenCMISS ZincWidgets
+CMLibs Widgets
 
-A collection of Qt widgets and utilities building on the Python bindings for the OpenCMISS-Zinc Visualisation Library.
+A collection of Qt widgets and utilities building on the Python bindings for the Zinc Visualisation Library.
 """
 import io
 import os
@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with open(os.path.join(here, 'src', 'opencmiss', 'zincwidgets', '__init__.py')) as fd:
+with open(os.path.join(here, 'src', 'cmlibs', 'widgets', '__init__.py')) as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
@@ -53,22 +53,22 @@ Topic :: Software Development :: Libraries :: Python Modules
 doc_lines = __doc__.split("\n")
 
 requires = [
-    'opencmiss.maths',
-    'opencmiss.utils >= 0.4.0',
+    'cmlibs.maths',
+    'cmlibs.utils >= 0.4.0',
     'PySide6',
-    'opencmiss.zinc >= 3.10.0',
-    'opencmiss.argon >= 0.3.4',
+    'cmlibs.zinc >= 3.10.0',
+    'cmlibs.argon >= 0.4.0',
 ]
 
 setup(
-    name='opencmiss.zincwidgets',
+    name='cmlibs.widgets',
     version=version,
     author='H. Sorby',
     author_email='h.sorby@auckland.ac.nz',
     long_description='\n'.join(readme) + software_licence,
     long_description_content_type='text/x-rst',
     platforms=['any'],
-    url='https://github.com/OpenCMISS-Bindings/opencmiss.zincwidgets/',
+    url='https://github.com/CMLibs-Python/cmlibs.widgets/',
     license='Mozilla Public License',
     license_files=("LICENSE",),
     packages=find_packages("src"),

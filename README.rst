@@ -1,6 +1,6 @@
 
-======================
-OpenCMISS Zinc Widgets
-======================
+==============
+CMLibs Widgets
+==============
 
-A collection of Qt widgets and utilities building on the Python bindings for the OpenCMISS-Zinc Visualisation Library.
+A collection of Qt widgets and utilities building on the Python bindings for the Zinc Visualisation Library.

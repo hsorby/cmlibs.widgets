@@ -75,7 +75,7 @@
                </property>
                <property name="icon">
                 <iconset resource="../icons.qrc">
-                 <normaloff>:/zincwidgets/images/icons/list-add-icon.png</normaloff>:/zincwidgets/images/icons/list-add-icon.png</iconset>
+                 <normaloff>:/widgets/images/icons/list-add-icon.png</normaloff>:/widgets/images/icons/list-add-icon.png</iconset>
                </property>
               </widget>
              </item>
@@ -89,7 +89,7 @@
                </property>
                <property name="icon">
                 <iconset resource="../icons.qrc">
-                 <normaloff>:/zincwidgets/images/icons/list-remove-icon.png</normaloff>:/zincwidgets/images/icons/list-remove-icon.png</iconset>
+                 <normaloff>:/widgets/images/icons/list-remove-icon.png</normaloff>:/widgets/images/icons/list-remove-icon.png</iconset>
                </property>
               </widget>
              </item>
@@ -201,7 +201,7 @@
                </property>
                <property name="icon">
                 <iconset resource="../icons.qrc">
-                 <normaloff>:/zincwidgets/images/icons/list-add-icon.png</normaloff>:/zincwidgets/images/icons/list-add-icon.png</iconset>
+                 <normaloff>:/widgets/images/icons/list-add-icon.png</normaloff>:/widgets/images/icons/list-add-icon.png</iconset>
                </property>
               </widget>
              </item>
@@ -215,7 +215,7 @@
                </property>
                <property name="icon">
                 <iconset resource="../icons.qrc">
-                 <normaloff>:/zincwidgets/images/icons/list-remove-icon.png</normaloff>:/zincwidgets/images/icons/list-remove-icon.png</iconset>
+                 <normaloff>:/widgets/images/icons/list-remove-icon.png</normaloff>:/widgets/images/icons/list-remove-icon.png</iconset>
                </property>
               </widget>
              </item>
@@ -229,7 +229,7 @@
                </property>
                <property name="icon">
                 <iconset resource="../icons.qrc">
-                 <normaloff>:/zincwidgets/images/icons/go-up-icon.png</normaloff>:/zincwidgets/images/icons/go-up-icon.png</iconset>
+                 <normaloff>:/widgets/images/icons/go-up-icon.png</normaloff>:/widgets/images/icons/go-up-icon.png</iconset>
                </property>
               </widget>
              </item>
@@ -243,7 +243,7 @@
                </property>
                <property name="icon">
                 <iconset resource="../icons.qrc">
-                 <normaloff>:/zincwidgets/images/icons/go-down-icon.png</normaloff>:/zincwidgets/images/icons/go-down-icon.png</iconset>
+                 <normaloff>:/widgets/images/icons/go-down-icon.png</normaloff>:/widgets/images/icons/go-down-icon.png</iconset>
                </property>
               </widget>
              </item>
@@ -488,7 +488,7 @@
   <customwidget>
    <class>SceneviewerWidget</class>
    <extends>QWidget</extends>
-   <header>opencmiss/zincwidgets/sceneviewerwidget.h</header>
+   <header>cmlibs/widgets/sceneviewerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

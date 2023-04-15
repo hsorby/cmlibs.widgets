@@ -3,7 +3,7 @@ Material Editor Widget
 
 The **Material Editor Widget** is a control to add, remove, and modify materials.
 
-.. _fig-opencmiss-zincwidgets-material-editor-widget:
+.. _fig-cmlibs-widgets-material-editor-widget:
 
 .. figure:: _images/material-editor-widget.png
    :alt: Material editor widget.
@@ -31,8 +31,8 @@ This panel displays a sphere, shaded with the selected material.
 API
 ---
 
-.. autoclass:: opencmiss.zincwidgets.materialeditorwidget.MaterialEditorWidget
+.. autoclass:: cmlibs.widgets.materialeditorwidget.MaterialEditorWidget
    :members:
 
-.. autoclass:: opencmiss.zincwidgets.materialeditorwidget.MaterialModel
+.. autoclass:: cmlibs.widgets.materialeditorwidget.MaterialModel
    :members:

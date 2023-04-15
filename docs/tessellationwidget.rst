@@ -3,7 +3,7 @@ Tessellation Editor Widget
 
 The **Tessellation Editor Widget** is a control to add, remove, and edit tessellations.
 
-.. _fig-opencmiss-zincwidgets-tessellation-editor-widget:
+.. _fig-cmlibs-widgets-tessellation-editor-widget:
 
 .. figure:: _images/tessellation-editor-widget.png
    :alt: Tessellation editor widget.

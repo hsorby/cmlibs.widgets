@@ -3,7 +3,7 @@ Time Editor Widget
 
 The **Time Editor Widget** is a control to manipulate and observe the current time value and time limits.
 
-.. _fig-opencmiss-zincwidgets-time-editor-widget:
+.. _fig-cmlibs-widgets-time-editor-widget:
 
 .. figure:: _images/time-editor-widget.png
    :alt: Time editor widget.
@@ -39,5 +39,5 @@ The maximum time cannot be less than the minimum time.
 API
 ---
 
-.. autoclass:: opencmiss.zincwidgets.timeeditorwidget.TimeEditorWidget
+.. autoclass:: cmlibs.widgets.timeeditorwidget.TimeEditorWidget
    :members:
