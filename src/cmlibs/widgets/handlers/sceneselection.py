@@ -24,7 +24,10 @@ class SceneSelection(KeyActivatedHandler):
         self._selection_mode = SelectionMode.NONE
 
     def leave(self):
-        pass
+        if self._processing_mouse_events and self._selection_mode != SelectionMode.NONE:
+            self._remove_selection_box()
+            selection_group = self._get_or_create_selection_group()
+            selection_group.clear()
 
     def mouse_press_event(self, event):
         super(SceneSelection, self).mouse_press_event(event)
