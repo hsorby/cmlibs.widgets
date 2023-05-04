@@ -24,12 +24,15 @@ class SceneSelection(KeyActivatedHandler):
         self._selection_mode = SelectionMode.NONE
 
     def leave(self):
-        pass
+        if self._processing_mouse_events and self._selection_mode != SelectionMode.NONE:
+            self._remove_selection_box()
+            selection_group = self._get_or_create_selection_group()
+            selection_group.clear()
 
     def mouse_press_event(self, event):
         super(SceneSelection, self).mouse_press_event(event)
         if self._processing_mouse_events:
-            self._start_position = (event.x(), event.y())
+            self._start_position = (event.x() * self._scene_viewer.get_pixel_scale(), event.y() * self._scene_viewer.get_pixel_scale())
             if BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT:
                 self._selection_mode = SelectionMode.EXCLUSIVE
             elif BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_RIGHT:
@@ -40,15 +43,15 @@ class SceneSelection(KeyActivatedHandler):
     def mouse_move_event(self, event):
         super(SceneSelection, self).mouse_move_event(event)
         if self._processing_mouse_events and self._selection_mode != SelectionMode.NONE:
-            self._update_selection_box_description(event.x(), event.y())
+            self._update_selection_box_description(event.x() * self._scene_viewer.get_pixel_scale(), event.y() * self._scene_viewer.get_pixel_scale())
             self._update_and_or_create_selection_box()
 
     def mouse_release_event(self, event):
         super(SceneSelection, self).mouse_release_event(event)
         if self._processing_mouse_events and self._selection_mode != SelectionMode.NONE:
             self._remove_selection_box()
-            x = event.x()
-            y = event.y()
+            x = event.x() * self._scene_viewer.get_pixel_scale()
+            y = event.y() * self._scene_viewer.get_pixel_scale()
             self._update_selection_box_description(x, y)
             # Construct a small frustum to look for nodes in.
             scene = self._zinc_sceneviewer.getScene()
@@ -77,12 +80,12 @@ class SceneSelection(KeyActivatedHandler):
             else:
                 # point select - get nearest object only
                 scene_picker.setSceneviewerRectangle(self._zinc_sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                                    x - self._selection_tolerance,
-                                                    y - self._selection_tolerance,
-                                                    x + self._selection_tolerance,
-                                                    y + self._selection_tolerance)
+                                                     x - self._selection_tolerance,
+                                                     y - self._selection_tolerance,
+                                                     x + self._selection_tolerance,
+                                                     y + self._selection_tolerance)
                 nearest_graphics = scene_picker.getNearestGraphics()
-                if self._selection_mode == SelectionMode.EXCLUSIVE\
+                if self._selection_mode == SelectionMode.EXCLUSIVE \
                         and not nearest_graphics.isValid():
                     self.clear_selection()
 
@@ -239,10 +242,10 @@ class SceneSelection(KeyActivatedHandler):
         return self._graphics_selection_mode == GraphicsSelectionMode.ANY
 
     def _selecting_elements(self):
-        return self._graphics_selection_mode == GraphicsSelectionMode.ELEMENTS or\
+        return self._graphics_selection_mode == GraphicsSelectionMode.ELEMENTS or \
                self._selecting_any()
 
     def _selecting_points(self):
-        return self._graphics_selection_mode == GraphicsSelectionMode.DATA or\
-               self._graphics_selection_mode == GraphicsSelectionMode.NODE or\
+        return self._graphics_selection_mode == GraphicsSelectionMode.DATA or \
+               self._graphics_selection_mode == GraphicsSelectionMode.NODE or \
                self._selecting_any()
