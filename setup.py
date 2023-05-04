@@ -55,7 +55,7 @@ requires = [
     'cmlibs.maths >= 0.3',
     'cmlibs.utils >= 0.4',
     'PySide6',
-    'cmlibs.zinc >= 3.99',
+    'cmlibs.zinc',
     'cmlibs.argon >= 0.4.0',
 ]
 

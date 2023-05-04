@@ -13,10 +13,9 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # This python module is intended to facilitate users creating their own applications that use Zinc
 # See the examples at https://svn.physiomeproject.org/svn/cmiss/zinc/bindings/trunk/python/ for further
 # information.
-from PySide6 import QtCore, QtWidgets, QtOpenGLWidgets
+from PySide6 import QtCore, QtOpenGLWidgets
 
 from cmlibs.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
-from cmlibs.zinc.sceneviewerinput import Sceneviewerinput
 from cmlibs.zinc.scenecoordinatesystem import \
     SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, \
     SCENECOORDINATESYSTEM_WORLD
@@ -24,11 +23,13 @@ from cmlibs.zinc.field import Field
 from cmlibs.zinc.result import RESULT_OK
 
 from cmlibs.widgets.handlers.interactionmanager import InteractionManager
+from cmlibs.widgets.definitions import ProjectionMode
 
 
 class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
     # Create a signal to notify when the OpenGL scene is ready.
     graphics_initialized = QtCore.Signal()
+    pixel_scale_changed = QtCore.Signal(float)
 
     def __init__(self, parent=None):
         """
@@ -43,13 +44,14 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         self._sceneviewer = None
         self._scene_picker = None
 
-        # Retina displays require a scaling factor most other devices have a scale factor of 1.
-        self._pixel_scale = self.window().devicePixelRatio()
-
         # Client-specified filter which is used in logical AND with sceneviewer filter in selection
         self._selection_filter = None
         self._selection_tolerance = 3.0  # Number of pixels to set the selection tolerance to.
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
+
+        self._pixel_scale = self.devicePixelRatio()
+        self._width = -1
+        self._height = -1
 
     def set_context(self, context):
         """
@@ -66,30 +68,6 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         else:
             raise RuntimeError("Zinc context has not been set in base scene viewer widget.")
 
-    def _create_sceneviewer(self):
-        # From the scene viewer module we can create a scene viewer, we set up the
-        # scene viewer to have the same OpenGL properties as the QGLWidget.
-        scene_viewer_module = self._context.getSceneviewermodule()
-        self._sceneviewer = scene_viewer_module.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE,
-                                                                  Sceneviewer.STEREO_MODE_DEFAULT)
-        self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
-        pixel_scale = self.window().devicePixelRatio()
-        self._sceneviewer.setViewportSize(int(self.width() * pixel_scale), int(self.height() * pixel_scale))
-
-        # Get the default scene filter, which filters by visibility flags
-        scene_filter_module = self._context.getScenefiltermodule()
-        scene_filter = scene_filter_module.getDefaultScenefilter()
-        self._sceneviewer.setScenefilter(scene_filter)
-
-        region = self._context.getDefaultRegion()
-        scene = region.getScene()
-        self.set_scene(scene)
-
-        self._sceneviewer_notifier = self._sceneviewer.createSceneviewernotifier()
-        self._sceneviewer_notifier.setCallback(self._zinc_sceneviewer_event)
-
-        self._sceneviewer.viewAll()
-
     def set_scene(self, scene):
         if self._sceneviewer is not None:
             self._sceneviewer.setScene(scene)
@@ -104,16 +82,6 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         Get the scene viewer for this ZincWidget.
         """
         return self._sceneviewer
-
-    def initializeGL(self):
-        """
-        The OpenGL context is ready for use. If Zinc Context has been set, create Zinc Sceneviewer, otherwise
-        inform client who is required to set Context at a later time.
-        """
-        self._graphics_initialized = True
-        if self._context:
-            self._create_sceneviewer()
-        self.graphics_initialized.emit()
 
     def is_graphics_initialized(self):
         return self._graphics_initialized
@@ -289,17 +257,6 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         """
         self._sceneviewer.viewAll()
 
-    # paintGL start
-    def paintGL(self):
-        """
-        Render the scene for this scene viewer.  The QGLWidget has already set up the
-        correct OpenGL buffer for us so all we need do is render into it.  The scene viewer
-        will clear the background so any OpenGL drawing of your own needs to go after this
-        API call.
-        """
-        self._sceneviewer.renderScene()
-        # paintGL end
-
     def _zinc_sceneviewer_event(self, event):
         """
         Process a scene viewer event.  The update() method is called for a
@@ -313,11 +270,73 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
     #         print(event.getChangeFlags())
     #         print('go the selection change')
 
+    def _create_sceneviewer(self):
+        # From the scene viewer module we can create a scene viewer, we set up the
+        # scene viewer to have the same OpenGL properties as the QGLWidget.
+        scene_viewer_module = self._context.getSceneviewermodule()
+        self._sceneviewer = scene_viewer_module.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE,
+                                                                  Sceneviewer.STEREO_MODE_DEFAULT)
+        self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
+        self._sceneviewer.setViewportSize(int(self.width() * self._pixel_scale + 0.5), int(self.height() * self._pixel_scale + 0.5))
+
+        # Get the default scene filter, which filters by visibility flags
+        scene_filter_module = self._context.getScenefiltermodule()
+        scene_filter = scene_filter_module.getDefaultScenefilter()
+        self._sceneviewer.setScenefilter(scene_filter)
+
+        region = self._context.getDefaultRegion()
+        scene = region.getScene()
+        self.set_scene(scene)
+
+        self._sceneviewer_notifier = self._sceneviewer.createSceneviewernotifier()
+        self._sceneviewer_notifier.setCallback(self._zinc_sceneviewer_event)
+
+        self._sceneviewer.viewAll()
+
+    def initializeGL(self):
+        """
+        The OpenGL context is ready for use. If Zinc Context has been set, create Zinc Sceneviewer, otherwise
+        inform client who is required to set Context at a later time.
+        """
+        self._graphics_initialized = True
+        self._update_pixel_scale(self.devicePixelRatio())
+        if self._context:
+            self._create_sceneviewer()
+        self.graphics_initialized.emit()
+
+    def _update_pixel_scale(self, pixel_scale):
+        changed = False
+        if pixel_scale != self._pixel_scale:
+            self._pixel_scale = pixel_scale
+            self.pixel_scale_changed.emit(self._pixel_scale)
+            changed = True
+
+        return changed
+
+    def _update_viewport_size(self, width, height):
+        if self._update_pixel_scale(self.devicePixelRatio()) or width != self._width or height != self._height:
+            self._width = width
+            self._height = height
+            self._sceneviewer.setViewportSize(int(width * self._pixel_scale + 0.5), int(height * self._pixel_scale + 0.5))
+
+    def paintGL(self):
+        """
+        Render the scene for this scene viewer.  The QOpenGLWidget has already set up the
+        correct OpenGL buffer for us so all we need do is render into it.  The scene viewer
+        will clear the background so any OpenGL drawing of your own needs to go after this
+        API call.
+        """
+        if self._sceneviewer:
+            # handle change of device pixel ratio when window moved between screens:
+            self._update_viewport_size(self.width(), self.height())
+            self._sceneviewer.renderScene()
+
     def resizeGL(self, width, height):
         """
         Respond to widget resize events.
         """
-        self._sceneviewer.setViewportSize(int(width * self._pixel_scale), int(height * self._pixel_scale))
+        if self._sceneviewer:
+            self._update_viewport_size(width, height)
 
     def keyPressEvent(self, event):
         self.key_press_event(event)
