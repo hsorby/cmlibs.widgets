@@ -280,7 +280,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         self._scenepicker = scenepicker
 
     def setPickingRectangle(self, coordinate_system, left, bottom, right, top):
-        self._scenepicker.setSceneviewerRectangle(self._sceneviewer, coordinate_system, left, bottom, right, top);
+        self._scenepicker.setSceneviewerRectangle(self._sceneviewer, coordinate_system, left, bottom, right, top)
 
     def setSelectionfilter(self, scenefilter):
         """
@@ -508,7 +508,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
                     right = max(x, self._selection_position_start[0])
                     bottom = min(y, self._selection_position_start[1])
                     top = max(y, self._selection_position_start[1])
-                    scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, left, bottom, right, top);
+                    scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, left, bottom, right, top)
                     if self._selection_mode == SelectionMode.EXCLUSIVE:
                         self.clearSelection()
                     if self._nodeSelectMode or self._dataSelectMode or self._elemSelectMode:
