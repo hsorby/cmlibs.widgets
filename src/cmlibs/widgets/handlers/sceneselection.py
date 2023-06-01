@@ -116,16 +116,14 @@ class SceneSelection(KeyActivatedHandler):
                             for domain_type in (Field.DOMAIN_TYPE_NODES, Field.DOMAIN_TYPE_DATAPOINTS):
                                 node_set = field_module.findNodesetByFieldDomainType(domain_type)
                                 previous_selection = self._get_or_create_selection_group()
-                                field_node_group = previous_selection.getFieldNodeGroup(node_set)
-                                node_set_group = field_node_group.getNodesetGroup()
-                                node_set_group.removeNodesConditional(not_field)
+                                nodeset_group = previous_selection.getNodesetGroup(node_set)
+                                nodeset_group.removeNodesConditional(not_field)
                                 scene.setSelectionField(previous_selection)
                         if self._selecting_elements():
                             mesh = _get_highest_dimension_mesh(field_module)
                             if mesh:
                                 previous_selection = self._get_or_create_selection_group()
-                                field_element_group = previous_selection.getFieldElementGroup(mesh)
-                                mesh_group = field_element_group.getMeshGroup()
+                                mesh_group = previous_selection.getMeshGroup(mesh)
                                 mesh_group.removeElementsConditional(not_field)
                                 scene.setSelectionField(previous_selection)
 
@@ -153,35 +151,26 @@ class SceneSelection(KeyActivatedHandler):
                     if node.isValid():
                         node_set = node.getNodeset()
                         selection_group = self._get_or_create_selection_group()
-                        nodegroup = selection_group.getFieldNodeGroup(node_set)
-                        if not nodegroup.isValid():
-                            nodegroup = selection_group.createFieldNodeGroup(node_set)
-                        group = nodegroup.getNodesetGroup()
+                        nodeset_group = selection_group.getOrCreateNodesetGroup(node_set)
                         if self._selection_mode == SelectionMode.EXCLUSIVE:
-                            remove_current = (group.getSize() == 1) and group.containsNode(node)
+                            remove_current = (nodeset_group.getSize() == 1) and nodeset_group.containsNode(node)
                             selection_group.clear()
                             if not remove_current:
                                 # re-find node group lost by above clear()
-                                nodegroup = selection_group.getFieldNodeGroup(node_set)
-                                if not nodegroup.isValid():
-                                    nodegroup = selection_group.createFieldNodeGroup(node_set)
-                                group = nodegroup.getNodesetGroup()
-                                group.addNode(node)
+                                nodeset_group = selection_group.getOrCreateNodesetGroup(node_set)
+                                nodeset_group.addNode(node)
                         elif self._selection_mode == SelectionMode.ADDITIVE:
-                            if group.containsNode(node):
-                                group.removeNode(node)
+                            if nodeset_group.containsNode(node):
+                                nodeset_group.removeNode(node)
                             else:
-                                group.addNode(node)
+                                nodeset_group.addNode(node)
                         elif self._selection_mode == SelectionMode.INTERSECTION:
-                            node_selected = True if group.containsNode(node) else False
+                            node_selected = True if nodeset_group.containsNode(node) else False
                             selection_group.clear()
                             if node_selected:
                                 # re-find node group lost by above clear()
-                                nodegroup = selection_group.getFieldNodeGroup(node_set)
-                                if not nodegroup.isValid():
-                                    nodegroup = selection_group.createFieldNodeGroup(node_set)
-                                group = nodegroup.getNodesetGroup()
-                                group.addNode(node)
+                                nodeset_group = selection_group.getOrCreateNodesetGroup(node_set)
+                                nodeset_group.addNode(node)
 
                 if self._selecting_elements() and \
                         (nearest_graphics.getFieldDomainType() in
@@ -191,35 +180,26 @@ class SceneSelection(KeyActivatedHandler):
                     if elem.isValid():
                         mesh = elem.getMesh()
                         selection_group = self._get_or_create_selection_group()
-                        element_group = selection_group.getFieldElementGroup(mesh)
-                        if not element_group.isValid():
-                            element_group = selection_group.createFieldElementGroup(mesh)
-                        group = element_group.getMeshGroup()
+                        mesh_group = selection_group.getOrCreateMeshGroup(mesh)
                         if self._selection_mode == SelectionMode.EXCLUSIVE:
-                            remove_current = (group.getSize() == 1) and group.containsElement(elem)
+                            remove_current = (mesh_group.getSize() == 1) and mesh_group.containsElement(elem)
                             selection_group.clear()
                             if not remove_current:
                                 # re-find element group lost by above clear()
-                                element_group = selection_group.getFieldElementGroup(mesh)
-                                if not element_group.isValid():
-                                    element_group = selection_group.createFieldElementGroup(mesh)
-                                group = element_group.getMeshGroup()
-                                group.addElement(elem)
+                                mesh_group = selection_group.getOrCreateMeshGroup(mesh)
+                                mesh_group.addElement(elem)
                         elif self._selection_mode == SelectionMode.ADDITIVE:
-                            if group.containsElement(elem):
-                                group.removeElement(elem)
+                            if mesh_group.containsElement(elem):
+                                mesh_group.removeElement(elem)
                             else:
-                                group.addElement(elem)
+                                mesh_group.addElement(elem)
                         elif self._selection_mode == SelectionMode.INTERSECTION:
-                            node_selected = True if group.containsElement(elem) else False
+                            node_selected = True if mesh_group.containsElement(elem) else False
                             selection_group.clear()
                             if node_selected:
                                 # re-find element group lost by above clear()
-                                element_group = selection_group.getFieldElementGroup(mesh)
-                                if not element_group.isValid():
-                                    element_group = selection_group.createFieldElementGroup(mesh)
-                                group = element_group.getMeshGroup()
-                                group.addElement(elem)
+                                mesh_group = selection_group.getOrCreateMeshGroup(mesh)
+                                mesh_group.addElement(elem)
 
             region.endHierarchicalChange()
             self._selection_mode = SelectionMode.NONE

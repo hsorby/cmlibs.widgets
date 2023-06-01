@@ -533,26 +533,20 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
                         node = scenepicker.getNearestNode()
                         if node.isValid():
                             nodeset = node.getNodeset()
-                            selectionGroup = self.getOrCreateSelectionGroup()
-                            nodegroup = selectionGroup.getFieldNodeGroup(nodeset)
-                            if not nodegroup.isValid():
-                                nodegroup = selectionGroup.createFieldNodeGroup(nodeset)
-                            group = nodegroup.getNodesetGroup()
+                            selection_group = self.getOrCreateSelectionGroup()
+                            nodeset_group = selection_group.getOrCreateNodesetGroup(nodeset)
                             if self._selection_mode == SelectionMode.EXCLUSIVE:
-                                remove_current = (group.getSize() == 1) and group.containsNode(node)
-                                selectionGroup.clear()
+                                remove_current = (nodeset_group.getSize() == 1) and nodeset_group.containsNode(node)
+                                selection_group.clear()
                                 if not remove_current:
-                                    # re-find node group lost by above clear()
-                                    nodegroup = selectionGroup.getFieldNodeGroup(nodeset)
-                                    if not nodegroup.isValid():
-                                        nodegroup = selectionGroup.createFieldNodeGroup(nodeset)
-                                    group = nodegroup.getNodesetGroup()
-                                    group.addNode(node)
+                                    # re-find nodeset group lost by above clear()
+                                    nodeset_group = selection_group.getOrCreateNodesetGroup(nodeset)
+                                    nodeset_group.addNode(node)
                             elif self._selection_mode == SelectionMode.ADDITIVE:
-                                if group.containsNode(node):
-                                    group.removeNode(node)
+                                if nodeset_group.containsNode(node):
+                                    nodeset_group.removeNode(node)
                                 else:
-                                    group.addNode(node)
+                                    nodeset_group.addNode(node)
 
                     if self._elemSelectMode and \
                             (nearestGraphics.getFieldDomainType() in
@@ -560,26 +554,20 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
                         elem = scenepicker.getNearestElement()
                         if elem.isValid():
                             mesh = elem.getMesh()
-                            selectionGroup = self.getOrCreateSelectionGroup()
-                            elementgroup = selectionGroup.getFieldElementGroup(mesh)
-                            if not elementgroup.isValid():
-                                elementgroup = selectionGroup.createFieldElementGroup(mesh)
-                            group = elementgroup.getMeshGroup()
+                            selection_group = self.getOrCreateSelectionGroup()
+                            mesh_group = selection_group.getOrCreateMeshGroup(mesh)
                             if self._selection_mode == SelectionMode.EXCLUSIVE:
-                                remove_current = (group.getSize() == 1) and group.containsElement(elem)
-                                selectionGroup.clear()
+                                remove_current = (mesh_group.getSize() == 1) and mesh_group.containsElement(elem)
+                                selection_group.clear()
                                 if not remove_current:
                                     # re-find element group lost by above clear()
-                                    elementgroup = selectionGroup.getFieldElementGroup(mesh)
-                                    if not elementgroup.isValid():
-                                        elementgroup = selectionGroup.createFieldElementGroup(mesh)
-                                    group = elementgroup.getMeshGroup()
-                                    group.addElement(elem)
+                                    mesh_group = selection_group.getOrCreateMeshGroup(mesh)
+                                    mesh_group.addElement(elem)
                             elif self._selection_mode == SelectionMode.ADDITIVE:
-                                if group.containsElement(elem):
-                                    group.removeElement(elem)
+                                if mesh_group.containsElement(elem):
+                                    mesh_group.removeElement(elem)
                                 else:
-                                    group.addElement(elem)
+                                    mesh_group.addElement(elem)
                 region.endHierarchicalChange()
 
             self._selection_mode = SelectionMode.NONE
