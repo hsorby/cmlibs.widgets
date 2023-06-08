@@ -2,7 +2,7 @@ from PySide6 import QtCore
 
 from cmlibs.zinc.sceneviewerinput import Sceneviewerinput
 
-SELECTION_GROUP_NAME = 'cmiss_selection'
+SELECTION_GROUP_NAME = '.scene_selection'
 SELECTION_RUBBERBAND_NAME = 'selection_rubberband'
 
 # mapping from qt to zinc start
