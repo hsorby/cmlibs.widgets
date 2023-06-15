@@ -107,31 +107,39 @@ class SceneSelection(KeyActivatedHandler):
                     scene_picker.addPickedElementsToFieldGroup(selection_group)
 
                 if self._selection_mode == SelectionMode.INTERSECTION:
-                    scene = self._zinc_sceneviewer.getScene()
-                    field_module = scene.getRegion().getFieldmodule()
-                    with ChangeManager(field_module):
-                        not_field = field_module.createFieldNot(selection_group)
+                    previous_selection = self._get_or_create_selection_group()
 
-                        if self._selecting_points():
-                            for domain_type in (Field.DOMAIN_TYPE_NODES, Field.DOMAIN_TYPE_DATAPOINTS):
-                                node_set = field_module.findNodesetByFieldDomainType(domain_type)
-                                previous_selection = self._get_or_create_selection_group()
-                                field_node_group = previous_selection.getFieldNodeGroup(node_set)
-                                node_set_group = field_node_group.getNodesetGroup()
-                                node_set_group.removeNodesConditional(not_field)
-                                scene.setSelectionField(previous_selection)
-                        if self._selecting_elements():
-                            mesh = _get_highest_dimension_mesh(field_module)
-                            if mesh:
-                                previous_selection = self._get_or_create_selection_group()
-                                field_element_group = previous_selection.getFieldElementGroup(mesh)
-                                mesh_group = field_element_group.getMeshGroup()
-                                mesh_group.removeElementsConditional(not_field)
-                                scene.setSelectionField(previous_selection)
+                    def select_intersection_recursive(_region):
+                        select_intersection(_region)
+                        child_region = _region.getFirstChild()
+                        while child_region.isValid():
+                            select_intersection_recursive(child_region)
+                            child_region = child_region.getNextSibling()
 
-                        selection_group.clear()
-                        del not_field
-                        del selection_group
+                    def select_intersection(_region):
+                        field_module = _region.getFieldmodule()
+                        selection_field = field_module.findFieldByName("temporary_selection").castGroup()
+
+                        if selection_field.isValid():
+                            with ChangeManager(field_module):
+                                not_field = field_module.createFieldNot(selection_field)
+                                if self._selecting_points():
+                                    for domain_type in (Field.DOMAIN_TYPE_NODES, Field.DOMAIN_TYPE_DATAPOINTS):
+                                        _node_set = field_module.findNodesetByFieldDomainType(domain_type)
+                                        field_node_group = previous_selection.getFieldNodeGroup(_node_set)
+                                        node_set_group = field_node_group.getNodesetGroup()
+                                        node_set_group.removeNodesConditional(not_field)
+                                if self._selecting_elements():
+                                    _mesh = _get_highest_dimension_mesh(field_module)
+                                    if _mesh:
+                                        field_element_group = previous_selection.getFieldElementGroup(_mesh)
+                                        mesh_group = field_element_group.getMeshGroup()
+                                        mesh_group.removeElementsConditional(not_field)
+                                del not_field
+
+                    select_intersection_recursive(region)
+                    scene.setSelectionField(previous_selection)
+                    selection_group.clear()
 
             else:
                 # point select - get nearest object only
