@@ -83,151 +83,152 @@ class SceneSelection(KeyActivatedHandler):
             region = scene.getRegion()
             region.beginHierarchicalChange()
 
-            scene_picker = self._scene_viewer.get_scenepicker()
-            if (x != self._start_position[0]) or (y != self._start_position[1]):
-                # box select
-                left = min(x, self._start_position[0])
-                right = max(x, self._start_position[0])
-                bottom = min(y, self._start_position[1])
-                top = max(y, self._start_position[1])
-                scene_picker.setSceneviewerRectangle(self._zinc_sceneviewer,
-                                                     SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                                     left, bottom, right, top)
-                if self._selection_mode == SelectionMode.EXCLUSIVE:
-                    self.clear_selection()
+            with ChangeManager(scene):
+                scene_picker = self._scene_viewer.get_scenepicker()
+                if (x != self._start_position[0]) or (y != self._start_position[1]):
+                    # box select
+                    left = min(x, self._start_position[0])
+                    right = max(x, self._start_position[0])
+                    bottom = min(y, self._start_position[1])
+                    top = max(y, self._start_position[1])
+                    scene_picker.setSceneviewerRectangle(self._zinc_sceneviewer,
+                                                         SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
+                                                         left, bottom, right, top)
+                    if self._selection_mode == SelectionMode.EXCLUSIVE:
+                        self.clear_selection()
 
-                if self._selection_mode == SelectionMode.INTERSECTION:
-                    selection_group = self._get_temporary_selection_group()
+                    if self._selection_mode == SelectionMode.INTERSECTION:
+                        selection_group = self._get_temporary_selection_group()
+                    else:
+                        selection_group = self._get_or_create_selection_group()
+
+                    if self._selecting_points():
+                        scene_picker.addPickedNodesToFieldGroup(selection_group)
+                    if self._selecting_elements():
+                        scene_picker.addPickedElementsToFieldGroup(selection_group)
+
+                    if self._selection_mode == SelectionMode.INTERSECTION:
+                        previous_selection = self._get_or_create_selection_group()
+
+                        def select_intersection_recursive(_region):
+                            select_intersection(_region)
+                            child_region = _region.getFirstChild()
+                            while child_region.isValid():
+                                select_intersection_recursive(child_region)
+                                child_region = child_region.getNextSibling()
+
+                        def select_intersection(_region):
+                            field_module = _region.getFieldmodule()
+                            selection_field = field_module.findFieldByName("temporary_selection").castGroup()
+
+                            if selection_field.isValid():
+                                with ChangeManager(field_module):
+                                    not_field = field_module.createFieldNot(selection_field)
+                                    if self._selecting_points():
+                                        for domain_type in (Field.DOMAIN_TYPE_NODES, Field.DOMAIN_TYPE_DATAPOINTS):
+                                            _node_set = field_module.findNodesetByFieldDomainType(domain_type)
+                                            field_node_group = previous_selection.getFieldNodeGroup(_node_set)
+                                            node_set_group = field_node_group.getNodesetGroup()
+                                            node_set_group.removeNodesConditional(not_field)
+                                    if self._selecting_elements():
+                                        _mesh = _get_highest_dimension_mesh(field_module)
+                                        if _mesh:
+                                            field_element_group = previous_selection.getFieldElementGroup(_mesh)
+                                            mesh_group = field_element_group.getMeshGroup()
+                                            mesh_group.removeElementsConditional(not_field)
+                                    del not_field
+
+                        select_intersection_recursive(region)
+                        scene.setSelectionField(previous_selection)
+                        selection_group.clear()
+
                 else:
-                    selection_group = self._get_or_create_selection_group()
+                    # point select - get nearest object only
+                    scene_picker.setSceneviewerRectangle(self._zinc_sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
+                                                         x - self._selection_tolerance,
+                                                         y - self._selection_tolerance,
+                                                         x + self._selection_tolerance,
+                                                         y + self._selection_tolerance)
+                    nearest_graphics = scene_picker.getNearestGraphics()
+                    if (self._selection_mode == SelectionMode.EXCLUSIVE
+                            or self._selection_mode == SelectionMode.INTERSECTION) \
+                            and not nearest_graphics.isValid():
+                        self.clear_selection()
 
-                if self._selecting_points():
-                    scene_picker.addPickedNodesToFieldGroup(selection_group)
-                if self._selecting_elements():
-                    scene_picker.addPickedElementsToFieldGroup(selection_group)
+                    if self._selecting_points() and \
+                            (nearest_graphics.getFieldDomainType() == Field.DOMAIN_TYPE_NODES or
+                             nearest_graphics.getFieldDomainType() == Field.DOMAIN_TYPE_DATAPOINTS):
+                        node = scene_picker.getNearestNode()
+                        if node.isValid():
+                            node_set = node.getNodeset()
+                            selection_group = self._get_or_create_selection_group()
+                            nodegroup = selection_group.getFieldNodeGroup(node_set)
+                            if not nodegroup.isValid():
+                                nodegroup = selection_group.createFieldNodeGroup(node_set)
+                            group = nodegroup.getNodesetGroup()
+                            if self._selection_mode == SelectionMode.EXCLUSIVE:
+                                remove_current = (group.getSize() == 1) and group.containsNode(node)
+                                selection_group.clear()
+                                if not remove_current:
+                                    # re-find node group lost by above clear()
+                                    nodegroup = selection_group.getFieldNodeGroup(node_set)
+                                    if not nodegroup.isValid():
+                                        nodegroup = selection_group.createFieldNodeGroup(node_set)
+                                    group = nodegroup.getNodesetGroup()
+                                    group.addNode(node)
+                            elif self._selection_mode == SelectionMode.ADDITIVE:
+                                if group.containsNode(node):
+                                    group.removeNode(node)
+                                else:
+                                    group.addNode(node)
+                            elif self._selection_mode == SelectionMode.INTERSECTION:
+                                node_selected = True if group.containsNode(node) else False
+                                selection_group.clear()
+                                if node_selected:
+                                    # re-find node group lost by above clear()
+                                    nodegroup = selection_group.getFieldNodeGroup(node_set)
+                                    if not nodegroup.isValid():
+                                        nodegroup = selection_group.createFieldNodeGroup(node_set)
+                                    group = nodegroup.getNodesetGroup()
+                                    group.addNode(node)
 
-                if self._selection_mode == SelectionMode.INTERSECTION:
-                    previous_selection = self._get_or_create_selection_group()
-
-                    def select_intersection_recursive(_region):
-                        select_intersection(_region)
-                        child_region = _region.getFirstChild()
-                        while child_region.isValid():
-                            select_intersection_recursive(child_region)
-                            child_region = child_region.getNextSibling()
-
-                    def select_intersection(_region):
-                        field_module = _region.getFieldmodule()
-                        selection_field = field_module.findFieldByName("temporary_selection").castGroup()
-
-                        if selection_field.isValid():
-                            with ChangeManager(field_module):
-                                not_field = field_module.createFieldNot(selection_field)
-                                if self._selecting_points():
-                                    for domain_type in (Field.DOMAIN_TYPE_NODES, Field.DOMAIN_TYPE_DATAPOINTS):
-                                        _node_set = field_module.findNodesetByFieldDomainType(domain_type)
-                                        field_node_group = previous_selection.getFieldNodeGroup(_node_set)
-                                        node_set_group = field_node_group.getNodesetGroup()
-                                        node_set_group.removeNodesConditional(not_field)
-                                if self._selecting_elements():
-                                    _mesh = _get_highest_dimension_mesh(field_module)
-                                    if _mesh:
-                                        field_element_group = previous_selection.getFieldElementGroup(_mesh)
-                                        mesh_group = field_element_group.getMeshGroup()
-                                        mesh_group.removeElementsConditional(not_field)
-                                del not_field
-
-                    select_intersection_recursive(region)
-                    scene.setSelectionField(previous_selection)
-                    selection_group.clear()
-
-            else:
-                # point select - get nearest object only
-                scene_picker.setSceneviewerRectangle(self._zinc_sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                                     x - self._selection_tolerance,
-                                                     y - self._selection_tolerance,
-                                                     x + self._selection_tolerance,
-                                                     y + self._selection_tolerance)
-                nearest_graphics = scene_picker.getNearestGraphics()
-                if (self._selection_mode == SelectionMode.EXCLUSIVE
-                        or self._selection_mode == SelectionMode.INTERSECTION) \
-                        and not nearest_graphics.isValid():
-                    self.clear_selection()
-
-                if self._selecting_points() and \
-                        (nearest_graphics.getFieldDomainType() == Field.DOMAIN_TYPE_NODES or
-                         nearest_graphics.getFieldDomainType() == Field.DOMAIN_TYPE_DATAPOINTS):
-                    node = scene_picker.getNearestNode()
-                    if node.isValid():
-                        node_set = node.getNodeset()
-                        selection_group = self._get_or_create_selection_group()
-                        nodegroup = selection_group.getFieldNodeGroup(node_set)
-                        if not nodegroup.isValid():
-                            nodegroup = selection_group.createFieldNodeGroup(node_set)
-                        group = nodegroup.getNodesetGroup()
-                        if self._selection_mode == SelectionMode.EXCLUSIVE:
-                            remove_current = (group.getSize() == 1) and group.containsNode(node)
-                            selection_group.clear()
-                            if not remove_current:
-                                # re-find node group lost by above clear()
-                                nodegroup = selection_group.getFieldNodeGroup(node_set)
-                                if not nodegroup.isValid():
-                                    nodegroup = selection_group.createFieldNodeGroup(node_set)
-                                group = nodegroup.getNodesetGroup()
-                                group.addNode(node)
-                        elif self._selection_mode == SelectionMode.ADDITIVE:
-                            if group.containsNode(node):
-                                group.removeNode(node)
-                            else:
-                                group.addNode(node)
-                        elif self._selection_mode == SelectionMode.INTERSECTION:
-                            node_selected = True if group.containsNode(node) else False
-                            selection_group.clear()
-                            if node_selected:
-                                # re-find node group lost by above clear()
-                                nodegroup = selection_group.getFieldNodeGroup(node_set)
-                                if not nodegroup.isValid():
-                                    nodegroup = selection_group.createFieldNodeGroup(node_set)
-                                group = nodegroup.getNodesetGroup()
-                                group.addNode(node)
-
-                if self._selecting_elements() and \
-                        (nearest_graphics.getFieldDomainType() in
-                         [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D,
-                          Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
-                    elem = scene_picker.getNearestElement()
-                    if elem.isValid():
-                        mesh = elem.getMesh()
-                        selection_group = self._get_or_create_selection_group()
-                        element_group = selection_group.getFieldElementGroup(mesh)
-                        if not element_group.isValid():
-                            element_group = selection_group.createFieldElementGroup(mesh)
-                        group = element_group.getMeshGroup()
-                        if self._selection_mode == SelectionMode.EXCLUSIVE:
-                            remove_current = (group.getSize() == 1) and group.containsElement(elem)
-                            selection_group.clear()
-                            if not remove_current:
-                                # re-find element group lost by above clear()
-                                element_group = selection_group.getFieldElementGroup(mesh)
-                                if not element_group.isValid():
-                                    element_group = selection_group.createFieldElementGroup(mesh)
-                                group = element_group.getMeshGroup()
-                                group.addElement(elem)
-                        elif self._selection_mode == SelectionMode.ADDITIVE:
-                            if group.containsElement(elem):
-                                group.removeElement(elem)
-                            else:
-                                group.addElement(elem)
-                        elif self._selection_mode == SelectionMode.INTERSECTION:
-                            node_selected = True if group.containsElement(elem) else False
-                            selection_group.clear()
-                            if node_selected:
-                                # re-find element group lost by above clear()
-                                element_group = selection_group.getFieldElementGroup(mesh)
-                                if not element_group.isValid():
-                                    element_group = selection_group.createFieldElementGroup(mesh)
-                                group = element_group.getMeshGroup()
-                                group.addElement(elem)
+                    if self._selecting_elements() and \
+                            (nearest_graphics.getFieldDomainType() in
+                             [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D,
+                              Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
+                        elem = scene_picker.getNearestElement()
+                        if elem.isValid():
+                            mesh = elem.getMesh()
+                            selection_group = self._get_or_create_selection_group()
+                            element_group = selection_group.getFieldElementGroup(mesh)
+                            if not element_group.isValid():
+                                element_group = selection_group.createFieldElementGroup(mesh)
+                            group = element_group.getMeshGroup()
+                            if self._selection_mode == SelectionMode.EXCLUSIVE:
+                                remove_current = (group.getSize() == 1) and group.containsElement(elem)
+                                selection_group.clear()
+                                if not remove_current:
+                                    # re-find element group lost by above clear()
+                                    element_group = selection_group.getFieldElementGroup(mesh)
+                                    if not element_group.isValid():
+                                        element_group = selection_group.createFieldElementGroup(mesh)
+                                    group = element_group.getMeshGroup()
+                                    group.addElement(elem)
+                            elif self._selection_mode == SelectionMode.ADDITIVE:
+                                if group.containsElement(elem):
+                                    group.removeElement(elem)
+                                else:
+                                    group.addElement(elem)
+                            elif self._selection_mode == SelectionMode.INTERSECTION:
+                                node_selected = True if group.containsElement(elem) else False
+                                selection_group.clear()
+                                if node_selected:
+                                    # re-find element group lost by above clear()
+                                    element_group = selection_group.getFieldElementGroup(mesh)
+                                    if not element_group.isValid():
+                                        element_group = selection_group.createFieldElementGroup(mesh)
+                                    group = element_group.getMeshGroup()
+                                    group.addElement(elem)
 
             region.endHierarchicalChange()
             self._selection_mode = SelectionMode.NONE
