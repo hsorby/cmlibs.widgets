@@ -10,6 +10,9 @@ from cmlibs.widgets.handlers.keyactivatedhandler import KeyActivatedHandler
 from cmlibs.utils.zinc.general import ChangeManager
 
 
+TEMP_SELECTION = "_temporary_selection"
+
+
 def _get_highest_dimension_mesh(field_module):
     for d in range(3, 0, -1):
         mesh = field_module.findMeshByDimension(d)
@@ -59,7 +62,7 @@ class SceneSelection(KeyActivatedHandler):
     def _get_temporary_selection_group(self):
         scene = self._zinc_sceneviewer.getScene()
         field_module = scene.getRegion().getFieldmodule()
-        selection_group = field_module.findFieldByName("temporary_selection")
+        selection_group = field_module.findFieldByName(TEMP_SELECTION)
         if selection_group.isValid():
             selection_group = selection_group.castGroup()
             if selection_group.isValid():
@@ -67,7 +70,7 @@ class SceneSelection(KeyActivatedHandler):
         if not selection_group.isValid():
             field_module.beginChange()
             selection_group = field_module.createFieldGroup()
-            selection_group.setName("temporary_selection")
+            selection_group.setName(TEMP_SELECTION)
             field_module.endChange()
         return selection_group
 
@@ -119,7 +122,7 @@ class SceneSelection(KeyActivatedHandler):
 
                         def select_intersection(_region):
                             field_module = _region.getFieldmodule()
-                            selection_field = field_module.findFieldByName("temporary_selection").castGroup()
+                            selection_field = field_module.findFieldByName(TEMP_SELECTION).castGroup()
 
                             if selection_field.isValid():
                                 with ChangeManager(field_module):
