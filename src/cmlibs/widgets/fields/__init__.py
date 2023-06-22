@@ -11,7 +11,7 @@ from cmlibs.widgets.fields.requirements import FieldRequirementRealListValues, F
     FieldRequirementNaturalNumberVector, FieldRequirementMesh, FieldRequirementNeverMet, FieldRequirementMeasure, FieldRequirementOptionalSourceField, \
     FieldRequirementSearchMode, FieldRequirementMeshLike, FieldRequirementNaturalNumberValue, FieldRequirementFaceType, FieldRequirementValueType, \
     FieldRequirementNumberOfComponents, FieldRequirementSourceFieldRegionDependent, FieldRequirementRegion, FieldRequirementSourceFieldRegionDependentFieldDependent, \
-    FieldRequirementTimekeeper, FieldRequirementQuadratureRule, FieldRequirementNodeset, FieldRequirementCoordinateSystemType
+    FieldRequirementTimekeeper, FieldRequirementQuadratureRule, FieldRequirementNodesetLike, FieldRequirementCoordinateSystemType
 
 
 class FieldBase(object):
@@ -114,10 +114,10 @@ class FieldBase(object):
                 if index == 0:
                     requirement.set_value(self._field.getSourceField(1))
                 elif index == 1:
-                    index = self._field.getMeasure()
+                    index = self._field.castEdgeDiscontinuity().getMeasure()
                     requirement.set_value(index)
                 elif index == 2:
-                    field = self._field.getConditionalField()
+                    field = self._field.castEdgeDiscontinuity().getConditionalField()
                     if field and field.isValid():
                         requirement.set_value(field)
             elif field_type == "FieldFindMeshLocation":
@@ -129,7 +129,7 @@ class FieldBase(object):
                     mesh = self._field.castFindMeshLocation().getMesh()
                     requirement.set_value(mesh)
                 elif index == 3:
-                    index = self._field.getSearchMode()
+                    index = self._field.castFindMeshLocation().getSearchMode()
                     requirement.set_value(index)
                 elif index == 4:
                     search_mesh = self._field.castFindMeshLocation().getSearchMesh()
@@ -315,7 +315,7 @@ class FieldTypeBase(object):
         elif self._field_type == "FieldFindMeshLocation":
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:", FieldIsRealValued))
             field_requirements.append(FieldRequirementSourceField(self._region, "Mesh Field:", FieldIsRealValued))
-            field_requirements.append(FieldRequirementMeshLike(self._region, "Mesh:"))
+            field_requirements.append(FieldRequirementMeshLike(self._region))
         elif self._field_type == "FieldStoredMeshLocation":
             field_requirements.append(FieldRequirementMesh(self._region))
         elif self._field_type == "FieldGradient":
@@ -344,7 +344,7 @@ class FieldTypeBase(object):
             field_requirements.append(FieldRequirementNaturalNumberValue("Version number:"))
         elif self._field_type in FIELDS_REQUIRING_ONE_SOURCE_FIELD_ONE_NODESET:
             field_requirements.append(FieldRequirementSourceField(self._region, "Source Field:"))
-            field_requirements.append(FieldRequirementNodeset(self._region))
+            field_requirements.append(FieldRequirementNodesetLike(self._region))
         elif self._field_type == "FieldMeshIntegral":
             field_requirements.append(FieldRequirementSourceField(self._region, "Integrand Field:"))
             field_requirements.append(FieldRequirementSourceField(self._region, "Coordinate Field:", FieldIsCoordinateCapable))
@@ -369,7 +369,7 @@ class FieldTypeBase(object):
             additional_requirements.append(FieldRequirementOptionalSourceField(self._region, "Conditional Field:", FieldIsScalar))
         elif self._field_type == "FieldFindMeshLocation":
             additional_requirements.append(FieldRequirementSearchMode())
-            additional_requirements.append(FieldRequirementMeshLike(self._region))
+            additional_requirements.append(FieldRequirementMeshLike(self._region, label="Search Mesh:"))
         elif self._field_type == "FieldMeshIntegral":
             additional_requirements.append(FieldRequirementNaturalNumberVector("Numbers of Points:"))
             additional_requirements.append(FieldRequirementQuadratureRule())

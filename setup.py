@@ -53,9 +53,9 @@ doc_lines = __doc__.split("\n")
 
 requires = [
     'cmlibs.maths >= 0.3',
-    'cmlibs.utils >= 0.4',
+    'cmlibs.utils >= 0.6',
     'PySide6',
-    'cmlibs.zinc',
+    'cmlibs.zinc >= 4.0',
     'cmlibs.argon >= 0.4.0',
 ]
 
