@@ -5,6 +5,8 @@ from cmlibs.zinc.element import Element
 from cmlibs.zinc.field import FieldFindMeshLocation, FieldEdgeDiscontinuity, Field
 from cmlibs.zinc.node import Node
 
+from cmlibs.utils.zinc.field import get_group_list
+
 from cmlibs.widgets.fieldchooserwidget import FieldChooserWidget
 from cmlibs.widgets.fields.lists import MESH_NAMES, NODESET_NAMES, SEARCH_MODES, MEASURE_TYPES, FACE_TYPES, VALUE_TYPES, QUADRATURE_RULES, COORDINATE_SYSTEM_TYPE
 from cmlibs.widgets.fields.parsers import display_as_vector, parse_to_vector, display_as_integer_vector, parse_to_integer_vector
@@ -127,14 +129,14 @@ class FieldRequirementMesh(FieldRequirementComboBoxBase):
 
 class FieldRequirementNodeset(FieldRequirementComboBoxBase):
 
-    def __init__(self, region):
-        super().__init__("Nodeset:", NODESET_NAMES)
+    def __init__(self, region, label=None, names=None):
+        super().__init__("Nodeset:" if label is None else label, NODESET_NAMES if names is None else names)
         self._region = region
 
     def value(self):
-        mesh_name = self._combobox.currentText()
+        nodeset_name = self._combobox.currentText()
         field_module = self._region.getFieldmodule()
-        return field_module.findNodesetByName(mesh_name)
+        return field_module.findNodesetByName(nodeset_name)
 
     def set_value(self, value):
         nodeset_name = value.getName()
@@ -215,16 +217,32 @@ class FieldRequirementCoordinateSystemType(FieldRequirementComboBoxBase):
 
 class FieldRequirementMeshLike(FieldRequirementMesh):
 
-    def __init__(self, region, label="Search Mesh:"):
-        search_mesh_names = copy(MESH_NAMES)
+    def __init__(self, region, label="Mesh:"):
+        mesh_names = copy(MESH_NAMES)
         field_module = region.getFieldmodule()
-        field_iterator = field_module.createFielditerator()
-        field = field_iterator.next()
-        while field.isValid():
-            if field.castElementGroup().isValid():
-                search_mesh_names.append(field.getName())
-            field = field_iterator.next()
-        super().__init__(region, label, search_mesh_names)
+        meshes = [field_module.findMeshByName(mesh_name) for mesh_name in MESH_NAMES]
+        groups = get_group_list(field_module)
+        for group in groups:
+            for mesh in meshes:
+                mesh_group = group.getMeshGroup(mesh)
+                if mesh_group.isValid():
+                    mesh_names.append(mesh_group.getName())
+        super().__init__(region, label, mesh_names)
+
+
+class FieldRequirementNodesetLike(FieldRequirementNodeset):
+
+    def __init__(self, region, label="Nodeset:"):
+        nodeset_names = copy(NODESET_NAMES)
+        field_module = region.getFieldmodule()
+        nodesets = [field_module.findNodesetByName(nodeset_name) for nodeset_name in NODESET_NAMES]
+        groups = get_group_list(field_module)
+        for group in groups:
+            for nodeset in nodesets:
+                nodeset_group = group.getNodesetGroup(nodeset)
+                if nodeset_group.isValid():
+                    nodeset_names.append(nodeset_group.getName())
+        super().__init__(region, label, nodeset_names)
 
 
 class FieldRequirementRegion(FieldRequirementBase):
