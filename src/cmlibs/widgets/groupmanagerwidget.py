@@ -43,7 +43,7 @@ class GroupManagerWidget(QtWidgets.QWidget):
     """
     group_updated = QtCore.Signal()
 
-    def __init__(self, current_group, group_list, parent=None):
+    def __init__(self, parent=None, current_group=None, group_list=None):
         QtWidgets.QWidget.__init__(self, parent)
         self._ui = Ui_GroupManagerWidget()
         self._ui.setupUi(self)
@@ -52,7 +52,6 @@ class GroupManagerWidget(QtWidgets.QWidget):
         self._group_map = {group.getName(): group for group in group_list}
 
         self._setup_widget()
-        self._setup_whats_this()
         self._make_connections()
 
     def _setup_widget(self):
@@ -67,6 +66,8 @@ class GroupManagerWidget(QtWidgets.QWidget):
         horizontal_header = self._ui.groupTableWidget.horizontalHeader()
         horizontal_header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self._create_row(0)
+
+        self._setup_whats_this()
 
     def _create_row(self, i):
         self._ui.groupTableWidget.insertRow(i)
@@ -114,10 +115,28 @@ class GroupManagerWidget(QtWidgets.QWidget):
         self._ui.clearPushButton.clicked.connect(self._clear_table)
         self._ui.applyPushButton.clicked.connect(self._apply_group_operations)
 
+    def get_current_group(self):
+        return self._current_group
+
+    def set_current_group(self, current_group):
+        self._current_group = current_group
+        self.reset()
+
+    def get_group_list(self):
+        return list(self._group_map.values())
+    
+    def set_group_list(self, group_list):
+        self._group_map = {group.getName(): group for group in group_list}
+        self.reset()
+
     def _clear_table(self):
         for _ in range(self._ui.groupTableWidget.rowCount()):
             self._ui.groupTableWidget.removeRow(0)
         self._create_row(0)
+
+    def reset(self):
+        self._clear_table()
+        self._setup_widget()
 
     def _group_selection_changed(self, current_text):
         count = self._ui.groupTableWidget.rowCount()
