@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'groupmanagerwidget.ui'
+## Form generated from reading UI file 'groupeditorwidget.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.5.1
 ##
@@ -20,16 +20,16 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QGridLayout, QHB
     QSpacerItem, QTableWidget, QTableWidgetItem, QVBoxLayout,
     QWidget)
 
-class Ui_GroupManagerWidget(object):
-    def setupUi(self, GroupManagerWidget):
-        if not GroupManagerWidget.objectName():
-            GroupManagerWidget.setObjectName(u"GroupManagerWidget")
-        GroupManagerWidget.resize(500, 400)
-        self.verticalLayout = QVBoxLayout(GroupManagerWidget)
+class Ui_GroupEditorWidget(object):
+    def setupUi(self, GroupEditorWidget):
+        if not GroupEditorWidget.objectName():
+            GroupEditorWidget.setObjectName(u"GroupEditorWidget")
+        GroupEditorWidget.resize(500, 400)
+        self.verticalLayout = QVBoxLayout(GroupEditorWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
-        self.groupTableWidget = QTableWidget(GroupManagerWidget)
+        self.groupTableWidget = QTableWidget(GroupEditorWidget)
         if (self.groupTableWidget.columnCount() < 3):
             self.groupTableWidget.setColumnCount(3)
         __qtablewidgetitem = QTableWidgetItem()
@@ -53,7 +53,7 @@ class Ui_GroupManagerWidget(object):
 
         self.gridLayout.addWidget(self.groupTableWidget, 1, 0, 1, 1)
 
-        self.currentGroupLabel = QLabel(GroupManagerWidget)
+        self.currentGroupLabel = QLabel(GroupEditorWidget)
         self.currentGroupLabel.setObjectName(u"currentGroupLabel")
 
         self.gridLayout.addWidget(self.currentGroupLabel, 0, 0, 1, 1)
@@ -63,7 +63,7 @@ class Ui_GroupManagerWidget(object):
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.clearPushButton = QPushButton(GroupManagerWidget)
+        self.clearPushButton = QPushButton(GroupEditorWidget)
         self.clearPushButton.setObjectName(u"clearPushButton")
 
         self.horizontalLayout.addWidget(self.clearPushButton)
@@ -72,7 +72,7 @@ class Ui_GroupManagerWidget(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.applyPushButton = QPushButton(GroupManagerWidget)
+        self.applyPushButton = QPushButton(GroupEditorWidget)
         self.applyPushButton.setObjectName(u"applyPushButton")
 
         self.horizontalLayout.addWidget(self.applyPushButton)
@@ -81,24 +81,24 @@ class Ui_GroupManagerWidget(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
 
 
-        self.retranslateUi(GroupManagerWidget)
+        self.retranslateUi(GroupEditorWidget)
 
-        QMetaObject.connectSlotsByName(GroupManagerWidget)
+        QMetaObject.connectSlotsByName(GroupEditorWidget)
     # setupUi
 
-    def retranslateUi(self, GroupManagerWidget):
-        GroupManagerWidget.setWindowTitle(QCoreApplication.translate("GroupManagerWidget", u"Group Manager Widget", None))
+    def retranslateUi(self, GroupEditorWidget):
+        GroupEditorWidget.setWindowTitle(QCoreApplication.translate("GroupEditorWidget", u"Group Editor Widget", None))
 #if QT_CONFIG(whatsthis)
-        GroupManagerWidget.setWhatsThis("")
+        GroupEditorWidget.setWhatsThis("")
 #endif // QT_CONFIG(whatsthis)
         ___qtablewidgetitem = self.groupTableWidget.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("GroupManagerWidget", u"Group", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("GroupEditorWidget", u"Group", None));
         ___qtablewidgetitem1 = self.groupTableWidget.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("GroupManagerWidget", u"Operation", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("GroupEditorWidget", u"Operation", None));
         ___qtablewidgetitem2 = self.groupTableWidget.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("GroupManagerWidget", u"Complement", None));
-        self.currentGroupLabel.setText(QCoreApplication.translate("GroupManagerWidget", u"Managing Group: ", None))
-        self.clearPushButton.setText(QCoreApplication.translate("GroupManagerWidget", u"Clear", None))
-        self.applyPushButton.setText(QCoreApplication.translate("GroupManagerWidget", u"Apply", None))
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("GroupEditorWidget", u"Complement", None));
+        self.currentGroupLabel.setText(QCoreApplication.translate("GroupEditorWidget", u"Managing Group: ", None))
+        self.clearPushButton.setText(QCoreApplication.translate("GroupEditorWidget", u"Clear", None))
+        self.applyPushButton.setText(QCoreApplication.translate("GroupEditorWidget", u"Apply", None))
     # retranslateUi
 

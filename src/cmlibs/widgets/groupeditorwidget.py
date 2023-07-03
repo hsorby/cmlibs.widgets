@@ -15,7 +15,7 @@
 """
 from PySide6 import QtCore, QtWidgets
 
-from cmlibs.widgets.ui.ui_groupmanagerwidget import Ui_GroupManagerWidget
+from cmlibs.widgets.ui.ui_groupeditorwidget import Ui_GroupEditorWidget
 from cmlibs.utils.zinc.group import group_add_group_elements, group_remove_group_elements, \
     group_add_not_group_elements, group_remove_not_group_elements
 
@@ -30,10 +30,10 @@ OPERATION_MAP = {
 }
 
 
-class GroupManagerWidget(QtWidgets.QWidget):
+class GroupEditorWidget(QtWidgets.QWidget):
     """
     This widget takes a list of Zinc groups as an input and provides a GUI allowing the user to redefine a specific group based on the
-    nodes/elements contained in each of the other groups in the list. Calls to the GroupManagerWidget constructor must ensure that the
+    nodes/elements contained in each of the other groups in the list. Calls to the GroupEditorWidget constructor must ensure that the
     group arguments are valid and non-empty.
 
     This widget emits a group_updated signal when the group operations are applied.
@@ -45,7 +45,7 @@ class GroupManagerWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None, current_group=None, group_list=None):
         QtWidgets.QWidget.__init__(self, parent)
-        self._ui = Ui_GroupManagerWidget()
+        self._ui = Ui_GroupEditorWidget()
         self._ui.setupUi(self)
 
         self._current_group = current_group
@@ -95,7 +95,7 @@ class GroupManagerWidget(QtWidgets.QWidget):
         self.setWhatsThis(
             f"""
             <html>
-            The Group Manager Widget provides the ability to redefine the selected group (<i>{self._current_group.getName()}</i>) based on
+            The Group Editor Widget provides the ability to redefine the selected group (<i>{self._current_group.getName()}</i>) based on
             elements of other groups defined over the same model. For each line in the widget:
             
             <ul>
@@ -124,7 +124,7 @@ class GroupManagerWidget(QtWidgets.QWidget):
 
     def get_group_list(self):
         return list(self._group_map.values())
-    
+
     def set_group_list(self, group_list):
         self._group_map = {group.getName(): group for group in group_list}
         self.reset()
