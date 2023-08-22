@@ -15,29 +15,31 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QGridLayout, QHBoxLayout,
-    QHeaderView, QLabel, QPushButton, QSizePolicy,
-    QSpacerItem, QTableWidget, QTableWidgetItem, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QGridLayout,
+    QHBoxLayout, QHeaderView, QLabel, QPushButton,
+    QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 class Ui_GroupEditorWidget(object):
     def setupUi(self, GroupEditorWidget):
         if not GroupEditorWidget.objectName():
             GroupEditorWidget.setObjectName(u"GroupEditorWidget")
-        GroupEditorWidget.resize(500, 400)
+        GroupEditorWidget.resize(600, 400)
         self.verticalLayout = QVBoxLayout(GroupEditorWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
         self.groupTableWidget = QTableWidget(GroupEditorWidget)
-        if (self.groupTableWidget.columnCount() < 3):
-            self.groupTableWidget.setColumnCount(3)
+        if (self.groupTableWidget.columnCount() < 4):
+            self.groupTableWidget.setColumnCount(4)
         __qtablewidgetitem = QTableWidgetItem()
         self.groupTableWidget.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
         self.groupTableWidget.setHorizontalHeaderItem(1, __qtablewidgetitem1)
         __qtablewidgetitem2 = QTableWidgetItem()
         self.groupTableWidget.setHorizontalHeaderItem(2, __qtablewidgetitem2)
+        __qtablewidgetitem3 = QTableWidgetItem()
+        self.groupTableWidget.setHorizontalHeaderItem(3, __qtablewidgetitem3)
         self.groupTableWidget.setObjectName(u"groupTableWidget")
         self.groupTableWidget.setFocusPolicy(Qt.NoFocus)
         self.groupTableWidget.setAlternatingRowColors(True)
@@ -45,18 +47,51 @@ class Ui_GroupEditorWidget(object):
         self.groupTableWidget.setSelectionBehavior(QAbstractItemView.SelectItems)
         self.groupTableWidget.setShowGrid(False)
         self.groupTableWidget.setRowCount(0)
-        self.groupTableWidget.setColumnCount(3)
+        self.groupTableWidget.setColumnCount(4)
         self.groupTableWidget.horizontalHeader().setVisible(True)
         self.groupTableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.groupTableWidget.horizontalHeader().setHighlightSections(True)
         self.groupTableWidget.verticalHeader().setVisible(False)
 
-        self.gridLayout.addWidget(self.groupTableWidget, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.groupTableWidget, 4, 0, 1, 1)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.label = QLabel(GroupEditorWidget)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout_2.addWidget(self.label)
+
+        self.dimensionComboBox = QComboBox(GroupEditorWidget)
+        self.dimensionComboBox.setObjectName(u"dimensionComboBox")
+
+        self.horizontalLayout_2.addWidget(self.dimensionComboBox)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
+
+
+        self.gridLayout.addLayout(self.horizontalLayout_2, 2, 0, 1, 1)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.label_2 = QLabel(GroupEditorWidget)
+        self.label_2.setObjectName(u"label_2")
+
+        self.horizontalLayout_3.addWidget(self.label_2)
 
         self.currentGroupLabel = QLabel(GroupEditorWidget)
         self.currentGroupLabel.setObjectName(u"currentGroupLabel")
 
-        self.gridLayout.addWidget(self.currentGroupLabel, 0, 0, 1, 1)
+        self.horizontalLayout_3.addWidget(self.currentGroupLabel)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_3)
+
+
+        self.gridLayout.addLayout(self.horizontalLayout_3, 1, 0, 1, 1)
 
 
         self.verticalLayout.addLayout(self.gridLayout)
@@ -94,10 +129,14 @@ class Ui_GroupEditorWidget(object):
         ___qtablewidgetitem = self.groupTableWidget.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("GroupEditorWidget", u"Group", None));
         ___qtablewidgetitem1 = self.groupTableWidget.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("GroupEditorWidget", u"Operation", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("GroupEditorWidget", u"Face-Type", None));
         ___qtablewidgetitem2 = self.groupTableWidget.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("GroupEditorWidget", u"Complement", None));
-        self.currentGroupLabel.setText(QCoreApplication.translate("GroupEditorWidget", u"Managing Group: ", None))
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("GroupEditorWidget", u"Operation", None));
+        ___qtablewidgetitem3 = self.groupTableWidget.horizontalHeaderItem(3)
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("GroupEditorWidget", u"Complement", None));
+        self.label.setText(QCoreApplication.translate("GroupEditorWidget", u"Dimension of Operations:", None))
+        self.label_2.setText(QCoreApplication.translate("GroupEditorWidget", u"Managing Group: ", None))
+        self.currentGroupLabel.setText("")
         self.clearPushButton.setText(QCoreApplication.translate("GroupEditorWidget", u"Clear", None))
         self.applyPushButton.setText(QCoreApplication.translate("GroupEditorWidget", u"Apply", None))
     # retranslateUi

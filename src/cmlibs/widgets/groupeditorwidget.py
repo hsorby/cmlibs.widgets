@@ -15,9 +15,11 @@
 """
 from PySide6 import QtCore, QtWidgets
 
+from cmlibs.zinc.field import Field
+from cmlibs.zinc.element import Element
 from cmlibs.widgets.ui.ui_groupeditorwidget import Ui_GroupEditorWidget
 from cmlibs.utils.zinc.group import group_add_group_elements, group_remove_group_elements, \
-    group_add_not_group_elements, group_remove_not_group_elements
+    group_add_not_group_elements, group_remove_not_group_elements, group_get_highest_dimension
 
 
 NULL_PLACEHOLDER = "---"
@@ -28,6 +30,34 @@ OPERATION_MAP = {
     "Remove": {"operation": group_remove_group_elements, "NOT-operation": group_remove_not_group_elements,
                "tooltip": "Remove all nodes/elements in this group from the selected group"},
 }
+
+DEFAULT_FACE_FIELDS = {
+    NULL_PLACEHOLDER: lambda field_module: field_module.createFieldIsOnFace(Element.FACE_TYPE_ALL),
+}
+
+GENERAL_FACE_FIELDS = {
+    "Exterior": lambda field_module: field_module.createFieldIsExterior()
+}
+
+XI_FIELDS = [
+    {"xi1=0": lambda field_module: field_module.createFieldIsOnFace(Element.FACE_TYPE_XI1_0),
+     "xi1=1": lambda field_module: field_module.createFieldIsOnFace(Element.FACE_TYPE_XI1_1)},
+    {"xi2=0": lambda field_module: field_module.createFieldIsOnFace(Element.FACE_TYPE_XI2_0),
+     "xi2=1": lambda field_module: field_module.createFieldIsOnFace(Element.FACE_TYPE_XI2_1)},
+    {"xi3=0": lambda field_module: field_module.createFieldIsOnFace(Element.FACE_TYPE_XI3_0),
+     "xi3=1": lambda field_module: field_module.createFieldIsOnFace(Element.FACE_TYPE_XI3_1)}
+]
+
+
+def region_get_highest_dimension(field_module):
+    for dimension in range(3, 0, -1):
+        mesh = field_module.findMeshByDimension(dimension)
+        if mesh.getSize() > 0:
+            return dimension
+    node_set = field_module.findNodesetByFieldDomainType(Field.DOMAIN_TYPE_NODES)
+    if node_set.getSize() > 0:
+        return 0
+    return -1
 
 
 class GroupEditorWidget(QtWidgets.QWidget):
@@ -50,9 +80,27 @@ class GroupEditorWidget(QtWidgets.QWidget):
 
         self._current_group = current_group
         self._group_map = {group.getName(): group for group in group_list}
+        self._dimension_of_operation = self._define_dimension_of_operation()
+        self._face_type_fields = self._define_face_type_fields()
 
         self._setup_widget()
         self._make_connections()
+
+    def _define_dimension_of_operation(self):
+        highest_dimension = group_get_highest_dimension(self._current_group)
+        if highest_dimension == -1:
+            field_module = self._current_group.getFieldmodule()
+            highest_dimension = region_get_highest_dimension(field_module)
+        return highest_dimension
+
+    def _define_face_type_fields(self):
+        field_module = self._current_group.getFieldmodule()
+        highest_dimension = region_get_highest_dimension(field_module)
+        if self._dimension_of_operation < highest_dimension:
+            xi_fields = {k: v for d in XI_FIELDS[:highest_dimension + 1] for k, v in d.items()}
+            return {**DEFAULT_FACE_FIELDS, **GENERAL_FACE_FIELDS, **xi_fields}
+        else:
+            return {**DEFAULT_FACE_FIELDS}
 
     def _setup_widget(self):
         current_group_name = self._current_group.getName()
@@ -60,14 +108,21 @@ class GroupEditorWidget(QtWidgets.QWidget):
             del self._group_map[current_group_name]
 
         # Set the current group label text.
-        self._ui.currentGroupLabel.setText(self._ui.currentGroupLabel.text() + current_group_name)
+        self._ui.currentGroupLabel.setText(current_group_name)
 
-        # Setup table.
+        # Define the dimensions of operation.
+        highest_dimension = region_get_highest_dimension(self._current_group.getFieldmodule())
+        dimensions = ["0D (Nodes)", "1D (Lines)", "2D (Faces)", "3D (Elements)"][:highest_dimension + 1]
+        self._ui.dimensionComboBox.addItems(dimensions)
+        self._ui.dimensionComboBox.setCurrentIndex(self._dimension_of_operation)
+
+        self._setup_table()
+        self._setup_whats_this()
+
+    def _setup_table(self):
         horizontal_header = self._ui.groupTableWidget.horizontalHeader()
         horizontal_header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self._create_row(0)
-
-        self._setup_whats_this()
 
     def _create_row(self, i):
         self._ui.groupTableWidget.insertRow(i)
@@ -75,6 +130,9 @@ class GroupEditorWidget(QtWidgets.QWidget):
         group_combo_box = QtWidgets.QComboBox()
         group_combo_box.addItems([NULL_PLACEHOLDER] + list(self._group_map.keys()))
         group_combo_box.currentTextChanged.connect(self._group_selection_changed)
+
+        face_type_combo_box = QtWidgets.QComboBox()
+        face_type_combo_box.addItems(self._face_type_fields.keys())
 
         operation_combo_box = QtWidgets.QComboBox()
         operation_combo_box.addItem(NULL_PLACEHOLDER)
@@ -87,8 +145,9 @@ class GroupEditorWidget(QtWidgets.QWidget):
         not_combo_box.addItems([NULL_PLACEHOLDER, "Not"])
 
         self._ui.groupTableWidget.setCellWidget(i, 0, group_combo_box)
-        self._ui.groupTableWidget.setCellWidget(i, 1, operation_combo_box)
-        self._ui.groupTableWidget.setCellWidget(i, 2, not_combo_box)
+        self._ui.groupTableWidget.setCellWidget(i, 1, face_type_combo_box)
+        self._ui.groupTableWidget.setCellWidget(i, 2, operation_combo_box)
+        self._ui.groupTableWidget.setCellWidget(i, 3, not_combo_box)
 
     def _setup_whats_this(self):
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.WindowContextHelpButtonHint)
@@ -112,8 +171,9 @@ class GroupEditorWidget(QtWidgets.QWidget):
         )
 
     def _make_connections(self):
-        self._ui.clearPushButton.clicked.connect(self._clear_table)
+        self._ui.clearPushButton.clicked.connect(self._reset_table)
         self._ui.applyPushButton.clicked.connect(self._apply_group_operations)
+        self._ui.dimensionComboBox.currentIndexChanged.connect(self._update_dimension_of_operation)
 
     def get_current_group(self):
         return self._current_group
@@ -129,13 +189,28 @@ class GroupEditorWidget(QtWidgets.QWidget):
         self._group_map = {group.getName(): group for group in group_list}
         self.reset()
 
+    def _update_dimension_of_operation(self, dimension):
+        self._dimension_of_operation = dimension
+        self._face_type_fields = self._define_face_type_fields()
+
+        self._clear_table()
+        self._setup_table()
+
     def _clear_table(self):
         for _ in range(self._ui.groupTableWidget.rowCount()):
             self._ui.groupTableWidget.removeRow(0)
+
+    def _reset_table(self):
+        self._clear_table()
         self._create_row(0)
 
-    def reset(self):
+    def _clear_widget(self):
+        self._ui.currentGroupLabel.clear()
+        self._ui.dimensionComboBox.clear()
         self._clear_table()
+
+    def reset(self):
+        self._clear_widget()
         self._setup_widget()
 
     def _group_selection_changed(self, current_text):
@@ -148,12 +223,18 @@ class GroupEditorWidget(QtWidgets.QWidget):
             self._ui.groupTableWidget.removeRow(current_row)
 
     def _apply_group_operations(self):
+        field_module = self._current_group.getFieldmodule()
         for i in range(self._ui.groupTableWidget.rowCount()):
-            text = self._ui.groupTableWidget.cellWidget(i, 1).currentText()
+            text = self._ui.groupTableWidget.cellWidget(i, 2).currentText()
             if text in OPERATION_MAP.keys():
                 group = self._group_map[self._ui.groupTableWidget.cellWidget(i, 0).currentText()]
-                if self._ui.groupTableWidget.cellWidget(i, 2).currentText() == NULL_PLACEHOLDER:
-                    OPERATION_MAP[text]["operation"](self._current_group, group)
+                face_type_name = self._ui.groupTableWidget.cellWidget(i, 1).currentText()
+                face_type = self._face_type_fields[face_type_name](field_module)
+
+                if self._ui.groupTableWidget.cellWidget(i, 3).currentText() == NULL_PLACEHOLDER:
+                    operation = OPERATION_MAP[text]["operation"]
                 else:
-                    OPERATION_MAP[text]["NOT-operation"](self._current_group, group)
+                    operation = OPERATION_MAP[text]["NOT-operation"]
+                operation(self._current_group, group, highest_dimension=self._dimension_of_operation, conditional_field=face_type)
+
         self.group_updated.emit()
