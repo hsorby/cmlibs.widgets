@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from enum import IntEnum
 from PySide6 import QtCore, QtWidgets
 
 from cmlibs.zinc.field import Field
@@ -58,6 +59,13 @@ def region_get_highest_dimension(field_module):
     if node_set.getSize() > 0:
         return 0
     return -1
+
+
+class Column(IntEnum):
+    GROUP = 0
+    FACE_TYPE = 1
+    OPERATION = 2
+    COMPLEMENT = 3
 
 
 class GroupEditorWidget(QtWidgets.QWidget):
@@ -144,10 +152,10 @@ class GroupEditorWidget(QtWidgets.QWidget):
         not_combo_box = QtWidgets.QComboBox()
         not_combo_box.addItems([NULL_PLACEHOLDER, "Not"])
 
-        self._ui.groupTableWidget.setCellWidget(i, 0, group_combo_box)
-        self._ui.groupTableWidget.setCellWidget(i, 1, face_type_combo_box)
-        self._ui.groupTableWidget.setCellWidget(i, 2, operation_combo_box)
-        self._ui.groupTableWidget.setCellWidget(i, 3, not_combo_box)
+        self._ui.groupTableWidget.setCellWidget(i, Column.GROUP, group_combo_box)
+        self._ui.groupTableWidget.setCellWidget(i, Column.FACE_TYPE, face_type_combo_box)
+        self._ui.groupTableWidget.setCellWidget(i, Column.OPERATION, operation_combo_box)
+        self._ui.groupTableWidget.setCellWidget(i, Column.COMPLEMENT, not_combo_box)
 
     def _setup_whats_this(self):
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.WindowContextHelpButtonHint)
@@ -225,13 +233,13 @@ class GroupEditorWidget(QtWidgets.QWidget):
     def _apply_group_operations(self):
         field_module = self._current_group.getFieldmodule()
         for i in range(self._ui.groupTableWidget.rowCount()):
-            text = self._ui.groupTableWidget.cellWidget(i, 2).currentText()
+            text = self._ui.groupTableWidget.cellWidget(i, Column.OPERATION).currentText()
             if text in OPERATION_MAP.keys():
-                group = self._group_map[self._ui.groupTableWidget.cellWidget(i, 0).currentText()]
-                face_type_name = self._ui.groupTableWidget.cellWidget(i, 1).currentText()
+                group = self._group_map[self._ui.groupTableWidget.cellWidget(i, Column.GROUP).currentText()]
+                face_type_name = self._ui.groupTableWidget.cellWidget(i, Column.FACE_TYPE).currentText()
                 face_type = self._face_type_fields[face_type_name](field_module)
 
-                if self._ui.groupTableWidget.cellWidget(i, 3).currentText() == NULL_PLACEHOLDER:
+                if self._ui.groupTableWidget.cellWidget(i, Column.COMPLEMENT).currentText() == NULL_PLACEHOLDER:
                     operation = OPERATION_MAP[text]["operation"]
                 else:
                     operation = OPERATION_MAP[text]["NOT-operation"]
