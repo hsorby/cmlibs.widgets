@@ -15,7 +15,7 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
         super(AlignmentSceneviewerWidget, self).__init__(parent)
         self._model = None
         self._alignKeyPressed = False
-        self._active_button = QtCore.Qt.NoButton
+        self._active_button = QtCore.Qt.MouseButton.NoButton
         self._lastMousePos = None
 
     def setModel(self, model):
@@ -25,29 +25,29 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
         """
         Holding down the 'A' key performs alignment (if align mode is on)
         """
-        if (event.key() == QtCore.Qt.Key_A) and event.isAutoRepeat() is False:
+        if (event.key() == QtCore.Qt.Key.Key_A) and event.isAutoRepeat() is False:
             self._alignKeyPressed = True
             event.setAccepted(True)
         else:
             super(AlignmentSceneviewerWidget, self).keyPressEvent(event)
 
     def keyReleaseEvent(self, event):
-        if (event.key() == QtCore.Qt.Key_A) and event.isAutoRepeat() is False:
+        if (event.key() == QtCore.Qt.Key.Key_A) and event.isAutoRepeat() is False:
             self._alignKeyPressed = False
             event.setAccepted(True)
         else:
             super(AlignmentSceneviewerWidget, self).keyReleaseEvent(event)
 
     def mousePressEvent(self, event):
-        if self._active_button != QtCore.Qt.NoButton:
+        if self._active_button != QtCore.Qt.MouseButton.NoButton:
             return
         if self._model.isStateAlign() and self._alignKeyPressed:
             self._use_zinc_mouse_event_handling = False  # needed as not calling super mousePressEvent
             self._active_button = event.button()
             self._model.interactionStart()
             # shift-Left button becomes middle button, to support Mac
-            if (self._active_button == QtCore.Qt.LeftButton) and (event.modifiers() & QtCore.Qt.SHIFT):
-                self._active_button = QtCore.Qt.MiddleButton
+            if (self._active_button == QtCore.Qt.MouseButton.LeftButton) and (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier):
+                self._active_button = QtCore.Qt.MouseButton.MiddleButton
             self._lastMousePos = [event.x(), event.y()]
         else:
             super(AlignmentSceneviewerWidget, self).mousePressEvent(event)
@@ -63,14 +63,14 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
             eyeDistance = vectorops.magnitude(lookatToEye)
             front = vectorops.div(lookatToEye, eyeDistance)
             right = vectorops.cross(up, front)
-            if self._active_button == QtCore.Qt.LeftButton:
+            if self._active_button == QtCore.Qt.MouseButton.LeftButton:
                 mag = vectorops.magnitude(delta)
                 if mag > 1e-12:
                     prop = vectorops.div(delta, mag)
                     axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
                     angle = mag*0.002
                     self._model.rotateModel(axis, angle)
-            elif self._active_button == QtCore.Qt.MiddleButton:
+            elif self._active_button == QtCore.Qt.MouseButton.MiddleButton:
                 result, l, r, b, t, near, far = self._sceneviewer.getViewingVolume()
                 viewportWidth = self.width()
                 viewportHeight = self.height()
@@ -80,7 +80,7 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
                     eyeScale = (r - l) / viewportWidth
                 offset = vectorops.add(vectorops.mult(right, eyeScale * delta[0]), vectorops.mult(up, -eyeScale * delta[1]))
                 self._model.offsetModel(offset)
-            elif self._active_button == QtCore.Qt.RightButton:
+            elif self._active_button == QtCore.Qt.MouseButton.RightButton:
                 factor = 1.0 + delta[1]*0.0005
                 if factor < 0.9:
                     factor = 0.9
@@ -94,5 +94,5 @@ class AlignmentSceneviewerWidget(SceneviewerWidget):
             self._model.interactionEnd()
         else:
             super(AlignmentSceneviewerWidget, self).mouseReleaseEvent(event)
-        self._active_button = QtCore.Qt.NoButton
+        self._active_button = QtCore.Qt.MouseButton.NoButton
         self._lastMousePos = None
