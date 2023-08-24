@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'groupeditorwidget.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.1
+## Created by: Qt User Interface Compiler version 6.4.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -112,6 +112,11 @@ class Ui_GroupEditorWidget(object):
 
         self.horizontalLayout.addWidget(self.applyPushButton)
 
+        self.closePushButton = QPushButton(GroupEditorWidget)
+        self.closePushButton.setObjectName(u"closePushButton")
+
+        self.horizontalLayout.addWidget(self.closePushButton)
+
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
@@ -139,5 +144,6 @@ class Ui_GroupEditorWidget(object):
         self.currentGroupLabel.setText("")
         self.clearPushButton.setText(QCoreApplication.translate("GroupEditorWidget", u"Clear", None))
         self.applyPushButton.setText(QCoreApplication.translate("GroupEditorWidget", u"Apply", None))
+        self.closePushButton.setText(QCoreApplication.translate("GroupEditorWidget", u"Close", None))
     # retranslateUi
 

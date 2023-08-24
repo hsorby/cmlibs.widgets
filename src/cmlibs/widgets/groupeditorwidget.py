@@ -80,6 +80,7 @@ class GroupEditorWidget(QtWidgets.QWidget):
     :param group_list: A list of FieldGroups to use for redefining the current group.
     """
     group_updated = QtCore.Signal()
+    close_requested = QtCore.Signal()
 
     def __init__(self, parent=None, current_group=None, group_list=None):
         QtWidgets.QWidget.__init__(self, parent)
@@ -129,7 +130,7 @@ class GroupEditorWidget(QtWidgets.QWidget):
 
     def _setup_table(self):
         horizontal_header = self._ui.groupTableWidget.horizontalHeader()
-        horizontal_header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        horizontal_header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
         self._create_row(0)
 
     def _create_row(self, i):
@@ -140,14 +141,14 @@ class GroupEditorWidget(QtWidgets.QWidget):
         group_combo_box.currentTextChanged.connect(self._group_selection_changed)
 
         face_type_combo_box = QtWidgets.QComboBox()
-        face_type_combo_box.addItems(self._face_type_fields.keys())
+        face_type_combo_box.addItems(list(self._face_type_fields.keys()))
 
         operation_combo_box = QtWidgets.QComboBox()
         operation_combo_box.addItem(NULL_PLACEHOLDER)
         for j in range(len(OPERATION_MAP)):
             key, value = list(OPERATION_MAP.items())[j]
             operation_combo_box.addItem(key)
-            operation_combo_box.setItemData(j + 1, value["tooltip"], QtCore.Qt.ToolTipRole)
+            operation_combo_box.setItemData(j + 1, value["tooltip"], QtCore.Qt.ItemDataRole.ToolTipRole)
 
         not_combo_box = QtWidgets.QComboBox()
         not_combo_box.addItems([NULL_PLACEHOLDER, "Not"])
@@ -158,7 +159,7 @@ class GroupEditorWidget(QtWidgets.QWidget):
         self._ui.groupTableWidget.setCellWidget(i, Column.COMPLEMENT, not_combo_box)
 
     def _setup_whats_this(self):
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.WindowContextHelpButtonHint)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.WindowType.WindowContextHelpButtonHint)
         self.setWhatsThis(
             f"""
             <html>
@@ -181,6 +182,7 @@ class GroupEditorWidget(QtWidgets.QWidget):
     def _make_connections(self):
         self._ui.clearPushButton.clicked.connect(self._reset_table)
         self._ui.applyPushButton.clicked.connect(self._apply_group_operations)
+        self._ui.closePushButton.clicked.connect(self.close_requested)
         self._ui.dimensionComboBox.currentIndexChanged.connect(self._update_dimension_of_operation)
 
     def get_current_group(self):
@@ -221,9 +223,16 @@ class GroupEditorWidget(QtWidgets.QWidget):
         self._clear_widget()
         self._setup_widget()
 
+    def _group_selection_row(self, sender):
+        row = 0
+        while self._ui.groupTableWidget.cellWidget(row, 0) != sender:
+            row += 1
+
+        return row
+
     def _group_selection_changed(self, current_text):
         count = self._ui.groupTableWidget.rowCount()
-        current_row = self._ui.groupTableWidget.currentRow()
+        current_row = self._group_selection_row(self.sender())
         if current_text in self._group_map.keys():
             if current_row == count - 1:
                 self._create_row(count)
