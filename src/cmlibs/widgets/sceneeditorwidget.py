@@ -116,9 +116,9 @@ class SceneEditorWidget(QtWidgets.QWidget):
             while graphics and graphics.isValid():
                 name = self._getGraphicsDisplayName(graphics)
                 item = QtWidgets.QListWidgetItem(name)
-                item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+                item.setFlags(item.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
                 visible = graphics.getVisibilityFlag()
-                item.setCheckState(QtCore.Qt.Checked if visible else QtCore.Qt.Unchecked)
+                item.setCheckState(QtCore.Qt.CheckState.Checked if visible else QtCore.Qt.CheckState.Unchecked)
                 self._ui.graphics_listWidget.addItem(item)
                 if graphics == selectedGraphics:
                     self._ui.graphics_listWidget.setCurrentItem(item)
@@ -155,7 +155,7 @@ class SceneEditorWidget(QtWidgets.QWidget):
         while tempIndex > 0 and graphics.isValid():
             graphics = self._scene.getNextGraphics(graphics)
             tempIndex -= 1
-        visibilityFlag = item.checkState() == QtCore.Qt.Checked
+        visibilityFlag = item.checkState() == QtCore.Qt.CheckState.Checked
         graphics.setVisibilityFlag(visibilityFlag)
         selectedModelIndex = self._ui.graphics_listWidget.currentIndex()
         if clickedIndex == selectedModelIndex.row():

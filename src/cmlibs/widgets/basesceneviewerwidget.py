@@ -47,7 +47,7 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         # Client-specified filter which is used in logical AND with sceneviewer filter in selection
         self._selection_filter = None
         self._selection_tolerance = 3.0  # Number of pixels to set the selection tolerance to.
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
         self._pixel_scale = self.devicePixelRatio()
         self._width = -1

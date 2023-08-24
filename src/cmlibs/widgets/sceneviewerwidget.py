@@ -69,7 +69,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         self._selectionFilter = None  # Client-specified filter which is used in logical AND with sceneviewer filter in selection
         self._selectTol = 3.0  # how many pixels on all sides to add to selection box when a point is clicked on
         self._selectionKeyPressed = False
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
         self._selection_position_start = None
         # init end
 
@@ -78,7 +78,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
 
         if self._is_active:
             painter = QtGui.QPainter(self)
-            painter.setPen(QtGui.QPen(QtGui.QBrush(QtCore.Qt.magenta), 2))
+            painter.setPen(QtGui.QPen(QtGui.QBrush(QtCore.Qt.GlobalColor.magenta), 2))
             painter.drawRect(QtCore.QRect(1, 1, self.width() - 2, self.height() - 2))
 
     def focusInEvent(self, event) -> None:
@@ -436,14 +436,14 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         # resizeGL end
 
     def keyPressEvent(self, event):
-        if self._selectionKeyHandling and (event.key() == QtCore.Qt.Key_S) and not event.isAutoRepeat():
+        if self._selectionKeyHandling and (event.key() == QtCore.Qt.Key.Key_S) and not event.isAutoRepeat():
             self._selectionKeyPressed = True
             event.setAccepted(True)
         else:
             event.ignore()
 
     def keyReleaseEvent(self, event):
-        if self._selectionKeyHandling and (event.key() == QtCore.Qt.Key_S) and event.isAutoRepeat() == False:
+        if self._selectionKeyHandling and (event.key() == QtCore.Qt.Key.Key_S) and event.isAutoRepeat() == False:
             self._selectionKeyPressed = False
             event.setAccepted(True)
         else:
@@ -467,7 +467,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
         if BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT \
                 and self._selectionKeyPressed and (self._nodeSelectMode or self._elemSelectMode):
             self._selection_mode = SelectionMode.EXCLUSIVE
-            if event.modifiers() & QtCore.Qt.ShiftModifier:
+            if event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
                 self._selection_mode = SelectionMode.ADDITIVE
         else:
             scene_input = self._sceneviewer.createSceneviewerinput()

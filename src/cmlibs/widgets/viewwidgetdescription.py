@@ -12,7 +12,7 @@ def create_view(zinc_context, scenes, specification=None):
     for scene in scenes:
         s = SceneviewerWidget(widget)
         s.setContext(zinc_context)
-        s.setFocusPolicy(QtCore.Qt.StrongFocus)
+        s.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
         row = scene.get("Row", 0)
         col = scene.get("Col", 0)
         layout.addWidget(s, row, col)

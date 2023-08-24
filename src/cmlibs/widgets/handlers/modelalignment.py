@@ -10,7 +10,7 @@ class ModelAlignment(KeyActivatedHandler):
     def __init__(self, key_code):
         super(ModelAlignment, self).__init__(key_code)
         self._model = None
-        self._active_button = QtCore.Qt.NoButton
+        self._active_button = QtCore.Qt.MouseButton.NoButton
         self._lastMousePos = None
 
     def set_model(self, model):
@@ -27,8 +27,8 @@ class ModelAlignment(KeyActivatedHandler):
 
     def mouse_press_event(self, event):
         self._active_button = event.button()
-        if self._active_button == QtCore.Qt.LeftButton and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
-            self._active_button = QtCore.Qt.MiddleButton
+        if self._active_button == QtCore.Qt.MouseButton.LeftButton and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
+            self._active_button = QtCore.Qt.MouseButton.MiddleButton
         pixel_scale = self._scene_viewer.get_pixel_scale()
         self._lastMousePos = [event.x() * pixel_scale, event.y() * pixel_scale]
 
@@ -49,12 +49,12 @@ class ModelAlignment(KeyActivatedHandler):
             right = vectorops.cross(up, front)
             viewportWidth = self._scene_viewer.width()
             viewportHeight = self._scene_viewer.height()
-            if self._active_button == QtCore.Qt.LeftButton:
+            if self._active_button == QtCore.Qt.MouseButton.LeftButton:
                 prop = vectorops.div(delta, mag)
                 axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
                 angle = mag * 0.002
                 self._model.rotateModel(axis, angle)
-            elif self._active_button == QtCore.Qt.MiddleButton:
+            elif self._active_button == QtCore.Qt.MouseButton.MiddleButton:
                 result, l, r, b, t, near, far = self._zinc_sceneviewer.getViewingVolume()
                 if viewportWidth > viewportHeight:
                     eyeScale = (t - b) / viewportHeight
@@ -62,7 +62,7 @@ class ModelAlignment(KeyActivatedHandler):
                     eyeScale = (r - l) / viewportWidth
                 offset = vectorops.add(vectorops.mult(right, eyeScale * delta[0]), vectorops.mult(up, -eyeScale * delta[1]))
                 self._model.offsetModel(offset)
-            elif self._active_button == QtCore.Qt.RightButton:
+            elif self._active_button == QtCore.Qt.MouseButton.RightButton:
                 factor = 1.0 + delta[1] * 0.0005
                 if factor < 0.9:
                     factor = 0.9
@@ -70,5 +70,5 @@ class ModelAlignment(KeyActivatedHandler):
             self._lastMousePos = pos
 
     def mouse_release_event(self, event):
-        self._active_button = QtCore.Qt.NoButton
+        self._active_button = QtCore.Qt.MouseButton.NoButton
         self._lastMousePos = None

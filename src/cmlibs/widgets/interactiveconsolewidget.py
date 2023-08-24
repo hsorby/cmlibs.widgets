@@ -88,10 +88,10 @@ class InteractiveConsoleWidget(QtWidgets.QWidget):
             self._ui.promptLabel.setText(">>> ")
 
     def eventFilter(self, obj, event):
-        if event.type() == QtCore.QEvent.KeyPress:
-            if event.key() == QtCore.Qt.Key_Up:
+        if event.type() == QtCore.QEvent.Type.KeyPress:
+            if event.key() == QtCore.Qt.Key.Key_Up:
                 self.go_history(-1)
-            elif event.key() == QtCore.Qt.Key_Down:
+            elif event.key() == QtCore.Qt.Key.Key_Down:
                 self.go_history(1)
         return False
 

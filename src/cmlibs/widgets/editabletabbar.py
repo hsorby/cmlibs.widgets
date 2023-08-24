@@ -10,7 +10,7 @@ class EditableTabBar(QtWidgets.QTabBar):
         super().__init__(parent)
         self._editable = True
         self._editor = QtWidgets.QLineEdit(self)
-        self._editor.setWindowFlags(QtCore.Qt.Popup)
+        self._editor.setWindowFlags(QtCore.Qt.WindowType.Popup)
         self._editor.setFocusProxy(self)
         self._editor.installEventFilter(self)
         self.setStyleSheet("alignment: left;")
@@ -26,10 +26,10 @@ class EditableTabBar(QtWidgets.QTabBar):
         return self._editable
 
     def eventFilter(self, widget, event):
-        if ((event.type() == QtCore.QEvent.MouseButtonPress and
+        if ((event.type() == QtCore.QEvent.Type.MouseButtonPress and
              not self._editor.geometry().contains(event.globalPos())) or
-            (event.type() == QtCore.QEvent.KeyPress and
-             event.key() == QtCore.Qt.Key_Escape)):
+            (event.type() == QtCore.QEvent.Type.KeyPress and
+             event.key() == QtCore.Qt.Key.Key_Escape)):
             self._editor.hide()
             return True
         return super().eventFilter(widget, event)

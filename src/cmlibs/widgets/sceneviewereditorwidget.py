@@ -348,9 +348,9 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
     def lightBothSidesDisplay(self):
         flag = self._sceneviewer.isLightingTwoSided()
         if flag:
-            self._ui.light_both_sides_checkbox.setCheckState(QtCore.Qt.Checked)
+            self._ui.light_both_sides_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
         else:
-            self._ui.light_both_sides_checkbox.setCheckState(QtCore.Qt.Unchecked)
+            self._ui.light_both_sides_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
     def lightBothSidesStateChanged(self, state):
         """
@@ -361,9 +361,9 @@ class SceneviewerEditorWidget(QtWidgets.QWidget):
     def perturbLineDisplay(self):
         flag = self._sceneviewer.getPerturbLinesFlag()
         if flag:
-            self._ui.perturbline_checkbox.setCheckState(QtCore.Qt.Checked)
+            self._ui.perturbline_checkbox.setCheckState(QtCore.Qt.CheckState.Checked)
         else:
-            self._ui.perturbline_checkbox.setCheckState(QtCore.Qt.Unchecked)
+            self._ui.perturbline_checkbox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
     def perturbLineStateChanged(self, state):
         """

@@ -137,7 +137,7 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
 
         item = self._get_item_from_index(index)
 
-        if role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
             if index.column() == 0:
                 return os.path.normpath(item.getFileName()).replace(self._common_path, '')
             elif index.column() == 1:
@@ -172,10 +172,10 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
         bottom_right_index = self.createIndex(self._row_count - 1, 2)
         self.dataChanged.emit(top_left_index, bottom_right_index)
 
-    def setData(self, index, value, role=QtCore.Qt.EditRole):
+    def setData(self, index, value, role=QtCore.Qt.ItemDataRole.EditRole):
         if index.isValid():
             item = self._get_item_from_index(index)
-            if role == QtCore.Qt.EditRole:
+            if role == QtCore.Qt.ItemDataRole.EditRole:
                 top_left_index = index
                 if index.column() == 2:
                     current_region = self._get_region_path(item)
@@ -188,7 +188,7 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
                     item.setTime(value)
                 elif index.column() == 4:
                     region_index = self.createIndex(index.row(), 2)
-                    region_path = self.data(region_index, QtCore.Qt.DisplayRole)
+                    region_path = self.data(region_index, QtCore.Qt.ItemDataRole.DisplayRole)
                     if value:
                         try:
                             region = self._document.findRegion(region_path)
@@ -210,22 +210,22 @@ class ModelSourcesModel(QtCore.QAbstractTableModel):
         if index.isValid():
             item = self._get_item_from_index(index)
             if index.column() == 0:
-                return QtCore.Qt.ItemIsEnabled
+                return QtCore.Qt.ItemFlag.ItemIsEnabled
             elif index.column() in [2, 3]:
                 if not item.isLoaded():
-                    return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled
+                    return QtCore.Qt.ItemFlag.ItemIsEditable | QtCore.Qt.ItemFlag.ItemIsEnabled
             elif index.column() == 4:
                 if item.isLoaded():
                     # Use the ItemIsUserTristate to indicate that the item is loaded and disabled.
-                    return QtCore.Qt.ItemIsUserTristate
+                    return QtCore.Qt.ItemFlag.ItemIsUserTristate
                 else:
-                    return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled
+                    return QtCore.Qt.ItemFlag.ItemIsEditable | QtCore.Qt.ItemFlag.ItemIsEnabled
 
-        return QtCore.Qt.NoItemFlags
+        return QtCore.Qt.ItemFlag.NoItemFlags
 
     def headerData(self, section, orientation, role):
-        if role == QtCore.Qt.DisplayRole:
-            if orientation == QtCore.Qt.Horizontal:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
+            if orientation == QtCore.Qt.Orientation.Horizontal:
                 return self._headers[section]
 
 
@@ -253,14 +253,14 @@ class RegionDelegate(QtWidgets.QStyledItemDelegate):
             option.widget.openPersistentEditor(index)
 
         if len(self._combo_boxes) > index.row() and self._combo_boxes[index.row()] is not None:
-            self._combo_boxes[index.row()].setEnabled(index.flags() != QtCore.Qt.NoItemFlags)
+            self._combo_boxes[index.row()].setEnabled(index.flags() != QtCore.Qt.ItemFlag.NoItemFlags)
 
     def setModelData(self, editor, model, index):
         model.setData(index, editor.currentText())
 
     def setEditorData(self, editor, index):
         model = index.model()
-        value = model.data(index, QtCore.Qt.DisplayRole)
+        value = model.data(index, QtCore.Qt.ItemDataRole.DisplayRole)
 
         if len(value) > 1 and value.endswith(REGION_PATH_SEPARATOR):
             value = value[:-1]
@@ -296,9 +296,9 @@ class ApplyDelegate(QtWidgets.QItemDelegate):
         return None
 
     def paint(self, painter, option, index):
-        if index.flags() == QtCore.Qt.NoItemFlags:
+        if index.flags() == QtCore.Qt.ItemFlag.NoItemFlags:
             self._add_disabled_icon.paint(painter, option.rect)
-        elif index.flags() == QtCore.Qt.ItemIsUserTristate:
+        elif index.flags() == QtCore.Qt.ItemFlag.ItemIsUserTristate:
             self._remove_disabled_icon.paint(painter, option.rect)
         elif index.data():
             self._remove_icon.paint(painter, option.rect)
@@ -311,10 +311,10 @@ class ApplyDelegate(QtWidgets.QItemDelegate):
         if the user presses the left mouse button and this cell is editable. Otherwise
         do nothing.
         """
-        if not index.flags() & QtCore.Qt.ItemIsEditable:
+        if not index.flags() & QtCore.Qt.ItemFlag.ItemIsEditable:
             return False
 
-        if event.type() == QtCore.QEvent.MouseButtonRelease and event.button() == QtCore.Qt.LeftButton:
+        if event.type() == QtCore.QEvent.Type.MouseButtonRelease and event.button() == QtCore.Qt.MouseButton.LeftButton:
             # Change the checkbox-state
             self.setModelData(None, model, index)
             return True
@@ -325,7 +325,7 @@ class ApplyDelegate(QtWidgets.QItemDelegate):
         """
         Toggle the data state.
         """
-        model.setData(index, not index.data(), QtCore.Qt.EditRole)
+        model.setData(index, not index.data(), QtCore.Qt.ItemDataRole.EditRole)
 
 
 class ModelSourcesEditorWidget(QtWidgets.QWidget):
@@ -466,10 +466,10 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
             msgBox.setWindowTitle("Please confirm")
             msgBox.setText("Delete model data source?")
             # msgBox.setInformativeText("Please confirm action.")
-            msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
-            msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
+            msgBox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok | QtWidgets.QMessageBox.StandardButton.Cancel)
+            msgBox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Cancel)
             result = msgBox.exec_()
-            if result == QtWidgets.QMessageBox.Ok:
+            if result == QtWidgets.QMessageBox.StandardButton.Ok:
                 self._region.removeModelSource(self._currentModelSource)
 
     def _setCurrentModelSource(self, modelSource):

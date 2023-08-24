@@ -70,15 +70,15 @@ class MaterialModel(QtCore.QAbstractListModel):
     def flags(self, index):
         if index.isValid():
             if index.column() == 0:
-                return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
+                return QtCore.Qt.ItemFlag.ItemIsEditable | QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable
 
-        return QtCore.Qt.NoItemFlags
+        return QtCore.Qt.ItemFlag.NoItemFlags
 
     def data(self, index, role):
         if not index.isValid():
             return None
 
-        if role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
             return self._material_names[index.row()]
 
         return None
@@ -86,7 +86,7 @@ class MaterialModel(QtCore.QAbstractListModel):
     def setData(self, index, value, role):
         if index.isValid():
             value = value.rstrip()
-            if role == QtCore.Qt.EditRole and value:
+            if role == QtCore.Qt.ItemDataRole.EditRole and value:
                 current_name = self._material_names[index.row()]
                 material = self._material_module.findMaterialByName(
                     current_name)

@@ -58,7 +58,7 @@ class FieldChooserWidget(QtWidgets.QComboBox):
                 self.addItem(self._nullObjectName)
                 font_for_null = self.font()
                 font_for_null.setItalic(True)
-                self.setItemData(0, font_for_null, QtCore.Qt.FontRole)
+                self.setItemData(0, font_for_null, QtCore.Qt.ItemDataRole.FontRole)
             fielditer = self._region.getFieldmodule().createFielditerator()
             field = fielditer.next()
             while field.isValid():
@@ -84,15 +84,15 @@ class FieldChooserWidget(QtWidgets.QComboBox):
         self.blockSignals(False)
 
     def paintEvent(self, e):
-        fontData = self.currentData(QtCore.Qt.FontRole)
+        fontData = self.currentData(QtCore.Qt.ItemDataRole.FontRole)
         if fontData:
             painter = QtGui.QPainter(self)
             painter.save()
             painter.setFont(fontData)
             opt = QtWidgets.QStyleOptionComboBox()
             self.initStyleOption(opt)
-            self.style().drawComplexControl(QtWidgets.QStyle.CC_ComboBox, opt, painter)
-            self.style().drawControl(QtWidgets.QStyle.CE_ComboBoxLabel, opt, painter)
+            self.style().drawComplexControl(QtWidgets.QStyle.ComplexControl.CC_ComboBox, opt, painter)
+            self.style().drawControl(QtWidgets.QStyle.ControlElement.CE_ComboBoxLabel, opt, painter)
             painter.restore()
         else:
             QtWidgets.QComboBox.paintEvent(self, e)

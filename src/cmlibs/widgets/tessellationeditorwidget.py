@@ -22,7 +22,7 @@ from cmlibs.widgets.ui.ui_tessellationeditorwidget import Ui_TessellationEditorW
 from cmlibs.widgets.delegates.spinboxdelegate import SpinBoxDelegate
 
 TESSELLATION_NAME_FORMAT = 'tessellation{0}'
-TESSELLATION_DATA_ROLE = QtCore.Qt.UserRole + 1
+TESSELLATION_DATA_ROLE = QtCore.Qt.ItemDataRole.UserRole + 1
 
 
 class TessellationEditorWidget(QtWidgets.QWidget):
@@ -90,27 +90,27 @@ class TessellationEditorWidget(QtWidgets.QWidget):
             t = first_item.data(TESSELLATION_DATA_ROLE)
 
         if item_column == 0:
-            if ZINC_OK != t.setName(item.data(QtCore.Qt.DisplayRole)):
-                item.setData(QtCore.Qt.DisplayRole, t.getName())
+            if ZINC_OK != t.setName(item.data(QtCore.Qt.ItemDataRole.DisplayRole)):
+                item.setData(QtCore.Qt.ItemDataRole.DisplayRole, t.getName())
         elif item_column == 1 or item_column == 2:
-            item_data = item.data(QtCore.Qt.DisplayRole)
+            item_data = item.data(QtCore.Qt.ItemDataRole.DisplayRole)
             value = processMultiFormatData(item_data)
             if item_column == 1:
                 if value is None:
                     min_value_count, _ = t.getMinimumDivisions(0)
                     _, min_values = t.getMinimumDivisions(min_value_count)
-                    item.setData(QtCore.Qt.DisplayRole, str(min_values))
+                    item.setData(QtCore.Qt.ItemDataRole.DisplayRole, str(min_values))
                 else:
                     t.setMinimumDivisions(value)
             elif item_column == 2:
                 if value is None:
                     ref_value_count, _ = t.getRefinementFactors(0)
                     _, ref_values = t.getRefinementFactors(ref_value_count)
-                    item.setData(QtCore.Qt.DisplayRole, str(ref_values))
+                    item.setData(QtCore.Qt.ItemDataRole.DisplayRole, str(ref_values))
                 else:
                     t.setRefinementFactors(value)
         elif item_column == 3:
-            t.setCircleDivisions(int(item.data(QtCore.Qt.DisplayRole)))
+            t.setCircleDivisions(int(item.data(QtCore.Qt.ItemDataRole.DisplayRole)))
 
     def _defaultTessellationClicked(self):
         selected_items = self._ui.tableWidgetTessellations.selectedItems()

@@ -172,7 +172,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
         self._domainTypeDisplay()
         self._selectModeDisplay()
         self._ui.wireframe_checkbox.setCheckState(
-            QtCore.Qt.Checked if isWireframe else QtCore.Qt.Unchecked)
+            QtCore.Qt.CheckState.Checked if isWireframe else QtCore.Qt.CheckState.Unchecked)
         # contours
         isoscalarField = None
         if contours and contours.isValid():
@@ -184,7 +184,7 @@ class GraphicsEditorWidget(QtWidgets.QWidget):
             self._ui.contours_groupbox.hide()
         self._ui.isoscalar_field_chooser.setField(isoscalarField)
         self._ui.range_isovalues_checkBox.setCheckState(
-            QtCore.Qt.Checked if self._isRangeIsovalues else QtCore.Qt.Unchecked)
+            QtCore.Qt.CheckState.Checked if self._isRangeIsovalues else QtCore.Qt.CheckState.Unchecked)
         self._isovaluesDisplay()
         # streamlines
         streamVectorField = None

@@ -35,7 +35,7 @@ class ViewWidget(QtWidgets.QWidget):
             s.becameActive.connect(self._active_view_changed)
             self._sceneviewers.append(s)
             self._ready_state.append(False)
-            s.setFocusPolicy(QtCore.Qt.StrongFocus)
+            s.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
             row = scene.get("Row", 0)
             col = scene.get("Col", 0)
             self._initial_state.append(scene.get("Sceneviewer", {}))

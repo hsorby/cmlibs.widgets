@@ -24,7 +24,7 @@ from cmlibs.argon.settings.mainsettings import FLOAT_STRING_FORMAT
 from cmlibs.argon.argonlogger import ArgonLogger
 
 COMPONENT_NAME_FORMAT = '{:d}. '
-SPECTRUM_DATA_ROLE = QtCore.Qt.UserRole + 1
+SPECTRUM_DATA_ROLE = QtCore.Qt.ItemDataRole.UserRole + 1
 
 
 class SpectrumEditorWidget(QtWidgets.QWidget):
@@ -533,7 +533,7 @@ PRIVATE_SPECTRUM_FORMAT = 'spectrum_{0}'
 
 def createSpectrumListItem(name):
     i = QtWidgets.QListWidgetItem(name)
-    i.setFlags(i.flags() | QtCore.Qt.ItemIsEditable)
+    i.setFlags(i.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
 
     return i
 
@@ -542,7 +542,7 @@ def createItem(name, data, editable=False):
     i = QtWidgets.QListWidgetItem(name)
     i.setData(SPECTRUM_DATA_ROLE, data)
     if editable:
-        i.setFlags(i.flags() | QtCore.Qt.ItemIsEditable)
+        i.setFlags(i.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
 
     return i
 

@@ -31,14 +31,14 @@ class SpinBoxDelegate(QtWidgets.QStyledItemDelegate):
         return editor
 
     def setEditorData(self, editor, index):
-        data = index.model().data(index, QtCore.Qt.EditRole)
+        data = index.model().data(index, QtCore.Qt.ItemDataRole.EditRole)
         if data is not None:
-            value = int(index.model().data(index, QtCore.Qt.EditRole))
+            value = int(index.model().data(index, QtCore.Qt.ItemDataRole.EditRole))
             editor.setValue(value)
 
     def setModelData(self, editor, model, index):
         value = editor.value()
-        model.setData(index, value, QtCore.Qt.EditRole)
+        model.setData(index, value, QtCore.Qt.ItemDataRole.EditRole)
 
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(option.rect)

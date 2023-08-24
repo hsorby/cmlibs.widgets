@@ -172,7 +172,7 @@ class FieldListEditorWidget(QtWidgets.QWidget):
                 self._fieldItems.appendRow(item)
                 field = fieldIterator.next()
         self._ui.field_listview.setModel(self._fieldItems)
-        self._fieldItems.itemChanged.connect(self._list_item_edited, QtCore.Qt.UniqueConnection)
+        self._fieldItems.itemChanged.connect(self._list_item_edited, QtCore.Qt.ConnectionType.UniqueConnection)
         self._ui.field_listview.show()
 
     def _display_field(self):

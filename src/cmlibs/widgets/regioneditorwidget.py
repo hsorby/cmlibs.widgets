@@ -108,7 +108,7 @@ class RegionTreeModel(QtCore.QAbstractItemModel):
     def flags(self, index):
         if not index.isValid():
             return 0
-        return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
+        return QtCore.Qt.ItemFlag.ItemIsEditable | QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable
 
     # def headerData(self, section, orientation, role):
     #    if (orientation == QtCore.Qt.Horizontal) and (role == QtCore.Qt.DisplayRole) and (section == 0):
@@ -149,7 +149,7 @@ class RegionTreeModel(QtCore.QAbstractItemModel):
         if not index.isValid():
             return None
         item = index.internalPointer()
-        if (role == QtCore.Qt.DisplayRole) and (index.column() == 0):
+        if (role == QtCore.Qt.ItemDataRole.DisplayRole) and (index.column() == 0):
             region = item.getRegion()
             return region.getDisplayName()
         return None
@@ -217,10 +217,10 @@ class RegionEditorWidget(QtWidgets.QWidget):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setWindowTitle("Please confirm")
         msgBox.setText("Clear region " + region.getDisplayName() + " and remove its sub-regions?")
-        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
-        msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok | QtWidgets.QMessageBox.StandardButton.Cancel)
+        msgBox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Cancel)
         result = msgBox.exec_()
-        if result == QtWidgets.QMessageBox.Ok:
+        if result == QtWidgets.QMessageBox.StandardButton.Ok:
             region.clear()
 
     def _removeRegion(self):
@@ -228,10 +228,10 @@ class RegionEditorWidget(QtWidgets.QWidget):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setWindowTitle("Please confirm")
         msgBox.setText("Remove region " + region.getDisplayName() + " and all its sub-regions?")
-        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
-        msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok | QtWidgets.QMessageBox.StandardButton.Cancel)
+        msgBox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Cancel)
         result = msgBox.exec_()
-        if result == QtWidgets.QMessageBox.Ok:
+        if result == QtWidgets.QMessageBox.StandardButton.Ok:
             region.remove()
 
     def contextMenuEvent(self, event):
