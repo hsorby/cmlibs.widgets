@@ -59,7 +59,7 @@ class FieldPropertiesWidget(QtWidgets.QWidget):
         self._properties_layout = QtWidgets.QVBoxLayout(self._properties_groupbox)
         self._type_coordinate_checkbox = QtWidgets.QCheckBox(self._properties_groupbox)
         self._type_coordinate_checkbox.setCheckState(QtCore.Qt.CheckState.Checked if is_type_coordinate else QtCore.Qt.CheckState.Unchecked)
-        self._type_coordinate_checkbox..stateChanged.connect(self._type_coordinate_clicked)
+        self._type_coordinate_checkbox.stateChanged.connect(self._type_coordinate_clicked)
         self._type_coordinate_checkbox.setText(u"Is Coordinate")
         self._type_coordinate_checkbox.setVisible(is_type_coordinate_capable)
         self._managed_checkbox = QtWidgets.QCheckBox(self._properties_groupbox)
