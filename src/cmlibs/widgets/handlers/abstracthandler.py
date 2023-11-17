@@ -1,7 +1,7 @@
 from cmlibs.widgets.definitions import BUTTON_MAP
 
 
-class AbstractHandler(object):
+class AbstractHandler:
 
     def __init__(self):
         self._scene_viewer = None

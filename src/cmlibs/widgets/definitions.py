@@ -1,3 +1,5 @@
+from enum import Enum
+
 from PySide6 import QtCore
 
 from cmlibs.zinc.sceneviewerinput import Sceneviewerinput
@@ -28,20 +30,28 @@ def modifier_map(qt_modifiers):
     return modifiers
 
 
-class ProjectionMode(object):
+class ProjectionMode(Enum):
     PARALLEL = 0
     PERSPECTIVE = 1
 
 
-class SelectionMode(object):
+class SelectionMode(Enum):
     NONE = -1
     EXCLUSIVE = 0
     ADDITIVE = 1
     INTERSECTION = 2
 
 
-class GraphicsSelectionMode(object):
+class GraphicsSelectionMode(Enum):
     ANY = -1
     DATA = 0
     ELEMENTS = 1
     NODE = 2
+
+
+class ManipulationMode(Enum):
+    NONE = 0
+    ROTATION = 1
+    SCALE = 2
+    TRANSLATION = 3
+

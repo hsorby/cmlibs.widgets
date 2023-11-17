@@ -393,7 +393,7 @@ class ModelSourcesEditorWidget(QtWidgets.QWidget):
         modelSources = []
         if self._region:
             modelSources = self._region.getModelSources()
-            # selectedGraphics = self.ui.graphics_editor.getGraphics()
+            # selectedGraphics = self.view.graphics_editor.getGraphics()
             for modelSource in modelSources:
                 name = modelSource.getDisplayName()
                 item = QtGui.QStandardItem(name)
