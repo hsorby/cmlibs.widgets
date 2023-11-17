@@ -39,6 +39,6 @@ class Ui_RegionEditorWidget(object):
     # setupUi
 
     def retranslateUi(self, RegionEditorWidget):
-        RegionEditorWidget.setWindowTitle(QCoreApplication.translate("RegionEditorWidget", u"Form", None))
+        RegionEditorWidget.setWindowTitle(QCoreApplication.translate("RegionEditorWidget", u"Region Editor", None))
     # retranslateUi
 

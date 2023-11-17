@@ -301,33 +301,35 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
     def getSelectionfilter(self):
         return self._selectionFilter
 
-    def project(self, x, y, z):
+    def project(self, x, y, z, reference_coordinates=SCENECOORDINATESYSTEM_WORLD, local_scene=None):
         """
         Project the given point in global coordinates into window pixel coordinates
         with the origin at the window's top left pixel.
         Note the z pixel coordinate is a depth which is mapped so that -1 is
         on the far clipping plane, and +1 is on the near clipping plane.
         """
-        in_coords = [x, y, z]
-        result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WORLD, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, self._sceneviewer.getScene(),
-                                                                    in_coords)
+        in_coordinates = [x, y, z]
+        reference_scene = self._sceneviewer.getScene() if local_scene is None else local_scene
+        result, out_coordinates = self._sceneviewer.transformCoordinates(reference_coordinates, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, reference_scene,
+                                                                         in_coordinates)
         if result == RESULT_OK:
-            return out_coords  # [out_coords[0] / out_coords[3], out_coords[1] / out_coords[3], out_coords[2] / out_coords[3]]
+            return out_coordinates  # [out_coordinates[0] / out_coordinates[3], out_coordinates[1] / out_coordinates[3], out_coordinates[2] / out_coordinates[3]]
 
         return None
 
-    def unproject(self, x, y, z):
+    def unproject(self, x, y, z, reference_coordinates=SCENECOORDINATESYSTEM_WORLD, local_scene=None):
         """
         Unproject the given point in window pixel coordinates where the origin is
         at the window's top left pixel into global coordinates.
         Note the z pixel coordinate is a depth which is mapped so that -1 is
         on the far clipping plane, and +1 is on the near clipping plane.
         """
-        in_coords = [x, y, z]
-        result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, SCENECOORDINATESYSTEM_WORLD, self._sceneviewer.getScene(),
-                                                                    in_coords)
+        in_coordinates = [x, y, z]
+        reference_scene = self._sceneviewer.getScene() if local_scene is None else local_scene
+        result, out_coordinates = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, reference_coordinates, reference_scene,
+                                                                         in_coordinates)
         if result == RESULT_OK:
-            return out_coords  # [out_coords[0] / out_coords[3], out_coords[1] / out_coords[3], out_coords[2] / out_coords[3]]
+            return out_coordinates  # [out_coordinates[0] / out_coordinates[3], out_coordinates[1] / out_coordinates[3], out_coordinates[2] / out_coordinates[3]]
 
         return None
 
