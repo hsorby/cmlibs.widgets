@@ -1,6 +1,9 @@
+from PySide6 import QtCore
 
 
 class InteractionManager(object):
+    handler_activated = QtCore.Signal()
+    handler_deactivated = QtCore.Signal()
 
     def __init__(self):
         self._handlers = {}
@@ -45,10 +48,15 @@ class InteractionManager(object):
     def set_fallback_handler(self, fallback_handler):
         self._fallback_handler = fallback_handler
 
+    def active_handler(self):
+        return self._active_handler
+
     def _activate_handler(self, handler):
         self._active_handler.leave()
+        self.handler_deactivated.emit()
         self._active_handler = handler
         self._active_handler.enter()
+        self.handler_activated.emit()
 
     def key_press_event(self, event):
         if event.key() in self._key_code_handler_map and not event.isAutoRepeat():
