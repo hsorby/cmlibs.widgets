@@ -29,6 +29,7 @@ class ViewWidget(QtWidgets.QWidget):
         self._ready_state = []
         self._initial_state = []
         self._active_sceneviewer = None
+        self._active_sceneviewer_widget = None
 
         for index, scene in enumerate(scenes):
             s = BaseSceneviewerWidget(self)
@@ -51,7 +52,10 @@ class ViewWidget(QtWidgets.QWidget):
         for r in range(rows):
             for c in range(columns):
                 sceneviewer_widget = layout.itemAtPosition(r, c).widget()
-                sceneviewer_widget.set_active_state(sceneviewer_widget == self._active_sceneviewer)
+                is_active_widget = sceneviewer_widget == self._active_sceneviewer
+                sceneviewer_widget.set_active_state(is_active_widget)
+                if is_active_widget:
+                    self._active_sceneviewer_widget = sceneviewer_widget
 
         self.currentChanged.emit()
 
@@ -87,6 +91,14 @@ class ViewWidget(QtWidgets.QWidget):
             return self._active_sceneviewer.get_zinc_sceneviewer()
 
         return None
+
+    def getActiveSceneviewerWidget(self):
+        """
+        Get the currently active sceneviewer widget.
+
+        :return: cmlibs.widgets.basesceneviewerwidget.
+        """
+        return self._active_sceneviewer_widget
 
     def setContext(self, context):
         """

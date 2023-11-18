@@ -9,6 +9,9 @@ class InteractionManager(object):
         self._fallback_handler = None
 
     def register_handler(self, handler):
+        if handler is None:
+            return
+
         handler.set_scene_viewer(self)
         self._handlers[handler.get_mode()] = handler
 
@@ -20,7 +23,13 @@ class InteractionManager(object):
             self._fallback_handler = handler
             self._active_handler = handler
 
+    def clear_active_handler(self):
+        self.unregister_handler(self._active_handler)
+
     def unregister_handler(self, handler):
+        if handler is None:
+            return
+
         # Check to make sure we are not trying to unregister the fallback handler, that is a no-no.
         # But, we also check to make sure that the handler to unregister is actually registered in the first place.
         if handler != self._fallback_handler and handler.get_mode() in self._handlers:
