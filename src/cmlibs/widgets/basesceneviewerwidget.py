@@ -22,6 +22,7 @@ from cmlibs.zinc.scenecoordinatesystem import \
 from cmlibs.zinc.field import Field
 from cmlibs.zinc.result import RESULT_OK
 
+from cmlibs.utils.zinc.scene import scene_get_or_create_selection_group, scene_clear_selection_group
 from cmlibs.widgets.handlers.interactionmanager import InteractionManager
 from cmlibs.widgets.definitions import ProjectionMode
 
@@ -236,7 +237,10 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         return self._scene_picker.getNearestGraphics()
 
     def get_nearest_graphics_node(self, x, y):
-        return self._get_nearest_graphic(x, y, Field.DOMAIN_TYPE_NODES)
+        self._scene_picker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
+                                                   x - self._selection_tolerance, y - self._selection_tolerance,
+                                                   x + self._selection_tolerance, y + self._selection_tolerance)
+        return self._scene_picker.getNearestNodeGraphics()
 
     def get_nearest_graphics_point(self, x, y):
         """
@@ -318,6 +322,17 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
 
         self._sceneviewer.viewAll()
 
+    def clear_selection(self):
+        """
+        If there is a selection group, clears it and removes it from scene.
+        """
+        scene = self._sceneviewer.getScene()
+        scene_clear_selection_group(scene)
+
+    def get_or_create_selection_group(self):
+        scene = self._sceneviewer.getScene()
+        return scene_get_or_create_selection_group(scene)
+
     def initializeGL(self):
         """
         The OpenGL context is ready for use. If Zinc Context has been set, create Zinc Sceneviewer, otherwise
@@ -333,7 +348,7 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         changed = False
         if pixel_scale != self._pixel_scale:
             self._pixel_scale = pixel_scale
-            print("emitting: pixel scale changed.")
+            print("emitting: pixel scale changed.", self._pixel_scale)
             self.pixel_scale_changed.emit(self._pixel_scale)
             changed = True
 

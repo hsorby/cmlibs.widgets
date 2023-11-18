@@ -13,8 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtCore
 
+from cmlibs.widgets.handlers.nodeeditor import NodeEditor
 from cmlibs.widgets.ui.ui_mesheditorwidget import Ui_MeshEditorWidget
 
 """
@@ -39,11 +40,37 @@ class MeshEditorWidget(QtWidgets.QWidget):
         # Using composition to include the visual element of the GUI.
         self._ui = Ui_MeshEditorWidget()
         self._ui.setupUi(self)
+        self._sceneviewer_widget = None
+        self._current_handler = None
         self._edit_button_group = QtWidgets.QButtonGroup()
-        self._edit_button_group.addButton(self._ui.toolButtonNone)
-        self._edit_button_group.addButton(self._ui.toolButtonNodes)
+        self._edit_button_group.addButton(self._ui.toolButtonNone, 1)
+        self._edit_button_group.addButton(self._ui.toolButtonNodes, 2)
 
         self._make_connections()
+        self._update_ui()
 
     def _make_connections(self):
-        pass
+        self._edit_button_group.buttonClicked.connect(self._edit_button_clicked)
+
+    def _update_ui(self):
+        self._ui.toolButtonNone.setEnabled(self._sceneviewer_widget is not None)
+        self._ui.toolButtonNodes.setEnabled(self._sceneviewer_widget is not None)
+
+    def _update_handler(self):
+        if self._sceneviewer_widget is not None:
+            self._sceneviewer_widget.register_handler(self._current_handler)
+
+    def _edit_button_clicked(self, button):
+        self._sceneviewer_widget.unregister_handler(self._current_handler)
+        if button.objectName() == "toolButtonNodes":
+            self._current_handler = NodeEditor(QtCore.Qt.Key.Key_E)
+        else:
+            self._current_handler = None
+        self._update_handler()
+
+    def setSceneviewerWidget(self, sceneviewer_widget):
+        if self._sceneviewer_widget is not None:
+            self._sceneviewer_widget.unregister_handler(self._current_handler)
+        self._sceneviewer_widget = sceneviewer_widget
+        self._update_handler()
+        self._update_ui()
