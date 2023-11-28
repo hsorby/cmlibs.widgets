@@ -34,3 +34,22 @@ def set_wait_cursor(f):
             # Always unset
             QtWidgets.QApplication.restoreOverrideCursor()
     return do_wait_cursor
+
+
+def display_vector(widget, values, number_format='{:.5g}'):
+    """
+    Display real vector values in a widget
+    """
+    newText = ", ".join(number_format.format(value) for value in values)
+    widget.setText(newText)
+
+
+def parse_vector(widget):
+    """
+    Return real vector from comma separated text in line edit widget
+    """
+    text = widget.text()
+    values = [float(value) for value in text.split(',')]
+    if len(values) < 1:
+        raise
+    return values
