@@ -44,7 +44,7 @@ class NodeEditor(KeyActivatedHandler):
                 scene.removeGraphics(graphic)
                 del graphic
 
-    def set_generator_model(self, model):
+    def set_model(self, model):
         if hasattr(model, 'getOrCreateMeshEditsNodesetGroup'):
             self._model = model
         else:
