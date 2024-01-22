@@ -24,7 +24,7 @@ class InteractionManager(object):
 
         if self._fallback_handler is None:
             self._fallback_handler = handler
-            self._active_handler = handler
+            self._activate_handler(handler)
 
     def clear_active_handler(self):
         self.unregister_handler(self._active_handler)
@@ -52,8 +52,9 @@ class InteractionManager(object):
         return self._active_handler
 
     def _activate_handler(self, handler):
-        self._active_handler.leave()
-        self.handler_deactivated.emit()
+        if self._active_handler:
+            self._active_handler.leave()
+            self.handler_deactivated.emit()
         self._active_handler = handler
         self._active_handler.enter()
         self.handler_activated.emit()
