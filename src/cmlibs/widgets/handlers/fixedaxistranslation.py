@@ -9,14 +9,14 @@ from cmlibs.widgets.handlers.keyactivatedhandler import KeyActivatedHandler
 from cmlibs.widgets.errors import HandlerError
 from cmlibs.maths.vectorops import sub, mult, dot
 from cmlibs.maths.algorithms import calculate_centroid
-from cmlibs.utils.zinc.scene import create_plane_normal_indicator, get_glyph_position, set_glyph_position
+from cmlibs.utils.zinc.scene import create_plane_manipulation_arrow, get_glyph_position, set_glyph_position
 from cmlibs.utils.zinc.node import translate_nodes
 
 
-NORMAL_ARROW_SIZE = 25.0
+AXIS_ARROW_SIZE = 25.0
 
 
-class Normal(KeyActivatedHandler):
+class FixedAxisTranslation(KeyActivatedHandler):
 
     def __init__(self, key_code):
         super().__init__(key_code)
@@ -49,12 +49,12 @@ class Normal(KeyActivatedHandler):
             self._glyph_fields.append(field_module.createFieldConstant([0, 0, 0]))
             self._glyph_fields.append(field_module.createFieldConstant([0, 0, 0]))
             self._glyph_fields.append(field_module.createFieldConstant([0, 0, 0]))
-            self._glyphs.append(create_plane_normal_indicator(scene, self._glyph_fields[0], size=NORMAL_ARROW_SIZE))
-            self._glyphs.append(create_plane_normal_indicator(scene, self._glyph_fields[1], size=NORMAL_ARROW_SIZE))
-            self._glyphs.append(create_plane_normal_indicator(scene, self._glyph_fields[2], size=NORMAL_ARROW_SIZE))
-            self._reverse_glyphs.append(create_plane_normal_indicator(scene, self._glyph_fields[0], size=-NORMAL_ARROW_SIZE))
-            self._reverse_glyphs.append(create_plane_normal_indicator(scene, self._glyph_fields[1], size=-NORMAL_ARROW_SIZE))
-            self._reverse_glyphs.append(create_plane_normal_indicator(scene, self._glyph_fields[2], size=-NORMAL_ARROW_SIZE))
+            self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[0], size=AXIS_ARROW_SIZE))
+            self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[1], size=AXIS_ARROW_SIZE))
+            self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[2], size=AXIS_ARROW_SIZE))
+            self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[0], size=-AXIS_ARROW_SIZE))
+            self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[1], size=-AXIS_ARROW_SIZE))
+            self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[2], size=-AXIS_ARROW_SIZE))
 
             self._initialise_materials()
 
@@ -134,7 +134,7 @@ class Normal(KeyActivatedHandler):
             scene.endChange()
             self._start_position = [x, y]
         else:
-            super(Normal, self).mouse_move_event(event)
+            super(FixedAxisTranslation, self).mouse_move_event(event)
 
     def mouse_release_event(self, event):
         super().mouse_release_event(event)
