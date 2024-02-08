@@ -1,6 +1,9 @@
+from PySide6 import QtCore
 
 
 class InteractionManager(object):
+    handler_activated = QtCore.Signal()
+    handler_deactivated = QtCore.Signal()
 
     def __init__(self):
         self._handlers = {}
@@ -9,6 +12,9 @@ class InteractionManager(object):
         self._fallback_handler = None
 
     def register_handler(self, handler):
+        if handler is None:
+            return
+
         handler.set_scene_viewer(self)
         self._handlers[handler.get_mode()] = handler
 
@@ -20,7 +26,13 @@ class InteractionManager(object):
             self._fallback_handler = handler
             self._active_handler = handler
 
+    def clear_active_handler(self):
+        self.unregister_handler(self._active_handler)
+
     def unregister_handler(self, handler):
+        if handler is None:
+            return
+
         # Check to make sure we are not trying to unregister the fallback handler, that is a no-no.
         # But, we also check to make sure that the handler to unregister is actually registered in the first place.
         if handler != self._fallback_handler and handler.get_mode() in self._handlers:
@@ -36,10 +48,15 @@ class InteractionManager(object):
     def set_fallback_handler(self, fallback_handler):
         self._fallback_handler = fallback_handler
 
+    def active_handler(self):
+        return self._active_handler
+
     def _activate_handler(self, handler):
         self._active_handler.leave()
+        self.handler_deactivated.emit()
         self._active_handler = handler
         self._active_handler.enter()
+        self.handler_activated.emit()
 
     def key_press_event(self, event):
         if event.key() in self._key_code_handler_map and not event.isAutoRepeat():

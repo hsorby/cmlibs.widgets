@@ -13,7 +13,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # This python module is intended to facilitate users creating their own applications that use Zinc
 # See the examples at https://svn.physiomeproject.org/svn/cmiss/zinc/bindings/trunk/python/ for further
 # information.
-from PySide6 import QtCore, QtOpenGLWidgets
+from PySide6 import QtCore, QtOpenGLWidgets, QtGui
 
 from cmlibs.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from cmlibs.zinc.scenecoordinatesystem import \
@@ -22,6 +22,7 @@ from cmlibs.zinc.scenecoordinatesystem import \
 from cmlibs.zinc.field import Field
 from cmlibs.zinc.result import RESULT_OK
 
+from cmlibs.utils.zinc.scene import scene_get_or_create_selection_group, scene_clear_selection_group
 from cmlibs.widgets.handlers.interactionmanager import InteractionManager
 from cmlibs.widgets.definitions import ProjectionMode
 
@@ -30,6 +31,7 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
     # Create a signal to notify when the OpenGL scene is ready.
     graphics_initialized = QtCore.Signal()
     pixel_scale_changed = QtCore.Signal(float)
+    became_active = QtCore.Signal()
 
     def __init__(self, parent=None):
         """
@@ -43,6 +45,8 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         self._context = None
         self._sceneviewer = None
         self._scene_picker = None
+        self._is_active = False
+        self._grab_focus = False
 
         # Client-specified filter which is used in logical AND with sceneviewer filter in selection
         self._selection_filter = None
@@ -52,6 +56,7 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         self._pixel_scale = self.devicePixelRatio()
         self._width = -1
         self._height = -1
+        self._border_pen = QtGui.QPen(QtGui.QBrush(QtCore.Qt.GlobalColor.magenta), 2)
 
     def set_context(self, context):
         """
@@ -72,7 +77,20 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         if self._sceneviewer is not None:
             self._sceneviewer.setScene(scene)
             self._scene_picker = scene.createScenepicker()
-            self.set_selectionfilter(self._selection_filter)
+            self.set_selection_filter(self._selection_filter)
+
+    def set_border_colour(self, colour):
+        self._border_pen = QtGui.QPen(QtGui.QBrush(colour), 2)
+
+    def set_border_off(self):
+        self._border_pen = None
+
+    def set_grab_focus(self, grab_focus):
+        self._grab_focus = grab_focus
+
+    def set_active_state(self, state):
+        self._is_active = state
+        self.update()
 
     def get_pixel_scale(self):
         return self._pixel_scale
@@ -127,7 +145,7 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
     def set_picking_rectangle(self, coordinate_system, left, bottom, right, top):
         self._scene_picker.setSceneviewerRectangle(self._sceneviewer, coordinate_system, left, bottom, right, top)
 
-    def set_selectionfilter(self, scene_filter):
+    def set_selection_filter(self, scene_filter):
         """
         Set filter to be applied in logical AND with sceneviewer filter during selection
         """
@@ -143,40 +161,38 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
             scene_filter = scene_viewer_filter
         self._scene_picker.setScenefilter(scene_filter)
 
-    def get_selectionfilter(self):
+    def get_selection_filter(self):
         return self._selection_filter
 
-    def project(self, x, y, z):
+    def project(self, x, y, z, reference_coordinates=SCENECOORDINATESYSTEM_WORLD, local_scene=None):
         """
         Project the given point in global coordinates into window pixel coordinates
         with the origin at the window's top left pixel.
         Note the z pixel coordinate is a depth which is mapped so that -1 is
         on the far clipping plane, and +1 is on the near clipping plane.
         """
-        in_coords = [x, y, z]
-        result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WORLD,
-                                                                    SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                                                    self._sceneviewer.getScene(), in_coords)
+        in_coordinates = [x, y, z]
+        reference_scene = self._sceneviewer.getScene() if local_scene is None else local_scene
+        result, out_coordinates = self._sceneviewer.transformCoordinates(reference_coordinates, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, reference_scene,
+                                                                         in_coordinates)
         if result == RESULT_OK:
-            # [out_coords[0] / out_coords[3], out_coords[1] / out_coords[3], out_coords[2] / out_coords[3]]
-            return out_coords
+            return out_coordinates  # [out_coordinates[0] / out_coordinates[3], out_coordinates[1] / out_coordinates[3], out_coordinates[2] / out_coordinates[3]]
 
         return None
 
-    def unproject(self, x, y, z):
+    def unproject(self, x, y, z, reference_coordinates=SCENECOORDINATESYSTEM_WORLD, local_scene=None):
         """
         Unproject the given point in window pixel coordinates where the origin is
         at the window's top left pixel into global coordinates.
         Note the z pixel coordinate is a depth which is mapped so that -1 is
         on the far clipping plane, and +1 is on the near clipping plane.
         """
-        in_coords = [x, y, z]
-        result, out_coords = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                                                    SCENECOORDINATESYSTEM_WORLD,
-                                                                    self._sceneviewer.getScene(), in_coords)
+        in_coordinates = [x, y, z]
+        reference_scene = self._sceneviewer.getScene() if local_scene is None else local_scene
+        result, out_coordinates = self._sceneviewer.transformCoordinates(SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, reference_coordinates, reference_scene,
+                                                                         in_coordinates)
         if result == RESULT_OK:
-            # [out_coords[0] / out_coords[3], out_coords[1] / out_coords[3], out_coords[2] / out_coords[3]]
-            return out_coords
+            return out_coordinates  # [out_coordinates[0] / out_coordinates[3], out_coordinates[1] / out_coordinates[3], out_coordinates[2] / out_coordinates[3]]
 
         return None
 
@@ -197,10 +213,13 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
 
         return None
 
-    def _get_nearest_graphic(self, x, y, domain_type):
+    def _set_scene_picker_rect(self, x, y):
         self._scene_picker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
                                                    x - self._selection_tolerance, y - self._selection_tolerance,
                                                    x + self._selection_tolerance, y + self._selection_tolerance)
+
+    def _get_nearest_graphic(self, x, y, domain_type):
+        self._set_scene_picker_rect(x, y)
         nearest_graphics = self._scene_picker.getNearestGraphics()
         if nearest_graphics.isValid() and nearest_graphics.getFieldDomainType() == domain_type:
             return nearest_graphics
@@ -211,26 +230,21 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         return self._scene_picker.getNearestGraphics()
 
     def get_nearest_graphics_node(self, x, y):
-        return self._get_nearest_graphic(x, y, Field.DOMAIN_TYPE_NODES)
+        self._set_scene_picker_rect(x, y)
+        return self._scene_picker.getNearestNodeGraphics()
 
     def get_nearest_graphics_point(self, x, y):
-        """
-        Assuming given x and y is in the sending widgets coordinates
-        which is a parent of this widget.  For example the values given
-        directly from the event in the parent widget.
-        """
         return self._get_nearest_graphic(x, y, Field.DOMAIN_TYPE_POINT)
 
-    def get_nearest_element_graphics(self, x, y):
-        self._scene_picker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                                   x - self._selection_tolerance, y - self._selection_tolerance,
-                                                   x + self._selection_tolerance, y + self._selection_tolerance)
+    def get_nearest_graphics_datapoint(self, x, y):
+        return self._get_nearest_graphic(x, y, Field.DOMAIN_TYPE_DATAPOINTS)
+
+    def get_nearest_graphics_element(self, x, y):
+        self._set_scene_picker_rect(x, y)
         return self._scene_picker.getNearestElementGraphics()
 
     def get_nearest_element(self, x, y):
-        self._scene_picker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                                   x - self._selection_tolerance, y - self._selection_tolerance,
-                                                   x + self._selection_tolerance, y + self._selection_tolerance)
+        self._set_scene_picker_rect(x, y)
         return self._scene_picker.getNearestElement()
 
     def get_nearest_graphics_mesh_3d(self, x, y):
@@ -239,13 +253,12 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
     def get_nearest_graphics_mesh_2d(self, x, y):
         return self._get_nearest_graphic(x, y, Field.DOMAIN_TYPE_MESH2D)
 
-    def get_nearest_node(self, x, y):
-        self._scene_picker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
-                                                   x - self._selection_tolerance, y - self._selection_tolerance,
-                                                   x + self._selection_tolerance, y + self._selection_tolerance)
-        node = self._scene_picker.getNearestNode()
+    def get_nearest_graphics_mesh_1d(self, x, y):
+        return self._get_nearest_graphic(x, y, Field.DOMAIN_TYPE_MESH1D)
 
-        return node
+    def get_nearest_node(self, x, y):
+        self._set_scene_picker_rect(x, y)
+        return self._scene_picker.getNearestNode()
 
     def add_picked_nodes_to_field_group(self, selection_group):
         self._scene_picker.addPickedNodesToFieldGroup(selection_group)
@@ -293,21 +306,22 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
 
         self._sceneviewer.viewAll()
 
-    def initializeGL(self):
+    def clear_selection(self):
         """
-        The OpenGL context is ready for use. If Zinc Context has been set, create Zinc Sceneviewer, otherwise
-        inform client who is required to set Context at a later time.
+        If there is a selection group, clears it and removes it from scene.
         """
-        self._graphics_initialized = True
-        self._update_pixel_scale(self.devicePixelRatio())
-        if self._context:
-            self._create_sceneviewer()
-        self.graphics_initialized.emit()
+        scene = self._sceneviewer.getScene()
+        scene_clear_selection_group(scene)
+
+    def get_or_create_selection_group(self):
+        scene = self._sceneviewer.getScene()
+        return scene_get_or_create_selection_group(scene)
 
     def _update_pixel_scale(self, pixel_scale):
         changed = False
         if pixel_scale != self._pixel_scale:
             self._pixel_scale = pixel_scale
+            print("emitting: pixel scale changed.", self._pixel_scale)
             self.pixel_scale_changed.emit(self._pixel_scale)
             changed = True
 
@@ -318,6 +332,31 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
             self._width = width
             self._height = height
             self._sceneviewer.setViewportSize(int(width * self._pixel_scale + 0.5), int(height * self._pixel_scale + 0.5))
+
+    def paintEvent(self, event):
+        super(BaseSceneviewerWidget, self).paintEvent(event)
+
+        if self._is_active and self._border_pen:
+            painter = QtGui.QPainter(self)
+            painter.setPen(self._border_pen)
+            painter.drawRect(QtCore.QRect(1, 1, self.width() - 2, self.height() - 2))
+
+    def focusInEvent(self, event) -> None:
+        super(QtOpenGLWidgets.QOpenGLWidget, self).focusInEvent(event)
+        if not self._is_active:
+            self._is_active = True
+            self.became_active.emit()
+
+    def initializeGL(self):
+        """
+        The OpenGL context is ready for use. If Zinc Context has been set, create Zinc Sceneviewer, otherwise
+        inform client who is required to set Context at a later time.
+        """
+        self._graphics_initialized = True
+        self._update_pixel_scale(self.devicePixelRatio())
+        if self._context:
+            self._create_sceneviewer()
+        self.graphics_initialized.emit()
 
     def paintGL(self):
         """
@@ -346,6 +385,8 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
 
     def enterEvent(self, event):
         self.mouse_enter_event(event)
+        if self._grab_focus:
+            self.setFocus()
 
     def leaveEvent(self, event):
         self.mouse_leave_event(event)

@@ -15,15 +15,15 @@
 """
 from PySide6 import QtGui, QtWidgets
 
-from cmlibs.widgets.ui.ui_loggereditorwidget import Ui_LoggerEditorWidget
+from cmlibs.widgets.ui.ui_logviewerwidget import Ui_LogViewerWidget
 from cmlibs.argon.argonlogger import CustomStream
 
 
-class LoggerEditorWidget(QtWidgets.QWidget):
+class LogViewerWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
-        self._ui = Ui_LoggerEditorWidget()
+        self._ui = Ui_LogViewerWidget()
         self._ui.setupUi(self)
 
         self._make_connections()

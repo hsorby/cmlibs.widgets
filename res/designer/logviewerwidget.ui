@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LoggerEditorWidget</class>
- <widget class="QWidget" name="LoggerEditorWidget">
+ <class>LogViewerWidget</class>
+ <widget class="QWidget" name="LogViewerWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Log viewer</string>
+   <string>Log Viewer</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
@@ -50,11 +50,12 @@
    </item>
   </layout>
  </widget>
+ <resources/>
  <connections>
   <connection>
    <sender>clearAllButton</sender>
    <signal>clicked()</signal>
-   <receiver>LoggerEditorWidget</receiver>
+   <receiver>LogViewerWidget</receiver>
    <slot>clearAll()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -70,7 +71,7 @@
   <connection>
    <sender>copyButton</sender>
    <signal>clicked()</signal>
-   <receiver>LoggerEditorWidget</receiver>
+   <receiver>LogViewerWidget</receiver>
    <slot>copyToClipboard()</slot>
    <hints>
     <hint type="sourcelabel">

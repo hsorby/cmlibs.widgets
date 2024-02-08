@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'loggereditorwidget.ui'
+## Form generated from reading UI file 'logviewerwidget.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.2
 ##
@@ -17,26 +17,27 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QPushButton,
     QSizePolicy, QSpacerItem, QTextBrowser, QWidget)
-class Ui_LoggerEditorWidget(object):
-    def setupUi(self, LoggerEditorWidget):
-        if not LoggerEditorWidget.objectName():
-            LoggerEditorWidget.setObjectName(u"LoggerEditorWidget")
-        LoggerEditorWidget.resize(452, 533)
-        self.gridLayout = QGridLayout(LoggerEditorWidget)
+
+class Ui_LogViewerWidget(object):
+    def setupUi(self, LogViewerWidget):
+        if not LogViewerWidget.objectName():
+            LogViewerWidget.setObjectName(u"LogViewerWidget")
+        LogViewerWidget.resize(452, 533)
+        self.gridLayout = QGridLayout(LogViewerWidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.logText = QTextBrowser(LoggerEditorWidget)
+        self.logText = QTextBrowser(LogViewerWidget)
         self.logText.setObjectName(u"logText")
 
         self.gridLayout.addWidget(self.logText, 1, 0, 1, 1)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.clearAllButton = QPushButton(LoggerEditorWidget)
+        self.clearAllButton = QPushButton(LogViewerWidget)
         self.clearAllButton.setObjectName(u"clearAllButton")
 
         self.horizontalLayout.addWidget(self.clearAllButton)
 
-        self.copyButton = QPushButton(LoggerEditorWidget)
+        self.copyButton = QPushButton(LogViewerWidget)
         self.copyButton.setObjectName(u"copyButton")
 
         self.horizontalLayout.addWidget(self.copyButton)
@@ -49,16 +50,16 @@ class Ui_LoggerEditorWidget(object):
         self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
 
 
-        self.retranslateUi(LoggerEditorWidget)
-        self.clearAllButton.clicked.connect(LoggerEditorWidget.clearAll)
-        self.copyButton.clicked.connect(LoggerEditorWidget.copyToClipboard)
+        self.retranslateUi(LogViewerWidget)
+        self.clearAllButton.clicked.connect(LogViewerWidget.clearAll)
+        self.copyButton.clicked.connect(LogViewerWidget.copyToClipboard)
 
-        QMetaObject.connectSlotsByName(LoggerEditorWidget)
+        QMetaObject.connectSlotsByName(LogViewerWidget)
     # setupUi
 
-    def retranslateUi(self, LoggerEditorWidget):
-        LoggerEditorWidget.setWindowTitle(QCoreApplication.translate("LoggerEditorWidget", u"Log viewer", None))
-        self.clearAllButton.setText(QCoreApplication.translate("LoggerEditorWidget", u"Clear All", None))
-        self.copyButton.setText(QCoreApplication.translate("LoggerEditorWidget", u"Copy To Clipboard", None))
+    def retranslateUi(self, LogViewerWidget):
+        LogViewerWidget.setWindowTitle(QCoreApplication.translate("LogViewerWidget", u"Log Viewer", None))
+        self.clearAllButton.setText(QCoreApplication.translate("LogViewerWidget", u"Clear All", None))
+        self.copyButton.setText(QCoreApplication.translate("LogViewerWidget", u"Copy To Clipboard", None))
     # retranslateUi
 
