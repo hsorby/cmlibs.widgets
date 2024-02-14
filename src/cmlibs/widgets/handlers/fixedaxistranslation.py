@@ -68,7 +68,7 @@ class FixedAxisTranslation(KeyActivatedHandler):
         self._selected_material = material_module.findMaterialByName('red')
 
     def enter(self):
-        x_vector, y_vector = calculate_orthogonal_vectors(self._model.plane_nodes_coordinates())
+        x_vector, y_vector = _calculate_orthogonal_vectors(self._model.plane_nodes_coordinates())
         normal = self._model.get_plane_normal()
 
         x_field_cache = self._glyph_fields[0].getFieldmodule().createFieldcache()
@@ -146,7 +146,7 @@ class FixedAxisTranslation(KeyActivatedHandler):
         self._selected_index = None
 
 
-def calculate_orthogonal_vectors(points):
+def _calculate_orthogonal_vectors(points):
     vectors = [np.array(point) - points[0] for point in points[1:]]
     lengths = [np.linalg.norm(vector) for vector in vectors]
     max_index = int(np.argmax(lengths))

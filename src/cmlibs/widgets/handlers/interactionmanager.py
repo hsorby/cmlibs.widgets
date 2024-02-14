@@ -29,9 +29,6 @@ class InteractionManager(object):
     def clear_active_handler(self):
         self.unregister_handler(self._active_handler)
 
-    def clear_active_handler(self):
-        self.unregister_handler(self._active_handler)
-
     def unregister_handler(self, handler):
         if handler is None:
             return
