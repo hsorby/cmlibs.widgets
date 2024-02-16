@@ -68,9 +68,8 @@ class FixedAxisTranslation(KeyActivatedHandler):
         normal = self._model.get_plane_normal()
 
         field_cache = self._glyph_fields[0].getFieldmodule().createFieldcache()
-        self._glyph_fields[0].assignReal(field_cache, x_vector.tolist())
-        self._glyph_fields[1].assignReal(field_cache, y_vector.tolist())
-        self._glyph_fields[2].assignReal(field_cache, normal)
+        for i, vector in enumerate([x_vector, y_vector, normal]):
+            self._glyph_fields[i].assignReal(field_cache, vector)
 
         centroid = calculate_centroid(self._model.plane_nodes_coordinates())
         for glyph in (self._glyphs + self._reverse_glyphs):
@@ -149,4 +148,6 @@ def _calculate_orthogonal_vectors(points):
     vectors.pop(max_index)
     lengths.pop(max_index)
 
-    return (vectors[0] / lengths[0]), (vectors[1] / lengths[1])
+    x_vector = vectors[0] / lengths[0]
+    y_vector = vectors[1] / lengths[1]
+    return x_vector.tolist(), y_vector.tolist()
