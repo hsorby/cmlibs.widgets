@@ -43,16 +43,17 @@ class FixedAxisTranslation(KeyActivatedHandler):
             self._reverse_glyphs = []
             self._glyph_fields = []
 
+            self._initialise_materials()
+
             region = model.get_projection_plane_region()
             field_module = region.getFieldmodule()
             scene = region.getScene()
 
             for i in range(3):
                 self._glyph_fields.append(field_module.createFieldConstant([0, 0, 0]))
-                self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[i], size=AXIS_ARROW_SIZE))
-                self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[i], size=-AXIS_ARROW_SIZE))
+                self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[i], size=AXIS_ARROW_SIZE, material=self._default_material))
+                self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[i], size=-AXIS_ARROW_SIZE, material=self._default_material))
 
-            self._initialise_materials()
 
         else:
             raise HandlerError('Given model does not have the required API for handling translation.')
@@ -74,7 +75,7 @@ class FixedAxisTranslation(KeyActivatedHandler):
         centroid = calculate_centroid(self._model.plane_nodes_coordinates())
         for glyph in (self._glyphs + self._reverse_glyphs):
             glyph.setVisibilityFlag(True)
-            glyph.setMaterial(self._default_material)
+            # glyph.setMaterial(self._default_material)
             set_glyph_position(glyph, centroid)
 
     def leave(self):
