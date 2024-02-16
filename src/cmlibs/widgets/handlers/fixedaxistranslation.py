@@ -46,15 +46,11 @@ class FixedAxisTranslation(KeyActivatedHandler):
             region = model.get_projection_plane_region()
             field_module = region.getFieldmodule()
             scene = region.getScene()
-            self._glyph_fields.append(field_module.createFieldConstant([0, 0, 0]))
-            self._glyph_fields.append(field_module.createFieldConstant([0, 0, 0]))
-            self._glyph_fields.append(field_module.createFieldConstant([0, 0, 0]))
-            self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[0], size=AXIS_ARROW_SIZE))
-            self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[1], size=AXIS_ARROW_SIZE))
-            self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[2], size=AXIS_ARROW_SIZE))
-            self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[0], size=-AXIS_ARROW_SIZE))
-            self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[1], size=-AXIS_ARROW_SIZE))
-            self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[2], size=-AXIS_ARROW_SIZE))
+
+            for i in range(3):
+                self._glyph_fields.append(field_module.createFieldConstant([0, 0, 0]))
+                self._glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[i], size=AXIS_ARROW_SIZE))
+                self._reverse_glyphs.append(create_plane_manipulation_arrow(scene, self._glyph_fields[i], size=-AXIS_ARROW_SIZE))
 
             self._initialise_materials()
 
@@ -71,12 +67,10 @@ class FixedAxisTranslation(KeyActivatedHandler):
         x_vector, y_vector = _calculate_orthogonal_vectors(self._model.plane_nodes_coordinates())
         normal = self._model.get_plane_normal()
 
-        x_field_cache = self._glyph_fields[0].getFieldmodule().createFieldcache()
-        y_field_cache = self._glyph_fields[1].getFieldmodule().createFieldcache()
-        normal_field_cache = self._glyph_fields[2].getFieldmodule().createFieldcache()
-        self._glyph_fields[0].assignReal(x_field_cache, x_vector.tolist())
-        self._glyph_fields[1].assignReal(y_field_cache, y_vector.tolist())
-        self._glyph_fields[2].assignReal(normal_field_cache, normal)
+        field_cache = self._glyph_fields[0].getFieldmodule().createFieldcache()
+        self._glyph_fields[0].assignReal(field_cache, x_vector.tolist())
+        self._glyph_fields[1].assignReal(field_cache, y_vector.tolist())
+        self._glyph_fields[2].assignReal(field_cache, normal)
 
         centroid = calculate_centroid(self._model.plane_nodes_coordinates())
         for glyph in (self._glyphs + self._reverse_glyphs):
