@@ -99,6 +99,7 @@ class FixedAxisTranslation(KeyActivatedHandler):
                     self._selected_index = i
                     self._glyphs[i].setMaterial(self._selected_material)
                     self._reverse_glyphs[i].setMaterial(self._selected_material)
+                    break
 
     def mouse_move_event(self, event):
         if self._selected_index is not None:
@@ -133,8 +134,9 @@ class FixedAxisTranslation(KeyActivatedHandler):
     def mouse_release_event(self, event):
         super().mouse_release_event(event)
 
-        for glyph in (self._glyphs + self._reverse_glyphs):
-            glyph.setMaterial(self._default_material)
+        if self._selected_index is not None:
+            self._glyphs[self._selected_index].setMaterial(self._default_material)
+            self._reverse_glyphs[self._selected_index].setMaterial(self._default_material)
 
         self._start_position = None
         self._selected_index = None
