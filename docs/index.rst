@@ -19,3 +19,12 @@ Widgets
    tessellationwidget
    timeeditorwidget
    viewwidget
+
+Handlers
+--------
+
+.. toctree::
+   :maxdepth: 2
+
+   handlers/orientationhandler
+   handlers/fixedaxistranslationhandler
