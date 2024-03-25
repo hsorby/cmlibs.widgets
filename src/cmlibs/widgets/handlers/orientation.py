@@ -18,6 +18,11 @@ from cmlibs.utils.zinc.node import rotate_nodes
 class Orientation(KeyActivatedHandler):
 
     def __init__(self, key_code):
+        """
+        Orientation handler constructor.
+
+        :param Qt.Key key_code: Qt key code specifying a keyboard key.
+        """
         super().__init__(key_code)
 
         self._model = None
@@ -27,6 +32,15 @@ class Orientation(KeyActivatedHandler):
         self._start_position = None
 
     def set_model(self, model):
+        """
+        Set the model required by the handler. The model is in charge of tracking the rotation-point and surface-normal attributes and must
+        provide the following methods required by the handler: ``get_projection_plane_region``, ``get_rotation_point``,
+        ``set_rotation_point``, ``get_plane_normal``, ``set_plane_normal``. The ``get_projection_plane_region`` method should return the
+        Zinc region associated with the surface graphic. The rotation point is a 3D list of coordinates. The plane normal is a direction
+        vector in 3D list format.
+
+        :param model: Model providing Zinc surface definition.
+        """
         attributes = ['get_projection_plane_region', 'get_rotation_point', 'set_rotation_point', 'get_plane_normal', 'set_plane_normal']
         if all(hasattr(model, attr) for attr in attributes):
             self._model = model
