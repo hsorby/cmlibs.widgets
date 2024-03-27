@@ -321,7 +321,6 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         changed = False
         if pixel_scale != self._pixel_scale:
             self._pixel_scale = pixel_scale
-            print("emitting: pixel scale changed.", self._pixel_scale)
             self.pixel_scale_changed.emit(self._pixel_scale)
             changed = True
 
