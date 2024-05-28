@@ -27,6 +27,7 @@ class FixedAxisTranslation(KeyActivatedHandler):
         super().__init__(key_code)
 
         self._model = None
+        self._plane = None
 
         # Two glyphs for each of the three translation axes (x, y, normal).
         self._glyphs = []
@@ -41,18 +42,18 @@ class FixedAxisTranslation(KeyActivatedHandler):
     def set_model(self, model):
         """
         Set the model required by the handler. The model is in charge of tracking the rotation-point and surface-normal attributes and must
-        provide the following methods required by the handler: ``get_projection_plane_region``, ``set_rotation_point``,
-        ``get_plane_normal``, ``plane_nodes_coordinates``. The ``get_projection_plane_region`` method should return the Zinc region
-        associated with the surface graphic. The rotation point is a 3D list of coordinates. The plane normal is a direction vector in 3D
-        list format. ``plane_nodes_coordinates`` should return a list of lists, specifying the coordinates of the four corners of the plane
-        segment (currently only square plane segments are supported).
+        provide the following methods required by the handler:  ``get_plane``, ``get_plane_region``. The ``get_plane`` method
+        should return a Zinc ``Plane``. The ``get_plane_region`` method should return the Zinc region associated with the
+        surface graphic. ``plane_nodes_coordinates`` should return a list of lists, specifying the coordinates of the four corners of the
+        plane segment (currently only square plane segments are supported).
 
         :param model: Model providing Zinc plane definition.
         """
-        attributes = ['get_projection_plane_region', 'set_rotation_point', 'get_plane_normal', 'plane_nodes_coordinates']
+        attributes = ['get_plane', 'get_plane_region', 'plane_nodes_coordinates']
 
         if all(hasattr(model, attr) for attr in attributes):
             self._model = model
+            self._plane = model.get_plane()
 
             self._glyphs = []
             self._reverse_glyphs = []
@@ -60,7 +61,7 @@ class FixedAxisTranslation(KeyActivatedHandler):
 
             self._initialise_materials()
 
-            region = model.get_projection_plane_region()
+            region = model.get_plane_region()
             field_module = region.getFieldmodule()
             scene = region.getScene()
 
@@ -73,14 +74,14 @@ class FixedAxisTranslation(KeyActivatedHandler):
             raise HandlerError('Given model does not have the required API for handling translation.')
 
     def _initialise_materials(self):
-        context = self._model.get_projection_plane_region().getContext()
+        context = self._model.get_plane_region().getContext()
         material_module = context.getMaterialmodule()
         self._default_material = material_module.findMaterialByName('orange')
         self._selected_material = material_module.findMaterialByName('red')
 
     def enter(self):
         x_vector, y_vector = _calculate_orthogonal_vectors(self._model.plane_nodes_coordinates())
-        normal = self._model.get_plane_normal()
+        normal = self._plane.getNormal()
 
         field_cache = self._glyph_fields[0].getFieldmodule().createFieldcache()
         for i, vector in enumerate([x_vector, y_vector, normal]):
@@ -132,10 +133,10 @@ class FixedAxisTranslation(KeyActivatedHandler):
             scene = self._glyphs[2].getScene()
             scene.beginChange()
 
-            translate_nodes(self._model.get_projection_plane_region(), proj_n)
+            translate_nodes(self._model.get_plane_region(), proj_n)
             centroid = calculate_centroid(self._model.plane_nodes_coordinates())
             if centroid is not None:
-                self._model.set_rotation_point(centroid)
+                self._plane.setRotationPoint(centroid)
                 for glyph in (self._glyphs + self._reverse_glyphs):
                     set_glyph_position(glyph, centroid)
 
