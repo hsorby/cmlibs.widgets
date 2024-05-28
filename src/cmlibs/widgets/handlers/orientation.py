@@ -26,6 +26,7 @@ class Orientation(KeyActivatedHandler):
         super().__init__(key_code)
 
         self._model = None
+        self._plane = None
         self._glyph = None
         self._default_material = None
         self._selected_material = None
@@ -34,18 +35,19 @@ class Orientation(KeyActivatedHandler):
     def set_model(self, model):
         """
         Set the model required by the handler. The model is in charge of tracking the rotation-point and surface-normal attributes and must
-        provide the following methods required by the handler: ``get_projection_plane_region``, ``get_rotation_point``,
-        ``set_rotation_point``, ``get_plane_normal``, ``set_plane_normal``. The ``get_projection_plane_region`` method should return the
-        Zinc region associated with the surface graphic. The rotation point is a 3D list of coordinates. The plane normal is a direction
-        vector in 3D list format.
+        provide the following methods required by the handler: ``get_plane``, ``get_plane_region``. The ``get_plane`` method
+        should return a Zinc ``Plane``. The ``get_plane_region`` method should return the Zinc region associated with the
+        surface graphic. ``plane_nodes_coordinates`` should return a list of lists, specifying the coordinates of the four corners of the
+        plane segment (currently only square plane segments are supported).
 
         :param model: Model providing Zinc surface definition.
         """
-        attributes = ['get_projection_plane_region', 'get_rotation_point', 'set_rotation_point', 'get_plane_normal', 'set_plane_normal']
+        attributes = ['get_plane', 'get_plane_region', 'plane_nodes_coordinates']
         if all(hasattr(model, attr) for attr in attributes):
             self._model = model
+            self._plane = model.get_plane()
 
-            scene = model.get_projection_plane_region().getScene()
+            scene = model.get_plane_region().getScene()
             self._glyph = create_plane_manipulation_sphere(scene)
             self._initialise_materials()
 
@@ -53,7 +55,7 @@ class Orientation(KeyActivatedHandler):
             raise HandlerError('Given model does not have the required API for handling orientation.')
 
     def _initialise_materials(self):
-        context = self._model.get_projection_plane_region().getContext()
+        context = self._model.get_plane_region().getContext()
         material_module = context.getMaterialmodule()
         self._default_material = material_module.findMaterialByName('blue')
         self._selected_material = material_module.findMaterialByName('red')
@@ -62,11 +64,11 @@ class Orientation(KeyActivatedHandler):
         self._glyph.setVisibilityFlag(True)
         self._glyph.setMaterial(self._default_material)
 
-        rotation_point = self._model.get_rotation_point()
+        rotation_point = self._plane.getRotationPoint()
         set_glyph_position(self._glyph, rotation_point)
 
         scene = self._zinc_sceneviewer.getScene()
-        region = self._model.get_projection_plane_region()
+        region = self._model.get_plane_region()
         scene_filter = scene.getScenefiltermodule().createScenefilterRegion(region)
         self._scene_viewer.get_scenepicker().setScenefilter(scene_filter)
 
@@ -97,15 +99,15 @@ class Orientation(KeyActivatedHandler):
             if self._glyph.getMaterial().getName() == self._selected_material.getName():
                 far_plane_point = self._scene_viewer.unproject(x, -y, -1.0)
                 near_plane_point = self._scene_viewer.unproject(x, -y, 1.0)
-                point_on_plane = calculate_line_plane_intersection(near_plane_point, far_plane_point, self._model.get_rotation_point(),
-                                                                   self._model.get_plane_normal())
+                point_on_plane = calculate_line_plane_intersection(near_plane_point, far_plane_point, self._plane.getRotationPoint(),
+                                                                   self._plane.getNormal())
                 if point_on_plane is not None:
                     scene_picker.setSceneviewerRectangle(self._zinc_sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
                                                          x - 1.0, y - 1.0, x + 1.0, y + 1.0)
                     nearest_element_graphics = scene_picker.getNearestElementGraphics()
                     if nearest_element_graphics.isValid() and nearest_element_graphics.getFieldDomainType() is Field.DOMAIN_TYPE_MESH2D:
                         set_glyph_position(self._glyph, point_on_plane)
-                        self._model.set_rotation_point(point_on_plane)
+                        self._plane.setRotationPoint(point_on_plane)
 
             else:
                 width = self._scene_viewer.width()
@@ -146,12 +148,12 @@ class Orientation(KeyActivatedHandler):
 
                     # Calculate the rotation matrix.
                     rotation_matrix = axis_angle_to_rotation_matrix(axis, angle)
-                    rotation_point = self._model.get_rotation_point()
+                    rotation_point = self._plane.getRotationPoint()
 
-                    rotate_nodes(self._model.get_projection_plane_region(), rotation_matrix, rotation_point)
+                    rotate_nodes(self._model.get_plane_region(), rotation_matrix, rotation_point)
                     normal = calculate_plane_normal(*self._model.plane_nodes_coordinates()[:3])
 
-                    self._model.set_plane_normal(normal)
+                    self._plane.setNormal(normal)
                     self._start_position = [x, y]
 
             scene.endChange()
