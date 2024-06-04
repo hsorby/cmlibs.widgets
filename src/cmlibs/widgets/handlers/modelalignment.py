@@ -29,13 +29,11 @@ class ModelAlignment(KeyActivatedHandler):
         self._active_button = event.button()
         if self._active_button == QtCore.Qt.MouseButton.LeftButton and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
             self._active_button = QtCore.Qt.MouseButton.MiddleButton
-        pixel_scale = self._scene_viewer.get_pixel_scale()
-        self._lastMousePos = [event.x() * pixel_scale, event.y() * pixel_scale]
+        self._lastMousePos = self.get_scaled_event_position(event)
 
     def mouse_move_event(self, event):
         if self._lastMousePos is not None:
-            pixel_scale = self._scene_viewer.get_pixel_scale()
-            pos = [event.x() * pixel_scale, event.y() * pixel_scale]
+            pos = self.get_scaled_event_position(event)
             delta = [pos[0] - self._lastMousePos[0], pos[1] - self._lastMousePos[1]]
             mag = vectorops.magnitude(delta)
             if mag <= 0.0:

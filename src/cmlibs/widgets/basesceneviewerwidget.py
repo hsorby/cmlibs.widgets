@@ -53,7 +53,7 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         self._selection_tolerance = 3.0  # Number of pixels to set the selection tolerance to.
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
-        self._pixel_scale = self.devicePixelRatio()
+        self._pixel_scale = 1.0
         self._width = -1
         self._height = -1
         self._border_pen = QtGui.QPen(QtGui.QBrush(QtCore.Qt.GlobalColor.magenta), 2)

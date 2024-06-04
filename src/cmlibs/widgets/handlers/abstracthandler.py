@@ -76,3 +76,7 @@ class AbstractHandler:
 
     def _graphics_ready(self):
         self._zinc_sceneviewer = self._scene_viewer.get_zinc_sceneviewer()
+
+    def get_scaled_event_position(self, event):
+        pixel_scale = self._scene_viewer.get_pixel_scale()
+        return event.x() * pixel_scale, event.y() * pixel_scale

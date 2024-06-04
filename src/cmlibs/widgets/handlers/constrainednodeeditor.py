@@ -165,7 +165,7 @@ class ConstrainedNodeEditor(KeyActivatedHandler):
 
     def mouse_move_event(self, event):
         if self._edit_node:
-            mousePos = [event.x() * self._pixel_scale, event.y() * self._pixel_scale]
+            mousePos = self.get_scaled_event_position(event)
             update_last_mouse_pos = True
             nodeset = self._edit_node.getNodeset()
             fieldmodule = nodeset.getFieldmodule()

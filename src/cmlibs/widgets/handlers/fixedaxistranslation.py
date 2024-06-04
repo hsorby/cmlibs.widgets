@@ -101,8 +101,7 @@ class FixedAxisTranslation(KeyActivatedHandler):
     def mouse_press_event(self, event):
         super().mouse_press_event(event)
 
-        pixel_scale = self._scene_viewer.get_pixel_scale()
-        x, y = event.x() * pixel_scale, event.y() * pixel_scale
+        x, y = self.get_scaled_event_position(event)
         self._start_position = [x, y]
 
         graphic = self._scene_viewer.get_nearest_graphics_point(x, y)
@@ -116,9 +115,7 @@ class FixedAxisTranslation(KeyActivatedHandler):
 
     def mouse_move_event(self, event):
         if self._selected_index is not None:
-            pixel_scale = self._scene_viewer.get_pixel_scale()
-            x = event.x() * pixel_scale
-            y = event.y() * pixel_scale
+            x, y = self.get_scaled_event_position(event)
             pos = get_glyph_position(self._glyphs[2])
             screen_pos = self._scene_viewer.project(pos[0], pos[1], pos[2])
             global_cur_pos = self._scene_viewer.unproject(x, -y, screen_pos[2])
