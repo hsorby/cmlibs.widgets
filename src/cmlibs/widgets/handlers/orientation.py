@@ -76,8 +76,7 @@ class Orientation(KeyActivatedHandler):
     def mouse_press_event(self, event):
         super().mouse_press_event(event)
 
-        pixel_scale = self._scene_viewer.get_pixel_scale()
-        x, y = event.x() * pixel_scale, event.y() * pixel_scale
+        x, y = self.get_scaled_event_position(event)
         self._start_position = [x, y]
 
         graphic = self._scene_viewer.get_nearest_graphics_point(x, y)
@@ -90,9 +89,7 @@ class Orientation(KeyActivatedHandler):
             scene_picker = self._scene_viewer.get_scenepicker()
             scene.beginChange()
 
-            pixel_scale = self._scene_viewer.get_pixel_scale()
-            x = event.x() * pixel_scale
-            y = event.y() * pixel_scale
+            x, y = self.get_scaled_event_position(event)
 
             if self._glyph.getMaterial().getName() == self._selected_material.getName():
                 far_plane_point = self._scene_viewer.unproject(x, -y, -1.0)

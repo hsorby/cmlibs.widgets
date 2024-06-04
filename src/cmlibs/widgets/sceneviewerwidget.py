@@ -579,7 +579,7 @@ class SceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget):
             scene_input.setPosition(int(event.x() * self._pixel_scale), int(event.y() * self._pixel_scale))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
-            # self.makeCurrent()
+            self.makeCurrent()
             self._sceneviewer.processSceneviewerinput(scene_input)
             # self._handle_mouse_events = False
         else:

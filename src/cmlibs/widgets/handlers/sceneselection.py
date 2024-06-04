@@ -45,7 +45,8 @@ class SceneSelection(KeyActivatedHandler):
     def mouse_press_event(self, event):
         super(SceneSelection, self).mouse_press_event(event)
         if self._processing_mouse_events:
-            self._start_position = (event.x() * self._scene_viewer.get_pixel_scale(), event.y() * self._scene_viewer.get_pixel_scale())
+            x, y = self.get_scaled_event_position(event)
+            self._start_position = (x, y)
             if BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT:
                 self._selection_mode = SelectionMode.EXCLUSIVE
             elif BUTTON_MAP[event.button()] == Sceneviewerinput.BUTTON_TYPE_RIGHT:
