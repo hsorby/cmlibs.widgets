@@ -23,7 +23,12 @@ jobs:
       - name: Install PySide6
         run: |
           pip install PySide6
+      - name: Investigate PySide6 - Ubuntu
+        if: runner.os == 'Linux'
+        run: |
           python -c "import PySide6;print(PySide6.__file__)"
+          ls /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6
+          ldd /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6/QtOpenGLWidgets.so
       - name: Execute tests
         run: |
           python multiple_inheritance.py
