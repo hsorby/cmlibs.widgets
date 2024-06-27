@@ -20,7 +20,10 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt install -y libopengl0 libglu1-mesa
-      - name: Execute tests
+      - name: Install PySide6
         run: |
           pip install PySide6
+          python -m "import PySide6;print(PySide6.__file__)"
+      - name: Execute tests
+        run: |
           python multiple_inheritance.py
