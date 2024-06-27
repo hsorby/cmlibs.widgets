@@ -7,7 +7,7 @@ jobs:
     strategy:
       matrix:
         python-version: [ "3.9.12", "3.10.4", "3.11.3", "3.12.3", "3.9", "3.10", "3.11", "3.12" ]
-        os: [windows-latest] # ubuntu-latest
+        os: [windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Python
@@ -19,7 +19,7 @@ jobs:
       - name: Test requirements - Ubuntu
         if: runner.os == 'Linux'
         run: |
-          sudo apt install -y libegl1 Ωlibxcb-cursor0 libopengl0 libglu1-mesa libxcb-xinerama0
+          sudo apt install -y libopengl0 libglu1-mesa
       - name: Execute tests
         run: |
           pip install PySide6
