@@ -26,7 +26,8 @@ class D(QtOpenGLWidgets.QOpenGLWidget, A):
 def main():
     app = QtWidgets.QApplication(sys.argv)
 
-    d = D()
+    w = QtWidgets.QWidget()
+    d = D(w)
     print(d)
 
 
