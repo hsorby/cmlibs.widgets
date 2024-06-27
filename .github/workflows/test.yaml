@@ -19,12 +19,12 @@ jobs:
       - name: Test requirements - Ubuntu
         if: runner.os == 'Linux'
         run: |
-          sudo apt install -y libopengl0 libglu1-mesa
+          sudo apt install -y libopengl0 libglu1-mesa libegl1
       - name: Install PySide6
         run: |
           pip install PySide6
       - name: Investigate PySide6 - Ubuntu
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && matrix.python-version == '3.9.19'
         run: |
           python -c "import PySide6;print(PySide6.__file__)"
           ls /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6
