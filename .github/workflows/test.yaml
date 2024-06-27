@@ -16,10 +16,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Test requirements
+      - name: Test requirements - Ubuntu
+        if: runner.os == 'Ubuntu'
         run: |
           sudo apt install -y libegl1 libxcb-cursor0 libopengl0 libglu1-mesa libxcb-xinerama0
-          pip install PySide6
       - name: Execute tests
         run: |
+          pip install PySide6
           python multiple_inheritance.py
