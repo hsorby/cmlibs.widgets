@@ -30,18 +30,21 @@ jobs:
         run: |
           pip install --force-reinstall PySide6
       - name: Investigate PySide6 - Ubuntu
-        if: runner.os == 'Linux' && matrix.python-version == '3.9.19' || matrix.python-version == '3.9'
+        if: runner.os == 'Linux'
         run: |
-          python -c "import PySide6;print(PySide6.__file__)"
-          # ls /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6
-          ldd /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6/QtOpenGLWidgets.abi3.so
-          cat /etc/ld.so.conf.d/*
+          a=`python -c "import PySide6;print(PySide6.__file__)"`
+          # ldd /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6/QtOpenGLWidgets.abi3.so
       - name: Execute tests
         shell: bash
+        if: runner.os != 'Linux'
         run: |
           a=`python print_info.py`
           echo $a
           ls $a/platforms
-          export DISPLAY=:0.0
           # QT_QPA_PLATFORM=offscreen 
           python multiple_inheritance.py
+      - name: Run headless test
+        if: runner.os == 'Linux'
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: python multiple_inheritance.py
