@@ -28,7 +28,7 @@ jobs:
         run: |
           pip install --force-reinstall PySide6
       - name: Investigate PySide6 - Ubuntu
-        if: runner.os == 'Linux' && matrix.python-version == '3.9.19'
+        if: runner.os == 'Linux' && matrix.python-version == '3.9.19' || matrix.python-version == '3.9'
         run: |
           python -c "import PySide6;print(PySide6.__file__)"
           ls /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6
