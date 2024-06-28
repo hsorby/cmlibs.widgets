@@ -16,24 +16,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install PySide6 - Ubuntu
-        if: runner.os == 'Linux'
-        run: |
-          pip install PySide6
       - name: Test requirements - Ubuntu
         if: runner.os == 'Linux'
         run: |
           sudo apt install -y libopengl0 libglu1-mesa libegl1 libxcb-cursor-dev libxcb-xinerama0 libxcb-cursor0 libxkbcommon-x11-0 libxcb-keysyms1 libxcb-icccm4 libxcb-shape0 xserver-xorg
-          sudo ldconfig
           python print_info.py
       - name: Install PySide6
         run: |
-          pip install --force-reinstall PySide6
-      - name: Investigate PySide6 - Ubuntu
-        if: runner.os == 'Linux'
-        run: |
-          a=`python -c "import PySide6;print(PySide6.__file__)"`
-          # ldd /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6/QtOpenGLWidgets.abi3.so
+          pip install PySide6
+          pip install -e .
       - name: Execute test - Ubuntu
         if: runner.os == 'Linux'
         run: xvfb-run python multiple_inheritance.py
