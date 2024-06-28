@@ -23,7 +23,7 @@ jobs:
       - name: Test requirements - Ubuntu
         if: runner.os == 'Linux'
         run: |
-          sudo apt install -y libopengl0 libglu1-mesa libegl1 libxcb-cursor-dev
+          sudo apt install -y libopengl0 libglu1-mesa libegl1 libxcb-cursor-dev libxcb-xinerama0
       - name: Install PySide6
         run: |
           pip install --force-reinstall PySide6
