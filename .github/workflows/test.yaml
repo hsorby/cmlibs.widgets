@@ -37,5 +37,8 @@ jobs:
           ldd /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6/QtOpenGLWidgets.abi3.so
           cat /etc/ld.so.conf.d/*
       - name: Execute tests
+        shell: bash
         run: |
+          a=`python print_info.py`
+          export LD_LIBRARY_PATH=$a
           python multiple_inheritance.py
