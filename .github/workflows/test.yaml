@@ -40,7 +40,6 @@ jobs:
         shell: bash
         run: |
           a=`python print_info.py`
-          export LD_LIBRARY_PATH=$a/platforms:$LD_LIBRARY_PATH
           echo $a
           ls $a/platforms
           ldd $a/platforms/libqxcb.so
