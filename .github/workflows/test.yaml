@@ -40,7 +40,7 @@ jobs:
         shell: bash
         run: |
           a=`python print_info.py`
-          export LD_LIBRARY_PATH=$a
+          export LD_LIBRARY_PATH=$a/platforms
           echo $a
-          ls $a
+          ls $a/platforms
           python multiple_inheritance.py
