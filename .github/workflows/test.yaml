@@ -34,7 +34,9 @@ jobs:
         run: |
           a=`python -c "import PySide6;print(PySide6.__file__)"`
           # ldd /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6/QtOpenGLWidgets.abi3.so
+      - name: Execute test - Ubuntu
+        if: runner.os == 'Linux'
+        run: xvfb-run python multiple_inheritance.py
       - name: Execute test
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: python multiple_inheritance.py
+        if: runner.os != 'Linux'
+        run: python multiple_inheritance.py
