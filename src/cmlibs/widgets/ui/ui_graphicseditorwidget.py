@@ -35,18 +35,18 @@ class Ui_GraphicsEditorWidget(object):
         GraphicsEditorWidget.setMinimumSize(QSize(580, 0))
         self.main_verticalLayout = QVBoxLayout(GraphicsEditorWidget)
         self.main_verticalLayout.setObjectName(u"main_verticalLayout")
-        self.main_verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.main_verticalLayout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.scrollArea = QScrollArea(GraphicsEditorWidget)
         self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setFrameShape(QFrame.NoFrame)
+        self.scrollArea.setFrameShape(QFrame.Shape.NoFrame)
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaGraphicWidgetContents = QWidget()
         self.scrollAreaGraphicWidgetContents.setObjectName(u"scrollAreaGraphicWidgetContents")
-        self.scrollAreaGraphicWidgetContents.setGeometry(QRect(0, 0, 548, 1295))
+        self.scrollAreaGraphicWidgetContents.setGeometry(QRect(0, 0, 556, 1744))
         self.verticalLayout = QVBoxLayout(self.scrollAreaGraphicWidgetContents)
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.verticalLayout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.verticalLayout.setContentsMargins(0, 0, 7, 7)
         self.general_groupbox = QGroupBox(self.scrollAreaGraphicWidgetContents)
         self.general_groupbox.setObjectName(u"general_groupbox")
@@ -57,7 +57,7 @@ class Ui_GraphicsEditorWidget(object):
         self.general_groupbox.setSizePolicy(sizePolicy)
         self.formLayout_3 = QFormLayout(self.general_groupbox)
         self.formLayout_3.setObjectName(u"formLayout_3")
-        self.formLayout_3.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_3.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         self.formLayout_3.setProperty("Margin", 7)
         self.coordinate_field_label = QLabel(self.general_groupbox)
         self.coordinate_field_label.setObjectName(u"coordinate_field_label")
@@ -76,7 +76,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.coordinate_field_chooser = FieldChooserWidget(self.general_groupbox)
         self.coordinate_field_chooser.setObjectName(u"coordinate_field_chooser")
-        self.coordinate_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.coordinate_field_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.coordinate_field_chooser)
 
@@ -122,7 +122,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.material_chooser = MaterialChooserWidget(self.general_groupbox)
         self.material_chooser.setObjectName(u"material_chooser")
-        self.material_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.material_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout_3.setWidget(10, QFormLayout.FieldRole, self.material_chooser)
 
@@ -144,7 +144,7 @@ class Ui_GraphicsEditorWidget(object):
         self.data_field_chooser = FieldChooserWidget(self.general_groupbox)
         self.data_field_chooser.setObjectName(u"data_field_chooser")
         self.data_field_chooser.setEditable(False)
-        self.data_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.data_field_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout_3.setWidget(13, QFormLayout.FieldRole, self.data_field_chooser)
 
@@ -242,7 +242,7 @@ class Ui_GraphicsEditorWidget(object):
         self.contours_groupbox.setFlat(False)
         self.formLayout_2 = QFormLayout(self.contours_groupbox)
         self.formLayout_2.setObjectName(u"formLayout_2")
-        self.formLayout_2.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_2.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         self.isovalues_lineedit = QLineEdit(self.contours_groupbox)
         self.isovalues_lineedit.setObjectName(u"isovalues_lineedit")
 
@@ -255,7 +255,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.isoscalar_field_chooser = FieldChooserWidget(self.contours_groupbox)
         self.isoscalar_field_chooser.setObjectName(u"isoscalar_field_chooser")
-        self.isoscalar_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.isoscalar_field_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.isoscalar_field_chooser)
 
@@ -271,6 +271,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.range_number_spinBox = QSpinBox(self.contours_groupbox)
         self.range_number_spinBox.setObjectName(u"range_number_spinBox")
+        self.range_number_spinBox.setMaximum(2147483646)
 
         self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.range_number_spinBox)
 
@@ -281,7 +282,7 @@ class Ui_GraphicsEditorWidget(object):
         self.streamlines_groupbox.setObjectName(u"streamlines_groupbox")
         self.formLayout_5 = QFormLayout(self.streamlines_groupbox)
         self.formLayout_5.setObjectName(u"formLayout_5")
-        self.formLayout_5.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_5.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         self.stream_vector_field_label = QLabel(self.streamlines_groupbox)
         self.stream_vector_field_label.setObjectName(u"stream_vector_field_label")
 
@@ -289,7 +290,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.stream_vector_field_chooser = FieldChooserWidget(self.streamlines_groupbox)
         self.stream_vector_field_chooser.setObjectName(u"stream_vector_field_chooser")
-        self.stream_vector_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.stream_vector_field_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout_5.setWidget(0, QFormLayout.FieldRole, self.stream_vector_field_chooser)
 
@@ -330,7 +331,7 @@ class Ui_GraphicsEditorWidget(object):
         self.lines_groupbox.setObjectName(u"lines_groupbox")
         self.formLayout_4 = QFormLayout(self.lines_groupbox)
         self.formLayout_4.setObjectName(u"formLayout_4")
-        self.formLayout_4.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_4.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         self.line_shape_label = QLabel(self.lines_groupbox)
         self.line_shape_label.setObjectName(u"line_shape_label")
 
@@ -360,7 +361,7 @@ class Ui_GraphicsEditorWidget(object):
         self.line_orientation_scale_field_chooser.setObjectName(u"line_orientation_scale_field_chooser")
         sizePolicy1.setHeightForWidth(self.line_orientation_scale_field_chooser.sizePolicy().hasHeightForWidth())
         self.line_orientation_scale_field_chooser.setSizePolicy(sizePolicy1)
-        self.line_orientation_scale_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.line_orientation_scale_field_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout_4.setWidget(2, QFormLayout.FieldRole, self.line_orientation_scale_field_chooser)
 
@@ -382,7 +383,7 @@ class Ui_GraphicsEditorWidget(object):
         self.points_groupbox.setMaximumSize(QSize(16777215, 16777215))
         self.formLayout = QFormLayout(self.points_groupbox)
         self.formLayout.setObjectName(u"formLayout")
-        self.formLayout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         self.glyph_label = QLabel(self.points_groupbox)
         self.glyph_label.setObjectName(u"glyph_label")
 
@@ -390,7 +391,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.glyph_chooser = GlyphChooserWidget(self.points_groupbox)
         self.glyph_chooser.setObjectName(u"glyph_chooser")
-        self.glyph_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.glyph_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.glyph_chooser)
 
@@ -411,7 +412,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.point_orientation_scale_field_chooser = FieldChooserWidget(self.points_groupbox)
         self.point_orientation_scale_field_chooser.setObjectName(u"point_orientation_scale_field_chooser")
-        self.point_orientation_scale_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.point_orientation_scale_field_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.point_orientation_scale_field_chooser)
 
@@ -427,7 +428,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.label_field_chooser = FieldChooserWidget(self.points_groupbox)
         self.label_field_chooser.setObjectName(u"label_field_chooser")
-        self.label_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.label_field_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout.setWidget(9, QFormLayout.FieldRole, self.label_field_chooser)
 
@@ -488,7 +489,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.glyph_signed_scale_field_chooser = FieldChooserWidget(self.points_groupbox)
         self.glyph_signed_scale_field_chooser.setObjectName(u"glyph_signed_scale_field_chooser")
-        self.glyph_signed_scale_field_chooser.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.glyph_signed_scale_field_chooser.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
 
         self.formLayout.setWidget(7, QFormLayout.FieldRole, self.glyph_signed_scale_field_chooser)
 
@@ -504,7 +505,7 @@ class Ui_GraphicsEditorWidget(object):
         self.sampling_groupbox.setObjectName(u"sampling_groupbox")
         self.formLayout_6 = QFormLayout(self.sampling_groupbox)
         self.formLayout_6.setObjectName(u"formLayout_6")
-        self.formLayout_6.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_6.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         self.formLayout_6.setContentsMargins(9, 9, 9, -1)
         self.sampling_mode_label = QLabel(self.sampling_groupbox)
         self.sampling_mode_label.setObjectName(u"sampling_mode_label")
@@ -539,7 +540,7 @@ class Ui_GraphicsEditorWidget(object):
 
         self.verticalLayout.addWidget(self.sampling_groupbox)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
