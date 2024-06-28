@@ -42,5 +42,10 @@ jobs:
           a=`python print_info.py`
           echo $a
           ls $a/platforms
-          ldd $a/platforms/libqxcb.so
+          echo "-------"
+          ldd $a/platforms/../../lib/libicui18n.so.73
+          echo "-------"
+          ldd $a/platforms/../../lib/libicuuc.so.73
+          echo "-------"
+          ldd $a/platforms/../../lib/libicudata.so.73
           python multiple_inheritance.py
