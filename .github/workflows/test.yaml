@@ -48,4 +48,5 @@ jobs:
           ldd $a/platforms/../../lib/libicuuc.so.73
           echo "-------"
           ldd $a/platforms/../../lib/libicudata.so.73
+          export DISPLAY=:0.0
           QT_QPA_PLATFORM=offscreen python multiple_inheritance.py
