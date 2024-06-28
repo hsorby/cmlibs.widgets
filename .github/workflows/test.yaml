@@ -42,11 +42,6 @@ jobs:
           a=`python print_info.py`
           echo $a
           ls $a/platforms
-          echo "-------"
-          ldd $a/platforms/../../lib/libicui18n.so.73
-          echo "-------"
-          ldd $a/platforms/../../lib/libicuuc.so.73
-          echo "-------"
-          ldd $a/platforms/../../lib/libicudata.so.73
           export DISPLAY=:0.0
-          QT_QPA_PLATFORM=offscreen python multiple_inheritance.py
+          # QT_QPA_PLATFORM=offscreen 
+          python multiple_inheritance.py
