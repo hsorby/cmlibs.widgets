@@ -2,6 +2,8 @@ import sys
 
 from PySide6 import QtOpenGLWidgets, QtWidgets
 
+from cmlibs.widgets.viewwidget import ViewWidget
+
 
 class A:
 
@@ -29,6 +31,9 @@ def main():
     w = QtWidgets.QWidget()
     d = D(w)
     print(d)
+
+    vw = ViewWidget([{}], None, w)
+    print(vw)
 
 
 if __name__ == "__main__":
