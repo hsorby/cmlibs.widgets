@@ -32,8 +32,9 @@ jobs:
         if: runner.os == 'Linux' && matrix.python-version == '3.9.19' || matrix.python-version == '3.9'
         run: |
           python -c "import PySide6;print(PySide6.__file__)"
-          ls /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6
+          # ls /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6
           ldd /opt/hostedtoolcache/Python/3.9.19/x64/lib/python3.9/site-packages/PySide6/QtOpenGLWidgets.abi3.so
+          cat /etc/ld.so.conf.d/*
       - name: Execute tests
         run: |
           python multiple_inheritance.py
