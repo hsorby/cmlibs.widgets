@@ -24,6 +24,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt install -y libopengl0 libglu1-mesa libegl1 libxcb-cursor-dev libxcb-xinerama0 libxcb-cursor0
+          sudo ldconfig
       - name: Install PySide6
         run: |
           pip install --force-reinstall PySide6
