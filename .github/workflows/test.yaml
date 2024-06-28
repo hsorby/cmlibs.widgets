@@ -27,6 +27,6 @@ jobs:
       - name: Execute test - Ubuntu
         if: runner.os == 'Linux'
         run: xvfb-run python multiple_inheritance.py
-      - name: Execute test
+      - name: Execute test - !Ubuntu
         if: runner.os != 'Linux'
         run: python multiple_inheritance.py
