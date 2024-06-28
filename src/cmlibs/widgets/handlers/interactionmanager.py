@@ -1,7 +1,7 @@
 from PySide6 import QtCore
 
 
-class InteractionManager(object):
+class InteractionManager:
     handler_activated = QtCore.Signal()
     handler_deactivated = QtCore.Signal()
 
