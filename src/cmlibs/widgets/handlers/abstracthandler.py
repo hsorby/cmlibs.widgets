@@ -8,9 +8,16 @@ class AbstractHandler:
         self._zinc_sceneviewer = None
         self._ignore_mouse_events = False
         self._processing_mouse_events = False
+        self._enabled = True
 
     def get_mode(self):
         return self.__class__.__name__
+
+    def set_enabled(self, state):
+        self._enabled = state
+
+    def is_enabled(self):
+        return self._enabled
 
     def set_ignore_mouse_events(self, value=True):
         self._ignore_mouse_events = value

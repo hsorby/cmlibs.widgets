@@ -52,6 +52,9 @@ class InteractionManager:
         return self._active_handler
 
     def _activate_handler(self, handler):
+        if not handler.is_enabled():
+            return
+
         if self._active_handler:
             self._active_handler.leave()
             self.handler_deactivated.emit()
