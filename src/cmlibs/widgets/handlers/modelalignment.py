@@ -27,6 +27,9 @@ class ModelAlignment(KeyActivatedHandler):
 
     def mouse_press_event(self, event):
         self._active_button = event.button()
+        if hasattr(self._model, 'interactionStart'):
+            self._model.interactionStart()
+
         if self._active_button == QtCore.Qt.MouseButton.LeftButton and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier:
             self._active_button = QtCore.Qt.MouseButton.MiddleButton
         self._lastMousePos = self.get_scaled_event_position(event)
@@ -45,20 +48,27 @@ class ModelAlignment(KeyActivatedHandler):
             eyeDistance = vectorops.magnitude(lookatToEye)
             front = vectorops.div(lookatToEye, eyeDistance)
             right = vectorops.cross(up, front)
-            viewportWidth = self._scene_viewer.width()
-            viewportHeight = self._scene_viewer.height()
             if self._active_button == QtCore.Qt.MouseButton.LeftButton:
                 prop = vectorops.div(delta, mag)
                 axis = vectorops.add(vectorops.mult(up, prop[0]), vectorops.mult(right, prop[1]))
                 angle = mag * 0.002
                 self._model.rotateModel(axis, angle)
             elif self._active_button == QtCore.Qt.MouseButton.MiddleButton:
-                result, l, r, b, t, near, far = self._zinc_sceneviewer.getViewingVolume()
-                if viewportWidth > viewportHeight:
-                    eyeScale = (t - b) / viewportHeight
-                else:
-                    eyeScale = (r - l) / viewportWidth
-                offset = vectorops.add(vectorops.mult(right, eyeScale * delta[0]), vectorops.mult(up, -eyeScale * delta[1]))
+                far_plane = self._scene_viewer.unproject(pos[0], -pos[1], -1.0)
+                near_plane = self._scene_viewer.unproject(pos[0], -pos[1], 1.0)
+                old_far_plane = self._scene_viewer.unproject(self._lastMousePos[0], -self._lastMousePos[1], -1.0)
+                old_near_plane = self._scene_viewer.unproject(self._lastMousePos[0], -self._lastMousePos[1], 1.0)
+                far = self._zinc_sceneviewer.getFarClippingPlane()
+                near = self._zinc_sceneviewer.getNearClippingPlane()
+
+                eye_distance = vectorops.magnitude(lookatToEye)
+                fact = (eye_distance - near) / (far - near) if far > near and near <= eye_distance <= far else 0.0
+
+                translate_rate = self._zinc_sceneviewer.getTranslationRate()
+                offset_1 = vectorops.mult(vectorops.sub(near_plane, old_near_plane), (1.0 - fact))
+                offset_2 = vectorops.mult(vectorops.sub(far_plane, old_far_plane), fact)
+
+                offset = vectorops.mult(vectorops.add(offset_1, offset_2), translate_rate)
                 self._model.offsetModel(offset)
             elif self._active_button == QtCore.Qt.MouseButton.RightButton:
                 factor = 1.0 + delta[1] * 0.0005
@@ -69,4 +79,6 @@ class ModelAlignment(KeyActivatedHandler):
 
     def mouse_release_event(self, event):
         self._active_button = QtCore.Qt.MouseButton.NoButton
+        if hasattr(self._model, "interactionEnd"):
+            self._model.interactionEnd()
         self._lastMousePos = None
