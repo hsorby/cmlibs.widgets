@@ -25,7 +25,7 @@ class ZoomOnly(AbstractHandler):
         if self._zooming:
             scene_input = self._zinc_sceneviewer.createSceneviewerinput()
             x, y = self.get_scaled_event_position(event)
-            scene_input.setPosition(x, y)
+            scene_input.setPosition(int(x + 0.5), int(y + 0.5))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
             scene_input.setModifierFlags(modifier_map(event.modifiers()))
@@ -37,7 +37,7 @@ class ZoomOnly(AbstractHandler):
         if self._zooming:
             scene_input = self._zinc_sceneviewer.createSceneviewerinput()
             x, y = self.get_scaled_event_position(event)
-            scene_input.setPosition(x, y)
+            scene_input.setPosition(int(x + 0.5), int(y + 0.5))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_MOTION_NOTIFY)
             self._scene_viewer.makeCurrent()
             self._zinc_sceneviewer.processSceneviewerinput(scene_input)
@@ -48,7 +48,7 @@ class ZoomOnly(AbstractHandler):
             self._zooming = False
             scene_input = self._zinc_sceneviewer.createSceneviewerinput()
             x, y = self.get_scaled_event_position(event)
-            scene_input.setPosition(x, y)
+            scene_input.setPosition(int(x + 0.5), int(y + 0.5))
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
             scene_input.setButtonType(BUTTON_MAP[event.button()])
             self._scene_viewer.makeCurrent()
