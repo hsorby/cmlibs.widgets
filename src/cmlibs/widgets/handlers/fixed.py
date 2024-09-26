@@ -5,7 +5,6 @@ class Fixed(AbstractHandler):
 
     def __init__(self):
         super(Fixed, self).__init__()
-        self._zooming = False
 
     def enter(self):
         pass
