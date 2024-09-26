@@ -1,6 +1,4 @@
-from cmlibs.zinc.sceneviewerinput import Sceneviewerinput
-from cmlibs.widgets.definitions import modifier_map
-from cmlibs.widgets.handlers.abstracthandler import AbstractHandler, BUTTON_MAP
+from cmlibs.widgets.handlers.abstracthandler import AbstractHandler
 
 
 class Fixed(AbstractHandler):
