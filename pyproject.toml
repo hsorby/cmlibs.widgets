@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools-git-versioning]
+enabled = true
+
+[project]
+name = "cmlibs.widgets"
+dynamic = ["version"]
+keywords = ["CMLibs", "Zinc", "Widgets", "UI"]
+readme = "README.rst"
+license = {file = "LICENSE"}
+authors = [
+    { name="Hugh Sorby", email="h.sorby@auckland.ac.nz" },
+]
+dependencies = [
+    "cmlibs.maths >= 0.3",
+    "cmlibs.utils >= 0.6",
+    "PySide6",
+    "cmlibs.zinc >= 4.0",
+    "cmlibs.argon >= 0.4.0",
+]
+description = "A collection of Qt widgets and utilities for handling user interface interactions with the CMLibs Zinc library."
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+
+[project.urls]
+Homepage = "https://cmlibs.org"
+Repository = "https://github.com/CMLibs-Python/cmlibs.widgets"
+
+[tool.setuptools_scm]
