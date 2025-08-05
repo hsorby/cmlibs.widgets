@@ -10,7 +10,7 @@ name = "cmlibs.widgets"
 dynamic = ["version"]
 keywords = ["CMLibs", "Zinc", "Widgets", "UI"]
 readme = "README.rst"
-license = "Apache-2.0"
+license = { file = "LICENSE" }
 authors = [
     { name="Hugh Sorby", email="h.sorby@auckland.ac.nz" },
 ]
