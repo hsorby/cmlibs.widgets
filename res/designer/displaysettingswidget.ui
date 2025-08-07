@@ -6,14 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>743</width>
+    <width>790</width>
     <height>729</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Display Settings</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QFrame" name="displayMisc_frame">
      <property name="frameShape">
@@ -50,13 +56,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="displayMarkerPoints_checkBox">
-        <property name="text">
-         <string>Marker points</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QCheckBox" name="displayZeroJacobianContours_checkBox">
         <property name="text">
          <string>Zero Jacobian contours</string>
@@ -84,7 +83,7 @@
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -130,6 +129,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="displayDataProjectionTangents_checkBox">
+           <property name="text">
+            <string>Data projection tangents</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QCheckBox" name="displayDataProjectionPoints_checkBox">
            <property name="text">
             <string>Data projection points</string>
@@ -152,54 +158,6 @@
          </item>
          <item>
           <spacer name="displayDataPoints_horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFrame" name="displayDataMarkers_frame">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_10">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QCheckBox" name="displayDataMarkerPoints_checkBox">
-           <property name="text">
-            <string>Data marker points</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="displayDataMarkerNames_checkBox">
-           <property name="text">
-            <string>Data marker names</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="displayDataMarkers_horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -264,13 +222,119 @@
           </widget>
          </item>
          <item>
-          <spacer name="displayElements_horizontalSpacer_2">
+          <spacer name="displayDataFieldLabels_horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="displayDataMarkers_frame">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="displayDataMarkerPoints_checkBox">
+           <property name="text">
+            <string>Marker data points</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="displayDataMarkerNames_checkBox">
+           <property name="text">
+            <string>Marker data names</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="displayDataMarkers_horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>481</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="displayMarker_frame">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="displayMarkerPoints_checkBox">
+           <property name="text">
+            <string>Marker points</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="displayMarkerNames_checkBox">
+           <property name="text">
+            <string>Marker names</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="displayMarkerDataProjections_checkBox">
+           <property name="text">
+            <string>Marker projections</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="displayMarker_horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>402</width>
              <height>20</height>
             </size>
            </property>
@@ -729,6 +793,62 @@
     </widget>
    </item>
    <item>
+    <widget class="QFrame" name="displayGroup_frame">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_9">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="displayGroup_label">
+        <property name="text">
+         <string>Group:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="FieldChooserWidget" name="displayGroup_fieldChooser">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Optional group to limit display of model and data to.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QFrame" name="displayField_frame">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -774,7 +894,7 @@
        </widget>
       </item>
       <item>
-       <spacer name="displaySurfaces_horizontalSpacer_2">
+       <spacer name="displayFieldContours_horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
