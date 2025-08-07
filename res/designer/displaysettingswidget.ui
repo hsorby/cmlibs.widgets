@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>790</width>
+    <width>999</width>
     <height>729</height>
    </rect>
   </property>
@@ -132,6 +132,23 @@
           <widget class="QCheckBox" name="displayDataProjectionTangents_checkBox">
            <property name="text">
             <string>Data projection tangents</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="displayDataLines_checkBox">
+           <property name="text">
+            <string>Data lines</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="displayDataEmbedded_checkBox">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show data embedded in model coordinates.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Data embedded</string>
            </property>
           </widget>
          </item>
@@ -270,13 +287,20 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="displayDataMarkerProjections_checkBox">
+           <property name="text">
+            <string>Marker data projections</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="displayDataMarkers_horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>481</width>
+             <width>520</width>
              <height>20</height>
             </size>
            </property>
@@ -321,20 +345,13 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="displayMarkerDataProjections_checkBox">
-           <property name="text">
-            <string>Marker projections</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <spacer name="displayMarker_horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>402</width>
+             <width>750</width>
              <height>20</height>
             </size>
            </property>

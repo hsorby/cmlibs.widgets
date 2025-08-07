@@ -26,7 +26,7 @@ class Ui_DisplaySettings(object):
     def setupUi(self, DisplaySettings):
         if not DisplaySettings.objectName():
             DisplaySettings.setObjectName(u"DisplaySettings")
-        DisplaySettings.resize(790, 729)
+        DisplaySettings.resize(999, 729)
         DisplaySettings.setMaximumSize(QSize(16777215, 16777215))
         self.verticalLayout_2 = QVBoxLayout(DisplaySettings)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -85,6 +85,16 @@ class Ui_DisplaySettings(object):
         self.displayDataProjectionTangents_checkBox.setObjectName(u"displayDataProjectionTangents_checkBox")
 
         self.horizontalLayout.addWidget(self.displayDataProjectionTangents_checkBox)
+
+        self.displayDataLines_checkBox = QCheckBox(self.displayDataPoints_frame)
+        self.displayDataLines_checkBox.setObjectName(u"displayDataLines_checkBox")
+
+        self.horizontalLayout.addWidget(self.displayDataLines_checkBox)
+
+        self.displayDataEmbedded_checkBox = QCheckBox(self.displayDataPoints_frame)
+        self.displayDataEmbedded_checkBox.setObjectName(u"displayDataEmbedded_checkBox")
+
+        self.horizontalLayout.addWidget(self.displayDataEmbedded_checkBox)
 
         self.displayDataProjectionPoints_checkBox = QCheckBox(self.displayDataPoints_frame)
         self.displayDataProjectionPoints_checkBox.setObjectName(u"displayDataProjectionPoints_checkBox")
@@ -158,7 +168,12 @@ class Ui_DisplaySettings(object):
 
         self.horizontalLayout_7.addWidget(self.displayDataMarkerNames_checkBox)
 
-        self.displayDataMarkers_horizontalSpacer = QSpacerItem(481, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.displayDataMarkerProjections_checkBox = QCheckBox(self.displayDataMarkers_frame)
+        self.displayDataMarkerProjections_checkBox.setObjectName(u"displayDataMarkerProjections_checkBox")
+
+        self.horizontalLayout_7.addWidget(self.displayDataMarkerProjections_checkBox)
+
+        self.displayDataMarkers_horizontalSpacer = QSpacerItem(520, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_7.addItem(self.displayDataMarkers_horizontalSpacer)
 
@@ -182,12 +197,7 @@ class Ui_DisplaySettings(object):
 
         self.horizontalLayout_2.addWidget(self.displayMarkerNames_checkBox)
 
-        self.displayMarkerDataProjections_checkBox = QCheckBox(self.displayMarker_frame)
-        self.displayMarkerDataProjections_checkBox.setObjectName(u"displayMarkerDataProjections_checkBox")
-
-        self.horizontalLayout_2.addWidget(self.displayMarkerDataProjections_checkBox)
-
-        self.displayMarker_horizontalSpacer = QSpacerItem(402, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.displayMarker_horizontalSpacer = QSpacerItem(750, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_2.addItem(self.displayMarker_horizontalSpacer)
 
@@ -531,6 +541,11 @@ class Ui_DisplaySettings(object):
         self.displayDataPoints_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Data points", None))
         self.displayDataProjections_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Data projections", None))
         self.displayDataProjectionTangents_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Data projection tangents", None))
+        self.displayDataLines_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Data lines", None))
+#if QT_CONFIG(tooltip)
+        self.displayDataEmbedded_checkBox.setToolTip(QCoreApplication.translate("DisplaySettings", u"<html><head/><body><p>Show data embedded in model coordinates.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.displayDataEmbedded_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Data embedded", None))
         self.displayDataProjectionPoints_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Data projection points", None))
         self.displayDataContours_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Data contours", None))
         self.displayDataRadius_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Data radius", None))
@@ -540,9 +555,9 @@ class Ui_DisplaySettings(object):
         self.displayDataFieldLabelsDelta_radioButton.setText(QCoreApplication.translate("DisplaySettings", u"Delta", None))
         self.displayDataMarkerPoints_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Marker data points", None))
         self.displayDataMarkerNames_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Marker data names", None))
+        self.displayDataMarkerProjections_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Marker data projections", None))
         self.displayMarkerPoints_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Marker points", None))
         self.displayMarkerNames_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Marker names", None))
-        self.displayMarkerDataProjections_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Marker projections", None))
         self.displayNodePoints_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Node points", None))
         self.displayNodeNumbers_checkBox.setText(QCoreApplication.translate("DisplaySettings", u"Node numbers", None))
 #if QT_CONFIG(tooltip)
