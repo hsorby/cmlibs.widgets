@@ -39,6 +39,10 @@ class BaseSceneviewerWidget(QtOpenGLWidgets.QOpenGLWidget, InteractionManager):
         Initialise other attributes that deal with selection and the rotation of the plane.
         """
         super().__init__(parent)
+        # For some (older) versions of Python, the QOpenGLWidget (or subclass) does not call super().__init(parent),
+        # this causes the MRO to not include the InteractionManager class __init__ function call.
+        # So we must call the InteractionManager __init__ function manually to set up the interaction handlers.
+        InteractionManager.__init__(self)
         # Create a Zinc context from which all other objects can be derived either directly or indirectly.
         self._graphics_initialized = False
         self._context = None

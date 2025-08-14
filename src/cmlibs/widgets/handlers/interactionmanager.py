@@ -6,6 +6,7 @@ class InteractionManager:
     handler_deactivated = QtCore.Signal()
 
     def __init__(self, *args, **kwargs):
+        super().__init__()
         self._handlers = {}
         self._key_code_handler_map = {}
         self._active_handler = None
